@@ -1,6 +1,9 @@
 #ifndef DFSVISITOR_CXX
 #define DFSVISITOR_CXX
 
+using namespace std;
+
+#include "DataFlowGraph.cxx"
 #include <list>
 
 class DFSVisitor {

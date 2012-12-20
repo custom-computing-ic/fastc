@@ -1,7 +1,10 @@
 #ifndef BFSVISITOR_CXX
 #define BFSVISITOR_CXX
 
+#include "DataFlowGraph.cxx"
 #include <list>
+
+using namespace std;
 
 class BFSVisitor {
   DataFlowGraph *dfg;

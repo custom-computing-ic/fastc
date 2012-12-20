@@ -1,3 +1,5 @@
+#include "main.hxx"
+
 #include "precompiled.hxx"
 #include <iostream>
 #include <set>
@@ -5,12 +7,12 @@
 #include <iterator>
 #include <fstream>
 //#include "HelloConfig.h"
-#include "DataFlowGraph/dfg.h"
 #include "DataFlowGraph/Node.hxx"
 #include "DataFlowGraph/InputNode.hxx"
 #include "DataFlowGraph/DataFlowGraph.cxx"
-#include "ASTtoDFGVisitor.cxx"
-#include "ASTtoMaxJVisitor.cxx"
+
+#include "AstToDfgVisitor.hxx"
+#include "AstToMaxJVisitor.hxx"
 
 int main(int argc, char** argv) { 
 

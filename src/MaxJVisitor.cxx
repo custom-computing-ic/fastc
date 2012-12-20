@@ -1,22 +1,12 @@
-#ifndef MAXJVSITOR_CXX
-#define MAXJVISITOR_CXX
-
+#include "MaxJVisitor.hxx"
 #include "DataFlowGraph/BFSVisitor.cxx"
 
-class MaxJVisitor : public BFSVisitor {
-    string code;
+using namespace std;
 
-public:
-  MaxJVisitor(DataFlowGraph *dfg) : BFSVisitor(dfg) {};
-  
-  void visit(Node *n) {
+void MaxJVisitor::visit(Node *n) {
     code += n->toMaxJ() + ";\n";
-  }
+}
 
-  string getMaxJCode() {
+string MaxJVisitor::getMaxJCode() {
     return code;
-  }
-
-};
-
-#endif
+}

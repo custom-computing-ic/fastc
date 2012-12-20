@@ -1,33 +1,25 @@
-#ifndef DOTDFSVISITOR_CXX
-#define DOTDFSVISITOR_CXX
+#include "DotDFSVisitor.hxx"
 
 #include "DataFlowGraph/DFSVisitor.cxx"
+#include "DataFlowGraph/DataFlowGraph.cxx"
 
-class DotDFSVisitor : public DFSVisitor {
+#include <string>
 
-  string dot;
-
-public:
-  DotDFSVisitor(DataFlowGraph *dfg) : DFSVisitor(dfg) {}
-
-  void visit(Node *n) {
+void DotDFSVisitor::visit(Node *n) {
     list<Node *>::iterator it;
     list<Node *> neighbours = n->getNeighbours();
     for (it = neighbours.begin(); it != neighbours.end(); it++)
       dot += n->toDot() + " -> " + (*it)->toDot() + ";\n";
-  }
+}
 
-  void beforeVisit() {
+void DotDFSVisitor::beforeVisit() {
     dot += "digraph {\n";
-  }
+}
 
-  void afterVisit() {
+void DotDFSVisitor::afterVisit() {
     dot += "}";
-  }
+}
 
-  string getDot() {
+string DotDFSVisitor::getDot() {
     return dot;
-  }
-};
-
-#endif 
+}

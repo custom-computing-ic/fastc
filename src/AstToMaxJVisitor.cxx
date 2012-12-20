@@ -1,54 +1,18 @@
-#ifndef ASTTOMAXJVISITOR_CXX
-#define ASTTOMAXJVISITOR_CXX
+#include "AstToMaxJVisitor.hxx"
+
 #include "precompiled.hxx"
 #include <iostream>
 #include <list>
 #include <algorithm>
 #include <iterator>
-//#include "HelloConfig.h"
-#include "rose.h"
-#include "DataFlowGraph/dfg.h"
+
 #include "DataFlowGraph/Node.hxx"
 #include "DataFlowGraph/InputNode.hxx"
 #include "DataFlowGraph/OutputNode.hxx"
 #include "DataFlowGraph/DataFlowGraph.cxx"
-//#include "DotDFSVisitor.cxx"
-//#include "MaxJVisitor.cxx"
 
 using namespace std;
 using namespace boost;
-
-class ASTtoMaxJVisitor : public AstSimpleProcessing {
-  list<InputNode> inputs;
-  list<OutputNode> outputs;
-  regex *PRAGMA_IN, *KERNEL_FUNC, *PRAGMA_OUT, *PRAGMA_SCALAR_IN;
-
-  DataFlowGraph dfg;
-
-  string source;
-
-  map<string, string> counterMap;
-
-  string declarations;
-
-
-  void function_call_initializer(string&, SgFunctionCallExp*);
-  string* toExprRec(SgExpression*);
-
-public:
-  ASTtoMaxJVisitor();
-  virtual void visit (SgNode*);
-  virtual void atTraversalEnd();
-  virtual void atTraversalStart();
-  string* toExpr(SgExpression *);
-  string imports();
-  string kernelName();
-  string declaration();
-  string import(list<string>);
-  string getSource() {
-	  return declarations + "\n\n" + source;
-  }
-};
 
 ASTtoMaxJVisitor :: ASTtoMaxJVisitor() {
   PRAGMA_IN     = new regex("in (\\w*) (\\w*) (\\w*)");
@@ -284,5 +248,3 @@ string ASTtoMaxJVisitor :: declaration() {
 	  	  	  "public " + kernelName() + "(KernelParameters parameters) {\n"
 	  	  	  "super(parameters);";
 }
-
-#endif

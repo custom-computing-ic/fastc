@@ -1,40 +1,21 @@
-#ifndef ASTTODFGVISITOR_CXX
-#define ASTTODFGVISITOR_CXX
+#include "AstToDfgVisitor.hxx"
+
 #include "precompiled.hxx"
 #include <iostream>
 #include <list>
 #include <algorithm>
 #include <iterator>
-//#include "HelloConfig.h"
-#include "rose.h"
-#include "DataFlowGraph/dfg.h"
 #include "DataFlowGraph/Node.hxx"
 #include "DataFlowGraph/InputNode.hxx"
 #include "DataFlowGraph/OutputNode.hxx"
 #include "DataFlowGraph/DataFlowGraph.cxx"
-#include "DotDFSVisitor.cxx"
-#include "MaxJVisitor.cxx"
+
+#include "DotDFSVisitor.hxx"
+#include "MaxJVisitor.hxx"
 
 using namespace std;
 using namespace boost;
 
-class ASTtoDFGVisitor : public AstSimpleProcessing {
-  list<InputNode> inputs;
-  list<OutputNode> outputs;
-  regex *PRAGMA_IN, *KERNEL_FUNC, *PRAGMA_OUT, *PRAGMA_SCALAR_IN;
-  
-  DataFlowGraph dfg; 
-
-  void function_call_initializer(string&, SgFunctionCallExp*);
-  Node* toExprNodeRec(SgExpression*);
-
-public:
-  ASTtoDFGVisitor();
-  virtual void visit (SgNode*);
-  virtual void atTraversalEnd();
-  Node* toNode(SgExpression*);
-  Node* toExprNode(SgExpression *);
-};
 
 ASTtoDFGVisitor :: ASTtoDFGVisitor() {
   PRAGMA_IN     = new regex("in (\\w*) (\\w*) (\\w*)");
@@ -278,5 +259,3 @@ void ASTtoDFGVisitor :: atTraversalEnd() {
   maxJVisitor.traverse();
   cout << maxJVisitor.getMaxJCode();
 }
-
-#endif
