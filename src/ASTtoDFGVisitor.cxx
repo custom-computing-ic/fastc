@@ -1,6 +1,6 @@
-#include "AstToDfgVisitor.hxx"
-
 #include "precompiled.hxx"
+
+#include "AstToDfgVisitor.hxx"
 #include <iostream>
 #include <list>
 #include <algorithm>

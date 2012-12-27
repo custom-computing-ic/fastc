@@ -1,6 +1,6 @@
-#include "main.hxx"
-
 #include "precompiled.hxx"
+
+#include "main.hxx"
 #include <iostream>
 #include <set>
 #include <algorithm>

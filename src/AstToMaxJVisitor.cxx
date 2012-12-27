@@ -1,6 +1,6 @@
-#include "AstToMaxJVisitor.hxx"
-
 #include "precompiled.hxx"
+
+#include "AstToMaxJVisitor.hxx"
 #include <iostream>
 #include <list>
 #include <algorithm>

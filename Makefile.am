@@ -11,7 +11,10 @@ maxcc_SOURCES = src/main.cxx src/main.hxx \
                 src/DataFlowGraph/InputNode.hxx src/DataFlowGraph/Node.hxx \
                 src/DataFlowGraph/BFSVisitor.cxx src/DataFlowGraph/DataFlowGraph.cxx \
                 src/DataFlowGraph/DFSVisitor.cxx \
-                src/DataFlowGraph/InputNode.cxx src/DataFlowGraph/Node.cxx \
-                src/precompiled.hxx
+                src/DataFlowGraph/InputNode.cxx src/DataFlowGraph/Node.cxx
+
+BUILT_SOURCES = src/precompiled.hxx.gch
+src/precompiled.hxx.gch: src/precompiled.hxx
+	$(CXXCOMPILE) -c $<
 
 dist_noinst_SCRIPTS = autogen.sh
