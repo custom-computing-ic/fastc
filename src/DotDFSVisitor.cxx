@@ -1,10 +1,5 @@
 #include "DotDFSVisitor.hxx"
 
-#include "DataFlowGraph/DFSVisitor.cxx"
-#include "DataFlowGraph/DataFlowGraph.cxx"
-
-#include <string>
-
 void DotDFSVisitor::visit(Node *n) {
     list<Node *>::iterator it;
     list<Node *> neighbours = n->getNeighbours();

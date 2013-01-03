@@ -1,16 +1,15 @@
 #ifndef ASTTODFGVISITOR_HXX
 #define ASTTODFGVISITOR_HXX
-
 #include "precompiled.hxx"
+
 #include <iostream>
 #include <list>
 #include <algorithm>
 #include <iterator>
-#include "rose.h"
-#include "DataFlowGraph/Node.hxx"
+
 #include "DataFlowGraph/InputNode.hxx"
 #include "DataFlowGraph/OutputNode.hxx"
-#include "DataFlowGraph/DataFlowGraph.cxx"
+#include "DataFlowGraph/DataFlowGraph.hxx"
 
 using namespace std;
 using namespace boost;

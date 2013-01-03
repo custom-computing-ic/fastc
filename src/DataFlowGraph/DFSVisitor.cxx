@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#include "DataFlowGraph.cxx"
+#include "DataFlowGraph.hxx"
 #include <list>
 
 class DFSVisitor {

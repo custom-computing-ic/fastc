@@ -1,15 +1,4 @@
-#include "precompiled.hxx"
-
 #include "AstToMaxJVisitor.hxx"
-#include <iostream>
-#include <list>
-#include <algorithm>
-#include <iterator>
-
-#include "DataFlowGraph/Node.hxx"
-#include "DataFlowGraph/InputNode.hxx"
-#include "DataFlowGraph/OutputNode.hxx"
-#include "DataFlowGraph/DataFlowGraph.cxx"
 
 using namespace std;
 using namespace boost;
@@ -18,7 +7,8 @@ ASTtoMaxJVisitor :: ASTtoMaxJVisitor() {
   PRAGMA_IN     = new regex("in (\\w*) (\\w*) (\\w*)");
   PRAGMA_OUT    = new regex("out (\\w*) (\\w*) (\\w*)");
   PRAGMA_SCALAR_IN = new regex("scalar in (\\w*) (\\w*)");
-  KERNEL_FUNC = new regex("kernel_.*");
+  KERNEL_FUNC = new regex("kernel_(.*)");
+  declarations = declaration() + "\n";
 }
 
 void ASTtoMaxJVisitor::function_call_initializer(
@@ -72,10 +62,6 @@ void ASTtoMaxJVisitor::function_call_initializer(
 }
 
 string* ASTtoMaxJVisitor :: toExpr(SgExpression *ex) {
-  return toExprRec(ex);
-}
-
-string* ASTtoMaxJVisitor :: toExprRec(SgExpression *ex) {
   if ( isSgVarRefExp(ex) ) {
     SgVarRefExp *e = isSgVarRefExp(ex);
     return new string(e->get_symbol()->get_name());
@@ -87,8 +73,8 @@ string* ASTtoMaxJVisitor :: toExprRec(SgExpression *ex) {
   } else if (isSgBinaryOp(ex)) {
 
     SgBinaryOp *e = isSgBinaryOp(ex);
-    string *left  = toExprRec(e->get_lhs_operand());
-    string *right = toExprRec(e->get_rhs_operand());
+    string *left  = toExpr(e->get_lhs_operand());
+    string *right = toExpr(e->get_rhs_operand());
 
     string op;
     if (isSgAddOp(ex))
@@ -126,7 +112,7 @@ string* ASTtoMaxJVisitor :: toExprRec(SgExpression *ex) {
 
   } else if (isSgUnaryOp(ex)) {
     SgUnaryOp *unOp = isSgUnaryOp(ex);
-    string *exp = toExprRec(unOp->get_operand());
+    string *exp = toExpr(unOp->get_operand());
     string op;
     if (isSgMinusOp(ex))
       op = "-";
@@ -136,86 +122,104 @@ string* ASTtoMaxJVisitor :: toExprRec(SgExpression *ex) {
   return NULL;
 }
 
-void ASTtoMaxJVisitor :: visit(SgNode *n) {
+// XXX this implementation does not support forward declarations
+/*void ASTtoMaxJVisitor:: visit(SgFunctionDeclaration* functionDeclaration) {
 
+	string funcName = functionDeclaration->get_name().getString();
+	cmatch sm;
+	if (regex_match(funcName.c_str(), sm, *KERNEL_FUNC)) {
+		string kernelName = sm[1].str();
+		cout << "Found kernel -- " << kernelName << endl;
+		Kernel* k = new Kernel(kernelName);
+		kernels.push_back(k);
+		currentKernel = k;
+		//visit(functionDeclaration->get_definition()); // visit the function body
+	}
+}*/
+
+void ASTtoMaxJVisitor :: visit(SgVariableDeclaration* decl) {
 	string type("hwFloat(8, 24)");
+	SgVariableDeclaration *varDecl = isSgVariableDeclaration(decl);
 
-	if (isSgVariableDeclaration(n)) {
-		SgVariableDeclaration *varDecl = isSgVariableDeclaration(n);
+	SgInitializedNamePtrList vars = varDecl->get_variables();
+	SgInitializedNamePtrList::iterator it;
 
-		SgInitializedNamePtrList vars = varDecl->get_variables();
-		SgInitializedNamePtrList::iterator it;
+	for (it = vars.begin(); it != vars.end(); it++) {
+		SgInitializedName *v = *it;
+		string variableName = (*it)->get_qualified_name();
 
-		for (it = vars.begin(); it != vars.end(); it++) {
-			SgInitializedName *v = *it;
-			string variableName = (*it)->get_qualified_name();
+		SgInitializer *init = v->get_initializer();
+		SgAssignInitializer *ass = isSgAssignInitializer(init);
+		if (ass == NULL)
+			continue;
 
-			SgInitializer *init = v->get_initializer();
-			SgAssignInitializer *ass = isSgAssignInitializer(init);
-			if (ass == NULL)
-				continue;
+		SgExpression *exp = ass->get_operand();
 
-			SgExpression *exp = ass->get_operand();
+		// i = f() ..
+		SgFunctionCallExp *fcall = isSgFunctionCallExp(exp);
+		if (fcall != NULL)
+			function_call_initializer(variableName, fcall);
 
-			// i = f() ..
-			SgFunctionCallExp *fcall = isSgFunctionCallExp(exp);
-			if (fcall != NULL)
-				function_call_initializer(variableName, fcall);
+		// i = expr;
+		string* n = toExpr(exp);
+		if (n != NULL)
+			source += "HWVar " + variableName + " = " + (*n) + ";\n";
+	}
+}
 
-			// i = expr;
-			string* n = toExpr(exp);
-			if (n != NULL)
-				source += "HWVar "+variableName+" = "+(*n)+";\n";
+void ASTtoMaxJVisitor :: visit(SgPragma* pragma) {
+	string type("hwFloat(8, 24)");
+	string s = pragma->get_pragma();
+	cmatch sm;
+	if (regex_match(s.c_str(), sm, *PRAGMA_IN)) {
+		declarations += "HWVar " + sm[1] + " =  io.input(\"" + sm[1] + "\", "
+				+ type + ");\n";
+	} else if (regex_match(s.c_str(), sm, *PRAGMA_OUT)) {
+		//source += "HWVar "+sm[1]+" =  io.output(\""+sm[1]+"\","+type+");\n";
+	} else if (regex_match(s.c_str(), sm, *PRAGMA_SCALAR_IN)) {
+		string t = type;
+		if (sm[2].compare("uint32") == 0) {
+			t = "hwUInt(32)";
+		} else if (sm[2].compare("float8_24") == 0) {
+			t = "hwFloat(8, 24)";
 		}
+		declarations += "HWVar " + sm[1] + " =  io.scalarInput(\"" + sm[1]
+				+ "\", " + t + ");\n";
+	}
+}
 
-	} else if (isSgPragma(n)) {
-		SgPragma* pragma = (SgPragma *) n;
-		string s = pragma->get_pragma();
-		cmatch sm;
-		if (regex_match(s.c_str(), sm, *PRAGMA_IN)) {
-			declarations += "HWVar "+sm[1]+" =  io.input(\""+sm[1]+"\", "+type+");\n";
-		} else if (regex_match(s.c_str(), sm, *PRAGMA_OUT)) {
-			//source += "HWVar "+sm[1]+" =  io.output(\""+sm[1]+"\","+type+");\n";
-		} else if (regex_match(s.c_str(), sm, *PRAGMA_SCALAR_IN)) {
-			string t = type;
-			if (sm[2].compare("uint32") == 0) {
-				t = "hwUInt(32)";
-			} else if (sm[2].compare("float8_24") == 0) {
-				t ="hwFloat(8, 24)";
-			}
-			declarations += "HWVar "+sm[1]+" =  io.scalarInput(\""+sm[1]+"\", "+t+");\n";
-		}
-	} else if (isSgFunctionCallExp(n)) {
-		SgFunctionCallExp *fcall = isSgFunctionCallExp(n);
-		SgExpressionPtrList args = fcall->get_args()->get_expressions();
-		SgExpressionPtrList::iterator it;
-		it = args.begin();
-		SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
-		string fname = fsymbol->get_name();
-		// output()
-		if (fname.compare("output") == 0) {
-			string* name = toExpr(*it);
-			string* expr = toExpr(*(++it));
-			string* cond = toExpr(*(++it));
-			if ( name == NULL || expr == NULL) {
-				cout << "NULL NAME!";
-			} else if (cond == NULL)
-				source += "io.output(\""+(*name)+"\", "+(*expr)+", "+type+");\n";
-			else {
-				source += "io.output(\""+(*name)+"\", "+(*expr)+", "+type+", "+(*cond)+");\n";
-			}
+void ASTtoMaxJVisitor :: visit(SgFunctionCallExp *fcall) {
+	string type("hwFloat(8, 24)");
+	SgExpressionPtrList args = fcall->get_args()->get_expressions();
+	SgExpressionPtrList::iterator it = args.begin();
+	SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
+	string fname = fsymbol->get_name();
+	// output()
+	if (fname.compare("output") == 0) {
+		string* name = toExpr(*it);
+		string* expr = toExpr(*(++it));
+		string* cond = toExpr(*(++it));
+		if (name == NULL || expr == NULL) {
+			cout << "NULL NAME!";
+		} else if (cond == NULL)
+			source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+					+ ");\n";
+		else {
+			source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+					+ ", " + (*cond) + ");\n";
 		}
 	}
-
 }
 
 void ASTtoMaxJVisitor :: atTraversalStart() {
+	cout << "At start!";
 	declarations += declaration() + "\n";
 }
 
 void ASTtoMaxJVisitor :: atTraversalEnd() {
+	cout << "At end!";
 	source += "}\n}\n";
-	cout << declarations + "\n\n" + source << endl;
+	//cout << declarations + "\n\n" + source << endl;
 }
 
 string ASTtoMaxJVisitor :: imports() {
@@ -247,4 +251,8 @@ string ASTtoMaxJVisitor :: declaration() {
 			  "public class " + kernelName() + " extends Kernel {\n\n"
 	  	  	  "public " + kernelName() + "(KernelParameters parameters) {\n"
 	  	  	  "super(parameters);";
+}
+
+void ASTtoMaxJVisitor :: writeKernels(ostream& out) {
+	out << getSource() << "}\n}\n";
 }

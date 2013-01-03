@@ -6,9 +6,7 @@
 #include <algorithm>
 #include <iterator>
 #include <fstream>
-#include "DataFlowGraph/Node.hxx"
-#include "DataFlowGraph/InputNode.hxx"
-#include "DataFlowGraph/DataFlowGraph.cxx"
+
 #include "AstToDfgVisitor.hxx"
 #include "AstToMaxJVisitor.hxx"
 
@@ -23,13 +21,18 @@ int main(int argc, char** argv) {
   //visitor.traverseInputFiles(project, preorder);
 
   ASTtoMaxJVisitor maxJVisitor;
-  maxJVisitor.traverseInputFiles(project, preorder);
+//  maxJVisitor.traverseInputFiles(project, preorder);
 
-  //  ofstream out("KernelFunc.java");
-  //  out << maxJVisitor.getSource();
+  traverseMemoryPoolVisitorPattern(maxJVisitor);
 
- // generateDOT(*project);
+  ofstream out("KernelFunc.java");
+  out << maxJVisitor.getSource();
 
+  cout << maxJVisitor.getSource();
+
+//  maxJVisitor.writeKernels(cout);
+
+  generateDOT(*project);
 
   return 0;
 }

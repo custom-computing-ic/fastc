@@ -1,15 +1,6 @@
-#include "precompiled.hxx"
-
 #include "AstToDfgVisitor.hxx"
-#include <iostream>
-#include <list>
-#include <algorithm>
-#include <iterator>
-#include "DataFlowGraph/Node.hxx"
-#include "DataFlowGraph/InputNode.hxx"
-#include "DataFlowGraph/OutputNode.hxx"
-#include "DataFlowGraph/DataFlowGraph.cxx"
 
+#include "DataFlowGraph/Node.hxx"
 #include "DotDFSVisitor.hxx"
 #include "MaxJVisitor.hxx"
 
