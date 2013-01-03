@@ -10,7 +10,7 @@ EXE=maxcc
 runTest() {
     printf "Running $1..."
     ${EXE} test/$1.c > test/$1.out
-    output=`diff test/$1.out test/$1.exp`
+    output=`diff -wbB test/$1.out test/$1.exp`
     res=$?
     if [ "$res" = "1" ]; then
 	printf "[Failed!]\n"
@@ -25,6 +25,6 @@ runTest() {
 
 ############# Test Setup #################
 
-runTest "testMaxCTemplate"
+runTest "maxc/testMaxCTemplate"
 
 ############# Test Summary ###############
