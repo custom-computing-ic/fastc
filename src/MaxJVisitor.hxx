@@ -1,7 +1,7 @@
 #ifndef MAXJVISITOR_HXX
 #define MAXJVISITOR_HXX
 
-#include "DataFlowGraph/BFSVisitor.cxx"
+#include "DataFlowGraph/BFSVisitor.hxx"
 
 using namespace std;
 

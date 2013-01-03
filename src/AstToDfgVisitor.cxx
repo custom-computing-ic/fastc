@@ -1,3 +1,4 @@
+#include "precompiled.hxx"
 #include "AstToDfgVisitor.hxx"
 
 #include "DataFlowGraph/Node.hxx"

@@ -1,3 +1,4 @@
+#include "precompiled.hxx"
 #include "AstToMaxJVisitor.hxx"
 
 using namespace std;

@@ -1,65 +1,44 @@
-#ifndef DFSVISITOR_CXX
-#define DFSVISITOR_CXX
+#include "DFSVisitor.hxx"
 
-using namespace std;
+bool DFSVisitor::seenNode(Node* n) {
+	list<Node *>::iterator it;
+	for (it = seenNodes.begin(); it != seenNodes.end(); it++)
+		if (n->getId().compare((*it)->getId()) == 0)
+			return true;
+	return false;
+}
 
-#include "DataFlowGraph.hxx"
-#include <list>
+DFSVisitor::DFSVisitor(DataFlowGraph *dfg) {
+	this->dfg = dfg;
+	seen = 0;
+	nodes = dfg->getSources();
+}
 
-class DFSVisitor {
-  DataFlowGraph *dfg;
-  list<Node*> queue, seenNodes;
-  list<Node*> nodes;
-  int seen;
+void DFSVisitor::traverse() {
+	beforeVisit();
 
-  bool seenNode(Node* n) {
-    list<Node *>::iterator it;
-    for(it = seenNodes.begin(); it != seenNodes.end(); it++)
-      if (n->getId().compare((*it)->getId()) == 0)
-	return true;
-    return false;
-  }
+	list<Node *>::iterator it;
+	for (it = nodes.begin(); it != nodes.end(); it++) {
+		//  cout << "Adding source " << (*it)->getName() << endl;
+		queue.push_front(*it);
+	}
 
-public:
-  DFSVisitor(DataFlowGraph *dfg) {
-    this->dfg = dfg;
-    seen = 0;
-    nodes = dfg->getSources();
-  }
+	// TODO does not handle cycles
+	// TODO does not handle multiple connected comps
+	while (!queue.empty()) {
+		Node* n = queue.front();
+		queue.pop_front();
+		if (!seenNode(n)) {
+			seen++;
+			visit(n);
+			list<Node *> neighbours = n->getNeighbours();
+			for (it = neighbours.begin(); it != neighbours.end(); it++)
+				queue.push_front(*it);
+		}
 
-  void traverse() {
-    beforeVisit();
-    
-    list<Node *>:: iterator it;
-    for (it = nodes.begin(); it != nodes.end(); it++) {
-      //  cout << "Adding source " << (*it)->getName() << endl;
-      queue.push_front(*it);  
-    }
+		seenNodes.push_front(n);
+	}
+	//cout << "seen " << seen << "/" << dfg->getNodes().size() << endl;
 
-    
-    // TODO does not handle cycles
-    // TODO does not handle multiple connected comps
-    while ( !queue.empty() ) {
-      Node* n = queue.front(); queue.pop_front();
-      if ( !seenNode(n) ) {
-	seen++;
-	visit(n);
-	list<Node *> neighbours = n->getNeighbours();
-	for(it=neighbours.begin(); it!=neighbours.end(); it++)
-	  queue.push_front(*it);
-      }
-
-      seenNodes.push_front(n);      
-    }
-    //cout << "seen " << seen << "/" << dfg->getNodes().size() << endl;
-
-    afterVisit();
-  }
-
-  virtual void visit(Node *n)=0;
-  virtual void beforeVisit() {}
-  virtual void afterVisit()  {}
-
-};
-
-#endif
+	afterVisit();
+}

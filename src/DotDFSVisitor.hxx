@@ -2,7 +2,7 @@
 #define DOTDFSVISITOR_HXX
 
 #include "DataFlowGraph/DataFlowGraph.hxx"
-#include "DataFlowGraph/DFSVisitor.cxx"
+#include "DataFlowGraph/DFSVisitor.hxx"
 
 #include <string>
 

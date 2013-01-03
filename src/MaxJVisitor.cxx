@@ -1,5 +1,4 @@
 #include "MaxJVisitor.hxx"
-#include "DataFlowGraph/BFSVisitor.cxx"
 
 using namespace std;
 
