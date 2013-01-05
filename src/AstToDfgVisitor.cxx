@@ -3,7 +3,6 @@
 
 #include "DataFlowGraph/Node.hxx"
 #include "DotDFSVisitor.hxx"
-#include "MaxJVisitor.hxx"
 
 using namespace std;
 using namespace boost;
@@ -246,8 +245,4 @@ void ASTtoDFGVisitor :: atTraversalEnd() {
   DotDFSVisitor dfsVisitor(&dfg);
   dfsVisitor.traverse();
   //  cout << dfsVisitor.getDot();
-
-  MaxJVisitor maxJVisitor(&dfg);
-  maxJVisitor.traverse();
-  cout << maxJVisitor.getMaxJCode();
 }

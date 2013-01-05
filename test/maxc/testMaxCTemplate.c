@@ -11,19 +11,19 @@ count_t countChain(int wrap, int inc, count_t parent) {return 1;}
 int scalar(){return 1;}
 //void input_scalar_array(scalar_array *c, int count) {}
 
-#pragma in x storage CPU
-#pragma out res storage CPU
-#pragma scalar in c  float8_24
-#pragma scalar in a1 uint32
-#pragma scalar in a2 uint32
-#pragma scalar in a3 uint32
-#pragma scalar in n1 uint32
-#pragma scalar in n2 uint32
-#pragma scalar in n3 uint32
-#pragma scalar in nx uint32
-#pragma scalar in ny uint32
-#pragma scalar in nz uint32
-void kernel_func(stream_t *x, stream_t *res,
+#pragma in x CPU kernel_KernelFunc
+#pragma out res CPU kernel_KernelFunc
+#pragma scalar in c float8_24 kernel_KernelFunc
+#pragma scalar in a1 uint32 kernel_KernelFunc
+#pragma scalar in a2 uint32 kernel_KernelFunc
+#pragma scalar in a3 uint32 kernel_KernelFunc
+#pragma scalar in n1 uint32 kernel_KernelFunc
+#pragma scalar in n2 uint32 kernel_KernelFunc
+#pragma scalar in n3 uint32 kernel_KernelFunc
+#pragma scalar in nx uint32 kernel_KernelFunc
+#pragma scalar in ny uint32 kernel_KernelFunc
+#pragma scalar in nz uint32 kernel_KernelFunc
+void kernel_KernelFunc(stream_t *x, stream_t *res,
 		 int nx, int ny, int nz, 
 		 int a1, int a2, int a3,
 		 int n1, int n2, int n3, 

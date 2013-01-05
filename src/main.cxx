@@ -9,28 +9,23 @@
 
 #include "AstToDfgVisitor.hxx"
 #include "AstToMaxJVisitor.hxx"
+#include "KernelVisitor.hxx"
+#include "PragmaVisitor.hxx"
 
 int main(int argc, char** argv) { 
 
-  // build ast
   SgProject* project = frontend(argc, argv);
-  AstTests :: runAllTests(project);
+//  AstTests :: runAllTests(project);
+
+  Design* design = new Design();
   
-  // traverse ast and build graph
-  //ASTtoDFGVisitor visitor;
-  //visitor.traverseInputFiles(project, preorder);
+  KernelVisitor kernelVisitor(design);
+  kernelVisitor.traverseInputFiles(project, preorder);
 
-  ASTtoMaxJVisitor maxJVisitor;
-//  maxJVisitor.traverseInputFiles(project, preorder);
+  PragmaVisitor pragmaVisitor(design);
+  pragmaVisitor.traverseInputFiles(project,  preorder);
 
-  traverseMemoryPoolVisitorPattern(maxJVisitor);
-
-  ofstream out("KernelFunc.java");
-  out << maxJVisitor.getSource();
-
-  cout << maxJVisitor.getSource();
-
-//  maxJVisitor.writeKernels(cout);
+  design->generateCode(cout);
 
   generateDOT(*project);
 

@@ -7,8 +7,10 @@ maxcc_SOURCES = src/main.cxx src/main.hxx \
                 src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
                 src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
                 src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
-                src/MaxJVisitor.cxx \
                 src/Kernel.hxx src/Kernel.cxx \
+                src/Design.hxx src/Design.cxx \
+                src/KernelVisitor.hxx src/KernelVisitor.cxx \
+                src/PragmaVisitor.hxx src/PragmaVisitor.cxx \
                 src/DataFlowGraph/DataFlowGraph.hxx src/DataFlowGraph/DataFlowGraph.cxx \
                 src/DataFlowGraph/InputNode.hxx src/DataFlowGraph/InputNode.cxx  \
                 src/DataFlowGraph/Node.hxx src/DataFlowGraph/Node.cxx \

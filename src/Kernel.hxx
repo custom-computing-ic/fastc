@@ -2,19 +2,28 @@
 #define KERNEL_HXX_
 
 #include <string>
+#include <list>
+#include <assert.h>
 
 using namespace std;
 
 class Kernel {
+	string name, source, declarations, output;
+	list<string> inputs, outputs, scalars;
 
-	string name;
+	string declaration();
+	string imports();
+	string import(list<string>  imports);
 
 public:
-	Kernel(string name) {
-		this->name = name;
-	}
-	string getName() { return name; }
-
+	Kernel(string name);
+	string getName();
+	string getFunctionName();
+	string getSource();
+	void addSource(string source);
+	void addInput(string inputName, string type);
+	void addOutput(string outputName, string type);
+	void addScalarInput(string inputName, string type);
 };
 
 #endif /* KERNEL_HXX_ */

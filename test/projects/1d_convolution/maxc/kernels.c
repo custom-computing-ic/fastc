@@ -1,29 +1,28 @@
-typedef int stream_t;
-typedef int scalar_array;
 typedef int count_t;
 
-//void input(stream_t *x, int dim) {}
-void output(stream_t* out, int res, int cond) {}
+extern void output_ic(int* out, int res, int cond);
+extern void output_i(int* out, int res);
+
 void chain(count_t i, count_t j, count_t k) {}
 int fselect(int cond, int val1, int val2) {return (cond ==0? val1 : val2);}
 count_t count(int wrap, int inc) {return 1;}
 count_t countChain(int wrap, int inc, count_t parent) {return 1;}
 int scalar(){return 1;}
-//void input_scalar_array(scalar_array *c, int count) {}
 
-#pragma in x storage CPU
-#pragma out res storage CPU
-#pragma scalar in c  float8_24
-#pragma scalar in a1 uint32
-#pragma scalar in a2 uint32
-#pragma scalar in a3 uint32
-#pragma scalar in n1 uint32
-#pragma scalar in n2 uint32
-#pragma scalar in n3 uint32
-#pragma scalar in nx uint32
-#pragma scalar in ny uint32
-#pragma scalar in nz uint32
-void kernel_func(stream_t *x, stream_t *res,
+#pragma in x CPU kernel_func
+#pragma out res CPU kernel_func
+#pragma scalar in c float8_24 kernel_func
+#pragma scalar in a1 uint32 kernel_func
+#pragma scalar in a2 uint32 kernel_func
+#pragma scalar in a3 uint32 kernel_func
+#pragma scalar in n1 uint32 kernel_func
+#pragma scalar in n2 uint32 kernel_func
+#pragma scalar in n3 uint32 kernel_func
+#pragma scalar in nx uint32 kernel_func
+#pragma scalar in ny uint32 kernel_func
+#pragma scalar in nz uint32 kernel_func
+void kernel_func(
+	 int *x, int *res,
      int nx, int ny, int nz,
      int a1, int a2, int a3,
      int n1, int n2, int n3,
@@ -49,6 +48,11 @@ void kernel_func(stream_t *x, stream_t *res,
   // otherwise assign a default value (0)
   // int r = fselect(cond, func, 0);
 
-  output(res, func, cond);
+  output_ic(res, func, cond);
 }
 
+#pragma in x CPU kernel_PassThrough
+#pragma out y CPU kernel_PassThrough
+void kernel_PassThrough(int *x, int *y) {
+	output_i(y, x[0]);
+}
