@@ -8,7 +8,7 @@ int fselect(int cond, int val1, int val2) {return (cond ==0? val1 : val2);}
 count_t count(int wrap, int inc) {return 1;}
 count_t countChain(int wrap, int inc, count_t parent) {return 1;}
 int scalar(){return 1;}
-
+/*
 #pragma in x CPU kernel_func
 #pragma out res CPU kernel_func
 #pragma scalar in c float8_24 kernel_func
@@ -49,10 +49,34 @@ void kernel_func(
   // int r = fselect(cond, func, 0);
 
   output_ic(res, func, cond);
-}
+}*/
 
 #pragma in x CPU kernel_PassThrough
 #pragma out y CPU kernel_PassThrough
 void kernel_PassThrough(int *x, int *y) {
 	output_i(y, x[0]);
 }
+
+#define burst_inc 1
+#pragma scalar in iniBursts uint32 kernel_Cmdread
+#pragma scalar in totalBursts uint32 kernel_Cmdread
+#pragma scalar in wordsPerBurst uint32 kernel_Cmdread
+#pragma scalar in Enable uint32 kernel_Cmdread
+void kernel_Cmdread(
+		int iniBursts, int totalBursts, int wordsPerBurst,
+		int Enable) {
+
+	int wordCount  = count(32, 1);
+	int burstCount = count(32, burst_inc);
+
+	int Control = (wordCount == 0) & Enable;
+
+	DRAMoutput("dram_read",
+			Control,
+			burstCount + iniBursts,
+			burst_inc,
+			1,
+			0,
+			0);
+}
+
