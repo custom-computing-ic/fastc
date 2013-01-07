@@ -56,7 +56,7 @@ fi
 
 ##########################################################################
 
-AM_CXXFLAGS="$AM_CXXFLAGS -H -Winvalid-pch"
+AM_CXXFLAGS="$AM_CXXFLAGS -H -Winvalid-pch -std=c++0x"
 
 # distribute the changed variables among the Makefiles
 AC_SUBST([LIBS])
