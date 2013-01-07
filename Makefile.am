@@ -24,3 +24,8 @@ src/precompiled.hxx.gch: src/precompiled.hxx
 	$(CXXCOMPILE) -c $<
 
 dist_noinst_SCRIPTS = autogen.sh
+
+test: all
+	./tests.sh
+
+.PHONY: test
