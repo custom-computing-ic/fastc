@@ -22,6 +22,9 @@ class SgPragma;
 class SgVariableDeclaration;
 
 class ASTtoMaxJVisitor : public AstSimpleProcessing {
+
+	int paramCount;
+
   list<InputNode> inputs;
   list<OutputNode> outputs;
 

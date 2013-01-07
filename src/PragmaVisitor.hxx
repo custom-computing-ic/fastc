@@ -8,13 +8,14 @@ using namespace boost;
 
 class PragmaVisitor: public AstSimpleProcessing {
 
-	regex *PRAGMA_IN, *PRAGMA_OUT, *PRAGMA_SCALAR_IN;
-	void visit(SgPragma*);
-	Design* design;
+    regex *PRAGMA_IN, *PRAGMA_OUT, *PRAGMA_SCALAR_IN, *TYPE;
+    void visit(SgPragma*);
+    string getType(string);
+    Design* design;
 
 public:
-	PragmaVisitor(Design* design);
-	virtual void visit(SgNode*);
+    PragmaVisitor(Design* design);
+    virtual void visit(SgNode*);
 
 };
 
