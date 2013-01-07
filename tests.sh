@@ -8,17 +8,16 @@ EXE=maxcc
 ############ Test Functions #############
 
 runTest() {
-    printf "Running $1..."
     ${EXE} test/$1.c > test/$1.out
     output=`diff -wbB test/$1.out test/$1.exp`
     res=$?
     if [ "$res" = "1" ]; then
-	printf "[Failed!]\n"
-	printf " ---- Test output ---- \n"
+	printf "[FAIL!] $1.c\n"
+	printf " ---- Diff (meld test/$1.out test/$1.exp) ---- \n"
 	printf "$output\n"
 	printf " ---------------------\n"
-    else 
-	printf "[Passed!]\n"
+    else
+	printf "[OK!]   $1.c\n"
     fi
 }
 
@@ -26,5 +25,7 @@ runTest() {
 ############# Test Setup #################
 
 runTest "maxc/testMaxCTemplate"
+
+runTest "maxc/testCmdRead"
 
 ############# Test Summary ###############
