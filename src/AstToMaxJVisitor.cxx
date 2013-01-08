@@ -116,6 +116,8 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         string op;
         if (isSgAddOp(ex))
             op = "+";
+	else if (isSgSubtractOp(ex))
+	    op = "-";
         else if (isSgMultiplyOp(ex))
             op = "*";
         else if (isSgAndOp(ex) || isSgBitAndOp(ex))
@@ -231,9 +233,14 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
         string *size       = toExpr(*(++it));
         string *inc        = toExpr(*(++it));
         string *streamNo   = toExpr(*(++it));
-        string interrupt("true");
-	if ( toExpr(*(++it))->compare("0") == 0)
-	    interrupt = "false";
+	string *interrupt  = toExpr(*(++it));
+
+	if (interrupt->compare("0") == 0)
+	    *interrupt = constVar("false");
+	else if ( isConstant(*interrupt) )
+	    *interrupt = constVar("true");
+
+
         source += "DRAMCommandStream.makeKernelOutput("
             + *streamName + ",\n"
             + *control + ",\n"
@@ -241,7 +248,7 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
             + constVar(*size, "hwUInt(8)") + ",\n"
             + constVar(*inc, "hwUInt(6)") + ",\n"
             + constVar(*streamNo, "hwUInt(4)") + ",\n"
-            + constVar(interrupt)
+            + *interrupt
             + ");\n";
 
     }
