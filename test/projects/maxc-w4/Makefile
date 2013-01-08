@@ -30,6 +30,11 @@ MAX_LFLAGS=-Wl,--hash-style=both\
 
 all: run-sim
 
+maxc:
+	../../../maxcc maxc/*.c
+	rm -rf engine && mkdir engine
+	mv *.java engine
+
 $(BUILDER).class:
 	$(JAVAC) engine/*.java
 
@@ -48,7 +53,7 @@ $(APP)_sim.o: cpu/$(APP).c
 $(EXE_SIM): $(MAXFILE_OBJ) $(APP)_sim.o
 	$(CC) $^ $(MAX_LFLAGS) -o $@
 
-run-sim: $(EXE_SIM) 
+run-sim: $(EXE_SIM)
 	maxcompilersim -n $(USER)cc -c3424 restart
 	LD_LIBRARY_PATH="$(SIM_MAXELEROS_LIB):$(LD_LIBRARY_PATH)" LD_PRELOAD=$(SIM_PRELOAD) ./$< "$(USER)cc0:$(USER)cc"
 	maxcompilersim -n $(USER)cc -c3424 stop
@@ -73,7 +78,7 @@ run-hw:
 	LD_PRELOAD=/opt/maxeler/maxeleros/lib/libmaxeleros.so ./hw "/dev/maxeler0"
 
 
-# --- Other Rules --- 
+# --- Other Rules ---
 
 gdb:
 	maxcompilersim -n $(USER)cc -c3424 restart
@@ -85,4 +90,4 @@ clean:
 	$(RM) -r SimBuilder $(EXE_SIM)
 
 
-.PHONY: gdb
+.PHONY: gdb maxc

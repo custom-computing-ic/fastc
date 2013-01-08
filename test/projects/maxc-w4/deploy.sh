@@ -24,6 +24,8 @@ echo "  build machine      ==> ${buildMachine}"
 echo "  run machine        ==> ${runMachine}"
 echo "  remote project dir ==> ${remoteProjectDir}"
 
+make maxc
+
 scp -r ${projectDir} ${remoteMachine}:${remoteDir}
 
 if [ "$build" = "Simulation" ]; then
