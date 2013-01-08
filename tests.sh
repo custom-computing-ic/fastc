@@ -21,11 +21,12 @@ runTest() {
     fi
 }
 
-
 ############# Test Setup #################
 
 runTest "maxc/testMaxCTemplate"
 
 runTest "maxc/testCmdRead"
+
+runTest "maxc/testCmdWrite"
 
 ############# Test Summary ###############
