@@ -23,37 +23,37 @@ class SgVariableDeclaration;
 
 class ASTtoMaxJVisitor : public AstSimpleProcessing {
 
-	int paramCount;
+    int paramCount;
 
-  list<InputNode> inputs;
-  list<OutputNode> outputs;
+    list<InputNode> inputs;
+    list<OutputNode> outputs;
 
-  DataFlowGraph dfg;
-  string source;
-  map<string, string> counterMap;
-  string declarations;
-  Kernel* currentKernel;
+    DataFlowGraph dfg;
+    string source;
+    map<string, string> counterMap;
+    string declarations;
+    Kernel* currentKernel;
 
-  void function_call_initializer(string&, SgFunctionCallExp*);
-  string* toExprRec(SgExpression*);void visit(SgVariableDeclaration*);
-  void visit(SgPragma*);
-  void visit(SgFunctionCallExp*);
+    void function_call_initializer(string&, SgFunctionCallExp*);
+    string* toExprRec(SgExpression*);void visit(SgVariableDeclaration*);
+    void visit(SgPragma*);
+    void visit(SgFunctionCallExp*);
 
-  string* toExpr(SgExpression *);
+    string* toExpr(SgExpression *);
 
-  string imports();
-  string kernelName();
-  string declaration();
-  string import(list<string>);
+    string imports();
+    string kernelName();
+    string declaration();
+    string import(list<string>);
 
 
 public:
-  ASTtoMaxJVisitor();
-  virtual void visit (SgNode*);
+    ASTtoMaxJVisitor();
+    virtual void visit (SgNode*);
 
-  string getSource() {
-	  return declarations + "\n" + source + "\n}\n}";
-  }
+    string getSource() {
+        return declarations + "\n" + source + "\n}\n}";
+    }
 
 };
 #endif
