@@ -32,10 +32,7 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
     SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
     string fname = fsymbol->get_name();
     if (fname.compare("count") == 0 || fname.compare("countChain") == 0) {
-        SgVarRefExp *dim = isSgVarRefExp(*itt);
-        string d = "128";
-        if (dim != NULL)
-            d = dim->get_symbol()->get_name();
+        string *wrap = toExpr(*itt);
 
         SgIntVal *inc = isSgIntVal(*(++itt));
         string i;
@@ -52,7 +49,7 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
             declarations += "CounterChain " + name
                 + " = control.count.makeCounterChain();\n";
             source += "HWVar " + variableName + " = " + name + ".addCounter("
-                + d + ", " + i + ");\n";
+                + *wrap + ", " + i + ");\n";
             counterMap[variableName] = name;
         } else if (fname.compare("countChain") == 0) {
             string p = "";
@@ -61,7 +58,7 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
                 p = parent->get_symbol()->get_name();
             string chainDeclaration = counterMap[p];
             source += "HWVar " + variableName + " = " + chainDeclaration
-                + ".addCounter(" + d + ", " + i + ");\n";
+                + ".addCounter(" + *wrap + ", " + i + ");\n";
             counterMap[variableName] = chainDeclaration;
         }
     }
@@ -89,6 +86,9 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         source += "HWVar " + variableName + " = control.mux(" + (*exp) + ", "
             + (*ifTrue) + ", " + (*ifFalse) + ");\n";
     }
+
+
+
 
 }
 
@@ -251,6 +251,11 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
             + *interrupt
             + ");\n";
 
+    } else if (fname.compare("pushDSPFactor") == 0) {
+	string *exp = toExpr(*it);
+	source += "optimization.pushDSPFactor(" + *exp + ");\n";
+    } else if (fname.compare("popDSPFactor") == 0 ) {
+	source += "optimization.popDSPFactor();\n";
     }
 }
 
