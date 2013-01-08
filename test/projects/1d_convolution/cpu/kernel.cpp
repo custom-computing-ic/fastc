@@ -20,7 +20,7 @@ real kernel(real* coef_arr, int* exe_params, real* grid, TOptionData* od, real* 
 
 	real* grid1 = (real*)malloc(M_Z1*sizeof(real));
 	real* grid2 = (real*)malloc(M_Z1*sizeof(real));
-	
+
 	real* source = grid;
 	real* target = grid1;
 
@@ -67,7 +67,7 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
 
   //fpga initialisation
   cout<<"Initialing..."<<endl;
-  maxfile = max_maxfile_init_MyApp();
+  maxfile = max_maxfile_init_Convolution1d();
   max_set_maximum_runnable_timing_score(maxfile, -1);
   device  = max_open_device(maxfile, device_name);
   max_set_terminate_on_error(device);
@@ -85,12 +85,14 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
   int BURST_SIZE    = 384;
   int total_bursts  = BYTE_SIZE / BURST_SIZE;
   int stream_bursts = M_Z1 * sizeof(float) / BURST_SIZE;
-  int stream_length = Par * sizeof(float);   
-  int stream_cycles = BURST_SIZE / stream_length;   
+  int stream_length = Par * sizeof(float);
+  int stream_cycles = BURST_SIZE / stream_length;
   int PCI_width     = 8;
   int cycle_PCI     = BURST_SIZE / (2 * PCI_width);
 
   printf("total bursts:%d\n",total_bursts);
+
+  cout << "This is mighty strange" << endl;
 
   //kernel cycle configuration
   max_kernel_set_cycles(device, "MyApp",       Inter * DATA_SIZE/ Par, FPGA_A);
@@ -104,16 +106,16 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
   max_set_scalar_input_f(device,"MyApp.c_0_0_0", coef_arr[0], FPGA_A);
   max_set_scalar_input_f(device,"MyApp.c_p_0_0", coef_arr[1], FPGA_A);
   max_set_scalar_input_f(device,"MyApp.c_n_0_0", coef_arr[2], FPGA_A);
-  
+
   //problem dimension
   max_set_scalar_input(device,"MyApp.n1",   M_Z1,    FPGA_A);
   max_set_scalar_input(device,"MyApp.ORDER",ORDER,   FPGA_A);
-  
+
   //memory stream configurations
   max_set_scalar_input(device,"Cmdread0.iniBursts",      0,                            FPGA_A);
   max_set_scalar_input(device,"Cmdread0.totalBursts",    stream_bursts,                FPGA_A);
   max_set_scalar_input(device,"Cmdread0.wordsPerBurst",  stream_cycles * Burst_inc,    FPGA_A);
-  
+
   max_set_scalar_input(device,"Cmdwrite0.iniBursts",     0,                            FPGA_A);
   max_set_scalar_input(device,"Cmdwrite0.iterations",    Inter,                        FPGA_A);
   max_set_scalar_input(device,"Cmdwrite0.totalBursts",   stream_bursts,                FPGA_A);
@@ -124,7 +126,7 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
 	real* grid2 = (real*)malloc(M_Z1 * sizeof(real));
 	real* comb  = (real*)malloc(M_Z1 * sizeof(real));
 	real* result= (real*)malloc(M_Z1 * sizeof(real));
-	
+
 	real* source = grid;
 	real* target = grid1;
 
@@ -134,20 +136,24 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
   max_set_scalar_input( device,"Cmdhostwrite.totalBursts",  total_bursts,         FPGA_A);
   max_set_scalar_input( device,"Cmdhostwrite.wordsPerBurst",cycle_PCI * Burst_inc,FPGA_A);
 
+  cout << "Scalar setup complete." << endl;
+
   int count =0;
   for(int j=0; j<M_Z1; j++)
   {
     comb[count] = source[j];
     count++;
   }
-      
+
+  cout << "Writing data to memory..." << endl;
   max_set_scalar_input( device,"Cmdhostwrite.Enable",       1,            FPGA_A);
   max_memory_stream_interrupt_on(ctx, "mgr2dram", NULL);
   max_run(device, max_input("host2mgr", comb, BYTE_SIZE), max_end());
   max_wait_for_interrupt(device, FPGA_A);
   max_set_scalar_input(device,"Cmdhostwrite.Enable",        0,            FPGA_A);
-  printf("FPGA cpu to memory\n");
+  cout << "Done" << endl;
 
+  cout << "Start FPGA execution..." << endl;
   //FPGA execution
   max_set_scalar_input(device,"Cmdread0.Enable",         1,               FPGA_A);
   max_set_scalar_input(device,"Cmdwrite0.Enable",        1,               FPGA_A);
@@ -155,7 +161,7 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
   max_memory_stream_interrupt_on(ctx, "knl2dram0", NULL);
   max_reset_device(device);
   max_wait_for_interrupt(device, FPGA_A);
-  
+
   max_set_scalar_input(device,"Cmdread0.Enable",         0,               FPGA_A);
   max_set_scalar_input(device,"Cmdwrite0.Enable",        0,               FPGA_A);
   printf("kernel finished\n");
@@ -165,7 +171,7 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
   max_set_scalar_input( device,"Cmdhostread.iniBursts",    0,                        FPGA_A);
   max_set_scalar_input( device,"Cmdhostread.totalBursts",  total_bursts,             FPGA_A);
   max_set_scalar_input( device,"Cmdhostread.wordsPerBurst",cycle_PCI * Burst_inc,    FPGA_A);
-  
+
   max_set_scalar_input( device,"Cmdhostread.Enable",       1,             FPGA_A);
   max_run(device, max_output("mgr2host", comb, BYTE_SIZE), max_end());
   max_set_scalar_input(device,"Cmdhostread.Enable",        0,             FPGA_A);
@@ -186,7 +192,7 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
 
      			real v_jkl= node_0_0_0  * a_0_0_0
                     + node_p1_0_0 * a_p1_0_0
-                    + node_m1_0_0 * a_m1_0_0; 
+                    + node_m1_0_0 * a_m1_0_0;
           real payoff = v_jkl;
      			target[j]=payoff;
      }
