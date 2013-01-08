@@ -12,6 +12,7 @@ class SgUnaryOp;
 
 ASTtoMaxJVisitor::ASTtoMaxJVisitor() {
     currentKernel = NULL;
+    paramCount = 0;
 }
 
 void ASTtoMaxJVisitor::visit(SgNode *n) {
@@ -65,7 +66,25 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         }
     }
 
-    if (fname.compare("fselect") == 0) {
+    cout << fname << endl;
+
+    if (fname.compare("count_p") == 0) {
+	string param = "param" + to_string(paramCount);
+	string *width = toExpr(*(itt));
+	string *max   = toExpr(*(++itt));
+	string *inc   = toExpr(*(++itt));
+	string *enable = toExpr(*(++itt));
+	source += "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
+	    + ".withMax(" + *max + ")"
+	    + ".withInc(" + *inc + ")";
+	if (enable != NULL)
+	    source += ".withEnable(" + *enable + ")";
+	source += ";\n";
+	string counter = "counter" + to_string(paramCount);
+	source += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
+	source += "HWVar " + variableName + " = " + counter + ".getCount();\n";
+	paramCount++;
+    } else if (fname.compare("fselect") == 0) {
         string *exp = toExpr(*itt);
         string *ifTrue = toExpr(*(++itt));
         string *ifFalse = toExpr(*(++itt));
@@ -84,6 +103,11 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         stringstream out;
         out << e->get_value();
         return new string("constant.var(" + out.str() + ")");
+    } else if (isSgStringVal(ex)) {
+	SgStringVal *e = isSgStringVal(ex);
+        stringstream out;
+        out << e->get_value();
+	return new string("\"" + out.str() + "\"");
     } else if (isSgBinaryOp(ex)) {
 
         SgBinaryOp *e = isSgBinaryOp(ex);
@@ -102,11 +126,12 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             op = "<";
         else if (isSgGreaterThanOp(ex))
             op = ">";
-        else if (isSgGreaterOrEqualOp(ex)) {
+        else if (isSgGreaterOrEqualOp(ex))
             op = ">=";
-        } else if (isSgLessOrEqualOp(ex)) {
+	else if (isSgLessOrEqualOp(ex))
             op = "<=";
-        }
+        else if (isSgEqualityOp(ex))
+            return new string((*left) + ".eq(" + (*right) + ")");
 
         if (isSgPntrArrRefExp(ex)) {
             // XXX optimisation should be done in a separate pass
@@ -199,5 +224,23 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
             source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
                 + ");\n";
         }
+    } else if (fname.compare("DRAMOutput") == 0) {
+	string *streamName = toExpr(*(it));
+	string *control    = toExpr(*(++it));
+	string *address    = toExpr(*(++it));
+	string *size       = toExpr(*(++it));
+	string *inc        = toExpr(*(++it));
+	string *streamNo   = toExpr(*(++it));
+	string *something  = toExpr(*(++it));
+	source += "DRAMCommandStream.makeKernelOutput("
+	    + *streamName + ",\n"
+	    + *control + ",\n"
+	    + *address + ",\n"
+	    + *size + ",\n"
+	    + *inc + ",\n"
+	    + *streamNo + ",\n"
+	    + *something
+	    + ");\n";
+
     }
 }
