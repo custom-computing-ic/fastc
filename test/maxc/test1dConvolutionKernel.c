@@ -2,6 +2,8 @@
 #pragma scalar in c_0_0_0 float8_24 kernel_Convolution1d
 #pragma scalar in c_p_0_0 float8_24 kernel_Convolution1d
 #pragma scalar in c_n_0_0 float8_24 kernel_Convolution1d
+#pragma scalar in n1 uint32 kernel_Convolution1d
+#pragma scalar in ORDER uint32 kernel_Convolution1d
 void kernel_Convolution1d(
                           float *p,
                           float *output,
@@ -15,12 +17,14 @@ void kernel_Convolution1d(
 
     int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
 
+    pushDSPFactor(1);
     int result =
-        p[-1] * c_n_0_0 +
-        p[0] * c_0_0_0 +
-        p[1] * c_p_0_0;
+        p[0]  * c_0_0_0 +
+        p[1]  * c_p_0_0 +
+	p[-1] * c_n_0_0;
 
-    int inter = fselect(up, result, p);
+    int inter = fselect(up, p, result);
+    popDSPFactor();
 
     output_i(output, inter);
 }
