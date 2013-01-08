@@ -12,24 +12,23 @@
 #include "KernelVisitor.hxx"
 #include "PragmaVisitor.hxx"
 
-int main(int argc, char** argv) { 
+int main(int argc, char** argv) {
 
-  SgProject* project = frontend(argc, argv);
-//  AstTests :: runAllTests(project);
+    SgProject* project = frontend(argc, argv);
+    //  AstTests :: runAllTests(project);
 
-  Design* design = new Design();
-  
-  KernelVisitor kernelVisitor(design);
-  kernelVisitor.traverseInputFiles(project, preorder);
+    Design* design = new Design();
 
-  PragmaVisitor pragmaVisitor(design);
-  pragmaVisitor.traverseInputFiles(project,  preorder);
+    KernelVisitor kernelVisitor(design);
+    kernelVisitor.traverseInputFiles(project, preorder);
 
-  design->generateCode(cout);
+    PragmaVisitor pragmaVisitor(design);
+    pragmaVisitor.traverseInputFiles(project,  preorder);
 
-  generateDOT(*project);
+    design->generateCode(cout);
+    design->writeCodeFiles();
 
-  return 0;
+    generateDOT(*project);
+
+    return 0;
 }
-
-

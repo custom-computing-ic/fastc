@@ -46,6 +46,9 @@ class ASTtoMaxJVisitor : public AstSimpleProcessing {
     string declaration();
     string import(list<string>);
 
+    string constVar(string);
+    string constVar(string, string);
+    bool isConstant(string);
 
 public:
     ASTtoMaxJVisitor();

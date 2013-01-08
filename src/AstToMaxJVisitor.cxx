@@ -66,24 +66,22 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         }
     }
 
-    cout << fname << endl;
-
     if (fname.compare("count_p") == 0) {
-	string param = "param" + to_string(paramCount);
-	string *width = toExpr(*(itt));
-	string *max   = toExpr(*(++itt));
-	string *inc   = toExpr(*(++itt));
-	string *enable = toExpr(*(++itt));
-	source += "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
-	    + ".withMax(" + *max + ")"
-	    + ".withInc(" + *inc + ")";
-	if (enable != NULL)
-	    source += ".withEnable(" + *enable + ")";
-	source += ";\n";
-	string counter = "counter" + to_string(paramCount);
-	source += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
-	source += "HWVar " + variableName + " = " + counter + ".getCount();\n";
-	paramCount++;
+        string param = "param" + to_string(paramCount);
+        string *width = toExpr(*(itt));
+        string *max   = toExpr(*(++itt));
+        string *inc   = toExpr(*(++itt));
+        string *enable = toExpr(*(++itt));
+        source += "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
+            + ".withMax(" + *max + ")"
+            + ".withInc(" + *inc + ")";
+        if (enable != NULL)
+            source += ".withEnable(" + *enable + ")";
+        source += ";\n";
+        string counter = "counter" + to_string(paramCount);
+        source += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
+        source += "HWVar " + variableName + " = " + counter + ".getCount();\n";
+        paramCount++;
     } else if (fname.compare("fselect") == 0) {
         string *exp = toExpr(*itt);
         string *ifTrue = toExpr(*(++itt));
@@ -102,12 +100,12 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         SgIntVal *e = isSgIntVal(ex);
         stringstream out;
         out << e->get_value();
-        return new string("constant.var(" + out.str() + ")");
+	return new string(out.str());
     } else if (isSgStringVal(ex)) {
-	SgStringVal *e = isSgStringVal(ex);
+        SgStringVal *e = isSgStringVal(ex);
         stringstream out;
         out << e->get_value();
-	return new string("\"" + out.str() + "\"");
+        return new string("\"" + out.str() + "\"");
     } else if (isSgBinaryOp(ex)) {
 
         SgBinaryOp *e = isSgBinaryOp(ex);
@@ -128,7 +126,7 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             op = ">";
         else if (isSgGreaterOrEqualOp(ex))
             op = ">=";
-	else if (isSgLessOrEqualOp(ex))
+        else if (isSgLessOrEqualOp(ex))
             op = "<=";
         else if (isSgEqualityOp(ex))
             return new string((*left) + ".eq(" + (*right) + ")");
@@ -146,9 +144,11 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
                                   "stream.offset(" + (*left) + ", " + out.str() + ")");
             } else {
                 // XXX limits for dynamic offsets should be inferred
-                return new string(
-                                  "stream.offset(" + (*left) + ", " + (*right)
-                                  + ", -1024, 1024)");
+		// first argument to offset() is HWVar
+		string val = *right;
+		if (isConstant(*right))
+		    val = constVar(val);
+                return new  string("stream.offset(" + (*left) + ", " + val + ", -1024, 1024)");
             }
         } else
             return new string("(" + (*left) + " " + op + " " + (*right) + ")");
@@ -225,22 +225,38 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
                 + ");\n";
         }
     } else if (fname.compare("DRAMOutput") == 0) {
-	string *streamName = toExpr(*(it));
-	string *control    = toExpr(*(++it));
-	string *address    = toExpr(*(++it));
-	string *size       = toExpr(*(++it));
-	string *inc        = toExpr(*(++it));
-	string *streamNo   = toExpr(*(++it));
-	string *something  = toExpr(*(++it));
-	source += "DRAMCommandStream.makeKernelOutput("
-	    + *streamName + ",\n"
-	    + *control + ",\n"
-	    + *address + ",\n"
-	    + *size + ",\n"
-	    + *inc + ",\n"
-	    + *streamNo + ",\n"
-	    + *something
-	    + ");\n";
+        string *streamName = toExpr(*(it));
+        string *control    = toExpr(*(++it));
+        string *address    = toExpr(*(++it));
+        string *size       = toExpr(*(++it));
+        string *inc        = toExpr(*(++it));
+        string *streamNo   = toExpr(*(++it));
+        string interrupt("true");
+	if ( toExpr(*(++it))->compare("0") == 0)
+	    interrupt = "false";
+        source += "DRAMCommandStream.makeKernelOutput("
+            + *streamName + ",\n"
+            + *control + ",\n"
+            + *address + ",\n"
+            + constVar(*size, "hwUInt(8)") + ",\n"
+            + constVar(*inc, "hwUInt(6)") + ",\n"
+            + constVar(*streamNo, "hwUInt(4)") + ",\n"
+            + constVar(interrupt)
+            + ");\n";
 
     }
+}
+
+string ASTtoMaxJVisitor::constVar(string s) {
+    return "constant.var(" + s + ")";
+}
+
+string ASTtoMaxJVisitor::constVar(string s, string type) {
+    return constVar(type + "," + s);
+}
+
+bool ASTtoMaxJVisitor::isConstant(string s) {
+    regex constant("-?[0-9]*");
+    cmatch group;
+    return regex_match(s.c_str(), group, constant);
 }
