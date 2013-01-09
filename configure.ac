@@ -1,5 +1,5 @@
-AC_INIT([Helloworld C++], [0.5], [bug-report@hello.example.com],
-             [helloworld_cc], [http://hello.example.com/])
+AC_INIT([MaxC Compiler], [0.1], [paul.grigoras90@gmail.com],
+             [maxcc], [https://github.com/paul-g/maxcc])
 AC_PREREQ([2.59])
 
 AC_PROG_CXX
