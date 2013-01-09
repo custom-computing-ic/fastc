@@ -92,8 +92,6 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
 
   printf("total bursts:%d\n",total_bursts);
 
-  cout << "This is mighty strange" << endl;
-
   //kernel cycle configuration
   max_kernel_set_cycles(device, "MyApp",       Inter * DATA_SIZE/ Par, FPGA_A);
   max_kernel_set_cycles(device, "Cmdread0",     Inter * DATA_SIZE/ Par, FPGA_A);
