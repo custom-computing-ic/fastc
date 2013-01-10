@@ -1,43 +1,56 @@
-# Makefile ---- Xinyu 2012
-
-PRJ=MyApp
-BOARD_MODEL=
-
-CC=g++
+# --- Commands ---
 JAVAC=maxjc
-JAVA=maxJavaRun
+JAVA =maxJavaRun
 FILEC=maxfilecompile
+CC=g++
 
-HOST_DIR=cpu
-ENGINE_DIR=engine_orig
-ENGINE_PKG=${ENGINE_DIR}
+# --- Project properties ---
+APP        =RTM
+BUILD_NAME =Builder
+EXE_SIM    =$(APP)_Sim
+
+HOST_DIR    =cpu
+ENGINE_PKG  =engine_orig
+BUILDER     =$(ENGINE_PKG)/AppManager
+MAXFILE_SIM =$(BUILD_NAME)_SIM/results/$(BUILD_NAME)_SIM.max
+MAXFILE_HW  =$(BUILD_NAME)_HW/results/$(BUILD_NAME)_HW.max
+MAXFILE_OBJ    =$(BUILD_NAME).o
+MAXFILE_OBJ_HW =$(BUILD_NAME)_HW.o
+
+# --- Runtime Libraries ---
+SIM_MAXELEROS_LIB ="$(MAXCOMPILERDIR)/lib/maxeleros-sim/lib/"
+SIM_PRELOAD       ="$(SIM_MAXELEROS_LIB)/libmaxeleros.so"
+
+# --- Compilation Flags ---
+MAX_CFLAGS=-g -I${MAXCOMPILERDIR}/include -I${MAXELEROSDIR}/include -DDESIGN_NAME=$(APP)
+
+MAX_LFLAGS=-Wl,--hash-style=both\
+ -L${MAXCOMPILERDIR}/lib -L${MAXELEROSDIR}/lib\
+ -L/usr/local/lib\
+ -lmaxcompilerrt -lmaxeleros -lm -lpthread -fopenmp
 
 MAX_JFLAGS=-cp ${MAXCOMPILERDIR}/lib/MaxCompiler.jar -1.6 -d .
-MAX_CFLAGS=-O3 -Iinc -fopenmp\
-					 -Iinc -I${MAXCOMPILERDIR}/include -I${MAXELEROSDIR}/include\
-					 -DDESIGN_NAME=${PRJ}\
-					 -I./includes\
-					 -I/usr/local/include
-MAX_LFLAGS=-Wl,--hash-style=both\
-					 -L${MAXCOMPILERDIR}/lib\
-					 -L${MAXCOMPILERDIR}/lib/maxeleros-sim/lib\
-					 -L/usr/local/lib\
-					 -lmaxcompilerrt -lmaxeleros -lm -lpthread -fopenmp
 
+# --- Project Files ---
 DESIGNFILES=\
- ${ENGINE_DIR}/${PRJ}.java \
- ${ENGINE_DIR}/Cmdwrite.java \
- ${ENGINE_DIR}/Cmdread.java \
- ${ENGINE_DIR}/AppManager.java \
+ ${ENGINE_PKG}/${APP}.java \
+ ${ENGINE_PKG}/Cmdwrite.java \
+ ${ENGINE_PKG}/Cmdread.java \
+ ${ENGINE_PKG}/AppManager.java \
 
 HOSTCODE   =\
  ${HOST_DIR}/constructors.o\
  ${HOST_DIR}/computation.o \
- # ./src/MyApp_pkg/max_util.o
 
 
-all: sim hw
-# ---- HostCode   ----
+maxc:
+	rm -rf $(MAXCFILES)
+	../../../maxcc maxc/kernels.c
+	mkdir -p engine
+	mv *.java engine
+
+$(BUILDER).class:
+	$(JAVAC) $(MAX_JFLAGS) $(ENGINE_PKG)/*.java
 
 ${HOST_DIR}/%.o: ${HOST_DIR}/%.c
 	$(CC) $(MAX_CFLAGS) -c $< -o $@
@@ -45,63 +58,60 @@ ${HOST_DIR}/%.o: ${HOST_DIR}/%.c
 # ---- Simulation ----
 
 
-SimBuilder/scratch/SimBuilder.max: ${DESIGNFILES}
-	${JAVAC} ${MAX_JFLAGS} $^
-	MAXAPPJCP=. ${JAVA} ${ENGINE_PKG}.AppManager SimBuilder SIM
+$(MAXFILE_SIM): $(BUILDER).class
+	MAXAPPJCP=. $(JAVA) $(BUILDER) $(BUILD_NAME)_SIM SIM
 
-SimBuilder.o: SimBuilder/scratch/SimBuilder.max
-	${FILEC} SimBuilder/results/SimBuilder.max SimBuilder.o ${PRJ}
+$(MAXFILE_OBJ):  $(MAXFILE_SIM)
+	$(FILEC) $< $@ $(APP)
 
-${PRJ}_sim.o: ${HOST_DIR}/${PRJ}.c
-	${CC} $< ${MAX_CFLAGS} -D__SIM__ -c -o $@
+$(APP)_sim.o: cpu/$(APP).c
+	$(CXX) $< $(MAX_CFLAGS) -D__SIM__ -c -o $@
 
-${PRJ}_sim: SimBuilder.o ${PRJ}_sim.o $(HOSTCODE)
-	${CC} -o ${PRJ}_sim ${PRJ}_sim.o SimBuilder.o $(HOSTCODE) ${MAX_LFLAGS}
+$(EXE_SIM): $(MAXFILE_OBJ) $(APP)_sim.o $(HOSTCODE)
+	$(CXX) $^ $(MAX_LFLAGS) -o $@
 
-sim: ${PRJ}_sim
-
-run-sim: sim
+run-sim: $(EXE_SIM)
 	maxcompilersim -n $(USER)cc -c3424 restart
-	#LD_LIBRARY_PATH="$(MAXCOMPILERDIR)/lib/maxeleros-sim/lib:$LD_LIBRARY_PATH" 
-	LD_PRELOAD=$(MAXCOMPILERDIR)/lib/maxeleros-sim/lib/libmaxeleros.so ./MyApp_sim "$(USER)cc0:$(USER)cc"
+	LD_LIBRARY_PATH="$(SIM_MAXELEROS_LIB):$(LD_LIBRARY_PATH)" LD_PRELOAD=$(SIM_PRELOAD) ./$< "$(USER)cc0:$(USER)cc"
 	maxcompilersim -n $(USER)cc -c3424 stop
-
-debug:
-	maxdebug -g test -d "$(USER)cc0:$(USER)cc" -n SimBuilder/results/SimBuilder.max
-	dot -Tsvg test_x210cc0_fpga_a.dot > test_${USER}0_fpga_a.svg
-	eog test_nx2100_fpga_a.svg 
-
-hwdebug:
-	maxdebug -g test -d "/dev/maxeler0" -n HWBuilder/results/HWBuilder.max
-	dot -Tsvg test_maxeler0_fpga_a.dot > test_${USER}0_fpga_a.svg
-	eog test_nx2100_fpga_a.svg 
 
 # ---- Hardware ----
 
-HWBuilder/scratch/HWBuilder.max: src/MyApp_pkg/$(PRJ).java src/MyApp_pkg/HWBuilder.java ${DESIGNFILES}
+HWBuilder/scratch/HWBuilder.max: src/MyApp_pkg/$(APP).java src/MyApp_pkg/HWBuilder.java ${DESIGNFILES}
 	  MAXSOURCEDIRS=src $(JAVAC) $(MAX_JFLAGS) $?
-		MAXSOURCEDIRS=src MAXAPPJCP=. $(JAVA) $(PRJ)_pkg.HWBuilder
+		MAXSOURCEDIRS=src MAXAPPJCP=. $(JAVA) $(APP)_pkg.HWBuilder
 
 par:HWBuilder/scratch/HWBuilder.max
 
 #we do not generate the max file automatically
-$(PRJ)_hw.o:
-	  $(FILEC) HWBuilder/results/HWBuilder.max $(PRJ)_hw.o $(PRJ)
+$(APP)_hw.o:
+	  $(FILEC) HWBuilder/results/HWBuilder.max $(APP)_hw.o $(APP)
 
-hw: src/MyApp_pkg/$(PRJ).o $(PRJ)_hw.o $(HOSTCODE)
-	  $(CC) -o hw src/MyApp_pkg/$(PRJ).o $(PRJ)_hw.o $(HOSTCODE) $(MAX_LFLAGS)
+hw: src/MyApp_pkg/$(APP).o $(APP)_hw.o $(HOSTCODE)
+	  $(CC) -o hw src/MyApp_pkg/$(APP).o $(APP)_hw.o $(HOSTCODE) $(MAX_LFLAGS)
 
 
 runhw:
 	LD_PRELOAD=/opt/maxeler/maxeleros//lib/libmaxeleros.so ./hw "/dev/maxeler0"
 
-# ----
+# --- Debug ---
+debug:
+	maxdebug -g test -d "$(USER)cc0:$(USER)cc" -n SimBuilder/results/SimBuilder.max
+	dot -Tsvg test_x210cc0_fpga_a.dot > test_${USER}0_fpga_a.svg
+	eog test_nx2100_fpga_a.svg
+
+hwdebug:
+	maxdebug -g test -d "/dev/maxeler0" -n HWBuilder/results/HWBuilder.max
+	dot -Tsvg test_maxeler0_fpga_a.dot > test_${USER}0_fpga_a.svg
+	eog test_nx2100_fpga_a.svg
+
+# --- Other ---
 
 clean:
-	rm -f ${PRJ}_sim ${PRJ} hw MyApp_hw.o
+	rm -f ${APP}_sim ${APP} hw MyApp_hw.o
 	find . -name "*.o" -exec rm {} \;
 
 
 distclean: clean
-	rm -fr ${PRJ}_pkg SimBuilder HWBuilder
-	rm -f SimBuilder.o HWBuilder.o ${PRJ}.o ${PRJ}_sim.o
+	rm -fr ${APP}_pkg SimBuilder HWBuilder
+	rm -f SimBuilder.o HWBuilder.o ${APP}.o ${APP}_sim.o

@@ -14,7 +14,7 @@ import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWFix;
 import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWFloat;
 import com.maxeler.maxcompiler.v1.kernelcompiler.RoundingMode;
 
-public class MyApp extends Kernel {
+public class RTM extends Kernel {
   int Par=1;
   int Mul=1;
   int Sub=0;
@@ -25,7 +25,7 @@ public class MyApp extends Kernel {
   public KArrayType<HWVar> burst_out=
     new KArrayType<HWVar>(hwFloat(8, 24),  Par);
 
-  public MyApp (KernelParameters parameters) {
+  public RTM(KernelParameters parameters) {
     super(parameters);
     HWFloat real    = hwFloat(8,24);
     HWFix   fix_4_24= hwFix(4,24,HWFix.SignMode.TWOSCOMPLEMENT);

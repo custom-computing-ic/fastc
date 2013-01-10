@@ -46,7 +46,7 @@ public class AppManager extends CustomManager {
         mgr2host.connect(dram2mgr);
 
         //  FPGA-0
-        KernelBlock k0   = addKernel(new MyApp(makeKernelParameters("MyApp0")));
+        KernelBlock k0   = addKernel(new RTM(makeKernelParameters("MyApp0")));
 
         KernelBlock r0   = addKernel(new Cmdread(makeKernelParameters("Cmdread0")));
         KernelBlock r1   = addKernel(new Cmdread(makeKernelParameters("Cmdread1")));

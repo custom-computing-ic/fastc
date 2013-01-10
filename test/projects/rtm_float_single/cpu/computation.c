@@ -89,7 +89,7 @@ void max_configure(){
 
   printf("Opening FPGA card ... ");
 
-  maxfile0 = max_maxfile_init_MyApp();
+  maxfile0 = max_maxfile_init_RTM();
   max_set_maximum_runnable_timing_score(maxfile0, -1);
   device0 = max_open_device(maxfile0, device_name);
   max_set_terminate_on_error(device0);
