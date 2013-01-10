@@ -29,7 +29,6 @@ DESIGNFILES=\
  ${ENGINE_DIR}/Cmdwrite.java \
  ${ENGINE_DIR}/Cmdread.java \
  ${ENGINE_DIR}/AppManager.java \
- ${ENGINE_DIR}/SimBuilder.java \
 
 HOSTCODE   =\
  ${HOST_DIR}/constructors.o\
@@ -48,7 +47,7 @@ ${HOST_DIR}/%.o: ${HOST_DIR}/%.c
 
 SimBuilder/scratch/SimBuilder.max: ${DESIGNFILES}
 	${JAVAC} ${MAX_JFLAGS} $^
-	MAXAPPJCP=. ${JAVA} ${ENGINE_PKG}.SimBuilder
+	MAXAPPJCP=. ${JAVA} ${ENGINE_PKG}.AppManager SimBuilder SIM
 
 SimBuilder.o: SimBuilder/scratch/SimBuilder.max
 	${FILEC} SimBuilder/results/SimBuilder.max SimBuilder.o ${PRJ}
