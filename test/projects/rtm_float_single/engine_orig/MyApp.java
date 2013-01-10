@@ -1,5 +1,4 @@
-
-package MyApp_pkg;
+package engine_orig;
 
 import com.maxeler.maxcompiler.v1.kernelcompiler.Kernel;
 import com.maxeler.maxcompiler.v1.kernelcompiler.KernelParameters;
@@ -18,11 +17,11 @@ import com.maxeler.maxcompiler.v1.kernelcompiler.RoundingMode;
 public class MyApp extends Kernel {
   int Par=1;
   int Mul=1;
-  int Sub=0; 
-  
+  int Sub=0;
+
   public KArrayType<HWVar> burst_in=
     new KArrayType<HWVar>(hwFloat(8, 24),  Par);
-  
+
   public KArrayType<HWVar> burst_out=
     new KArrayType<HWVar>(hwFloat(8, 24),  Par);
 
@@ -30,7 +29,7 @@ public class MyApp extends Kernel {
     super(parameters);
     HWFloat real    = hwFloat(8,24);
     HWFix   fix_4_24= hwFix(4,24,HWFix.SignMode.TWOSCOMPLEMENT);
- 
+
 //------------------------------Parameter configuration --------------------------------
     OffsetExpr nx = stream.makeOffsetParam("nx",  24/Par, 48/Par);
     OffsetExpr nxy = stream.makeOffsetParam("nxy",32* nx, 32 * nx);
@@ -59,22 +58,22 @@ public class MyApp extends Kernel {
     HWVar n3    = io.scalarInput("n3",    hwUInt(32));
     HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
     HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
-      
+
 //------------------------------Output control --------------------------------
     CounterChain chain = control.count.makeCounterChain();
     HWVar i4 = chain.addCounter(1000,1).cast(hwUInt(32));//iteration
     HWVar i3 = chain.addCounter(n3,  1).cast(hwUInt(32));//outest loop
     HWVar i2 = chain.addCounter(n2,  1).cast(hwUInt(32));
     HWVar i1 = chain.addCounter(n1,Par).cast(hwUInt(32));//innest loop
-    
+
     HWVar up[] = new HWVar[Par];
     for (int i=0; i <Par; i++)
     up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
-   
+
     HWVar output_ring;
     output_ring= n3  > i3  & i3 >= n3 - ORDER;
     //output_ring= n3 - ORDER > i3  & i3 >= n3 - 2 * ORDER;
-      
+
     HWVar input_ring;
     input_ring = ORDER > i3;
     //input_ring = 2 * ORDER > i3 & i3 >= ORDER;
@@ -92,7 +91,7 @@ public class MyApp extends Kernel {
     HWVar pp_i[]    =new HWVar[Par];
     HWVar dvv[]     =new HWVar[Par];
     HWVar source[]  =new HWVar[Par];
-    
+
     HWVar image[][] =new HWVar[Par][Mul];
 
     for (int i=0; i <Par; i++)
@@ -109,7 +108,7 @@ public class MyApp extends Kernel {
     HWVar cur[][][][]    = new HWVar[Mul][11+Par+1][11][11];
     HWVar inter[][]      = new HWVar[Par][Mul];
     HWVar result[][]     = new HWVar[Par][Mul];
-    
+
     // setup the optimisation factor to transfer operations between DSPs and Luts
     optimization.pushDSPFactor(1);
     //Cache
@@ -127,8 +126,8 @@ public class MyApp extends Kernel {
     //Computation
     for (int i=0; i <Par; i++)
     {
-    //data-path(0,i)      
-    result[i][0]=(  
+    //data-path(0,i)
+    result[i][0]=(
                     cur[0][6+i][5][5] * 2.0 - pp_i[i] +dvv[i]*(
                     cur[0][6+i][5][5] * c_0
                   +(cur[0][5+i][5][5] + cur[0][7+i][5][5]) * c_1_0
@@ -149,7 +148,7 @@ public class MyApp extends Kernel {
                   + source[i];
     inter[i][0]   =(up[i])? result[i][0] : pp_i[i];
     }
-    //Multiple Time-Dimension 
+    //Multiple Time-Dimension
     for (int j=1; j <Mul; j++)
     {
       //Cache
@@ -168,8 +167,8 @@ public class MyApp extends Kernel {
       //Computation
       for (int i=0; i <Par; i++)
       {
-      //data-path(j,i)      
-      result[i][j]=(  
+      //data-path(j,i)
+      result[i][j]=(
                       cur[j][6+i][5][5] * 2.0 - cur[j-1][6+i][5][5] +dvv[i]*(
                       cur[j][6+i][5][5] * c_0
                     +(cur[j][5+i][5][5] + cur[j][7+i][5][5]) * c_1_0
@@ -194,10 +193,10 @@ public class MyApp extends Kernel {
 
     //setup configuration
     optimization.popDSPFactor();
-    
+
 //------------------------------Data output --------------------------------
-    
-    // control counter 
+
+    // control counter
     KArray<HWVar> output_p  = burst_out.newInstance(this);
     KArray<HWVar> output_pp = burst_out.newInstance(this);
 
@@ -213,7 +212,7 @@ public class MyApp extends Kernel {
 
     io.output("ker_p",     output_p,  burst_out);
     io.output("output_pp", output_pp, burst_out);
-    
+
 //------------------------------Debug --------------------------------
 //  debug.printf("cycle:%d-%d-%d-%d\n",i4,i3,i2,i1);
 //  debug.printf("up[0]:%d\n",up[0]);

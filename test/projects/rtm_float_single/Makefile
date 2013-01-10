@@ -8,6 +8,10 @@ JAVAC=maxjc
 JAVA=maxJavaRun
 FILEC=maxfilecompile
 
+HOST_DIR=cpu
+ENGINE_DIR=engine_orig
+ENGINE_PKG=${ENGINE_DIR}
+
 MAX_JFLAGS=-cp ${MAXCOMPILERDIR}/lib/MaxCompiler.jar -1.6 -d .
 MAX_CFLAGS=-O3 -Iinc -fopenmp\
 					 -Iinc -I${MAXCOMPILERDIR}/include -I${MAXELEROSDIR}/include\
@@ -21,34 +25,35 @@ MAX_LFLAGS=-Wl,--hash-style=both\
 					 -lmaxcompilerrt -lmaxeleros -lm -lpthread -fopenmp
 
 DESIGNFILES=\
-						src/MyApp_pkg/${PRJ}.java \
-						src/MyApp_pkg/Cmdwrite.java \
-						src/MyApp_pkg/Cmdread.java \
-						src/MyApp_pkg/AppManager.java\
+ ${ENGINE_DIR}/${PRJ}.java \
+ ${ENGINE_DIR}/Cmdwrite.java \
+ ${ENGINE_DIR}/Cmdread.java \
+ ${ENGINE_DIR}/AppManager.java \
+ ${ENGINE_DIR}/SimBuilder.java \
 
 HOSTCODE   =\
-						./src/MyApp_pkg/constructors.o\
-					 	./src/MyApp_pkg/computation.o
-					 	#./src/MyApp_pkg/max_util.o
+ ${HOST_DIR}/constructors.o\
+ ${HOST_DIR}/computation.o \
+ # ./src/MyApp_pkg/max_util.o
 
 
 all: sim hw
 # ---- HostCode   ----
 
-./src/MyApp_pkg/%.o: ./src/MyApp_pkg/%.c
+${HOST_DIR}/%.o: ${HOST_DIR}/%.c
 	$(CC) $(MAX_CFLAGS) -c $< -o $@
-
 
 # ---- Simulation ----
 
-SimBuilder/scratch/SimBuilder.max: ${DESIGNFILES} src/MyApp_pkg/SimBuilder.java
+
+SimBuilder/scratch/SimBuilder.max: ${DESIGNFILES}
 	${JAVAC} ${MAX_JFLAGS} $^
-	MAXAPPJCP=. ${JAVA} ${PRJ}_pkg.SimBuilder
+	MAXAPPJCP=. ${JAVA} ${ENGINE_PKG}.SimBuilder
 
 SimBuilder.o: SimBuilder/scratch/SimBuilder.max
 	${FILEC} SimBuilder/results/SimBuilder.max SimBuilder.o ${PRJ}
 
-${PRJ}_sim.o: src/MyApp_pkg/${PRJ}.c
+${PRJ}_sim.o: ${HOST_DIR}/${PRJ}.c
 	${CC} $< ${MAX_CFLAGS} -D__SIM__ -c -o $@
 
 ${PRJ}_sim: SimBuilder.o ${PRJ}_sim.o $(HOSTCODE)
@@ -98,6 +103,6 @@ clean:
 	find . -name "*.o" -exec rm {} \;
 
 
-realclean: clean
+distclean: clean
 	rm -fr ${PRJ}_pkg SimBuilder HWBuilder
 	rm -f SimBuilder.o HWBuilder.o ${PRJ}.o ${PRJ}_sim.o

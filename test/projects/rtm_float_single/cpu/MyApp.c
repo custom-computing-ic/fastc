@@ -12,8 +12,8 @@
 //turn off the random seed for debug purposes
 //#define FIXED_SEED
 
-#include "../../includes/cpu_constructors.h"
-#include "../../includes/cpu_simulation.h"
+#include "cpu_constructors.h"
+#include "cpu_simulation.h"
 extern max_maxfile_t       *maxfile;
 extern max_device_handle_t *device;
 

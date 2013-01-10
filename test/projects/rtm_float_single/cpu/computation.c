@@ -12,8 +12,8 @@
 #include <string.h>
 #include <math.h>
 #include <omp.h>
-#include "../../includes/cpu_constructors.h"
-#include "../../includes/max_util.h"
+#include "cpu_constructors.h"
+#include "max_util.h"
 //#define DESIGN_NAME MyApp_beg
 //#include <MaxCompilerRT.h>
 //#define DESIGN_NAME MyApp_ker

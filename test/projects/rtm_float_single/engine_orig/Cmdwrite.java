@@ -1,26 +1,26 @@
-package MyApp_pkg;
+package engine_orig;
 
 import com.maxeler.maxcompiler.v1.kernelcompiler.Kernel;
 import com.maxeler.maxcompiler.v1.kernelcompiler.KernelParameters;
 import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.DRAMCommandStream;
-import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
 import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.WrapMode;
 import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Counter;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.WrapMode;
 import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Params;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
 
-
-public class Cmdread extends Kernel {
-    public Cmdread(KernelParameters parameters) {
+public class Cmdwrite extends Kernel {
+    public Cmdwrite(KernelParameters parameters) {
       super(parameters);
       int   Burst_inc     =1;
-            
+
       HWVar iniBursts     =io.scalarInput("iniBursts",hwUInt(32));
+      HWVar iterations    =io.scalarInput("iterations",hwUInt(32));
       HWVar totalBursts   =io.scalarInput("totalBursts",hwUInt(32));
       HWVar wordsPerBurst =io.scalarInput("wordsPerBurst",hwUInt(32));
       HWVar Enable        =io.scalarInput("Enable",hwUInt(1));
-      
-      //the address counters
+
+      //address generator
       Count.Params param0 = control.count.makeParams(32)
            .withEnable(Enable)
            .withMax(wordsPerBurst)
@@ -33,23 +33,29 @@ public class Cmdread extends Kernel {
            .withMax(totalBursts)
            .withInc(Burst_inc);
       Counter counter1    = control.count.makeCounter(param1);
-      HWVar burstCount    = counter1.getCount();   
-      
+      HWVar burstCount    = counter1.getCount();
+
+      Count.Params param2 = control.count.makeParams(32)
+           .withEnable(counter1.getWrap())
+           .withMax(iterations)
+           .withInc(1);
+      Counter counter2    = control.count.makeCounter(param2);
+      HWVar iterCount     = counter2.getCount();
+
       HWVar Control       = wordCount.eq(0) & Enable;
 
-      DRAMCommandStream.makeKernelOutput("dram_read",
+      DRAMCommandStream.makeKernelOutput("dram_write",
           Control,                          // control
           burstCount+iniBursts,             // address
           constant.var(hwUInt(8),Burst_inc),// size
           constant.var(hwUInt(6),  1),      // inc
           constant.var(hwUInt(4),  0),      // stream
-          constant.var(false));
-      
+          burstCount.eq(totalBursts - Burst_inc) & iterCount.eq(iterations - 1));
+
 
 //------------------------------The debug part--------------------------------
-//    debug.printf("Address%d:%d-%d\n", iniBursts, burstCount, wordCount);
+      debug.printf("Address%ld:%d-%d  %d\n",iniBursts, burstCount, wordCount, totalBursts + iniBursts - Burst_inc);
 //    debug.printf("Unsyn_cycles:%d\n", unsynCount);
-//    debug.printf("Control:%d\n",Control);
 
     }
 }

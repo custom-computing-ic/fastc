@@ -1,4 +1,4 @@
-package MyApp_pkg;
+package engine_orig;
 
 import com.maxeler.maxcompiler.v1.managers.BuildConfig;
 import com.maxeler.maxcompiler.v1.managers.BuildConfig.Level;

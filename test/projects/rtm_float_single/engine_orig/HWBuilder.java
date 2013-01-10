@@ -1,4 +1,4 @@
-package MyApp_pkg;
+package engine_orig;
 
 import com.maxeler.maxcompiler.v1.managers.BuildConfig;
 import com.maxeler.maxcompiler.v1.managers.BuildConfig.Level;
@@ -11,7 +11,7 @@ import com.maxeler.maxcompiler.v1.managers.custom.stdlib.DebugLevel;
 public class HWBuilder {
 	public static void main(String argv[]) {
 		AppManager m = new AppManager(MAX3BoardModel.MAX3424A, "HWBuilder", Target.MAXFILE_FOR_HARDWARE);
-    
+
 //  DebugLevel d = new DebugLevel();
 //  d.setHasMemoryControllerDebugRegisters(true);
 //  d.setHasMemoryControllerExtraDebugRegisters(true);
