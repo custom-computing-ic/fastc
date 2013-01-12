@@ -68,7 +68,13 @@ embedded systems.
 
 Using C is one of the limitations
 
-How
+How do we debug maxc designs?
+
+
+- proposed design flow with source-level transformation guided by
+  aspects until reaching a form with efficient implementation
+- implementation of maxcc and other optimisations
+- evaluation using various case studies including RTM
 
 # Background
 
@@ -106,6 +112,8 @@ How
 
 ## Accelerating Program Execution
 
+
+
 ## MaxCompiler
 
 ## LARA
@@ -117,6 +125,10 @@ How
 ### CatapultC
 
 ### AutoEsl
+
+### Impulse C
+
+
 
 # Design
 
@@ -131,7 +143,7 @@ How
 ## RTM
 
 Scan ocean floor to find oil and gas [Surface? HUGE]
-Huge data volume, complex physics
+Huge data volume, complex physics [@flynn]
 
 Isotropic vs anisotropic
 
@@ -143,6 +155,4 @@ Isotropic vs anisotropic
 * Convolution
 * Sparse Matrix
 
-% Local Variables:
-% eval: (add-hook 'after-save-hook 'recompile)
-% End:
+# References
