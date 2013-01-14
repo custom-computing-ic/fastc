@@ -8,15 +8,15 @@ string Kernel::declaration() {
 }
 
 string Kernel::imports() {
-    string imps[] = { "Kernel",
-                      "KernelParameters",
+    string imps[] = { "*",
                       "types.base.HWVar",
-                      "stdlib.DRAMCommandStream",
-                      "stdlib.core.Count",
-                      "stdlib.core.Count.WrapMode",
-                      "stdlib.core.Count.Counter",
-                      "stdlib.core.Count.Params",
-                      "stdlib.core.CounterChain"};
+                      "stdlib.*",
+                      "stdlib.core.*    ",
+                      "stdlib.core.Count.*",
+                      "stdlib.KernelMath.*",
+                      "stdlib.core.Stream.OffsetExpr",
+                      "types.composite.*",
+                      "types.base.*"};
     list<string> imports(imps, imps + 9);
     return import(imports);
 
