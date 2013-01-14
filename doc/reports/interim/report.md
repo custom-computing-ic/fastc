@@ -70,12 +70,6 @@ Using C is one of the limitations
 
 How do we debug maxc designs?
 
-
-- proposed design flow with source-level transformation guided by
-  aspects until reaching a form with efficient implementation
-- implementation of maxcc and other optimisations
-- evaluation using various case studies including RTM
-
 # Background
 
 
@@ -131,6 +125,39 @@ How do we debug maxc designs?
 
 
 # Design
+
+## Proposed Design Flow
+
+with source-level transformation guided by aspects until reaching a
+form with efficient implementation
+
+We propose a design flow for generating highly efficient FPGA designs,
+targeting a streaming dataflow architecture from high level languages
+such as C. We use LARA to profile and optimise the original source
+program, identifying potential candidates for optimisation, based on
+our optimization strategies. We then compile this to two components:
+
+1. CPU code written in C using Maxeler's runtime API
+2. A DFE design, specified in an intermediate representation, MaxC, a
+ dataflow language we developed as an extension of C99.
+
+We then analyze and transform this representation with LARA and finally
+compile it to MaxJava, Maxeler's own dataflow language.
+
+## MaxC & MaxCC
+
+implementation of maxcc and other optimisations
+
+## Evaluation
+
+### RTM
+
+### Himeno
+
+ evaluation using various case studies including RTM
+
+
+
 
 # Implementation
 

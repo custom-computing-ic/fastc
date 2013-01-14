@@ -1,6 +1,7 @@
 @INPROCEEDINGS{flynn, 
 author={Flynn, M.J. and Pell, O. and Mencer, O.}, 
-booktitle={Field Programmable Logic and Applications (FPL), 2012 22nd International Conference on}, title={Dataflow supercomputing}, 
+booktitle={Field Programmable Logic and Applications (FPL), 2012 22nd International Conference on}, 
+title={Dataflow supercomputing}, 
 year={2012}, 
 month={aug.}, 
 volume={}, 
@@ -9,3 +10,145 @@ pages={1 -3},
 keywords={Computational modeling;Field programmable gate arrays;Hardware;Kernel;Multicore processing;Programming;Servers;data flow computing;field programmable gate arrays;parallel machines;FPGA;computer architecture;computer design;data flow machine emulation;data stream;dataflow supercomputing;magnitude speedup;parallel processor speedup problem;performance scaling;programming models;}, 
 doi={10.1109/FPL.2012.6339170}, 
 ISSN={},}
+
+@INPROCEEDINGS{5398108, 
+author={Luk, W. and Coutinho, J.G.F. and Todman, T. and Lam, Y.M. and Osborne, W. and Susanto, K.W. and Liu, Q. and Wong, W.S.}, 
+booktitle={SOC Conference, 2009. SOCC 2009. IEEE International}, 
+title={A high-level compilation toolchain for heterogeneous systems}, 
+year={2009}, 
+month={sept.}, 
+volume={}, 
+number={}, 
+pages={9 -18}, 
+keywords={Application software;Control system synthesis;Digital signal processing;Digital signal processors;Educational institutions;Engines;Field programmable gate arrays;Graphical user interfaces;Hardware;Resource management;C language;multiprocessing systems;optimising compilers;Harmonic;data representation optimiser;digital signal processors;field-programmable gate arrays;general-purposed processors;hardware synthesiser;high-level C program;high-level compilation toolchain;mapping selector;multiprocessor heterogeneous systems;program optimisation;task transformation engine;}, 
+doi={10.1109/SOCCON.2009.5398108}, 
+ISSN={},}
+
+@PhDThesis{5069/THESES,
+   abstract        = {Nowadays processing systems are asked to support
+                     increasing complex and demanding high-performance
+                     applications, especially in the signal processing and
+                     video processing domains. The design of these systems
+                     are becoming extremely challenging because of several
+                     factors. Among them the most relevant are: The advent
+                     of the parallel era The sequential general purpose
+                     processor era during which performance increased more
+                     than two-fold every year, is definitely over. There
+                     has been no further increase in leading edge
+                     processor performance for over five years now and all
+                     projects aimed at breaking the 4 GHz barrier have
+                     been canceled by the major processor manufacturers.
+                     So as to continue increasing the computing power of
+                     computer systems, manufacturers have to use several
+                     slower processing cores, while trying to minimize the
+                     power consumption. Sequential reference softwares are
+                     no longer adapted Up to now, sequential software have
+                     proven to be the winning approaches for exploiting
+                     the potential of each new generation of sequential
+                     processors. But the advent of the new parallel era
+                     changes the way systems are implemented and
+                     sequential reference software used as specification
+                     base are no longer appropriate starting points for
+                     designing complex systems. The increasing demanding
+                     functionality and performance In parallel with
+                     miniaturization and the necessity to handle severely
+                     resource-constrained implementation platforms, the
+                     functionality and complexity of large classes of
+                     systems continue to increase making them from many
+                     respects comparable to ordinary desktop personal
+                     computers. A mixture of different types of timing and
+                     quality constraints make overall system architecture
+                     design, resource allocation and scheduling more
+                     important and challenging topics than ever before.
+                     Additionally, the market asks companies to build
+                     efficient systems while using the minimum of
+                     resources as fast as possible. Due to the level of
+                     complexity reached by high-demanding digital systems,
+                     it is no longer reasonable to handle such systems at
+                     low levels of abstraction (e.g. VHDL/Verilog or
+                     C/C++). A solution to the problem is to higher the
+                     level of abstraction at which the design of such
+                     systems is performed. But for raising the level of
+                     abstraction, the need for portable parallelism is
+                     primordial so as to be able to implement all kind of
+                     systems on a wide range of target platforms. Thus,
+                     enabling portable parallelism should be a primordial
+                     requirement for the development of this level of
+                     abstraction and the associated methodology and tools.
+                     However, creating a new abstraction layer may incur
+                     in the risk of loosing contact with implementation
+                     details and accuracy necessary for achieving
+                     efficient implementations. This work focuses on
+                     tackling such problem by using the CAL data flow
+                     language as main abstraction at the basis of the
+                     design process. The attempt of solving such
+                     challenging problem consists in building an
+                     environment for enabling high level design space
+                     exploration of complex parallel application for
+                     seamless implementation on heterogeneous platforms
+                     using CAL. It includes the extraction of metrics
+                     (static analysis and profiling) with the intention to
+                     use them as a basis for partitioning and scheduling
+                     heuristics aiming at finding the most efficient
+                     partitions. It also implies developing methodologies
+                     for guiding designers in the optimization of the high
+                     level specifications. Finally, a holistic approach
+                     has been defined in form of a complete design flow
+                     starting from CAL specifications down to
+                     implementations. Where traditional approaches are
+                     faced to traverse, at each iteration of the design
+                     flow, all the levels of abstraction for testing a
+                     design solution, the use of CAL as an abstraction
+                     layer enables designers to separate clearly three
+                     domains of concerns that are made orthogonal:
+                     functionality, partitioning and implementation. The
+                     separation of these domains of concerns eases the
+                     design space exploration and leads to an increase in
+                     productivity in the design of complex systems. This
+                     work leads to the creation of several new design
+                     tools: (1) profiling tools which extracts metrics
+                     from CAL programs and (2) exploration tools which
+                     include partitioning and scheduling heuristics and
+                     performance evaluation. These tools have been
+                     implemented with the aim of guiding designers in the
+                     high level design space exploration of systems in
+                     order to achieve efficient implementation. A
+                     systematic methodology has been also elaborated and
+                     has been tested successfully on a real world
+                     applications. Thanks to the metrics extracted from
+                     the CAL program, the design bottlenecks of a MPEG-4
+                     SP video decoder have been identified and removed at
+                     a high level of abstraction, leading to improvements
+                     up to 7 times faster implementation.},
+   address         = {Lausanne},
+   affiliation     = {EPFL},
+   author          = {Lucarz, Christophe},
+   details         = {http://infoscience.epfl.ch/record/165393},
+   doctoral        = {EDIC},
+   documenturl     = {http://infoscience.epfl.ch/record/165393/files/EPFL_TH5069.pdf},
+   doi             = {10.5075/epfl-thesis-5069},
+   extra-id        = {6418470},
+   keywords        = {data flow; parallelism; design space exploration;
+                     design flow; high level of abstraction; heterogeneous
+                     platforms; profiling; partitioning; scheduling;
+                     performance evaluation; code generation; flux de
+                     données; parallélisme; exploration des solutions;
+                     méthode de conception; abstraction haut niveau;
+                     plateformes hétérogènes; profilage; partitionnement;
+                     ordonnancement; évaluation des performances;
+                     génération de code},
+   oai-id          = {oai:infoscience.epfl.ch:165393},
+   oai-set         = {thesis-urn},
+   original-unit   = {GR-LSM},
+   pagecount       = {170},
+   production-date = 2011,
+   publisher       = {EPFL},
+   school          = {STI},
+   status          = {PUBLISHED},
+   thesis-id       = {5069},
+   title           = {Dataflow {P}rogramming for {S}ystems {D}esign
+                     {S}pace {E}xploration for {M}ulticore {P}latforms},
+   unit            = {SCI-STI-MM},
+   urn             = {urn:nbn:ch:bel-epfl-thesis5069-3},
+   year            = 2011
+}
