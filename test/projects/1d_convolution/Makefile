@@ -26,7 +26,7 @@ MAX_CFLAGS=-g -I${MAXCOMPILERDIR}/include -I${MAXELEROSDIR}/include \
 MAX_LFLAGS=-Wl,--hash-style=both\
 	-L${MAXCOMPILERDIR}/lib -L${MAXELEROSDIR}/lib\
 	-L/usr/local/lib\
-	-lmaxcompilerrt -lmaxeleros -lm -lpthread -openmp
+	-lmaxcompilerrt -lmaxeleros -lm -lpthread -fopenmp
 
 
 #MAX_JFLAGS=-cp ${MAXCOMPILERDIR}/lib/MaxCompiler.jar -1.6 -d .
