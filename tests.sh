@@ -30,4 +30,6 @@ runTest "maxc/testCmdRead"
 runTest "maxc/testCmdWrite"
 
 runTest "maxc/test1dConvolutionKernel"
+
+runTest "maxc/testRTMSingle"
 ############# Test Summary ###############
