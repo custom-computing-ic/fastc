@@ -96,11 +96,9 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
     if (isSgVarRefExp(ex)) {
         SgVarRefExp *e = isSgVarRefExp(ex);
         return new string(e->get_symbol()->get_name());
-    } else if (isSgIntVal(ex)) {
-        SgIntVal *e = isSgIntVal(ex);
-        stringstream out;
-        out << e->get_value();
-	return new string(out.str());
+    } else if (isSgIntVal(ex) || isSgFloatVal(ex) || isSgDoubleVal(ex)) {
+        SgValueExp *e = isSgValueExp(ex);
+        return new string(e->get_constant_folded_value_as_string());
     } else if (isSgStringVal(ex)) {
         SgStringVal *e = isSgStringVal(ex);
         stringstream out;
@@ -116,8 +114,8 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         string op;
         if (isSgAddOp(ex))
             op = "+";
-	else if (isSgSubtractOp(ex))
-	    op = "-";
+        else if (isSgSubtractOp(ex))
+            op = "-";
         else if (isSgMultiplyOp(ex))
             op = "*";
         else if (isSgAndOp(ex) || isSgBitAndOp(ex))
@@ -146,10 +144,10 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
                                   "stream.offset(" + (*left) + ", " + out.str() + ")");
             } else {
                 // XXX limits for dynamic offsets should be inferred
-		// first argument to offset() is HWVar
-		string val = *right;
-		if (isConstant(*right))
-		    val = constVar(val);
+                // first argument to offset() is HWVar
+                string val = *right;
+                if (isConstant(*right))
+                    val = constVar(val);
                 return new  string("stream.offset(" + (*left) + ", " + val + ", -1024, 1024)");
             }
         } else
@@ -233,12 +231,12 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
         string *size       = toExpr(*(++it));
         string *inc        = toExpr(*(++it));
         string *streamNo   = toExpr(*(++it));
-	string *interrupt  = toExpr(*(++it));
+        string *interrupt  = toExpr(*(++it));
 
-	if (interrupt->compare("0") == 0)
-	    *interrupt = constVar("false");
-	else if ( isConstant(*interrupt) )
-	    *interrupt = constVar("true");
+        if (interrupt->compare("0") == 0)
+            *interrupt = constVar("false");
+        else if ( isConstant(*interrupt) )
+            *interrupt = constVar("true");
 
 
         source += "DRAMCommandStream.makeKernelOutput("
@@ -252,10 +250,10 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
             + ");\n";
 
     } else if (fname.compare("pushDSPFactor") == 0) {
-	string *exp = toExpr(*it);
-	source += "optimization.pushDSPFactor(" + *exp + ");\n";
+        string *exp = toExpr(*it);
+        source += "optimization.pushDSPFactor(" + *exp + ");\n";
     } else if (fname.compare("popDSPFactor") == 0 ) {
-	source += "optimization.popDSPFactor();\n";
+        source += "optimization.popDSPFactor();\n";
     }
 }
 
