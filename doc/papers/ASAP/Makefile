@@ -5,7 +5,8 @@ PDFS=$(TEXS:.tex=.pdf)
 
 BIBLIOGRAPHY=--bibliography=bib/bibliography.bib
 TEMPLATE=--template=template/template.tex
-CSL=--csl=bib/haravard-imperial-college-london.csl
+#CSL=--csl harvard-imperial-college-london.csl
+CSL=--csl bib/acm-sig-proceedings.csl
 OPTIONS=--listings
 
 MD_SOURCES=report.md
@@ -17,7 +18,7 @@ report.pdf : report.tex
 	$(COMPILE) $^
 
 report.tex: $(MD_SOURCES)
-	pandoc $(TEMPLATE) $(BIBLIOGRAPHY) $(OPTIONS) -f markdown -t latex $^ -o $@
+	pandoc $(TEMPLATE) $(CSL) $(BIBLIOGRAPHY) $(OPTIONS) -f markdown -t latex $^ -o $@
 
 clean:
 	rm -rf $(TRASH) *.pdf
