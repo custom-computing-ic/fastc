@@ -1,8 +1,15 @@
+# IDE things
 .cproject
 .settings
 .project
 .deps
 .dirstamp
+/src/BROWSE
+/src/TAGS
+/TAGS
+auto
+
+# Build things
 *.o
 *.out
 *.orig
@@ -11,13 +18,18 @@
 /build-aux
 *.dot
 /src/precompiled.hxx.gch
-/src/BROWSE
-/src/TAGS
+/aclocal.m4
+/autom4te.cache/
+/maxcc
 /config.log
 /config.status
 /configure
-/aclocal.m4
-/autom4te.cache/output.0
-/autom4te.cache/
+
+# Tex things
 /doc/reports/interim/bib/auto/bibliography.el
-auto
+*.log
+*.pdf
+/doc/papers/ASAP/report.tex
+/doc/reports/interim/report.tex
+*.a
+*.aux
