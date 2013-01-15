@@ -1,8 +1,7 @@
-\documentclass[a4paper, 11pt, draft]{article}
+\documentclass[a4paper, 11pt]{article}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \usepackage{url}
-\usepackage[final]{listings}
 \usepackage{verbatim}
 \usepackage{fixme}
 
@@ -129,6 +128,20 @@ $endif$
 \tikzstyle{line} = [draw, -latex'] \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 
 \begin{document}
+
+\lstdefinestyle{MaxC}{language=C++, morekeywords={s_int32, int32,
+    float8_24, sin_float8_24, sout_float8_24, float8_24, s_int,
+    s_float8_24, s_bool}}
+
+\lstdefinestyle{MaxCconf}{language=C++, morekeywords={kernels, flow,
+    Host, Memory} }
+
+\lstset{
+  captionpos=b, basicstyle=\ttfamily,
+  tabsize=2, numberstyle=\tiny, numbersep=10pt, breaklines=true,
+  numbers=left, stepnumber=1, frame=leftline, numberblanklines=false,
+  showstringspaces=false, basicstyle=\footnotesize, emph={label},
+}
 
 $if(title)$
 \maketitle
