@@ -25,101 +25,6 @@ doi={10.1109/SOCCON.2009.5398108},
 ISSN={},}
 
 @PhDThesis{5069/THESES,
-   abstract        = {Nowadays processing systems are asked to support
-                     increasing complex and demanding high-performance
-                     applications, especially in the signal processing and
-                     video processing domains. The design of these systems
-                     are becoming extremely challenging because of several
-                     factors. Among them the most relevant are: The advent
-                     of the parallel era The sequential general purpose
-                     processor era during which performance increased more
-                     than two-fold every year, is definitely over. There
-                     has been no further increase in leading edge
-                     processor performance for over five years now and all
-                     projects aimed at breaking the 4 GHz barrier have
-                     been canceled by the major processor manufacturers.
-                     So as to continue increasing the computing power of
-                     computer systems, manufacturers have to use several
-                     slower processing cores, while trying to minimize the
-                     power consumption. Sequential reference softwares are
-                     no longer adapted Up to now, sequential software have
-                     proven to be the winning approaches for exploiting
-                     the potential of each new generation of sequential
-                     processors. But the advent of the new parallel era
-                     changes the way systems are implemented and
-                     sequential reference software used as specification
-                     base are no longer appropriate starting points for
-                     designing complex systems. The increasing demanding
-                     functionality and performance In parallel with
-                     miniaturization and the necessity to handle severely
-                     resource-constrained implementation platforms, the
-                     functionality and complexity of large classes of
-                     systems continue to increase making them from many
-                     respects comparable to ordinary desktop personal
-                     computers. A mixture of different types of timing and
-                     quality constraints make overall system architecture
-                     design, resource allocation and scheduling more
-                     important and challenging topics than ever before.
-                     Additionally, the market asks companies to build
-                     efficient systems while using the minimum of
-                     resources as fast as possible. Due to the level of
-                     complexity reached by high-demanding digital systems,
-                     it is no longer reasonable to handle such systems at
-                     low levels of abstraction (e.g. VHDL/Verilog or
-                     C/C++). A solution to the problem is to higher the
-                     level of abstraction at which the design of such
-                     systems is performed. But for raising the level of
-                     abstraction, the need for portable parallelism is
-                     primordial so as to be able to implement all kind of
-                     systems on a wide range of target platforms. Thus,
-                     enabling portable parallelism should be a primordial
-                     requirement for the development of this level of
-                     abstraction and the associated methodology and tools.
-                     However, creating a new abstraction layer may incur
-                     in the risk of loosing contact with implementation
-                     details and accuracy necessary for achieving
-                     efficient implementations. This work focuses on
-                     tackling such problem by using the CAL data flow
-                     language as main abstraction at the basis of the
-                     design process. The attempt of solving such
-                     challenging problem consists in building an
-                     environment for enabling high level design space
-                     exploration of complex parallel application for
-                     seamless implementation on heterogeneous platforms
-                     using CAL. It includes the extraction of metrics
-                     (static analysis and profiling) with the intention to
-                     use them as a basis for partitioning and scheduling
-                     heuristics aiming at finding the most efficient
-                     partitions. It also implies developing methodologies
-                     for guiding designers in the optimization of the high
-                     level specifications. Finally, a holistic approach
-                     has been defined in form of a complete design flow
-                     starting from CAL specifications down to
-                     implementations. Where traditional approaches are
-                     faced to traverse, at each iteration of the design
-                     flow, all the levels of abstraction for testing a
-                     design solution, the use of CAL as an abstraction
-                     layer enables designers to separate clearly three
-                     domains of concerns that are made orthogonal:
-                     functionality, partitioning and implementation. The
-                     separation of these domains of concerns eases the
-                     design space exploration and leads to an increase in
-                     productivity in the design of complex systems. This
-                     work leads to the creation of several new design
-                     tools: (1) profiling tools which extracts metrics
-                     from CAL programs and (2) exploration tools which
-                     include partitioning and scheduling heuristics and
-                     performance evaluation. These tools have been
-                     implemented with the aim of guiding designers in the
-                     high level design space exploration of systems in
-                     order to achieve efficient implementation. A
-                     systematic methodology has been also elaborated and
-                     has been tested successfully on a real world
-                     applications. Thanks to the metrics extracted from
-                     the CAL program, the design bottlenecks of a MPEG-4
-                     SP video decoder have been identified and removed at
-                     a high level of abstraction, leading to improvements
-                     up to 7 times faster implementation.},
    address         = {Lausanne},
    affiliation     = {EPFL},
    author          = {Lucarz, Christophe},
@@ -152,3 +57,187 @@ ISSN={},}
    urn             = {urn:nbn:ch:bel-epfl-thesis5069-3},
    year            = 2011
 }
+
+
+@INPROCEEDINGS{Lara1, 
+author={Cardoso, Joao M. P. and Carvalho, Tiago and Teixeira, Joao and Diniz, Pedro C. and Goncalves, Fernando and Petrov, Zlatko}, 
+booktitle={Embedded Computer Systems (SAMOS), 2012 International Conference on}, 
+title={Hardware/software specialization through aspects: The LARA approach}, 
+year={2012}, 
+month={july}, 
+volume={}, 
+number={}, 
+pages={260 -267}, 
+keywords={Arrays;Context;Field programmable gate arrays;Hardware;Optimization;Software;FPGA;aspect-oriented programming (AOP);compilation;hardware synthesis;high-level synthesis;}, 
+doi={10.1109/SAMOS.2012.6404183}, 
+ISSN={},}
+
+@INPROCEEDINGS{Lara2, 
+author={Cardoso, J.M.P. and Teixeira, J. and Alves, J.C. and Nobre, R. and Diniz, P.C. and Coutinho, J.G.F. and Luk, W.}, 
+booktitle={Field-Programmable Custom Computing Machines (FCCM), 2012 IEEE 20th Annual International Symposium on}, title={Specifying Compiler Strategies for FPGA-based Systems}, 
+year={2012}, 
+month={29 2012-may 1}, 
+volume={}, 
+number={}, 
+pages={192 -199}, 
+keywords={aspect-oriented programming;electronic engineering computing;field programmable gate arrays;hardware-software codesign;program compilers;FPGA-based system;LARA;aspect-oriented hardware-software design;compiler strategy;domain-specific aspect-oriented programming language;embedded system;field programmable gate array;high-level compilation;high-level programming language;high-level specification;performance portability;source code;FPGA;aspect-oriented programming;compilation;hardware acceleration;hardware synthesis;strategies;}, 
+doi={10.1109/FCCM.2012.41}, 
+ISSN={},}
+
+@inproceedings{Lara3,
+ author = {Cardoso, Jo\~{a}o M.P. and Carvalho, Tiago and Coutinho, Jos{\'e} G.F. and Luk, Wayne and Nobre, Ricardo and Diniz, Pedro and Petrov, Zlatko},
+ title = {LARA: an aspect-oriented programming language for embedded systems},
+ booktitle = {Proceedings of the 11th annual international conference on Aspect-oriented Software Development},
+ series = {AOSD '12},
+ year = {2012},
+ isbn = {978-1-4503-1092-5},
+ location = {Potsdam, Germany},
+ pages = {179--190},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2162049.2162071},
+ doi = {10.1145/2162049.2162071},
+ acmid = {2162071},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {FPGAs, aspect-oriented programming, compilers, domain-specific languages, embedded systems, reconfigurable computing},
+} 
+
+@INPROCEEDINGS{fplxinyu12, 
+author={Xinyu Niu and Qiwei Jin and Luk, W. and Qiang Liu and Pell, O.}, 
+booktitle={Field Programmable Logic and Applications (FPL), 2012 22nd International Conference on}, title={Exploiting run-time reconfiguration in stencil computation}, 
+year={2012}, 
+month={aug.}, 
+volume={}, 
+number={}, 
+pages={173 -180}, 
+keywords={Algorithm design and analysis;Analytical models;Field programmable gate arrays;Hardware;Kernel;Partitioning algorithms;Throughput;field programmable gate arrays;graphics processing units;optimisation;CPU reference designs;GPU;Maxeler MAX3424A system;RTM;Virtex-6 FPGA;field programmable gate arrays;field-programmable accelerators;graphics processing units;reverse time migration;run-time reconfiguration;stencil computation;}, 
+doi={10.1109/FPL.2012.6339257}, 
+ISSN={},}
+
+@article{rose00,
+author = {Quinlan, Dan},
+title = {ROSE: Compiler Support For Object-Oriented Frameworks},
+journal = {Parallel Processing Letters},
+volume = {10},
+number = {02n03},
+pages = {215-226},
+year = {2000},
+doi = {10.1142/S0129626400000214},
+
+URL = {http://www.worldscientific.com/doi/abs/10.1142/S0129626400000214},
+eprint = {http://www.worldscientific.com/doi/pdf/10.1142/S0129626400000214}
+}
+
+@inproceedings{survive1,
+    author  = {Olav Lindtjørn and Robert G. Clapp and Oliver Pell and Oskar Mencer and Michael J Flynn },
+    title   = {Surviving the End of Scaling of Traditional Micro Processors in HPC},
+    publisher = {IEEE HOT CHIPS 22},
+    month = {aug.}
+    year    = 2010
+}
+
+@article{survive2,
+ author = {Pell, Oliver and Mencer, Oskar},
+ title = {Surviving the end of frequency scaling with reconfigurable dataflow computing},
+ journal = {SIGARCH Comput. Archit. News},
+ issue_date = {September 2011},
+ volume = {39},
+ number = {4},
+ month = dec,
+ year = {2011},
+ issn = {0163-5964},
+ pages = {60--65},
+ numpages = {6},
+ url = {http://doi.acm.org/10.1145/2082156.2082172},
+ doi = {10.1145/2082156.2082172},
+ acmid = {2082172},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+} 
+
+@misc{maxwhite,
+author={Maxeler},
+url={http://www.maxeler.com/media/documents/MaxelerWhitePaperMaxCompiler.pdf},
+title={MaxCompiler White Paper}
+}
+
+@misc{virtex6,
+author={Xilinx},
+url={http://www.maxeler.com/media/documents/MaxelerWhitePaperMaxCompiler.pdf},
+title={Virtex 6 Family Overview }
+}
+
+@misc{llvm,
+author={LLVM},
+url={http://www.llvm.org},
+title={LLVM Compiler Infrastructure }
+}
+
+@misc{cetus,
+author={Purdue University},
+url={http://wwww.cetus.ecn.purdue.edu/},
+title={Cetus Source-to-Source Compiler Infrastructure}
+}
+
+@misc{rose,
+author={Lawrence Livermore National Laboratory},
+url={http://www.rosecompiler.org},
+title={ROSE Compiler Infrastructure}
+}
+
+@misc{autotools,
+author={GNU},
+url={http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html},
+title={AutoTools Introduction}
+}
+
+
+
+@ARTICLE{neumann,
+author={von Neumann, J.}, 
+journal={Annals of the History of Computing, IEEE}, title={First draft of a report on the EDVAC}, 
+year={1993}, 
+month={ }, 
+volume={15}, 
+number={4}, 
+pages={27 -75}, 
+abstract={The first draft of a report on the EDVAC written by John von Neumann is presented. This first draft contains a wealth of information, and it had a pervasive influence when it was first written. Most prominently, Alan Turing cites it in his proposal for the Pilot automatic computing engine (ACE) as the definitive source for understanding the nature and design of a general-purpose digital computer.<>}, 
+keywords={Electrical engineering;Engines;Forward contracts;History;Laboratories;Mathematics;Pain;Physics computing;Proposals;Statistics;digital computers;history;EDVAC;automatic computing engine;general-purpose digital computer;history;}, 
+doi={10.1109/85.238389}, 
+ISSN={1058-6180},}
+
+@INPROCEEDINGS{hwswcodesign, 
+author={Lam, Y.M. and Coutinho, J.G.F. and Luk, W.}, 
+booktitle={Programmable Logic, 2008 4th Southern Conference on}, title={Integrated Hardware/Software Codesign for Heterogeneous Computing Systems}, 
+year={2008}, 
+month={march}, 
+volume={}, 
+number={}, 
+pages={217 -220}, 
+abstract={This paper describes a strategy that integrates the task
+                  mapping and task scheduling steps for heuristic
+                  search techniques, with multiple neighbourhood
+                  functions to reduce search time and enchance
+                  solution quality in developing heterogeneous
+                  computing systems. For case studies involving 40
+                  randomly generated task graphs and the fast Fourier
+                  transform, experimental results show that our
+                  approach outperfroms previous approaches in terms of
+                  search time by up to 93 times, and solution quality
+                  by up to 22.6% for a system with a microprocessor, a
+                  floating-point digital signal processor, and an
+                  FPGA.}, 
+keywords={Costs;Digital signal processors;Educational
+                  institutions;Fast Fourier transforms;Field
+                  programmable gate
+                  arrays;Hardware;Microprocessors;Processor
+                  scheduling;Signal generators;Simulated
+                  annealing;fast Fourier transforms;graph
+                  theory;hardware-software codesign;scheduling;search
+                  problems;task analysis;fast Fourier
+                  transform;heterogeneous computing systems;heuristic
+                  search techniques;integrated hardware-software
+                  codesign;neighbourhood functions;task graphs;task
+                  mapping;task scheduling;}, 
+doi={10.1109/SPL.2008.4547761}, 
+ISSN={},}
