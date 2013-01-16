@@ -13,6 +13,7 @@ OPTIONS=--listings --toc
 MD_SOURCES=report.md
 
 all: report.pdf
+	cp report.pdf InterimReport.pdf
 
 report.pdf : report.tex
 	$(COMPILE) $^

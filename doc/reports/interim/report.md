@@ -75,8 +75,8 @@ traditional, general purpose architectures and we describe the Maxeler
 hardware acceleration solution and the MaxCompiler toolchain and API
 which represent the target of the MaxC compilation process. We also
 look at the LARA language which will be used as part of the design
-flow to specify and apply optimzation strategies both to the original
-source code and to the resulting dataflow desing. We also summarize
+flow to specify and apply optimization strategies both to the original
+source code and to the resulting dataflow design. We also summarize
 related work in the area of high level synthesis tools.
 
 ## Streaming Dataflow Architectures
@@ -137,7 +137,7 @@ than general purpose hardware. However, the size of the FPGA chip
 constrains the design that can be uploaded onto the chip. FPGAs have a
 limited number of each of the following resource types:
 
-* lookup tables (LUTs) - implement the logical functions performed by the circuit;
+* look-up tables (LUTs) - implement the logical functions performed by the circuit;
 
 * flip-flops (FFs) - small storage elements;
 
@@ -216,12 +216,12 @@ shows some of the important features of the MaxCompiler API:
   conditional operator) are used to select between streams (Lines 11
   and 12).
 
-All these features will have to be suported by our MaxC language as
+All these features will have to be supported by our MaxC language as
 described in Section \ref{maxc}.
 
 \lstset{language=Java, label={MovingAvg-Kernel}, caption={Kernel
 design for the three point moving average computation showing features
-such as stream offests, arithmetic and control which will have to be
+such as stream offsets, arithmetic and control which will have to be
 supported by our MaxC language}}
 
 ~~~
@@ -247,7 +247,7 @@ public class MAKernel extends Kernel{
 Next we create a manager design, also written in Java; this is used to
 manage kernel I/O, connecting multiple kernels together (in multi
 kernel designs) and kernels to DRAM and the CPU interface (via
-PCI-E). Listing \ref{MovingAvg-Manager} shows a simple design for the
+PCIe). Listing \ref{MovingAvg-Manager} shows a simple design for the
 moving average application that instantiates a single moving average
 kernel and connects its inputs and outputs to the host interface.
 
@@ -285,7 +285,7 @@ max_run(
   device,
   max_input("x", x, x_size),
   max_output("y", y, y_size),
-  max_runfor("MAV", n),
+  max_runfor("MAKernel", n),
   max_end());
 ~~~
 
@@ -356,15 +356,15 @@ The first milestone involved background reading on the tools used for
 this project particularly MaxCompiler and LARA. We also analysed a
 number of compiler frameworks to use for implementing MaxCC including
 LLVM[@llvm], Cetus[@cetus] and ROSE[@rose]. We developed a small
-code-generation prototype using Cetus but did not find the exisiting
+code-generation prototype using Cetus but did not find the existing
 infrastructure satisfying or flexible enough. We opted for ROSE which
 is a mature framework with integrated support for C99/C++ AST
 generation. The milestone also involved acquiring more in-depth
 knowledge of the C++ language and GNU toolchain (e.g Autotools[@autotools]).
 
 The second milestone involved designing the MaxC language. This
-involved analysing existing MaxJ applications as well as the MaxJ API
-and identifying required functions such as suport for stream offsets,
+involved analyzing existing MaxJ applications as well as the MaxJ API
+and identifying required functions such as support for stream offsets,
 multiplexing etc. We used the RTM application as a case study to guide
 our design of the language.  The MaxC language is briefly described in
 Section \ref{maxc}.
@@ -735,7 +735,7 @@ similar performance would represent a significant achievement.
 
 ## Himeno
 
-If time permits we would also like to evaluate MaxCC by implementating
+If time permits we would also like to evaluate MaxCC by implementing
 the Himeno benchmark [@himeno], a memory bound benchmark used by the
 HPC community. We would compare our results with those published in
 [@max-himeno], a manual implementation which also targets the Maxeler
