@@ -12,12 +12,10 @@ project.
 Conventional computing devices based on general purpose processors
 have hit a power and memory wall - performance no longer scales
 linearly with technology improvement (i.e. increase in number of
-transistors) [@survive1; @survive2].
-
-\fxfatal{introduce FPGAs}
-Custom designs on FPGA devices can be used to improve performance and
-power consumption of computationally intensive algorithms and scale
-linearly with resource availability.
+transistors) [@survive1; @survive2]. Custom hardware designs can
+improve performance and power consumption of computationally intensive
+applications, allowing their performance to scale linearly with
+resource availability.
 
 However, manually creating these designs from existing high level
 language implementations is a difficult task that requires detailed
@@ -26,25 +24,24 @@ considerations. So, ideally, we want to automatically generate custom
 designs from existing high level implementations without compromising
 on performance and energy efficiency.
 
-\fxfatal{should explain why aspect oriented programming is important}
-
 The aim of the project is to study how techniques of Aspect Oriented
 Programming can be applied to the compilation and optimisation of
-designs targeting streaming Data Flow Engines. This includes
+designs targeting streaming Data Flow Engines (special computing
+devices built around Field Programmable Gate Array chips that
+implement the dataflow paradigm of computation). This includes
 identifying efficient compiled patterns for streaming DFEs and how
 such patterns can be obtained from high level descriptions using AOP
-design techniques. We propose a compilation flow from high-level C
-programs to a streaming dataflow architecture. Our approach captures
-and applies optimizations using LARA, an aspect oriented programming
-language for embedded systems [@Lara1; @Lara2].
+design techniques.
 
-## Challenges
-\fxfatal{What is this project trying to solve?}
+Our goal is to develop and implement a compilation flow from
+high-level C programs to a streaming dataflow architecture that
+captures and applies optimizations using LARA, an AOP language for
+embedded systems [@Lara1; @Lara2].
 
 ## Contributions
 
-* We propose an approach for compiling existing programs to efficient
-  designs targeting a high throughput streaming dataflow
+* We propose an approach for compiling high level C programs to
+  efficient designs targeting a high throughput streaming dataflow
   architecture;
 
 * We introduce MaxC, a C based meta-programming language and API for
@@ -63,23 +60,23 @@ By the end of the project we plan to:
   technique for seismic imaging [@fplxinyu12];
 
 * Identify efficient compilation patterns and optimizations and
-capture and automate them using LARA, an aspect oriented language for
-embedded systems and MaxCC;
+  capture and automate them using LARA and MaxCC;
 
-* Develop the MaxCC frontend, capable of automating the process of
-  translating high level C specifications to MaxC dataflow designs;
+* Develop the MaxCC frontend for automating the process of translating
+  high level C specifications to MaxC dataflow designs;
 
-* Evaluate our solution on a number of applications, including RTM.
-
+* Evaluate our solution on a number of applications, including RTM and
+  the Himeno benchmark.
 
 # Background
 
 In this chapter we compare streaming data flow architectures with
 traditional, general purpose architectures and we describe the Maxeler
 hardware acceleration solution and the MaxCompiler toolchain and API
-which represent the target of the MaxC compilation process. We look at
-LARA and the ROSE compiler framework which will be as part of the
-design flow and to implement the MaxCC compiler. We also summarize
+which represent the target of the MaxC compilation process. We also
+look at the LARA language which will be used as part of the design
+flow to specify and apply optimzation strategies both to the original
+source code and to the resulting dataflow desing. We also summarize
 related work in the area of high level synthesis tools.
 
 ## Streaming Dataflow Architectures
@@ -88,7 +85,7 @@ Although general purpose computing devices offer a convenient
 programming paradigm, the traditional fetch - decode - execute cycle
 is inherently sequential and relies on inefficient access to external
 memory. To compensate for this a large area of a modern CPU core is
-dedicated to caches, branch prediction units and out of order
+dedicated to caches, branch prediction units and out-of-order
 scheduling and retirement units. This reduces the area of the chip
 available for performing useful computation. Furthermore, although
 multicore programing is an answer for the processor power wall (which
@@ -103,20 +100,26 @@ good flexibility when dealing with arbitrary access patterns, it is
 not efficient for large volumes of highly regular data.
 
 The dataflow computing paradigm operates differently form the general
-purpose computing paradigm, being designed to be efficient at
-processing large volumes of data. It works by creating a streaming
-dataflow graph of computational nodes, which operates as a large
-computational pipeline: input data is streamed in sequentially through
-each pipeline stage and output data is streamed out. This results in a
-highly pipelined design that can be statically scheduled achieving
-throughput rates of one value per cycle by completely avoiding
-pipeline hazards. This means that a design running at a few hundred
-megahertz can easily outperform a CPU implementation running at a few
-gigahertz while being more energy efficient [@survive2].
+purpose computing paradigm (as shown in Figure \ref{fig:cpudfe}),
+being designed to be efficient at processing large volumes of data. It
+works by creating a streaming dataflow graph of computational nodes,
+which operates as a large computational pipeline: input data is
+streamed in sequentially through each pipeline stage and output data
+is streamed out. This results in a highly pipelined design that can be
+statically scheduled achieving throughput rates of one value per cycle
+by completely avoiding pipeline hazards. This means that a design
+running at a few hundred megahertz can easily outperform a CPU
+implementation running at a few gigahertz while being more energy
+efficient [@survive2].
 
-* Discuss the challenge of programming dataflow style
 
-\fxfatal{Diagram comparing CPU vs FPGA flow}
+\begin{figure}[h] \centering
+\includegraphics[scale=0.45, trim=0 200 0 150]{res/cpu-vs-dfe.png}
+\caption{Comparison between general purpose CPU architecture and a
+streaming Data Flow Engine. In the case of the latter instructions are
+not stored in memory but encoded in the dataflow graph. }
+\label{fig:cpudfe}
+\end{figure}
 
 ## Maxeler Acceleration Solution
 
@@ -134,28 +137,40 @@ than general purpose hardware. However, the size of the FPGA chip
 constrains the design that can be uploaded onto the chip. FPGAs have a
 limited number of each of the following resource types:
 
-* lookup tables (LUTs) implement the logical functions performed by the circuit;
+* lookup tables (LUTs) - implement the logical functions performed by the circuit;
 
-* flip-flops (FFs) are small storage elements;
+* flip-flops (FFs) - small storage elements;
 
-* digital signal processors (DSP) are small special purpose arithmetic units;
+* digital signal processors (DSP) - small special purpose arithmetic units;
 
-* block RAM (BRAM) are larger, on-chip storage elements.
+* block RAM (BRAM) - larger, on-chip storage elements.
 
 The specific data flow engine used for this project is a MAX3424A card
 based on a Virtex 6 FPGA chip [@virtex6]. The MAX3 provides 48GB of
 on-board DRAM and about 4MB of fast on-chip BRAM are available on the
 FPGA chip.
 
-[^asic]: Application Specific Integrated Circuits
+The system is connected to the dataflow engine via PCIe as shown in
+Figure \ref{fig:max3}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.45, trim=0 200 0 200]{res/max3.png} \caption{
+The Maxeler acceleration solution: the DFE is connected to
+the host machine via PCIe. The board comprises 48GB of DRAM and a
+Virtex 6 FPGA chip. }
+\label{fig:max3}
+\end{figure}
+
+[^asic]: Application Specific Integrated Circuit
 
 ## MaxCompiler
 
 MaxCompiler is a high level compiler targeting the acceleration
 platform developed by Maxeler Technologies [@maxwhite]. It provides a
 Java based API for specifying hardware designs that are compiled and
-uploaded onto the DF and a C runtime interface for code running on
-the CPU.
+uploaded onto the DFE and a C runtime interface for the part of the
+application running on the CPU of the host system.
 
 We demonstrate the use of MaxCompiler in accelerating a simple moving
 average computation, starting from an original design in C shown in
@@ -323,7 +338,7 @@ use it in our proposed DSE[^DSE] step.
 
 # Proposed Project Plan
 
-\fxfatal{Fix table number} Table 1 shows the proposed project
+Table 3.1 shows the proposed project
 milestones along with their expected completion date and current
 status. We have currently completed the first three of the nine
 proposed milestones and are working towards the fourth one.
@@ -346,19 +361,33 @@ our design of the language.  The MaxC language is briefly described in
 Section \ref{maxc}.
 
 For the third milestone we implemented the MaxCC backend, responsible
-for translating the  This is briefly described in Section \ref{maxcc-impl}.
+for translating the MaxC design to MaxJ. This is briefly described in
+Section \ref{maxcc-impl}.
 
-**Milestone**                                    **Date**         **Status**
--------------                                   ----------       ------------
-Background reading (MaxCompiler, LARA, ROSE)    November 2012     Completed
-Design the MaxC language                        December 2012     Completed
-Implement the MaxCC backend                     December 2012     Completed
-Implement RTM using MaxC                        January 2013      In progress
-Identify LARA strategies for MaxC designs       January 2013      Planned
-Design and implement the MaxCC frontend         February 2013     Planned
-Implement RTM in C                              March 2013        Planned
-Identify LARA strategies for C applications     March 2013        Planned
-Report Writing                                  June 2013         Planned
+During milestones 4 and 5 we will evaluate our approach for compiling
+MaxC designs using the RTM case study and identify potential design
+optimizations which we will capture using LARA.
+
+For milestones 6, 7 and 8 we are concerned with identifying and
+implementing a compilation strategy from C source to MaxC guided by
+LARA aspect-based optimization strategies.
+
+The final milestone is allocated for evaluating the entire project
+(our approach is described in Section \ref{sec:evaluation}) and
+writing the final report.
+
+
+ **No**  **Milestone**                                    **Date**   **Status**
+-------- -------------                                   ---------- ------------
+1.       Background reading (MaxCompiler, LARA, ROSE)    Nov 2012     Completed
+2.       Design the MaxC language                        Dec 2012     Completed
+3.       Implement the MaxCC backend                     Dec 2012     Completed
+4.       Implement RTM using MaxC                        Jan 2013     In progress
+5.       Identify LARA strategies for MaxC designs       Jan 2013     Planned
+6.       Design and implement the MaxCC frontend         Feb 2013     Planned
+7.       Implement RTM in C                              Mar 2013     Planned
+8.       Identify LARA strategies for C applications     Mar 2013     Planned
+9.       Evaluation and Report Writing                   Jun 2013     Planned
 
 Table: Project milestones along with expected completion dates and
 current status.
@@ -647,25 +676,53 @@ flow:
 
 # Evaluation
 
-## 3D Convolution
+\label{sec:evaluation}
+
+The purpose of our evaluation strategy is twofold:
+
+1. first we should confirm that our compilation startegy succesfully
+handles a meaningful set of C applications;
+
+2. second we should evaluate the performance of the compiled designed
+by comparing to existing high-performance applications.
+
+For this purpose we propose to evaluate the MaxC compiler using two
+high performance applications, which have published results for
+implementations targeting the Maxeler dataflow platform. This enables
+us to evaluate the quality of the compilation process itself, rather
+than the underlying hardware platform.
 
 ## RTM
 
-### Himeno
+We propose to evaluate our project using the MaxC compiler to generate
+three different implementations of a high performance application
+based on the Reverse Time Migration (RTM) technique for seismic
+imaging [@fplxinyu12]:
 
- evaluation using various case studies including RTM
+* first, we will implement the simplest version, a design with a
+  single computational pipeline (or core) on the FPGA;
 
-Scan ocean floor to find oil and gas [Surface? HUGE]
-Huge data volume, complex physics [@flynn]
+* the second design is a multi pipe version, achieving more efficient
+  area and memory bandwidth utilization;
 
-Isotropic vs anisotropic
+* finally we aim to produce a run-time reconfigurable version as
+  described in [@fplxinyu12].
 
-* Isotropic
-* TTI
-* VTI
-* 30 Hz vs 60 Hz
+In all three cases we will analyze both area and performance results
+of the optimization strategies applied using MaxC and LARA and compare
+them with the reference implementation described in
+[@fplxinyu12]. This is currently the fastest published result for an
+RTM implementation for FPGA or GPU results and up to two orders of
+magnitude faster than CPU implementations. Hence, being able to
+generate, in a fully automated fashion, an efficient design with
+similar performance would represent a significant achievement.
 
-* Convolution
-* Sparse Matrix
+## Himeno
+
+If time permits we would also like to evaluate MaxCC by implementating
+the Himeno benchmark [@himeno], a memory bound benchmark used by the
+HPC community. We would compare our results with those published in
+[@max-himeno], a manual implementation which also targets the Maxeler
+dataflow acceleration solution.
 
 # References
