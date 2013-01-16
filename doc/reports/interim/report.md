@@ -114,7 +114,7 @@ efficient [@survive2].
 
 
 \begin{figure}[h] \centering
-\includegraphics[scale=0.45, trim=0 200 0 150]{res/cpu-vs-dfe.png}
+\includegraphics[scale=0.4, trim=0 200 0 150]{res/cpu-vs-dfe.png}
 \caption{Comparison between general purpose CPU architecture and a
 streaming Data Flow Engine. In the case of the latter instructions are
 not stored in memory but encoded in the dataflow graph. }
@@ -155,7 +155,7 @@ Figure \ref{fig:max3}.
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.45, trim=0 200 0 200]{res/max3.png} \caption{
+\includegraphics[scale=0.4, trim=0 200 0 200]{res/max3.png} \caption{
 The Maxeler acceleration solution: the DFE is connected to
 the host machine via PCIe. The board comprises 48GB of DRAM and a
 Virtex 6 FPGA chip. }
@@ -323,17 +323,74 @@ strategies for:
   used both for the original source code application which is the
   target of the compilation and for the dataflow design
 
-Furthermore LARA descriptions can be parametrized which enables us to
-use it in our proposed DSE[^DSE] step.
+Furthermore LARA descriptions can be parametrized which facilitates
+integration with our proposed DSE step described in Section
+\ref{designflow}.
 
-[^DSE]: Design Space Exploration
+Listing \ref{lara} shows an example description used for fully
+unrolling all innermost loops with an iteration count smaller than or
+equal to 16. The `select` statement on line 2 captures the join points
+on which the aspect acts, the `apply` statement specifies actions to
+be applied to the results of a query while `condition` is used to
+filter relevant queries.
+
+\lstset{style=lara, label={lara}, caption={Example LARA description
+for fully unrolling innermost loops with an iteration count smaller
+than or equal to 16.}}
+
+~~~
+aspectdef loopunroll
+  select function.loop{type="for"} end
+  apply optimize("loopunroll", "fully"); end
+  condition $loop.is_innermost && $loop.num_iter<=16; end
+end
+~~~
+
+[@Lara2] also introduces a design flow based on LARA for mapping
+applications into heterogeneous multicore platforms. This involves
+specifying optimizations and mapping strategies in the LARA
+programming language, separate from the application source code.
+
+The strategies are compiled and applied to the original source code in
+a sequential order to obtain the final design which is synthesized
+using Catapult-C [@catapultc]. Examples of strategies which are
+expressed using LARA include loop unrolling, coalescing, loop fission
+and mapping compute intensive functions to hardware (hardware/software
+partitioning).
+
+Advantages of the aspect based approach compared with the popular
+pragma based approach used in frameworks like OpenMP [@openmppragma]
+include the possibility of defining dynamic join points through which
+strategies can be applied to the intermediate results of the weaving
+(source translation) process. Additionally optimization strategies are
+grouped into cohesive aspects, rather than being spread through the
+code which makes them easier to understand, maintain and modify, for
+example to target a different platform.
 
 \begin{comment}
 
+## Related Work
+
+Substantial work has been carried out in synthesizing high level
+languages to hardware designs and many tools exist for this purpose
+[@ctoverilog; @vivadodesignsuite; @impulsec]. However most approaches
+do not target a streaming dataflow architecture but either soft
+processor designs - processor cores implemented on the FPGA chip with
+configurable custom computing units (e.g. floating point units). These
+usually offer limited speedups when compared to high-end hardcore
+CPUs but can turn out to be more energy efficient.
+
+
+[@stancl] proposes a method for synthesising hardware pipelines from
+OpenCL programs which exploits some important concepts related to
+parallelism exposed by the OpenCL specification [@opencl] such as
+threads and domain decomposition into threads sharing local memory.
+Although we are dealing with simple C kernels for this project, some
+of the proposed compilation strategies can be applied for
+loop.
+
 ## ROSE Compiler Infrastructure
 
-
-## Related Work
 
 ### Vivado
 
@@ -402,6 +459,8 @@ Table: Project milestones along with expected completion dates and
 current status.
 
 # Proposed Design Flow
+
+\label{designflow}
 
 We propose a design flow for generating efficient FPGA designs,
 targeting a streaming dataflow architecture from high level languages
