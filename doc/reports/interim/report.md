@@ -169,7 +169,8 @@ Virtex 6 FPGA chip. }
 MaxCompiler is a high level compiler targeting the acceleration
 platform developed by Maxeler Technologies [@maxwhite]. It provides a
 Java based API for specifying hardware designs that are compiled and
-uploaded onto the DFE and a C runtime interface for the part of the
+uploaded onto the DFE and a C runtime interface (MaxCompilerRT and
+MaxelerOS shown in Figure \ref{fig:max3}) for the part of the
 application running on the CPU of the host system.
 
 We demonstrate the use of MaxCompiler in accelerating a simple moving
@@ -206,7 +207,7 @@ shows some of the important features of the MaxCompiler API:
   chip BRAM so is limited to a few tens of thousands elements;
 
 - frequently used components such as counters are provided by the
-  API. they are useful in keeping track of iteration count when
+  API. They are useful in keeping track of iteration count when
   mapping loops to streaming designs (Line 7);
 
 - operator overloading is used to perform arithmetic on input streams;
@@ -215,8 +216,13 @@ shows some of the important features of the MaxCompiler API:
   conditional operator) are used to select between streams (Lines 11
   and 12).
 
+All these features will have to be suported by our MaxC language as
+described in Section \ref{maxc}.
+
 \lstset{language=Java, label={MovingAvg-Kernel}, caption={Kernel
-design for the three point moving average computation.}}
+design for the three point moving average computation showing features
+such as stream offests, arithmetic and control which will have to be
+supported by our MaxC language}}
 
 ~~~
 public class MAKernel extends Kernel{
@@ -262,6 +268,9 @@ public class MAManager extends CustomManager {
   }
 }
 ~~~
+
+In Section \ref{maxcconf} we introduce a simple language to capture
+this flow configuration.
 
 Finally we must write a host application which is required to queue
 the input streams and run the accelerator. This is achieved by calls
@@ -627,6 +636,8 @@ void kernel_Convolution1d(
 
 
 ## Connecting Kernels
+
+\label{maxcconf}
 
 We create a simple configuration language for specifying kernel and
 host interconnections. The configuration file used for the RTM
