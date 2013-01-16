@@ -33,3 +33,6 @@ auto
 /doc/reports/interim/report.tex
 *.a
 *.aux
+/doc/reports/interim/report-blx.bib
+/doc/reports/interim/report.run.xml
+/doc/reports/interim/report.toc
