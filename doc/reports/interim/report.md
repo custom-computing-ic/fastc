@@ -362,9 +362,9 @@ is a mature framework with integrated support for C99/C++ AST
 generation. The milestone also involved acquiring more in-depth
 knowledge of the C++ language and GNU toolchain (e.g Autotools[@autotools]).
 
-The second milestone involved designing the MaxC language. This meant
-analysing exisiting MaxJ applications as well as the MaxJ API and
-identifying required functions such as suport for stream offsets,
+The second milestone involved designing the MaxC language. This
+involved analysing existing MaxJ applications as well as the MaxJ API
+and identifying required functions such as suport for stream offsets,
 multiplexing etc. We used the RTM application as a case study to guide
 our design of the language.  The MaxC language is briefly described in
 Section \ref{maxc}.
@@ -375,7 +375,7 @@ Section \ref{maxcc-impl}.
 
 During milestones 4 and 5 we will evaluate our approach for compiling
 MaxC designs using the RTM case study and identify potential design
-optimizations which we will capture using LARA.
+optimization strategies which we will capture using LARA.
 
 For milestones 6, 7 and 8 we are concerned with identifying and
 implementing a compilation strategy from C source to MaxC guided by
@@ -425,7 +425,7 @@ flow consists of the following steps:
 4. Using the MaxCC frontend we generate a dataflow design from the
    processed C source, comprising one or more specialized kernels
    specified using MaxC, a dataflow language we developed as an
-   extension of C99.
+   extension of C99 which is described in Section \ref{maxc}.
 
 5. We perform DSE until we find a design that fits the chip, achieves
    timing closure and meets non functional requirements.  For each
@@ -442,6 +442,8 @@ flow consists of the following steps:
        - we measure NFRs such as performance or latency and if our
          target is not met we restart using a different optimization
          strategy
+
+\begin{comment}
 
 \begin{center}
 \begin{tikzpicture}[node distance = 2cm, auto]
@@ -481,33 +483,30 @@ flow consists of the following steps:
 \end{tikzpicture}
 \end{center}
 
+\end{comment}
+
 ## MaxC
 
 \label{maxc}
 
 MaxC is a programing language and API based on the C99 standard. It
 provides a succinct means of specifying dataflow designs and is an
-intermediate representation in the proposed design flow. MaxC is a
-meta-programming language in the sense that, unlike a regular C
-program, a MaxC program is not "executed"" but specifies
-a hardware design. MaxC is designed to be human readable and to
-facilitate integration with other tools. Being based on the C99
-standard, the language interacts well with existing compilers or source
-to source translation frameworks (e.g. LARA, ROSE), allowing source
-level optimizations to be applied through different tools.
+intermediate representation in the proposed design flow. Similar to
+Maxeler's MaxJ, MaxC is a meta-programming language in the sense that,
+unlike a regular C program, a MaxC program is not "executed" but
+specifies a hardware design. MaxC is designed to be human readable and
+to facilitate integration with other tools. Being based on the C99
+standard, the language interacts well with existing compilers or
+source to source translation frameworks (e.g. LARA, ROSE), allowing
+source level optimizations to be applied through different tools.
 
 The example below presents a simple kernel performing a 1d
-convolution.
-
-Lines 2-6 show the kernel declaration specifying the stream input "p"
-and output "out" as well as a number of scalar parameters configurable
-at run-time.
-
-On lines 13-16 we use array index notation to access future (positive
-offset) or past (negative offset) stream elements.
-
-Normal arithmetic operations can be used to operate on stream
-elements.
+convolution. Lines 2-6 show the kernel declaration specifying the
+stream input "p" and output "out" as well as a number of scalar
+parameters configurable at run-time. On lines 13-16 we use array index
+notation to access future (positive offset) or past (negative offset)
+stream elements. Normal arithmetic operations can be used to operate
+on stream elements.
 
 \lstset{style=MaxC, label={conv1d-maxc}, caption={Example 1D
 Convolution kernel implemented in MaxC.}}
@@ -538,8 +537,7 @@ void kernel_Convolution1d(
 The example illustrates the additional types we introduce as
 extensions to C99. These are meant to simplify the language and make
 it more expressive as well as provide additional verification and
-optimisation mechanisms (e.g. type safety). Maintaining compatibility
-with C99 simplifies the kernel simulation flow as discussed below.
+optimisation mechanisms (e.g. type safety).
 
 ## Implementation
 
@@ -562,7 +560,8 @@ MaxCC supports the following types, as extensions to C99:
 
 To allow decoupling of bit width specifications from the functional
 code we also provide the type `s_float`, `s_int` etc. In this
-situation we can specify the type using a pragma directive.
+situation we can specify the type using a pragma directive as shown on
+line 1 of Listing \ref{conv1d-maxc}.
 
 The previous example also illustrates some of the MaxC API components:
 
@@ -579,9 +578,10 @@ The previous example also illustrates some of the MaxC API components:
 ## Kernel Simulation
 
 The goal for the kernel simulation model is that it should be possible
-to compile and run it using the standard GCC toolchain, verifying the
-logical correctness of the design (i.e. not accounting for hardware
-effects such as stalls etc.).
+to compile and run MaxC designs in simulation using the standard GCC
+toolchain to enable verification of the logical correctness of a
+particular design (i.e. not accounting for hardware effects such as
+stalls).
 
 To achieve this we provide the type extensions described above as type
 definitions. Streams are modelled as pointers: `typedef float*
@@ -609,8 +609,9 @@ This issue is illustrated in the example below where we must use the
 to retrieve the appropriate stream values from the global data
 structures they are stored in. The function then either allocates a
 new stream or increments the stream pointer if the stream has already
-been allocated. Furthermore if we extend the example to use two
-counters, we similarly require unique identifiers for counters.
+been allocated. We similarly require unique identifiers for counters
+as shown on line 6, where the last argument of the call `counter(10,
+1, 0)` provides the counter id.
 
 \lstset{style=MaxC, label={simexample}, caption={Simple example for
 simulation code.}}
@@ -694,14 +695,15 @@ The purpose of our evaluation strategy is twofold:
 1. first we should confirm that our compilation startegy succesfully
 handles a meaningful set of C applications;
 
-2. second we should evaluate the performance of the compiled designed
-by comparing to existing high-performance applications.
+2. second we should evaluate the performance of compiled designs by
+comparing them to existing high-performance applications.
 
 For this purpose we propose to evaluate the MaxC compiler using two
 high performance applications, which have published results for
-implementations targeting the Maxeler dataflow platform. This enables
-us to evaluate the quality of the compilation process itself, rather
-than the underlying hardware platform.
+implementations targeting the Maxeler dataflow platform
+[@fplxinyu12; @max-himeno]. This enables us to evaluate the quality of
+the compilation process itself, rather than the underlying hardware
+platform.
 
 ## RTM
 
@@ -713,8 +715,11 @@ imaging [@fplxinyu12]:
 * first, we will implement the simplest version, a design with a
   single computational pipeline (or core) on the FPGA;
 
-* the second design is a multi pipe version, achieving more efficient
-  area and memory bandwidth utilization;
+* the second design is an optimized version comprising multiple
+  computational pipelines. This significantly increases the overall
+  performance of the design and is a crucial optimization in all
+  high-performance designs based on the dataflow paradigm, resulting
+  in more efficient area and memory bandwidth utilization;
 
 * finally we aim to produce a run-time reconfigurable version as
   described in [@fplxinyu12].
@@ -723,7 +728,7 @@ In all three cases we will analyze both area and performance results
 of the optimization strategies applied using MaxC and LARA and compare
 them with the reference implementation described in
 [@fplxinyu12]. This is currently the fastest published result for an
-RTM implementation for FPGA or GPU results and up to two orders of
+RTM implementation for FPGA or GPU and is up to two orders of
 magnitude faster than CPU implementations. Hence, being able to
 generate, in a fully automated fashion, an efficient design with
 similar performance would represent a significant achievement.
