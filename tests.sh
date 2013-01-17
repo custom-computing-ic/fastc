@@ -23,13 +23,18 @@ runTest() {
 
 ############# Test Setup #################
 
-runTest "maxc/testMaxCTemplate"
+if [ "$TEST" = "" ]; then
+    runTest "maxc/testMaxCTemplate"
 
-runTest "maxc/testCmdRead"
+    runTest "maxc/testCmdRead"
 
-runTest "maxc/testCmdWrite"
+    runTest "maxc/testCmdWrite"
 
-runTest "maxc/test1dConvolutionKernel"
+    runTest "maxc/test1dConvolutionKernel"
 
-runTest "maxc/testRTMSingle"
+    runTest "maxc/testRTMSingle"
+else
+    runTest $TEST
+fi
+
 ############# Test Summary ###############
