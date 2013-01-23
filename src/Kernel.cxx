@@ -59,8 +59,20 @@ void Kernel::addInput(string inputName, string type) {
         + "\", " + type + ");\n";
 }
 
+void Kernel::addInput(string inputName, string type, string width) {
+    inputs.push_back(inputName);
+    string t = "new KArrayType<HWVar>(" + type + "," + width + ")";
+    declarations += "KArray<HWVar> " + inputName +
+        " = io.input(\"" + inputName + "\",  " + t +");\n";
+}
+
+void Kernel::addOutput(string outputName, string type, string width) {
+    // XXX this is not really required, as outputs are created
+    // from source code (e.h. output_i, output_ic)
+}
+
 void Kernel::addOutput(string outputName, string type) {
-    // XXX this is not really required, as outputs are creawted
+    // XXX this is not really required, as outputs are created
     // from source code (e.h. output_i, output_ic)
     /*  outputs.push_back(outputName);
         output += "HWVar " + outputName + " =  io.output(\"" + outputName + "\","

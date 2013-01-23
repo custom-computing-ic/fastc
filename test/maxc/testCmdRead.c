@@ -1,16 +1,18 @@
+typedef int* s_int32;
 #define burst_inc 1
 
-#pragma scalar in iniBursts uint32 kernel_Cmdread
-#pragma scalar in totalBursts uint32 kernel_Cmdread
-#pragma scalar in wordsPerBurst uint32 kernel_Cmdread
-#pragma scalar in Enable uint1 kernel_Cmdread
+#pragma class:scalar dir:in name:iniBursts type:uint32 func:kernel_Cmdread
+#pragma class:scalar dir:in name:totalBursts type:uint32 func:kernel_Cmdread
+#pragma class:scalar dir:in name:wordsPerBurst type:uint32 func:kernel_Cmdread
+#pragma class:scalar dir:in name:Enable type:uint1 func:kernel_Cmdread
 void kernel_Cmdread(
     int iniBursts,
     int totalBursts,
     int wordsPerBurst,
     int Enable)
 {
-    int wordCount  = count_p(32, wordsPerBurst, 1, Enable);
+    s_int32 wordCount;
+    wordCount[0] = count_p(32, wordsPerBurst, 1, Enable);
 
     int wrap = (wordCount == wordsPerBurst);
     int burstCount = count_p(32, totalBursts, burst_inc, wrap);

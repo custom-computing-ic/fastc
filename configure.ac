@@ -1,5 +1,5 @@
 AC_INIT([MaxC Compiler], [0.1], [paul.grigoras90@gmail.com],
-             [maxcc], [https://github.com/paul-g/maxcc])
+[maxcc], [https://github.com/paul-g/maxcc])
 AC_PREREQ([2.59])
 
 AC_PROG_CXX
@@ -21,16 +21,16 @@ LIBS="-lrose $LIBS"
 
 # introduce the optional configure parameter for a non-standard install prefix of ROSE
 AC_ARG_WITH([rose],
-    [AS_HELP_STRING([--with-rose=prefix],
-        [try this for a non-standard install prefix of ROSE])],
-    [ROSEPATHSET=1],
-    [ROSEPATHSET=0])
-	
+[AS_HELP_STRING([--with-rose=prefix],
+[try this for a non-standard install prefix of ROSE])],
+[ROSEPATHSET=1],
+[ROSEPATHSET=0])
+
 # if optional parameter used, extend path flags for compliler and linker
 if test $ROSEPATHSET = 1 ; then
-    # extend the compiler and linker flags according to the path set
-    AM_CXXFLAGS="$AM_CXXFLAGS -I$with_rose/include"
-    AM_LDFLAGS="$AM_LDFLAGS -L$with_rose/lib"
+# extend the compiler and linker flags according to the path set
+AM_CXXFLAGS="$AM_CXXFLAGS -I$with_rose/include"
+AM_LDFLAGS="$AM_LDFLAGS -L$with_rose/lib"
 fi
 
 ##########################################################################
@@ -42,21 +42,21 @@ LIBS="-lboost_regex $LIBS"
 
 # introduce the optional configure parameter for a non-standard install prefix of ROSE
 AC_ARG_WITH([boost],
-    [AS_HELP_STRING([--with-boost=prefix],
-        [try this for a non-standard install prefix of boost])],
-    [BOOSTPATHSET=1],
-    [BOOSTPATHSET=0])
-	
+[AS_HELP_STRING([--with-boost=prefix],
+[try this for a non-standard install prefix of boost])],
+[BOOSTPATHSET=1],
+[BOOSTPATHSET=0])
+
 # if optional parameter used, extend path flags for compliler and linker
 if test $BOOSTPATHSET = 1 ; then
-    # extend the compiler and linker flags according to the path set
-    AM_CXXFLAGS="$AM_CXXFLAGS -I$with_boost/include"
-    AM_LDFLAGS="$AM_LDFLAGS -L$with_boost/lib"
+# extend the compiler and linker flags according to the path set
+AM_CXXFLAGS="$AM_CXXFLAGS -I$with_boost/include"
+AM_LDFLAGS="$AM_LDFLAGS -L$with_boost/lib"
 fi
 
 ##########################################################################
 
-AM_CXXFLAGS="$AM_CXXFLAGS -H -Winvalid-pch -std=c++0x"
+AM_CXXFLAGS="$AM_CXXFLAGS -H -Winvalid-pch -std=c++0x -g3 -O0"
 
 # distribute the changed variables among the Makefiles
 AC_SUBST([LIBS])

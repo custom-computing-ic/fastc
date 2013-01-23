@@ -22,7 +22,9 @@ public:
     string getSource();
     void addSource(string source);
     void addInput(string inputName, string type);
+    void addInput(string inputName, string type, string width);
     void addOutput(string outputName, string type);
+    void addOutput(string outputName, string type, string width);
     void addScalarInput(string inputName, string type);
 };
 

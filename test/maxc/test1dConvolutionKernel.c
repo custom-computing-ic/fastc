@@ -1,9 +1,9 @@
-#pragma in p CPU kernel_Convolution1d
-#pragma scalar in c_0_0_0 float8_24 kernel_Convolution1d
-#pragma scalar in c_p_0_0 float8_24 kernel_Convolution1d
-#pragma scalar in c_n_0_0 float8_24 kernel_Convolution1d
-#pragma scalar in n1 uint32 kernel_Convolution1d
-#pragma scalar in ORDER uint32 kernel_Convolution1d
+#pragma dir:in name:p type:float8_24 func:kernel_Convolution1d
+#pragma class:scalar dir:in name:c_0_0_0 type:float8_24 func:kernel_Convolution1d
+#pragma class:scalar dir:in name:c_p_0_0 type:float8_24 func:kernel_Convolution1d
+#pragma class:scalar dir:in name:c_n_0_0 type:float8_24 func:kernel_Convolution1d
+#pragma class:scalar dir:in name:n1 type:uint32 func:kernel_Convolution1d
+#pragma class:scalar dir:in name:ORDER type:uint32 func:kernel_Convolution1d
 void kernel_Convolution1d(
                           float *p,
                           float *output,

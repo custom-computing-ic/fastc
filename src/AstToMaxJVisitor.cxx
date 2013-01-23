@@ -1,5 +1,6 @@
 #include "precompiled.hxx"
 #include "AstToMaxJVisitor.hxx"
+#include "utils.hxx"
 
 using namespace std;
 using namespace boost;
@@ -15,11 +16,28 @@ ASTtoMaxJVisitor::ASTtoMaxJVisitor() {
     paramCount = 0;
 }
 
-void ASTtoMaxJVisitor::visit(SgNode *n) {
-    if (isSgVariableDeclaration(n)) {
-        visit(isSgVariableDeclaration(n));
-    } else if (isSgFunctionCallExp(n)) {
-        visit(isSgFunctionCallExp(n));
+void ASTtoMaxJVisitor::preOrderVisit(SgNode *n) {
+
+    D(cerr << "Visiting node: " << n->unparseToString());
+    D(cerr << ",ignore: " << n->getAttribute("ignore") << endl);
+
+    if ( n->getAttribute("ignore") != NULL )
+        return;
+
+    if (isSgVariableDeclaration(n))
+        visitVarDecl(isSgVariableDeclaration(n));
+    else if (isSgFunctionCallExp(n))
+        visitFcall(isSgFunctionCallExp(n));
+    else if (isSgForStatement(n))
+        visitFor(isSgForStatement(n));
+    else if (isSgExprStatement(n))
+        visitExprStmt(isSgExprStatement(n));
+
+}
+
+void ASTtoMaxJVisitor::postOrderVisit(SgNode *n) {
+    if (isSgForStatement(n)) {
+        source += "\n}\n";
     }
 }
 
@@ -43,6 +61,7 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         }
 
         if (fname.compare("count") == 0) {
+            D(cerr << "Visiting count " << endl);
             // XXX it seems counter chains with one counter are supported?
             // TODO need a fresh variable for chain
             string name = "chain_" + variableName;
@@ -85,20 +104,27 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         string *ifFalse = toExpr(*(++itt));
         source += "HWVar " + variableName + " = control.mux(" + (*exp) + ", "
             + (*ifTrue) + ", " + (*ifFalse) + ");\n";
+    } else if (fname.compare("make_offset") == 0) {
+        string *min  = toExpr(*itt);
+        string *max  = toExpr(*(++itt));
+        source += "OffsetExpr " + variableName;
+        source += " = stream.makeOffsetParam("+ variableName + "," + *min + "," + *max + ");\n";
     }
-
-
-
-
 }
 
 string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
     if (isSgVarRefExp(ex)) {
         SgVarRefExp *e = isSgVarRefExp(ex);
         return new string(e->get_symbol()->get_name());
-    } else if (isSgIntVal(ex) || isSgFloatVal(ex) || isSgDoubleVal(ex)) {
+    } else if (isSgIntVal(ex) || isSgUnsignedLongVal(ex)) {
         SgValueExp *e = isSgValueExp(ex);
         return new string(e->get_constant_folded_value_as_string());
+    } else if (isSgFloatVal(ex))  {
+        SgFloatVal *e = isSgFloatVal(ex);
+        return new string(e->get_valueString());
+    } else if ( isSgDoubleVal(ex)) {
+        SgDoubleVal *e = isSgDoubleVal(ex);
+        return new string(e->get_valueString());
     } else if (isSgStringVal(ex)) {
         SgStringVal *e = isSgStringVal(ex);
         stringstream out;
@@ -108,10 +134,18 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
 
         SgBinaryOp *e = isSgBinaryOp(ex);
 
-        string *left = toExpr(e->get_lhs_operand());
+        string op;
+
+        string *left;
+        if (isSgAssignOp(ex)) {
+            op = "=";
+            left = new string(e->get_lhs_operand()->unparseToString());
+        } else {
+            left = toExpr(e->get_lhs_operand());
+        }
+
         string *right = toExpr(e->get_rhs_operand());
 
-        string op;
         if (isSgAddOp(ex))
             op = "+";
         else if (isSgSubtractOp(ex))
@@ -128,28 +162,67 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             op = ">=";
         else if (isSgLessOrEqualOp(ex))
             op = "<=";
-        else if (isSgEqualityOp(ex))
+        else if (isSgAssignOp(ex))
+            op = "=";
+        else if (isSgDivideOp(ex))
+            op = "/";
+        if (isSgEqualityOp(ex))
             return new string((*left) + ".eq(" + (*right) + ")");
 
         if (isSgPntrArrRefExp(ex)) {
-            // XXX optimisation should be done in a separate pass
-            if ((*right).compare("0") == 0)
-                return left;
+            SgPntrArrRefExp *e = isSgPntrArrRefExp(ex);
+            // check for the type of lhs
+            string type =  e->get_type()->unparseToString();
+            D(cerr << "PTR REF: Found ptr ref type " << type);
+            D(cerr << "Expr: " << ex->unparseToString() << endl);
+            D(cerr << "PTR REF: Type of lhs" <<  e->get_lhs_operand()->get_type()->unparseToString() << endl);
+            string lhs_type = e->get_lhs_operand()->get_type()->unparseToString();
+            if (lhs_type.compare("s_float8_24") == 0 ||
+                lhs_type.compare("s_int32") == 0) {
+		// LHS is stream type so pointer access maps to stream.offset()
 
-            SgIntVal* rhs = isSgIntVal(e->get_rhs_operand());
-            if (rhs != NULL) {
-                stringstream out;
-                out << rhs->get_value(); //XXX this should be reused
-                return new string(
-                                  "stream.offset(" + (*left) + ", " + out.str() + ")");
-            } else {
-                // XXX limits for dynamic offsets should be inferred
-                // first argument to offset() is HWVar
-                string val = *right;
-                if (isConstant(*right))
-                    val = constVar(val);
-                return new  string("stream.offset(" + (*left) + ", " + val + ", -1024, 1024)");
+                // XXX optimisation should be done in a separate pass
+                if ((*right).compare("0") == 0)
+                    return left;
+
+                SgIntVal* rhs = isSgIntVal(e->get_rhs_operand());
+                if (rhs != NULL) {
+                    stringstream out;
+                    out << rhs->get_value(); //XXX this should be reused
+                    return new string(
+                                      "stream.offset(" + (*left) + ", " + out.str() + ")");
+                } else {
+                    // XXX limits for dynamic offsets should be inferred
+                    // first argument to offset() is HWVar
+                    string val = *right;
+                    if (isConstant(*right))
+                        val = constVar(val);
+                    return new  string("stream.offset(" + (*left) + ", " + val + ", -1024, 1024)");
+                }
             }
+
+            SgArrayType *t  = isSgArrayType(e->get_type());
+            if (t != NULL) {
+                vector<SgExpression*> expressions = SageInterface::get_C_array_dimensions(t);
+                vector<SgExpression*>::iterator it;
+                int dim = expressions.size() - 1;
+                D(cerr << "Array type dim: " << dim << endl);
+
+                for (SgExpression* d : expressions ) {
+                    string *value = toExpr(d);
+                    if ( value != NULL )
+                        cerr << "Extra args: " + *value + "]";
+                }
+
+                if (dim >= 1) {
+                    return new string(ex->unparseToString());
+                }
+            } else {
+		return new string(ex->unparseToString());
+	    }
+
+            D(cerr << "PTR REF: No type found for exp: " << e->unparseToString());
+
         } else
             return new string("(" + (*left) + " " + op + " " + (*right) + ")");
 
@@ -159,27 +232,56 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         string op;
         if (isSgMinusOp(ex))
             op = "-";
+        else if (isSgPlusPlusOp(ex))
+            op = "++";
+	else if (isSgPointerDerefExp(ex))
+	    op = "";
+
         return new string(op + *exp);
     }
 
     return NULL;
 }
 
-void ASTtoMaxJVisitor::visit(SgVariableDeclaration* decl) {
-    string type("hwFloat(8, 24)");
+void ASTtoMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
+
     SgVariableDeclaration *varDecl = isSgVariableDeclaration(decl);
 
     SgInitializedNamePtrList vars = varDecl->get_variables();
-    SgInitializedNamePtrList::iterator it;
 
+    SgInitializedNamePtrList::iterator it;
     for (it = vars.begin(); it != vars.end(); it++) {
         SgInitializedName *v = *it;
-        string variableName = (*it)->get_qualified_name();
+        string variableName = v->get_qualified_name();
+
+        if (isSgArrayType(v->get_type()) ) {
+            SgArrayType *t  = isSgArrayType(v->get_type());
+
+            vector<SgExpression*> expressions = SageInterface::get_C_array_dimensions(t);
+            vector<SgExpression*>::iterator it;
+            int dim = expressions.size() - 1;
+
+            source += "HWVar " + variableName;
+            for (int i = 0 ; i < dim; i++ ) {
+                source += "[]";
+            }
+            source += " = new HWVar ";
+            for (SgExpression* d : expressions ) {
+                string *value = toExpr(d);
+                if ( value != NULL )
+                    source += "[" + *value + "]";
+            }
+            source += ";\n";
+            continue;
+        }
 
         SgInitializer *init = v->get_initializer();
         SgAssignInitializer *ass = isSgAssignInitializer(init);
-        if (ass == NULL)
+        if (ass == NULL) {
+            // just a stream declaration, no assignment
+            source += "HWVar " + variableName + ";\n";
             continue;
+        }
 
         SgExpression *exp = ass->get_operand();
 
@@ -190,12 +292,32 @@ void ASTtoMaxJVisitor::visit(SgVariableDeclaration* decl) {
 
         // i = expr;
         string* n = toExpr(exp);
-        if (n != NULL)
-            source += "HWVar " + variableName + " = " + (*n) + ";\n";
+
+        if (n != NULL) {
+            if ( get_type(v)->compare("float") == 0 ||
+                 get_type(v)->compare("int") == 0) {
+                // proper float or int constants
+                source += *get_type(v) + " " + variableName;
+                source += " = " + (*n)  + ";\n";
+            } else {
+                // stream type consts or varsb
+                if (isConstant(*n))
+                    *n =  constVar(*n);
+                source += "HWVar " + variableName + " = " + (*n) + ";\n";
+            }
+        }
+
+
     }
 }
 
-void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
+string* ASTtoMaxJVisitor::get_type(SgInitializedName *ident) {
+    SgType *type = ident->get_type();
+    return new string(type->unparseToString());
+}
+
+void ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
+    cerr << "Handling fcall " << endl;
     string type("hwFloat(8, 24)");
     SgExpressionPtrList args = fcall->get_args()->get_expressions();
     SgExpressionPtrList::iterator it = args.begin();
@@ -207,7 +329,7 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
         string* expr = toExpr(*(++it));
         string* cond = toExpr(*(++it));
         if (name == NULL || expr == NULL) {
-            cout << "NULL NAME!";
+            cerr << "NULL NAME!";
         } else if (cond == NULL)
             source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
                 + ");\n";
@@ -219,7 +341,7 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
         string* name = toExpr(*it);
         string* expr = toExpr(*(++it));
         if (name == NULL || expr == NULL) {
-            cout << "NULL NAME!";
+            cerr << "NULL NAME!";
         } else {
             source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
                 + ");\n";
@@ -237,7 +359,6 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
             *interrupt = constVar("false");
         else if ( isConstant(*interrupt) )
             *interrupt = constVar("true");
-
 
         source += "DRAMCommandStream.makeKernelOutput("
             + *streamName + ",\n"
@@ -257,6 +378,42 @@ void ASTtoMaxJVisitor::visit(SgFunctionCallExp *fcall) {
     }
 }
 
+void ASTtoMaxJVisitor::visitExprStmt(SgExprStatement *exprStmt) {
+    string* s = toExpr(exprStmt->get_expression());
+    if ( s != NULL )
+        source += *s + ";\n";
+}
+
+void ASTtoMaxJVisitor::ignore(SgNode *n) {
+    AstAttribute *ignore = new AstTextAttribute("yes");
+    n->setAttribute("ignore", ignore);
+}
+
+void ASTtoMaxJVisitor::visitFor(SgForStatement *forStmt) {
+
+    SgStatementPtrList initList = forStmt->get_init_stmt();
+
+    SgStatement        *test = forStmt->get_test();
+    SgExpression       *incr = forStmt->get_increment();
+
+    source += "for (";
+
+    SgStatementPtrList::iterator it;
+    for (it = initList.begin(); it != initList.end(); it++ ) {
+        SgStatement* stmt = *it;
+        source += stmt->unparseToString();
+        ignore(stmt);
+    }
+
+    source += test->unparseToString();
+    source += incr->unparseToString();
+    source += ")";
+
+    ignore(test); ignore(incr);
+
+    source += " {\n";
+}
+
 string ASTtoMaxJVisitor::constVar(string s) {
     return "constant.var(" + s + ")";
 }
@@ -266,7 +423,7 @@ string ASTtoMaxJVisitor::constVar(string s, string type) {
 }
 
 bool ASTtoMaxJVisitor::isConstant(string s) {
-    regex constant("-?[0-9]*");
+    regex constant("-?[0-9]*(.[0-9]*)?");
     cmatch group;
     return regex_match(s.c_str(), group, constant);
 }

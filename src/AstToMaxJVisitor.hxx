@@ -17,15 +17,12 @@
 using namespace std;
 using namespace boost;
 
-class SgFunctionCallExp;
-class SgPragma;
-class SgVariableDeclaration;
-
-class ASTtoMaxJVisitor : public AstSimpleProcessing {
+class ASTtoMaxJVisitor : public AstPrePostProcessing {
 
     int paramCount;
 
     list<InputNode> inputs;
+
     list<OutputNode> outputs;
 
     DataFlowGraph dfg;
@@ -35,9 +32,12 @@ class ASTtoMaxJVisitor : public AstSimpleProcessing {
     Kernel* currentKernel;
 
     void function_call_initializer(string&, SgFunctionCallExp*);
-    string* toExprRec(SgExpression*);void visit(SgVariableDeclaration*);
+    string* toExprRec(SgExpression*);
+    void visitVarDecl(SgVariableDeclaration*);
     void visit(SgPragma*);
-    void visit(SgFunctionCallExp*);
+    void visitFcall(SgFunctionCallExp*);
+    void visitFor(SgForStatement *);
+    void visitExprStmt(SgExprStatement *);
 
     string* toExpr(SgExpression *);
 
@@ -49,10 +49,14 @@ class ASTtoMaxJVisitor : public AstSimpleProcessing {
     string constVar(string);
     string constVar(string, string);
     bool isConstant(string);
+    string* get_type(SgInitializedName *);
+    void ignore(SgNode *);
 
 public:
     ASTtoMaxJVisitor();
-    virtual void visit (SgNode*);
+    //    virtual void visit (SgNode*);
+    void preOrderVisit(SgNode *);
+    void postOrderVisit(SgNode *);
 
     string getSource() {
         return declarations + "\n" + source + "\n}\n}";

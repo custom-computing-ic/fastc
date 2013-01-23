@@ -1,10 +1,10 @@
 #define burst_inc 1
 
-#pragma scalar in iniBursts uint32 kernel_Cmdwrite
-#pragma scalar in iterations uint32 kernel_Cmdwrite
-#pragma scalar in totalBursts uint32 kernel_Cmdwrite
-#pragma scalar in wordsPerBurst uint32 kernel_Cmdwrite
-#pragma scalar in Enable uint1 kernel_Cmdwrite
+#pragma class:scalar dir:in name:iniBursts type:uint32 func:kernel_Cmdwrite
+#pragma class:scalar dir:in name:iterations type:uint32 func:kernel_Cmdwrite
+#pragma class:scalar dir:in name:totalBursts type:uint32 func:kernel_Cmdwrite
+#pragma class:scalar dir:in name:wordsPerBurst type:uint32 func:kernel_Cmdwrite
+#pragma class:scalar dir:in name:Enable type:uint1 func:kernel_Cmdwrite
 void kernel_Cmdwrite(int iniBursts,
                          int iterations,
                          int totalBursts,

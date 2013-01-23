@@ -31,8 +31,10 @@ CounterChain chain_i = control.count.makeCounterChain();
 HWVar i = chain_i.addCounter(nz, 1);
 HWVar j = chain_i.addCounter(ny, 1);
 HWVar k = chain_i.addCounter(nx, 1);
-HWVar cond = ((((i >= a1) & (i < n1)) & ((j >= a2) & (j < n2))) & ((k >= a3) & (k < n3)));
-HWVar func = (((((((c * x) + (c * stream.offset(x, 1))) + (c * stream.offset(x, constant.var(-1), -1024, 1024))) + (c * stream.offset(x, -nx, -1024, 1024))) + (c * stream.offset(x, nx, -1024, 1024))) + (c * stream.offset(x, (-nx * ny), -1024, 1024))) + (c * stream.offset(x, (nx * ny), -1024, 1024)));
+    HWVar cond;
+(cond = ((((i >= a1) & (i < n1)) & ((j >= a2) & (j < n2))) & ((k >= a3) & (k < n3))));
+HWVar func;
+(func = (((((((c * x) + (c * stream.offset(x, 1))) + (c * stream.offset(x, constant.var(-1), -1024, 1024))) + (c * stream.offset(x, -nx, -1024, 1024))) + (c * stream.offset(x, nx, -1024, 1024))) + (c * stream.offset(x, (-nx * ny), -1024, 1024))) + (c * stream.offset(x, (nx * ny), -1024, 1024))));
 io.output("res", func, hwFloat(8, 24), cond);
 }
 }

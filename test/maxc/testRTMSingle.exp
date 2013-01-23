@@ -1,30 +1,19 @@
 package engine;
 
-import com.maxeler.maxcompiler.v1.kernelcompiler.Kernel;
-import com.maxeler.maxcompiler.v1.kernelcompiler.KernelParameters;
+import com.maxeler.maxcompiler.v1.kernelcompiler.*;
 import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.DRAMCommandStream;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.WrapMode;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Counter;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Params;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain;
-import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.KArray;
-import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.KArrayType;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.*    ;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.*;
 import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath;
-import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.Range;
-import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWFix;
-import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWFloat;
-import com.maxeler.maxcompiler.v1.kernelcompiler.RoundingMode;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
 
 public class RTM extends Kernel {
   int Par=1;
   int Mul=1;
   int Sub=0;
-
-  public KArrayType<HWVar> burst_in=
-    new KArrayType<HWVar>(hwFloat(8, 24),  Par);
 
   public KArrayType<HWVar> burst_out=
     new KArrayType<HWVar>(hwFloat(8, 24),  Par);
@@ -37,6 +26,22 @@ public class RTM extends Kernel {
 //------------------------------Parameter configuration --------------------------------
     OffsetExpr nx = stream.makeOffsetParam("nx",  24/Par, 48/Par);
     OffsetExpr nxy = stream.makeOffsetParam("nxy",32* nx, 32 * nx);
+
+    HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+    HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+    HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+    HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+    HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+    KArray<HWVar> burst_p     =io.input("burst_p",      new KArrayType<HWVar>(hwFloat(8, 24),  1));
+    KArray<HWVar> burst_pp    =io.input("burst_pp",     new KArrayType<HWVar>(hwFloat(8, 24),  1));
+    KArray<HWVar> burst_dvv   =io.input("burst_dvv",    new KArrayType<HWVar>(hwFloat(8, 24),  1));
+    KArray<HWVar> burst_source=io.input("burst_source", new KArrayType<HWVar>(hwFloat(8, 24),  1));
+
+    CounterChain chain_i4 = control.count.makeCounterChain();
+    HWVar i4 = chain_i4.addCounter(1000,1);
+    HWVar i3 = chain_i4.addCounter(n3,  1);
+    HWVar i2 = chain_i4.addCounter(n2,  1);
+    HWVar i1 = chain_i4.addCounter(n1, 1);
 
     HWVar c_0   = constant.var(-0.000000056202665632554272);
     HWVar c_1_0 = constant.var( 0.000000010666666661052204);
@@ -57,22 +62,9 @@ public class RTM extends Kernel {
 
     HWVar bc    = constant.var(-0.0005);
 
-    HWVar n1    = io.scalarInput("n1",    hwUInt(32));
-    HWVar n2    = io.scalarInput("n2",    hwUInt(32));
-    HWVar n3    = io.scalarInput("n3",    hwUInt(32));
-    HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
-    HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
-
-//------------------------------Output control --------------------------------
-    CounterChain chain = control.count.makeCounterChain();
-    HWVar i4 = chain.addCounter(1000,1).cast(hwUInt(32));//iteration
-    HWVar i3 = chain.addCounter(n3,  1).cast(hwUInt(32));//outest loop
-    HWVar i2 = chain.addCounter(n2,  1).cast(hwUInt(32));
-    HWVar i1 = chain.addCounter(n1,Par).cast(hwUInt(32));//innest loop
-
-    HWVar up[] = new HWVar[Par];
+    HWVar up[] = new HWVar[1];
     for (int i=0; i <Par; i++)
-    up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+      up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
 
     HWVar output_ring;
     output_ring= n3  > i3  & i3 >= n3 - ORDER;
@@ -86,10 +78,6 @@ public class RTM extends Kernel {
     output_enable= (n3 - ORDER > i3 & i3 >= ORDER);
 //------------------------------Data input --------------------------------
     // input
-    KArray<HWVar> burst_p     =io.input("burst_p",      burst_in);
-    KArray<HWVar> burst_pp    =io.input("burst_pp",     burst_in);
-    KArray<HWVar> burst_dvv   =io.input("burst_dvv",    burst_in);
-    KArray<HWVar> burst_source=io.input("burst_source", burst_in);
 
     HWVar p[]       =new HWVar[Par];
     HWVar pp_i[]    =new HWVar[Par];

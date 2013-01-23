@@ -12,6 +12,8 @@ class PragmaVisitor: public AstSimpleProcessing {
     void visit(SgPragma*);
     string getType(string);
     Design* design;
+    string* get_param(string pragma, string param);
+    bool contains_param(string pragma, string param);
 
 public:
     PragmaVisitor(Design* design);

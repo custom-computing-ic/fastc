@@ -48,18 +48,62 @@ string PragmaVisitor::getType(string t) {
 }
 
 void PragmaVisitor::visit(SgPragma* pragma) {
-    string type("hwFloat(8, 24)");
+
     string s = pragma->get_pragma();
     cmatch sm;
-    if (regex_match(s.c_str(), sm, *PRAGMA_IN)) {
-        Kernel* k = design->getKernel(sm[3]);
-        k->addInput(sm[1], type);
-    } else if (regex_match(s.c_str(), sm, *PRAGMA_OUT)) {
-        Kernel* k = design->getKernel(sm[3]);
-        k->addOutput(sm[1], type);
-    } else if (regex_match(s.c_str(), sm, *PRAGMA_SCALAR_IN)) {
-        type = getType(sm[2]);
-        Kernel* k = design->getKernel(sm[3]);
-        k->addScalarInput(sm[1], type);
+    string *cls   = get_param(pragma->get_pragma(), "class");
+    string *dir   = get_param(pragma->get_pragma(), "dir");
+    string *type  = get_param(pragma->get_pragma(), "type");
+    string *width = get_param(pragma->get_pragma(), "width");
+    string *name  = get_param(pragma->get_pragma(), "name");
+    string *kernel = get_param(pragma->get_pragma(), "func");
+
+    if ( kernel == NULL ) {
+        cout << "Error : must specify kernel (func:<kerneL>) in pragma: ";
+        cout << pragma->get_pragma() << endl;
+        exit(1);
     }
+
+    if (name == NULL) {
+        cout << "Error : must specify input/output name in pragma: ";
+        cout << pragma->get_pragma() << endl;
+        exit(1);
+    }
+
+    Kernel *k = design->getKernel(*kernel);
+
+    if ( k == NULL )  {
+        cout << "Could not find specified kernel in the design!";
+        cout << "Is kernel_" + *kernel + "defined?" << endl;
+        exit(1);
+    }
+
+    if ( type != NULL )
+        *type = getType(*type);
+
+    if (cls == NULL) {
+        if (dir->compare("in") == 0)
+            k->addInput(*name, *type);
+        else if (dir->compare("out") == 0)
+            k->addOutput(*name, *type);
+    } else if (cls->compare("scalar") == 0)
+        k->addScalarInput(*name, *type);
+    else if (cls->compare("array") == 0) {
+        if (dir->compare("in") == 0)
+            k->addInput(*name, *type, *width);
+        else
+            k->addOutput(*name, *type, *width);
+    }
+}
+
+string* PragmaVisitor::get_param(string pragma, string param) {
+    regex s(param + " : (\\w*)");
+    cmatch sm;
+    if ( regex_search(pragma.c_str(), sm, s) )
+        return new string(sm[1]);
+    return NULL;
+}
+
+bool PragmaVisitor::contains_param(string pragma, string param) {
+    return pragma.find(param) != string::npos;
 }
