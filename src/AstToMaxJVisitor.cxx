@@ -41,15 +41,16 @@ void ASTtoMaxJVisitor::postOrderVisit(SgNode *n) {
     }
 }
 
-void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
-                                                 SgFunctionCallExp *fcall) {
+string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
+                                                    SgFunctionCallExp *fcall) {
+    string *s = new string();
 
     SgExpressionPtrList args = fcall->get_args()->get_expressions();
-    SgExpressionPtrList::iterator itt;
-    itt = args.begin();
+    SgExpressionPtrList::iterator itt = args.begin();
     SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
     string fname = fsymbol->get_name();
-    if (fname.compare("count") == 0 || fname.compare("countChain") == 0) {
+
+    if (fname.compare("count") == 0) {
         string *wrap = toExpr(*itt);
 
         SgIntVal *inc = isSgIntVal(*(++itt));
@@ -59,57 +60,66 @@ void ASTtoMaxJVisitor::function_call_initializer(string& variableName,
             s << inc->get_value();
             i = s.str();
         }
+        D(cerr << "Visiting count " << endl);
+        // XXX it seems counter chains with one counter are supported?
+        // TODO need a fresh variable for chain
+        string name = "chain_" + variableName;
+        declarations += "CounterChain " + name
+            + " = control.count.makeCounterChain();\n";
+        *s += "HWVar " + variableName + " = " + name + ".addCounter("
+            + *wrap + ", " + i + ");\n";
+        counterMap[variableName] = name;
+    } else if (fname.compare("count_chain") == 0) {
+        string *wrap = toExpr(*itt);
 
-        if (fname.compare("count") == 0) {
-            D(cerr << "Visiting count " << endl);
-            // XXX it seems counter chains with one counter are supported?
-            // TODO need a fresh variable for chain
-            string name = "chain_" + variableName;
-            declarations += "CounterChain " + name
-                + " = control.count.makeCounterChain();\n";
-            source += "HWVar " + variableName + " = " + name + ".addCounter("
-                + *wrap + ", " + i + ");\n";
-            counterMap[variableName] = name;
-        } else if (fname.compare("countChain") == 0) {
-            string p = "";
-            SgVarRefExp *parent = isSgVarRefExp(*(++itt));
-            if (parent != NULL)
-                p = parent->get_symbol()->get_name();
-            string chainDeclaration = counterMap[p];
-            source += "HWVar " + variableName + " = " + chainDeclaration
-                + ".addCounter(" + *wrap + ", " + i + ");\n";
-            counterMap[variableName] = chainDeclaration;
+        SgIntVal *inc = isSgIntVal(*(++itt));
+        string i;
+        if (inc != NULL) {
+            stringstream s;
+            s << inc->get_value();
+            i = s.str();
         }
-    }
-
-    if (fname.compare("count_p") == 0) {
+        string p = "";
+        SgVarRefExp *parent = isSgVarRefExp(*(++itt));
+        if (parent != NULL)
+            p = parent->get_symbol()->get_name();
+        string chainDeclaration = counterMap[p];
+        *s += "HWVar " + variableName + " = " + chainDeclaration
+            + ".addCounter(" + *wrap + ", " + i + ");\n";
+        counterMap[variableName] = chainDeclaration;
+    } else if (fname.compare("count_p") == 0) {
         string param = "param" + to_string(paramCount);
         string *width = toExpr(*(itt));
         string *max   = toExpr(*(++itt));
         string *inc   = toExpr(*(++itt));
         string *enable = toExpr(*(++itt));
-        source += "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
+        *s += "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
             + ".withMax(" + *max + ")"
             + ".withInc(" + *inc + ")";
         if (enable != NULL)
-            source += ".withEnable(" + *enable + ")";
-        source += ";\n";
+            *s += ".withEnable(" + *enable + ")";
+        *s += ";\n";
         string counter = "counter" + to_string(paramCount);
-        source += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
-        source += "HWVar " + variableName + " = " + counter + ".getCount();\n";
+        *s += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
+        *s += "HWVar " + variableName + " = " + counter + ".getCount();\n";
         paramCount++;
     } else if (fname.compare("fselect") == 0) {
         string *exp = toExpr(*itt);
         string *ifTrue = toExpr(*(++itt));
         string *ifFalse = toExpr(*(++itt));
-        source += "HWVar " + variableName + " = control.mux(" + (*exp) + ", "
+        *s += "HWVar " + variableName + " = control.mux(" + (*exp) + ", "
             + (*ifTrue) + ", " + (*ifFalse) + ");\n";
     } else if (fname.compare("make_offset") == 0) {
         string *min  = toExpr(*itt);
         string *max  = toExpr(*(++itt));
-        source += "OffsetExpr " + variableName;
-        source += " = stream.makeOffsetParam("+ variableName + "," + *min + "," + *max + ");\n";
+        *s += "OffsetExpr " + variableName;
+        *s += " = stream.makeOffsetParam("+ variableName + "," + *min + "," + *max + ");\n";
     }
+
+    if ( s->size() == 0 )
+        cerr << "Function definitio not found! " << endl;
+
+    return s;
 }
 
 string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
@@ -175,11 +185,12 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             string type =  e->get_type()->unparseToString();
             D(cerr << "PTR REF: Found ptr ref type " << type);
             D(cerr << "Expr: " << ex->unparseToString() << endl);
-            D(cerr << "PTR REF: Type of lhs" <<  e->get_lhs_operand()->get_type()->unparseToString() << endl);
+            D(cerr << "PTR REF: Type of lhs: ");
+            D(e->get_lhs_operand()->get_type()->unparseToString() << endl);
             string lhs_type = e->get_lhs_operand()->get_type()->unparseToString();
             if (lhs_type.compare("s_float8_24") == 0 ||
                 lhs_type.compare("s_int32") == 0) {
-		// LHS is stream type so pointer access maps to stream.offset()
+                // LHS is stream type so pointer access maps to stream.offset()
 
                 // XXX optimisation should be done in a separate pass
                 if ((*right).compare("0") == 0)
@@ -218,8 +229,8 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
                     return new string(ex->unparseToString());
                 }
             } else {
-		return new string(ex->unparseToString());
-	    }
+                return new string(ex->unparseToString());
+            }
 
             D(cerr << "PTR REF: No type found for exp: " << e->unparseToString());
 
@@ -234,10 +245,11 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             op = "-";
         else if (isSgPlusPlusOp(ex))
             op = "++";
-	else if (isSgPointerDerefExp(ex))
-	    op = "";
+        else if (isSgPointerDerefExp(ex))
+            op = "";
 
-        return new string(op + *exp);
+        if (exp != NULL)
+            return new string(op + *exp);
     }
 
     return NULL;
@@ -287,8 +299,10 @@ void ASTtoMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
 
         // i = f() ..
         SgFunctionCallExp *fcall = isSgFunctionCallExp(exp);
-        if (fcall != NULL)
-            function_call_initializer(variableName, fcall);
+        if (fcall != NULL) {
+            source += *function_call_initializer(variableName, fcall);
+            continue;
+        }
 
         // i = expr;
         string* n = toExpr(exp);
@@ -317,7 +331,7 @@ string* ASTtoMaxJVisitor::get_type(SgInitializedName *ident) {
 }
 
 void ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
-    cerr << "Handling fcall " << endl;
+    D(cerr << "Handling fcall " << endl);
     string type("hwFloat(8, 24)");
     SgExpressionPtrList args = fcall->get_args()->get_expressions();
     SgExpressionPtrList::iterator it = args.begin();

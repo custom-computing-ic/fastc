@@ -1,3 +1,5 @@
+typedef int int32;
+
 #define burst_inc 1
 
 #pragma class:scalar dir:in name:iniBursts type:uint32 func:kernel_Cmdwrite
@@ -11,15 +13,15 @@ void kernel_Cmdwrite(int iniBursts,
                          int wordsPerBurst,
                          int Enable) {
 
-int wordCount  = count_p(32, wordsPerBurst, 1, Enable);
+int32 wordCount  = count_p(32, wordsPerBurst, 1, Enable);
 
-int wrap = (wordCount == wordsPerBurst);
-int burstCount = count_p(32, totalBursts, 1, wrap);
+int32 wrap = (wordCount == wordsPerBurst);
+int32 burstCount = count_p(32, totalBursts, 1, wrap);
 
-int wrap2 = (burstCount == totalBursts);
-int iterCount = count_p(32, iterations, 1, wrap2);
+int32 wrap2 = (burstCount == totalBursts);
+int32 iterCount = count_p(32, iterations, 1, wrap2);
 
-int Control = (wordCount == 0) & Enable;
+int32 Control = (wordCount == 0) & Enable;
 DRAMOutput("dram_write",
                Control,
                burstCount + iniBursts,

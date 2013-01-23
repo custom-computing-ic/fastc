@@ -16,6 +16,10 @@ int main(int argc, char** argv) {
 
     SgProject* project = frontend(argc, argv);
     //  AstTests :: runAllTests(project);
+    if (project == NULL) {
+        cerr << "Could not run compiler frontend! Shutting down! " << endl;
+        return 1;
+    }
 
     Design* design = new Design();
 
