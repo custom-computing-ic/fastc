@@ -426,8 +426,25 @@ Fax: (888) 555--1212}}
 
 
 \begin{abstract}
-%\boldmath
-The abstract goes here.
+
+  The streaming (or dataflow) model of computation is a convenient
+  paradigm for expressing high-throughput parallel computations,
+  enabling synthesis of deeply pipelined hardware architectures
+  directly from a program's dataflow graph. Dataflow machines can be
+  conveniently emulated on Field Programmable Gate Array (FPGA) based
+  systems which combine the advantage of a fully customizable logic
+  circuit with low time to market. We propose a design flow for
+  creating dataflow designs for FPGA systems based on LARA, a
+  domain-specific aspect oriented programming language and MaxC. In
+  this paper we introduce MaxC, a new meta-programming language based
+  on C. Inputs, outputs, computation and control parts of hardware
+  designs can be captured with high-level MaxC descriptions, and
+  simulated in software using the standard GCC stack. Optimisation
+  strategies of generated designs are specified with LARA, to decouple
+  design optimisation from MaxC design development. Reverse-Time
+  Migration (RTM), a high performance application, is developed with
+  the proposed approach. Results show...
+
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -462,6 +479,9 @@ knowledge of circuit design and underlying performance
 considerations. Ideally we want to synthesize custom designs from
 existing high level implementations in C or other languages without
 compromising on performance and energy efficiency.
+
+We introduce a new C based meta-programming language and API for
+
 
 We propose a compilation flow from high-level C programs to a
 streaming dataflow architecture that captures and applies
