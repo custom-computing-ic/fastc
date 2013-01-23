@@ -186,7 +186,7 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             D(cerr << "PTR REF: Found ptr ref type " << type);
             D(cerr << "Expr: " << ex->unparseToString() << endl);
             D(cerr << "PTR REF: Type of lhs: ");
-            D(e->get_lhs_operand()->get_type()->unparseToString() << endl);
+            D(cerr << e->get_lhs_operand()->get_type()->unparseToString() << endl);
             string lhs_type = e->get_lhs_operand()->get_type()->unparseToString();
             if (lhs_type.compare("s_float8_24") == 0 ||
                 lhs_type.compare("s_int32") == 0) {

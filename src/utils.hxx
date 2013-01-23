@@ -1,7 +1,7 @@
 #ifndef UTILS_HXX
 #define UTILS_HXX
 
-#define DEBUG
+/#define DEBUG
 
 #ifdef DEBUG
 #define D(x) x
