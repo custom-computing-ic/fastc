@@ -58,6 +58,9 @@ void PragmaVisitor::visit(SgPragma* pragma) {
     string *name  = get_param(pragma->get_pragma(), "name");
     string *kernel = get_param(pragma->get_pragma(), "func");
 
+    if  ( cls != NULL && cls->compare("kernelopt") == 0 )
+	return;
+
     if ( kernel == NULL ) {
         cout << "Error : must specify kernel (func:<kerneL>) in pragma: ";
         cout << pragma->get_pragma() << endl;

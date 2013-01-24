@@ -19,7 +19,7 @@ maxcc_SOURCES = src/main.cxx src/main.hxx \
                 src/DataFlowGraph/SourceNode.hxx src/DataFlowGraph/SourceNode.cxx \
                 src/DataFlowGraph/DFSVisitor.hxx src/DataFlowGraph/DFSVisitor.cxx \
                 src/DataFlowGraph/BFSVisitor.hxx src/DataFlowGraph/BFSVisitor.cxx \
-                src/precompiled.hxx src/utils.hxx
+                src/precompiled.hxx src/utils.hxx src/utils.cxx
 
 BUILT_SOURCES = src/precompiled.hxx.gch
 src/precompiled.hxx.gch: src/precompiled.hxx
@@ -29,5 +29,8 @@ dist_noinst_SCRIPTS = autogen.sh
 
 test: all
 	./tests.sh
+
+cscope:
+	cscope -b -s src
 
 .PHONY: test

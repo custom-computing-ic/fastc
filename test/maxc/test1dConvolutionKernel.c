@@ -25,14 +25,14 @@ void kernel_Convolution1d(
 
     int32 up = (i1 >= ORDER) && (i1 < n1 - ORDER);
 
-    pushDSPFactor(1);
+#pragma class:kernelopt name:pushDSP factor:1
     int32 result =
         p[0]  * c_0_0_0 +
         p[1]  * c_p_0_0 +
-	p[-1] * c_n_0_0;
+        p[-1] * c_n_0_0;
 
     int32 inter = fselect(up, p, result);
-    popDSPFactor();
+#pragma class:kernelopt name:popDSP
 
     output_i(output, inter);
 }

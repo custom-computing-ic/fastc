@@ -12,12 +12,12 @@ runTest() {
     output=`diff -wbB test/$1.out test/$1.exp`
     res=$?
     if [ "$res" = "1" ]; then
-	printf "[FAIL!] $1.c\n"
-	printf " ---- Diff (meld test/$1.out test/$1.exp) ---- \n"
-	printf "$output\n"
-	printf " ---------------------\n"
+        printf "[FAIL!] $1.c\n"
+        printf " ---- Diff (meld test/$1.out test/$1.exp) ---- \n"
+        printf "$output\n"
+        printf " ---------------------\n"
     else
-	printf "[OK!]   $1.c\n"
+        printf "[OK!]   $1.c\n"
     fi
 }
 

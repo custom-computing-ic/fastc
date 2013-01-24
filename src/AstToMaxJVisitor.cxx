@@ -32,12 +32,32 @@ void ASTtoMaxJVisitor::preOrderVisit(SgNode *n) {
         visitFor(isSgForStatement(n));
     else if (isSgExprStatement(n))
         visitExprStmt(isSgExprStatement(n));
+    else if (isSgPragma(n))
+        source += *visitPragma(isSgPragma(n));
+}
 
+string* ASTtoMaxJVisitor::visitPragma(SgPragma *n) {
+    string *s = new string("pragma found");
+    D(cerr << "Visiting pragma! " << endl);
+
+    string *cls  = get_pragma_param(n->get_pragma(), "class");
+    string *name = get_pragma_param(n->get_pragma(), "name");
+
+    if (cls->compare("kernelopt") == 0) {
+        if (name->compare("pushDSP") == 0) {
+            string* factor = get_pragma_param(n->get_pragma(), "factor");
+            return new string("optimization.pushDSPFactor("+*factor+");\n");
+        } else if (name->compare("popDSP") == 0) {
+            return new string("optimization.popDSPFactor();\n");
+        }
+    }
+
+    return s;
 }
 
 void ASTtoMaxJVisitor::postOrderVisit(SgNode *n) {
     if (isSgForStatement(n)) {
-        source += "\n}\n";
+        source += "}\n";
     }
 }
 
@@ -113,17 +133,29 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         string *min  = toExpr(*itt);
         string *max  = toExpr(*(++itt));
         *s += "OffsetExpr " + variableName;
-        *s += " = stream.makeOffsetParam("+ variableName + "," + *min + "," + *max + ");\n";
+        *s += " = stream.makeOffsetParam(\""+ variableName + "\"," + *min + "," + *max + ");\n";
+    } else if (fname.compare("make_array_f") == 0) {
+        string *mantissa = toExpr(*itt);
+        string *exponent = toExpr(*++itt);
+        string *width    = toExpr(*++itt);
+        string type = "hwFloat("+*mantissa+","+*exponent+")";
+        *s += "KArray<HWVar>" + variableName;
+        *s += " = (new KArrayType<HWVar>("+type+",";
+        *s += *width+")).newInstance(this);\n";
     }
 
-    if ( s->size() == 0 )
-        cerr << "Function definitio not found! " << endl;
+    if ( s->size() == 0 ) {
+        LOG_CERR();
+        cerr << "Function definition not found! '" + fname + "'" << endl;
+    }
 
     return s;
 }
 
 string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
-    if (isSgVarRefExp(ex)) {
+    if (isSgFunctionCallExp(ex)) {
+        return visitFcall(isSgFunctionCallExp(ex));
+    } if (isSgVarRefExp(ex)) {
         SgVarRefExp *e = isSgVarRefExp(ex);
         return new string(e->get_symbol()->get_name());
     } else if (isSgIntVal(ex) || isSgUnsignedLongVal(ex)) {
@@ -145,17 +177,11 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         SgBinaryOp *e = isSgBinaryOp(ex);
 
         string op;
-
-        string *left;
-        if (isSgAssignOp(ex)) {
-            op = "=";
-            left = new string(e->get_lhs_operand()->unparseToString());
-        } else {
-            left = toExpr(e->get_lhs_operand());
-        }
-
         string *right = toExpr(e->get_rhs_operand());
+        string *left = toExpr(e->get_lhs_operand());
 
+        if (isSgAssignOp(ex))
+            op = "=";
         if (isSgAddOp(ex))
             op = "+";
         else if (isSgSubtractOp(ex))
@@ -172,8 +198,6 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             op = ">=";
         else if (isSgLessOrEqualOp(ex))
             op = "<=";
-        else if (isSgAssignOp(ex))
-            op = "=";
         else if (isSgDivideOp(ex))
             op = "/";
         if (isSgEqualityOp(ex))
@@ -196,19 +220,21 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
                 if ((*right).compare("0") == 0)
                     return left;
 
-                SgIntVal* rhs = isSgIntVal(e->get_rhs_operand());
-                if (rhs != NULL) {
-                    stringstream out;
-                    out << rhs->get_value(); //XXX this should be reused
-                    return new string(
-                                      "stream.offset(" + (*left) + ", " + out.str() + ")");
+                if (isConstant(*right)) {
+                    // constant offset value
+                    string* offset = new string();
+                    *offset += "stream.offset("+*left+", ";
+                    *offset += e->get_rhs_operand()->unparseToString() + ")";
+                    return offset;
                 } else {
+                    // offset expression / dynamic offset
                     // XXX limits for dynamic offsets should be inferred
                     // first argument to offset() is HWVar
-                    string val = *right;
-                    if (isConstant(*right))
-                        val = constVar(val);
-                    return new  string("stream.offset(" + (*left) + ", " + val + ", -1024, 1024)");
+                    // XXX for now, don't attempt to guess offset
+                    // bounds; Users should use the prev / next / ;
+                    // functions if they want to set limits
+                    return new  string("stream.offset("+*left+", "+*right+")");
+                    //+ ", -1024, 1024)");
                 }
             }
 
@@ -218,12 +244,6 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
                 vector<SgExpression*>::iterator it;
                 int dim = expressions.size() - 1;
                 D(cerr << "Array type dim: " << dim << endl);
-
-                for (SgExpression* d : expressions ) {
-                    string *value = toExpr(d);
-                    if ( value != NULL )
-                        cerr << "Extra args: " + *value + "]";
-                }
 
                 if (dim >= 1) {
                     return new string(ex->unparseToString());
@@ -330,14 +350,16 @@ string* ASTtoMaxJVisitor::get_type(SgInitializedName *ident) {
     return new string(type->unparseToString());
 }
 
-void ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
+string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
     D(cerr << "Handling fcall " << endl);
     string type("hwFloat(8, 24)");
     SgExpressionPtrList args = fcall->get_args()->get_expressions();
     SgExpressionPtrList::iterator it = args.begin();
     SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
     string fname = fsymbol->get_name();
-    // output()
+
+    string *s = new string();
+
     if (fname.compare("output_ic") == 0) {
         string* name = toExpr(*it);
         string* expr = toExpr(*(++it));
@@ -345,11 +367,11 @@ void ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
         if (name == NULL || expr == NULL) {
             cerr << "NULL NAME!";
         } else if (cond == NULL)
-            source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
-                + ");\n";
+            *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+                + ")";
         else {
-            source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
-                + ", " + (*cond) + ");\n";
+            *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+                + ", " + (*cond) + ")";
         }
     } else if (fname.compare("output_i") == 0) {
         string* name = toExpr(*it);
@@ -357,10 +379,16 @@ void ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
         if (name == NULL || expr == NULL) {
             cerr << "NULL NAME!";
         } else {
-            source += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
-                + ");\n";
+            *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+                + ")";
         }
-    } else if (fname.compare("DRAMOutput") == 0) {
+    } else if (fname.compare("output_iaf") == 0) {
+        string* name = toExpr(*it);
+        string* expr = toExpr(*(++it));
+        string type = "new KArrayType<HWVar>(hwFloat(8, 24),  1)";
+        *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+            + ")";
+    }  else if (fname.compare("DRAMOutput") == 0) {
         string *streamName = toExpr(*(it));
         string *control    = toExpr(*(++it));
         string *address    = toExpr(*(++it));
@@ -374,7 +402,7 @@ void ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
         else if ( isConstant(*interrupt) )
             *interrupt = constVar("true");
 
-        source += "DRAMCommandStream.makeKernelOutput("
+        *s += "DRAMCommandStream.makeKernelOutput("
             + *streamName + ",\n"
             + *control + ",\n"
             + *address + ",\n"
@@ -382,14 +410,25 @@ void ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
             + constVar(*inc, "hwUInt(6)") + ",\n"
             + constVar(*streamNo, "hwUInt(4)") + ",\n"
             + *interrupt
-            + ");\n";
+            + ")";
 
     } else if (fname.compare("pushDSPFactor") == 0) {
         string *exp = toExpr(*it);
-        source += "optimization.pushDSPFactor(" + *exp + ");\n";
+        *s += "optimization.pushDSPFactor(" + *exp + ");\n";
     } else if (fname.compare("popDSPFactor") == 0 ) {
-        source += "optimization.popDSPFactor();\n";
+        *s += "optimization.popDSPFactor();\n";
+    } else if (fname.compare("fselect") == 0) {
+        string *exp = toExpr(*it);
+        string *ifTrue = toExpr(*(++it));
+        string *ifFalse = toExpr(*(++it));
+        *s += "control.mux("+*exp+", "+*ifTrue+", "+*ifFalse+")";
     }
+    if (s->size() == 0) {
+        LOG_CERR();
+        cerr << "Function definition not found: '"+fname+"'" << endl;
+    }
+
+    return s;
 }
 
 void ASTtoMaxJVisitor::visitExprStmt(SgExprStatement *exprStmt) {

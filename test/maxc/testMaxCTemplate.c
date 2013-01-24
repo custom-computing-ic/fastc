@@ -34,9 +34,9 @@ void kernel_KernelFunc(s_int32 x, int *res,
 
     int32 func =
         c * x[0] +
-        c * x[1]      + c * x[-1] +
-        c * x[-nx]    + c * x[nx] +
-        c * x[-nx*ny] + c * x[nx*ny];
+        c * x[1]  + c * x[-1] +
+        c * x[-2] + c * x[2] +
+        c * x[-3] + c * x[3];
 
 
     // int r = fselect(cond, func, 0);

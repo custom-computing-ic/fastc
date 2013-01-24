@@ -33,11 +33,13 @@ class ASTtoMaxJVisitor : public AstPrePostProcessing {
 
     string* function_call_initializer(string&, SgFunctionCallExp*);
     string* toExprRec(SgExpression*);
+    string* visitFcall(SgFunctionCallExp*);
     void visitVarDecl(SgVariableDeclaration*);
     void visit(SgPragma*);
-    void visitFcall(SgFunctionCallExp*);
     void visitFor(SgForStatement *);
     void visitExprStmt(SgExprStatement *);
+
+    string* visitPragma(SgPragma *n);
 
     string* toExpr(SgExpression *);
 
