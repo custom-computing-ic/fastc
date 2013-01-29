@@ -169,8 +169,8 @@ void kernel_RTM(
   //------------------------------Data output --------------------------------
 
   // control counter
-    s_array_f8_24 output_pp_inter = make_array_f(8, 24, Par);
-    s_array_f8_24 output_p        = make_array_f(8, 24, Par);
+  s_array_f8_24 output_pp_inter = make_array_f(8, 24, Par);
+  s_array_f8_24 output_p        = make_array_f(8, 24, Par);
 
   for (int i=0; i <Par; i++) {
      output_p[i][0]  = inter[i][Mul-1][0];
