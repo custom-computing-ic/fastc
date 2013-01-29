@@ -36,3 +36,9 @@ auto
 /doc/reports/interim/report-blx.bib
 /doc/reports/interim/report.run.xml
 /doc/reports/interim/report.toc
+/test/projects/1d_convolution/engine/Cmdread.java
+/test/projects/1d_convolution/engine/Cmdwrite.java
+/test/projects/1d_convolution/engine/Convolution1d.java
+/test/projects/rtm_float_multi/engine/Cmdread.java
+/test/projects/rtm_float_multi/engine/Cmdwrite.java
+/test/projects/rtm_float_multi/engine/RTM.java
