@@ -180,8 +180,29 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         string *right = toExpr(e->get_rhs_operand());
         string *left = toExpr(e->get_lhs_operand());
 
-        if (isSgAssignOp(ex))
+        if (isSgAssignOp(ex)) {
             op = "=";
+            SgAssignOp *ass = isSgAssignOp(ex);
+            SgExpression *e1 = ass->get_lhs_operand();
+            if ( e1 == NULL ) {
+                LOG_CERR();
+                cerr << "LHS is null for " << e1->unparseToString();
+            }
+            // XXX this should be more general
+            // currently it checks if the type of 'a' in 'a[i][j]'  is s_array
+            // in which cases it uses <== instead of =
+            if (isSgPntrArrRefExp(e1) ) {
+                SgPntrArrRefExp *e = isSgPntrArrRefExp(e1);
+                if ( isSgPntrArrRefExp(e->get_lhs_operand())) {
+                    SgPntrArrRefExp *ee = isSgPntrArrRefExp(e->get_lhs_operand());
+                    string lhs_type = ee->get_lhs_operand()->get_type()->unparseToString();
+                    LOG_CERR();
+                    cerr << "lhs typre: " << lhs_type << endl;
+                    if ( lhs_type.compare("s_array_f8_24") == 0
+                        op = "<==";
+                }
+            }
+        }
         if (isSgAddOp(ex))
             op = "+";
         else if (isSgSubtractOp(ex))
@@ -254,8 +275,13 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
 
             D(cerr << "PTR REF: No type found for exp: " << e->unparseToString());
 
-        } else
-            return new string("(" + (*left) + " " + op + " " + (*right) + ")");
+        } else {
+            if (isSgAssignOp(ex))
+                // can't bracket assign stmts
+                return new string((*left) + " " + op + " " + (*right));
+            else
+                return new string("(" + (*left) + " " + op + " " + (*right) + ")");
+        }
 
     } else if (isSgUnaryOp(ex)) {
         SgUnaryOp *unOp = isSgUnaryOp(ex);
