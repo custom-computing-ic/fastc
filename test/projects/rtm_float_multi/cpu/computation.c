@@ -14,6 +14,7 @@
 #include <omp.h>
 #include "cpu_constructors.h"
 #include "max_util.h"
+#include "../include/params_dse.h"
 //#define DESIGN_NAME MyApp_beg
 //#include <MaxCompilerRT.h>
 //#define DESIGN_NAME MyApp_ker
@@ -39,7 +40,7 @@ extern float bc_b;
 int Num_FPGA =1;
 int Device_Num=1;
 int Inter=2;//make sure this number is even
-int Par=1;
+//int Par=4;
 int DATA_SIZE =0;
 int KNL_SIZE =0;
 int BYTE_SIZE =0;

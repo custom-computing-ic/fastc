@@ -8,6 +8,7 @@ CC=g++
 APP        =RTM
 BUILD_NAME =Builder
 EXE_SIM    =$(APP)_Sim
+EXE_HW     =$(APP)_Hw
 
 HOST_DIR    =cpu
 ENGINE_PKG  =engine
@@ -54,8 +55,8 @@ $(BUILDER).class:
 ${HOST_DIR}/%.o: ${HOST_DIR}/%.c
 	$(CC) $(MAX_CFLAGS) -c $< -o $@
 
-# ---- Simulation ----
 
+# ---- Simulation ----
 
 $(MAXFILE_SIM): $(BUILDER).class
 	MAXAPPJCP=. $(JAVA) $(BUILDER) $(BUILD_NAME)_SIM SIM
@@ -74,26 +75,29 @@ run-sim: $(EXE_SIM)
 	LD_LIBRARY_PATH="$(SIM_MAXELEROS_LIB):$(LD_LIBRARY_PATH)" LD_PRELOAD=$(SIM_PRELOAD) ./$< "$(USER)cc0:$(USER)cc"
 	maxcompilersim -n $(USER)cc -c3424 stop
 
+
 # ---- Hardware ----
 
-HWBuilder/scratch/HWBuilder.max: src/MyApp_pkg/$(APP).java src/MyApp_pkg/HWBuilder.java ${DESIGNFILES}
-	  MAXSOURCEDIRS=src $(JAVAC) $(MAX_JFLAGS) $?
-		MAXSOURCEDIRS=src MAXAPPJCP=. $(JAVA) $(APP)_pkg.HWBuilder
+$(MAXFILE_HW): $(BUILDER).class
+	MAXAPPJCP=. $(JAVA) $(BUILDER) $(BUILD_NAME)_HW HW
 
-par:HWBuilder/scratch/HWBuilder.max
+$(MAXFILE_OBJ_HW): $(MAXFILE_HW)
+	$(FILEC) $< $@ $(APP)
 
-#we do not generate the max file automatically
-$(APP)_hw.o:
-	  $(FILEC) HWBuilder/results/HWBuilder.max $(APP)_hw.o $(APP)
+$(APP)_hw.o:  cpu/$(APP).c
+	$(CXX) $< $(MAX_CFLAGS) -c -o $@
 
-hw: src/MyApp_pkg/$(APP).o $(APP)_hw.o $(HOSTCODE)
-	  $(CC) -o hw src/MyApp_pkg/$(APP).o $(APP)_hw.o $(HOSTCODE) $(MAX_LFLAGS)
+$(EXE_HW): $(MAXFILE_OBJ_HW) $(APP)_hw.o $(HOSTCODE)
+	$(CXX) $^ $(MAX_LFLAGS) -o $@
 
+build-hw: $(EXE_HW)
 
-runhw:
-	LD_PRELOAD=/opt/maxeler/maxeleros//lib/libmaxeleros.so ./hw "/dev/maxeler0"
+run-hw:
+	LD_PRELOAD=/opt/maxeler/maxeleros//lib/libmaxeleros.so $(EXE_HW) "/dev/maxeler0"
+
 
 # --- Debug ---
+
 debug:
 	maxdebug -g test -d "$(USER)cc0:$(USER)cc" -n SimBuilder/results/SimBuilder.max
 	dot -Tsvg test_x210cc0_fpga_a.dot > test_${USER}0_fpga_a.svg

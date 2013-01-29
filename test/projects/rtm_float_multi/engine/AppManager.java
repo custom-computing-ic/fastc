@@ -101,7 +101,6 @@ public class AppManager extends CustomManager {
 
     public static void buildHardware(String buildName) {
         AppManager m = new AppManager(MAX3BoardModel.MAX3424A, buildName, Target.MAXFILE_FOR_HARDWARE);
-
         //  DebugLevel d = new DebugLevel();
         //  d.setHasMemoryControllerDebugRegisters(true);
         //  d.setHasMemoryControllerExtraDebugRegisters(true);
@@ -109,13 +108,13 @@ public class AppManager extends CustomManager {
         //  d.setHasStreamStatusChecksums(true);
         //  m.debug.setDebugLevel(d);
 
-        BuildConfig a=new BuildConfig(Level.FULL_BUILD);
-        //  a.setMPPRParallelism(3);
-        //  a.setMPPRCostTableSearchRange(4,6);
+        BuildConfig a = new BuildConfig(Level.FULL_BUILD);
+        a.setMPPRParallelism(4);
+	//        a.setMPPRCostTableSearchRange(1,6);
         a.setBuildEffort (Effort.HIGH);
 
         m.config.setDefaultStreamClockFrequency(100);
-        m.config.setOnCardMemoryFrequency(400);
+        m.config.setOnCardMemoryFrequency(303);
         m.setBuildConfig(a);
         m.build();
     }
