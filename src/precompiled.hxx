@@ -3,5 +3,6 @@
 
 #include <rose.h>
 #include <boost/regex.hpp>
+#include <boost/lexical_cast.hpp>
 
 #endif

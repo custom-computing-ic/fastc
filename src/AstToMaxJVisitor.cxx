@@ -91,7 +91,6 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         counterMap[variableName] = name;
     } else if (fname.compare("count_chain") == 0) {
         string *wrap = toExpr(*itt);
-
         SgIntVal *inc = isSgIntVal(*(++itt));
         string i;
         if (inc != NULL) {
@@ -108,7 +107,7 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
             + ".addCounter(" + *wrap + ", " + i + ");\n";
         counterMap[variableName] = chainDeclaration;
     } else if (fname.compare("count_p") == 0) {
-        string param = "param" + to_string(paramCount);
+        string param = "param" + lexical_cast<string>(paramCount);
         string *width = toExpr(*(itt));
         string *max   = toExpr(*(++itt));
         string *inc   = toExpr(*(++itt));
@@ -119,7 +118,7 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         if (enable != NULL)
             *s += ".withEnable(" + *enable + ")";
         *s += ";\n";
-        string counter = "counter" + to_string(paramCount);
+        string counter = "counter" + lexical_cast<string>(paramCount);
         *s += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
         *s += "HWVar " + variableName + " = " + counter + ".getCount();\n";
         paramCount++;
@@ -142,6 +141,14 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         *s += "KArray<HWVar>" + variableName;
         *s += " = (new KArrayType<HWVar>("+type+",";
         *s += *width+")).newInstance(this);\n";
+    } else if (fname.compare("make_input_array_f") == 0) {
+        string *mantissa = toExpr(*itt);
+        string *exponent = toExpr(*++itt);
+        string *width    = toExpr(*++itt);
+        string type = "hwFloat("+*mantissa+","+*exponent+")";
+        string t ="new KArrayType<HWVar>(" + type + "," + *width + ")";
+        *s += "KArray<HWVar>" + variableName;
+        *s += " = io.input(\"" + variableName + "\",  " + t +")";
     }
 
     if ( s->size() == 0 ) {
@@ -174,7 +181,17 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         return new string("\"" + out.str() + "\"");
     } else if (isSgBinaryOp(ex)) {
 
-        SgBinaryOp *e = isSgBinaryOp(ex);
+        SgBinaryOp* e = isSgBinaryOp(ex);
+
+        SgExpression* lhs = e->get_lhs_operand();
+        SgExpression* rhs = e->get_rhs_operand();
+
+        // a = f()
+        if (isSgFunctionCallExp(rhs) && isSgVarRefExp(lhs)) {
+            SgVarRefExp *e = isSgVarRefExp(lhs);
+            string name = e->unparseToString();
+            return function_call_initializer(name, isSgFunctionCallExp(rhs));
+        }
 
         string op;
         string *right = toExpr(e->get_rhs_operand());
@@ -196,13 +213,14 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
                 if ( isSgPntrArrRefExp(e->get_lhs_operand())) {
                     SgPntrArrRefExp *ee = isSgPntrArrRefExp(e->get_lhs_operand());
                     string lhs_type = ee->get_lhs_operand()->get_type()->unparseToString();
-                    LOG_CERR();
-                    cerr << "lhs typre: " << lhs_type << endl;
-                    if ( lhs_type.compare("s_array_f8_24") == 0
+                    if ( lhs_type.compare("s_array_f8_24") == 0 )
                         op = "<==";
                 }
             }
+
         }
+
+
         if (isSgAddOp(ex))
             op = "+";
         else if (isSgSubtractOp(ex))
@@ -316,7 +334,7 @@ void ASTtoMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
             SgArrayType *t  = isSgArrayType(v->get_type());
 
             vector<SgExpression*> expressions = SageInterface::get_C_array_dimensions(t);
-            vector<SgExpression*>::iterator it;
+            vector<SgExpression*>::iterator it = expressions.begin();
             int dim = expressions.size() - 1;
 
             source += "HWVar " + variableName;
@@ -324,7 +342,8 @@ void ASTtoMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
                 source += "[]";
             }
             source += " = new HWVar ";
-            for (SgExpression* d : expressions ) {
+            for (; it != expressions.end(); it++) {
+		SgExpression* d = *(it);
                 string *value = toExpr(d);
                 if ( value != NULL )
                     source += "[" + *value + "]";
@@ -411,7 +430,10 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
     } else if (fname.compare("output_iaf") == 0) {
         string* name = toExpr(*it);
         string* expr = toExpr(*(++it));
-        string type = "new KArrayType<HWVar>(hwFloat(8, 24),  1)";
+        string* mantissa = toExpr(*(++it));
+        string* exponent = toExpr(*(++it));
+        string* width = toExpr(*(++it));
+        string type = "new KArrayType<HWVar>(hwFloat("+*mantissa+", "+*exponent+"), "+*width+")";
         *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
             + ")";
     }  else if (fname.compare("DRAMOutput") == 0) {

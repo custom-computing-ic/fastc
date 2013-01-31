@@ -1,3 +1,6 @@
+#define Par 1
+#define DspFactor 1
+
 typedef float float8_24;
 typedef float* s_float8_24;
 typedef int* s_uint32_in;
@@ -7,28 +10,28 @@ typedef int int32;
 typedef int uint32;
 typedef int s_offset;
 
-extern void output_iaf(s_array_f8_24 dest, s_array_f8_24 src);
+extern void output_iaf(s_array_f8_24 dest, s_array_f8_24 src, int mantissa, int exponent, int width);
 extern int count(int a, int b);
 extern int count_chain(int a, int b, int parent);
 extern int make_offset(int min, int max);
 extern int fselect(float8_24 cond, float8_24 left, float8_24 right);
 extern s_array_f8_24 make_array_f(int mantissa, int exponent, int width);
+extern s_array_f8_24 make_input_array_f(int mantissa, int exponent, int width);
 
-#define Par 1
-#define Mul 1
+extern void pushDSPFactor(float factor);
 
 #pragma class:scalar dir:in name:n1 type:uint32 func:kernel_RTM
 #pragma class:scalar dir:in name:n2 type:uint32 func:kernel_RTM
 #pragma class:scalar dir:in name:n3 type:uint32 func:kernel_RTM
 #pragma class:scalar dir:in name:ORDER type:uint32 func:kernel_RTM
 #pragma class:scalar dir:in name:SPONGE type:uint32 func:kernel_RTM
-#pragma class:array  dir:in name:burst_p type:float8_24 width:1 func:kernel_RTM
-#pragma class:array  dir:in name:burst_pp type:float8_24 width:1 func:kernel_RTM
-#pragma class:array  dir:in name:burst_dvv type:float8_24 width:1 func:kernel_RTM
-#pragma class:array  dir:in name:burst_source type:float8_24 width:1 func:kernel_RTM
-#pragma class:array  dir:out name:output_p type:float8_24 width:1 func:kernel_RTM
-#pragma class:array  dir:out name:ker_p type:float8_24 width:1 func:kernel_RTM
-#pragma class:array  dir:out name:output_pp type:float8_24 width:1 func:kernel_RTM
+//#pragma class:array  dir:in name:burst_p type:float8_24 width:1 func:kernel_RTM
+//#pragma class:array  dir:in name:burst_pp type:float8_24 width:1 func:kernel_RTM
+//#pragma class:array  dir:in name:burst_dvv type:float8_24 width:1 func:kernel_RTM
+//#pragma class:array  dir:in name:burst_source type:float8_24 width:1 func:kernel_RTM
+//#pragma class:array  dir:out name:output_p type:float8_24 width:1 func:kernel_RTM
+//#pragma class:array  dir:out name:ker_p type:float8_24 width:1 func:kernel_RTM
+//#pragma class:array  dir:out name:output_pp type:float8_24 width:1 func:kernel_RTM
 void kernel_RTM(
                 s_uint32 n1, s_uint32 n2, s_uint32 n3,
 		s_uint32 ORDER, s_uint32 SPONGE,
@@ -40,6 +43,10 @@ void kernel_RTM(
 		s_array_f8_24 ker_p
                 ) {
 
+    burst_p = make_input_array_f(8, 24, Par);
+    burst_pp  = make_input_array_f(8, 24, Par);
+    burst_dvv = make_input_array_f(8, 24, Par);
+    burst_source = make_input_array_f(8, 24, Par);
 
     int32 i4 = count(1000, 1);
     int32 i3 = count_chain(n3, 1, i4);
@@ -81,12 +88,13 @@ void kernel_RTM(
 
     float8_24 cur[Mul][11+Par+1][11][11], result[Par][Mul];
 
-    s_offset nx  = make_offset(24, 48);
+    s_offset nx  = make_offset(24 / Par, 48 / Par);
     s_offset nxy = make_offset(32 * nx, 32 * nx);
 
     // setup the optimisation factor to transfer operations between DSPs and Luts
 
-#pragma class:kernelopt name:pushDSP factor:1
+    //#pragma class:kernelopt name:pushDSP factor:1
+    pushDSPFactor(DspFactor);
 
     //Cache
     for (int i=0; i < Par; i++) {
@@ -160,6 +168,7 @@ void kernel_RTM(
               +(cur[j][6+i][5][0] + cur[j][6+i][5][10])* c_3_4 ))
                + source[i];
 
+
          inter[i][j][0] = fselect(up[i], cur[j-1][6+i][5][5], result[i][j]);
        }
      }
@@ -170,6 +179,7 @@ void kernel_RTM(
 
   // control counter
   s_array_f8_24 output_pp_inter = make_array_f(8, 24, Par);
+
   s_array_f8_24 output_p        = make_array_f(8, 24, Par);
 
   for (int i=0; i <Par; i++) {
@@ -177,7 +187,7 @@ void kernel_RTM(
      output_pp_inter[i][0] = cur[Mul-1][6+i][5][5];
   }
 
-  output_iaf(ker_p, output_p);
-  output_iaf(output_pp, output_pp_inter);
+  output_iaf(ker_p, output_p, 8, 24, Par);
+  output_iaf(output_pp, output_pp_inter, 8, 24, Par);
 
 }

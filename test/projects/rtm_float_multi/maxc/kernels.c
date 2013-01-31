@@ -17,6 +17,8 @@ extern int fselect(float8_24 cond, float8_24 left, float8_24 right);
 extern s_array_f8_24 make_array_f(int mantissa, int exponent, int width);
 extern s_array_f8_24 make_input_array_f(int mantissa, int exponent, int width);
 
+extern void pushDSPFactor(float factor);
+
 //#define Par 4
 #define Mul 1
 
@@ -44,8 +46,8 @@ void kernel_RTM(
                 ) {
 
     burst_p = make_input_array_f(8, 24, Par);
-    burst_dvv = make_input_array_f(8, 24, Par);
     burst_pp  = make_input_array_f(8, 24, Par);
+    burst_dvv = make_input_array_f(8, 24, Par);
     burst_source = make_input_array_f(8, 24, Par);
 
     int32 i4 = count(1000, 1);
