@@ -39,6 +39,7 @@ test/maxc
 ~~~
 
 These tests can be run with `make test` and cover the basic functionality of MaxC:
+
  1. Inputs and Outputs
     ~~~
     // Simple output of "inter"'s value to the output named "sink""
@@ -102,5 +103,5 @@ test/projects/rtm_float_multi
  engine/    --> [MaxJ]  Contains maxcompiler design files, generated with `make maxc`
  cpu/       --> [C/C++] Application host code with MaxCompilerRT
  dse.sh/    --> [Bash]  Usedto generate parameter headers for design space exploration
- exploded/  --> The original design is "exploded"/expanded to multiple designs with various parameter configurations
+ exploded/  --> The original design is "exploded"/expanded to multiple designs with various parameter configurations using dse.sh
 ~~~
