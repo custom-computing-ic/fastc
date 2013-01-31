@@ -16,18 +16,18 @@ public Arrays(KernelParameters parameters) {
 super(parameters);
 
 HWVar hw_up[] = new HWVar [3];
-(hw_up[0] = 1);
-(hw_up[1] = 2);
-(hw_up[2] = 3);
+hw_up[0] = 1;
+hw_up[1] = 2;
+hw_up[2] = 3;
 
 HWVar hw_up3d[][][] = new HWVar [1][1][1];
-(hw_up3d[0][0][0] = ((hw_up[0] + hw_up[1]) + hw_up[2]));
+hw_up3d[0][0][0] = ((hw_up[0] + hw_up[1]) + hw_up[2]);
 
 HWVar p[] = new HWVar [2];
-(p[0][0] = (p[1] + stream.offset(p[1], 2)));
+p[0] = ((p[1] + stream.offset(p[1], 2)) + hw_up3d[0][0][0]);
 
 HWVar pp[][] = new HWVar [2][4];
-(pp[0][1][1] = ((stream.offset(pp[1][0], 3) + pp[0][1]) + stream.offset(pp[0][1], 2)));
+pp[0][1] = ((stream.offset(pp[1][0], 3) + pp[0][1]) + stream.offset(pp[0][1], 2));
 
 }
 }

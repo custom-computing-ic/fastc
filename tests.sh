@@ -33,6 +33,11 @@ if [ "$TEST" = "" ]; then
     runTest "maxc/test1dConvolutionKernel"
 
     runTest "maxc/testRTMSingle"
+
+    runTest "maxc/testArrays"
+
+#    runTest "maxc/testRTMManager"
+
 else
     runTest $TEST
 fi
