@@ -36,6 +36,10 @@ if [ "$TEST" = "" ]; then
 
     runTest "maxc/testArrays"
 
+    runTest "maxc/testTypes"
+
+    runTest "maxc/testCounter"
+
 #    runTest "maxc/testRTMManager"
 
 else

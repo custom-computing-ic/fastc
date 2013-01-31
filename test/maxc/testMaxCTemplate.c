@@ -1,9 +1,4 @@
-typedef int* s_int32;
-typedef int int32;
-
-extern int count(int a, int b);
-extern int count_chain(int a, int b, int parent);
-extern void output_ic(int* res, int func, int32 cond);
+#include "../../include/maxcc.h"
 
 #pragma dir:in name:x type:float8_24 func:kernel_KernelFunc
 #pragma dir:out name:res type:float8_24 func:kernel_KernelFunc

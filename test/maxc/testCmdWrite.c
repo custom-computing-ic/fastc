@@ -1,4 +1,4 @@
-typedef int int32;
+#include "../../include/maxcc.h"
 
 #define burst_inc 1
 
