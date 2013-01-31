@@ -122,7 +122,8 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         *s += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
         *s += "HWVar " + variableName + " = " + counter + ".getCount();\n";
         paramCount++;
-    } else if (fname.compare("fselect") == 0) {
+    } else if (fname.compare("fselect") == 0
+               || fname.compare("fselect_sf_f") == 0 ) {
         string *exp = toExpr(*itt);
         string *ifTrue = toExpr(*(++itt));
         string *ifFalse = toExpr(*(++itt));
@@ -343,7 +344,7 @@ void ASTtoMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
             }
             source += " = new HWVar ";
             for (; it != expressions.end(); it++) {
-		SgExpression* d = *(it);
+                SgExpression* d = *(it);
                 string *value = toExpr(d);
                 if ( value != NULL )
                     source += "[" + *value + "]";
@@ -465,7 +466,8 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
         *s += "optimization.pushDSPFactor(" + *exp + ")";
     } else if (fname.compare("popDSPFactor") == 0 ) {
         *s += "optimization.popDSPFactor()";
-    } else if (fname.compare("fselect") == 0) {
+    } else if (fname.compare("fselect") == 0
+               || fname.compare("fselect_sf_f") == 0 ) {
         string *exp = toExpr(*it);
         string *ifTrue = toExpr(*(++it));
         string *ifFalse = toExpr(*(++it));

@@ -1,10 +1,4 @@
-typedef float* s_float8_24;
-typedef int* s_int32;
-typedef int int32;
-
-extern int count(int a, int b);
-extern int count_chain(int a, int b, int parent);
-extern void output_ic(int* res, int func, int32 cond);
+#include "../../include/maxcc.h"
 
 #pragma dir:in name:p type:float8_24 func:kernel_Convolution1d
 #pragma class:scalar dir:in name:c_0_0_0 type:float8_24 func:kernel_Convolution1d
@@ -31,7 +25,7 @@ void kernel_Convolution1d(
         p[1]  * c_p_0_0 +
         p[-1] * c_n_0_0;
 
-    int32 inter = fselect(up, p, result);
+    int32 inter = fselect_sf_f(up, p, result);
 #pragma class:kernelopt name:popDSP
 
     output_i(output, inter);

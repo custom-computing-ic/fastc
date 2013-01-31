@@ -34,6 +34,8 @@ int make_offset(int min, int max);
 // control/multiplexer functions
 int fselect(float8_24 cond, float8_24 left, float8_24 right);
 
+int fselect_sf_f(float8_24 cond, s_float8_24 left, float8_24 right);
+
 // array functions
 s_array_f8_24 make_array_f(int mantissa, int exponent, int width);
 
