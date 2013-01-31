@@ -1,4 +1,4 @@
-#include "../../include/maxcc.h"
+#include "../../../include/maxcc.h"
 
 #pragma dir:in name:sin1 type:float8_24 func:kernel_Types
 void kernel_Types(

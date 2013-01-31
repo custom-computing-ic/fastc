@@ -24,21 +24,21 @@ runTest() {
 ############# Test Setup #################
 
 if [ "$TEST" = "" ]; then
-    runTest "maxc/testMaxCTemplate"
+ #   runTest "maxc/testMaxCTemplate"
 
-    runTest "maxc/testCmdRead"
+#    runTest "maxc/testCmdRead"
 
-    runTest "maxc/testCmdWrite"
+#    runTest "maxc/testCmdWrite"
 
-    runTest "maxc/test1dConvolutionKernel"
+#    runTest "maxc/test1dConvolutionKernel"
 
-    runTest "maxc/testRTMSingle"
+#    runTest "maxc/testRTMSingle"
 
-    runTest "maxc/testArrays"
+ #   runTest "maxc/testArrays"
 
-    runTest "maxc/testTypes"
+    runTest "testTypes/maxc/testTypes"
 
-    runTest "maxc/testCounter"
+#    runTest "testTypes/testCounter"
 
 #    runTest "maxc/testRTMManager"
 
