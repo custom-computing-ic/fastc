@@ -1,24 +1,7 @@
+#include "../../include/maxcc.h"
 #define Par 1
+#define Mul 1
 #define DspFactor 1
-
-typedef float float8_24;
-typedef float* s_float8_24;
-typedef int* s_uint32_in;
-typedef s_float8_24* s_array_f8_24;
-typedef int s_uint32;
-typedef int int32;
-typedef int uint32;
-typedef int s_offset;
-
-extern void output_iaf(s_array_f8_24 dest, s_array_f8_24 src, int mantissa, int exponent, int width);
-extern int count(int a, int b);
-extern int count_chain(int a, int b, int parent);
-extern int make_offset(int min, int max);
-extern int fselect(float8_24 cond, float8_24 left, float8_24 right);
-extern s_array_f8_24 make_array_f(int mantissa, int exponent, int width);
-extern s_array_f8_24 make_input_array_f(int mantissa, int exponent, int width);
-
-extern void pushDSPFactor(float factor);
 
 #pragma class:scalar dir:in name:n1 type:uint32 func:kernel_RTM
 #pragma class:scalar dir:in name:n2 type:uint32 func:kernel_RTM

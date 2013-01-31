@@ -462,9 +462,9 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
 
     } else if (fname.compare("pushDSPFactor") == 0) {
         string *exp = toExpr(*it);
-        *s += "optimization.pushDSPFactor(" + *exp + ");\n";
+        *s += "optimization.pushDSPFactor(" + *exp + ")";
     } else if (fname.compare("popDSPFactor") == 0 ) {
-        *s += "optimization.popDSPFactor();\n";
+        *s += "optimization.popDSPFactor()";
     } else if (fname.compare("fselect") == 0) {
         string *exp = toExpr(*it);
         string *ifTrue = toExpr(*(++it));

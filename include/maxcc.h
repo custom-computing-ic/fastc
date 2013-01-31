@@ -1,0 +1,43 @@
+#ifndef MAXCC_H
+#define MAXCC_H
+
+
+// simple types
+typedef float float8_24;
+typedef int s_uint32;
+typedef int int32;
+typedef int uint32;
+
+// stream types
+typedef float* s_float8_24;
+typedef int* s_uint32_in;
+
+// array types
+typedef s_float8_24* s_array_f8_24;
+
+// offset expressions
+typedef int s_offset;
+
+// output functions
+void output_iaf(s_array_f8_24 dest, s_array_f8_24 src, int mantissa, int exponent, int width);
+
+// input functions
+s_array_f8_24 make_input_array_f(int mantissa, int exponent, int width);
+
+// counter functions
+int count(int a, int b);
+int count_chain(int a, int b, int parent);
+
+// offset functions
+int make_offset(int min, int max);
+
+// control/multiplexer functions
+int fselect(float8_24 cond, float8_24 left, float8_24 right);
+
+// array functions
+s_array_f8_24 make_array_f(int mantissa, int exponent, int width);
+
+// optimization functions
+void pushDSPFactor(float factor);
+
+#endif
