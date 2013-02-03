@@ -33,13 +33,6 @@ runRemote() {
 runLocalTestSuite() {
     test=$1
     if [ "$test" = "" ]; then
-        #   runTest "maxc/testMaxCTemplate"
-
-        #    runTest "maxc/testCmdRead"
-
-        #    runTest "maxc/testCmdWrite"
-
-        #    runTest "maxc/test1dConvolutionKernel"
 
         #    runTest "maxc/testRTMSingle"
 
