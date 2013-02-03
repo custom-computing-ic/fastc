@@ -37,7 +37,7 @@ MAXCFILES=engine/Cmdread.java engine/Cmdwrite.java engine/Convolution1d.java
 
 maxc:
 	rm -rf $(MAXCFILES)
-	../../../maxcc maxc/kernels.c
+	../../maxcc maxc/kernels.c
 	mkdir -p engine
 	mv *.java engine
 

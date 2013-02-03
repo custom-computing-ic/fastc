@@ -30,6 +30,9 @@ dist_noinst_SCRIPTS = autogen.sh
 test: all
 	./tests.sh
 
+test-remote: all
+	REMOTE=true ./tests.sh
+
 cscope:
 	cscope -b -s src
 

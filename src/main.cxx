@@ -24,10 +24,10 @@ int main(int argc, char** argv) {
     Design* design = new Design();
 
     KernelVisitor kernelVisitor(design);
-    kernelVisitor.traverseInputFiles(project, preorder);
+    kernelVisitor.traverse(project, preorder);
 
     PragmaVisitor pragmaVisitor(design);
-    pragmaVisitor.traverseInputFiles(project,  preorder);
+    pragmaVisitor.traverse(project,  preorder);
 
     design->generateCode(cout);
     design->writeCodeFiles();

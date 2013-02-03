@@ -43,3 +43,6 @@ auto
 /test/projects/rtm_float_multi/engine/Cmdwrite.java
 /test/projects/rtm_float_multi/engine/RTM.java
 /test/projects/rtm_float_multi/exploded/*
+exploded/*
+/test/projects/rtm_rtreconf/exploded/rtm_float_multi_1Pipes_0.5DSPFactor_303MHzMem_100MHzStream/cpu/computation.c
+/test/projects/rtm_rtreconf/exploded/*
