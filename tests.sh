@@ -53,6 +53,8 @@ runLocalTestSuite() {
 
         runTest "test1dConvolution/maxc/test1dConvolutionKernel"
 
+        runTest "testPassThrough/maxc/testPassThroughKernel"
+
         #    runTest "testTypes/testCounter"
 
         #    runTest "maxc/testRTMManager"

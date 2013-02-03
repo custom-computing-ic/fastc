@@ -422,6 +422,7 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
     } else if (fname.compare("output_i") == 0) {
         string* name = toExpr(*it);
         string* expr = toExpr(*(++it));
+        type = "hwInt(32)";
         if (name == NULL || expr == NULL) {
             cerr << "NULL NAME!";
         } else {

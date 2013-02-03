@@ -4,7 +4,6 @@
 
 // simple types
 typedef float float8_24;
-typedef int s_uint32;
 typedef int int32;
 typedef int uint32;
 
@@ -12,6 +11,7 @@ typedef int uint32;
 typedef float* s_float8_24;
 typedef int* s_uint32_in;
 typedef int* s_int32;
+typedef int* s_uint32;
 
 // array types
 typedef s_float8_24* s_array_f8_24;
@@ -20,6 +20,8 @@ typedef s_float8_24* s_array_f8_24;
 typedef int s_offset;
 
 // output functions
+void output_i(int* res, int func);
+
 void output_ic(int* res, int func, int32 cond);
 
 void output_iaf(s_array_f8_24 dest, s_array_f8_24 src, int mantissa, int exponent, int width);

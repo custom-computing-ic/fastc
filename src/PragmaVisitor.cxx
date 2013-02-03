@@ -34,13 +34,12 @@ string PragmaVisitor::getType(string t) {
         }
     }
 
-    if (type.compare("uint") == 0)
+    if (type.compare("uint") == 0 || type.compare("s_uint") == 0 )
         type="hwUInt";
-    else if (type.compare("int") == 0) {
+    else if (type.compare("int") == 0 || type.compare("s_int32") == 0)
         type="hwInt";
-    } else if (type.compare("float") == 0) {
+    else if (type.compare("float") == 0 || type.compare("s_float8_24") == 0)
         type="hwFloat";
-    }
 
     if (floatType)
         return type + "(" + exponent + "," + mantissa + ")";
