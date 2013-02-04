@@ -512,8 +512,7 @@ void ASTtoMaxJVisitor::visitFor(SgForStatement *forStmt) {
     source += "for (";
 
     SgStatementPtrList::iterator it;
-    for (it = initList.begin(); it != initList.end(); it++ ) {
-        SgStatement* stmt = *it;
+    foreach_(SgStatement* stmt, initList) {
         source += stmt->unparseToString();
         ignore(stmt);
     }
