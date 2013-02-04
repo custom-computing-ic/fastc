@@ -1,4 +1,4 @@
-#include "../../include/maxcc.h"
+#include "../../../include/maxcc.h"
 #define Par 1
 #define Mul 1
 #define DspFactor 1

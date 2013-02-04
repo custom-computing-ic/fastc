@@ -45,7 +45,7 @@ HOSTCODE   =\
 
 maxc:
 	rm -rf $(MAXCFILES)
-	../../../maxcc maxc/kernels.c
+	../../maxcc maxc/kernels.c
 	mkdir -p engine
 	mv *.java engine
 
