@@ -36,7 +36,7 @@ runLocalTestSuite() {
 
         #    runTest "maxc/testRTMSingle"
 
-        #   runTest "maxc/testArrays"
+        runTest "testArrays/maxc/testArrays"
 
         runTest "testCommon/maxc/testCmdRead"
 

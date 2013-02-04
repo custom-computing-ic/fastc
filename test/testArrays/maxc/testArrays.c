@@ -1,4 +1,4 @@
-#include "../../include/maxcc.h"
+#include "../../../include/maxcc.h"
 
 void kernel_Arrays() {
 
