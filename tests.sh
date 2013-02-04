@@ -34,7 +34,7 @@ runLocalTestSuite() {
     test=$1
     if [ "$test" = "" ]; then
 
-        #    runTest "maxc/testRTMSingle"
+        runTest "testRTMStatic/maxc/testRTMStatic"
 
         runTest "testArrays/maxc/testArrays"
 
