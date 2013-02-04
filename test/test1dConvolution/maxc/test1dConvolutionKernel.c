@@ -28,5 +28,5 @@ void kernel_Convolution1d(
     int32 inter = fselect_sf_f(up, p, result);
 #pragma class:kernelopt name:popDSP
 
-    output_i(output, inter);
+    output_f(output, inter);
 }

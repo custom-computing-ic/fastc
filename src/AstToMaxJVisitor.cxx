@@ -419,6 +419,15 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
             *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
                 + ", " + (*cond) + ")";
         }
+    } else if (fname.compare("output_f") == 0) {
+        string* name = toExpr(*it);
+        string* expr = toExpr(*(++it));
+        if (name == NULL || expr == NULL) {
+            cerr << "NULL NAME!";
+        } else {
+            *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+                + ")";
+        }
     } else if (fname.compare("output_i") == 0) {
         string* name = toExpr(*it);
         string* expr = toExpr(*(++it));

@@ -21,6 +21,6 @@ public class Types extends Kernel {
         HWVar inter = (sin1 * var1);
         HWVar res;
 		res = inter;
-        io.output("sout1", res, hwFloat(8, 24));
+        io.output("sout1", res, hwInt(32));
     }
 }

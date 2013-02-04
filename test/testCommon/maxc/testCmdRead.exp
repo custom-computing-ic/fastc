@@ -23,7 +23,7 @@ public class Cmdread extends Kernel {
         Counter counter0    = control.count.makeCounter(param0);
         HWVar  wordCount    = counter0.getCount();
 
-        HWVar wrap = wordCount.eq(wordsPerBurst);
+        HWVar wrap = (wordCount.eq((wordsPerBurst - 1)) & Enable);
         Count.Params param1 = control.count.makeParams(32).withMax(totalBursts).withInc(1).withEnable(wrap);
         Counter counter1    = control.count.makeCounter(param1);
         HWVar burstCount    = counter1.getCount();
