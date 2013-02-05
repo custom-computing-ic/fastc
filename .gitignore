@@ -46,3 +46,6 @@ auto
 exploded/*
 /test/projects/rtm_rtreconf/exploded/rtm_float_multi_1Pipes_0.5DSPFactor_303MHzMem_100MHzStream/cpu/computation.c
 /test/projects/rtm_rtreconf/exploded/*
+/test/testRTMStatic-64bit/engine/Cmdread.java
+/test/testRTMStatic-64bit/engine/Cmdwrite.java
+/test/testRTMStatic-64bit/engine/RTM.java
