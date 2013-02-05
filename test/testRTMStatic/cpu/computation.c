@@ -47,7 +47,7 @@ int BYTE_SIZE =0;
 int halo_SIZE=0;
 int halo_size=0;
 int BYTE_bursts;
-int Burst_inc =1;
+//int Burst_inc =1;
 int PCI_width =8;
 int cycle_PCI;
 int step1, step2;

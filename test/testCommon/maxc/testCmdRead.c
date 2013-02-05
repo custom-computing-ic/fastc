@@ -1,6 +1,8 @@
 #include "../../../include/maxcc.h"
 
-#define burst_inc 1
+#ifndef Burst_inc
+#define Burst_inc 1
+#endif
 
 #pragma class:scalar dir:in name:iniBursts type:uint32 func:kernel_Cmdread
 #pragma class:scalar dir:in name:totalBursts type:uint32 func:kernel_Cmdread
@@ -15,14 +17,14 @@ void kernel_Cmdread(
     int32 wordCount = count_p(32, wordsPerBurst, 1, Enable);
 
     int32 wrap = (wordCount == wordsPerBurst - 1) & Enable;
-    int32 burstCount = count_p(32, totalBursts, burst_inc, wrap);
+    int32 burstCount = count_p(32, totalBursts, Burst_inc, wrap);
 
     int32 Control = (wordCount == 0) & Enable;
 
     DRAMOutput("dram_read",
                Control,
                burstCount + iniBursts,
-               burst_inc,
+               Burst_inc,
                1,
                0,
                0);
