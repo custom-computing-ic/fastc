@@ -61,11 +61,12 @@ public class RTM extends Kernel {
     HWVar source[]  =new HWVar[1];
 
 	for (int i = 0;i < 1;i++) {
-		p[i] = burst_p[i];
-		pp_i[i] = burst_pp[i];
-		dvv[i] = burst_dvv[i];
-		source[i] = burst_source[i];
+		p[i] = burst_p[i].cast(hwFloat(8, 24));
+		pp_i[i] = burst_pp[i].cast(hwFloat(8, 24));
+		dvv[i] = burst_dvv[i].cast(hwFloat(8, 24));
+		source[i] = burst_source[i].cast(hwFloat(8, 24));
 	}
+
     HWVar inter[][]      = new HWVar[1][1];
     HWVar cur[][][][]    = new HWVar[1][13][11][11];
     HWVar result[][]     = new HWVar[1][1];

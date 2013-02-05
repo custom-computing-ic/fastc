@@ -61,10 +61,10 @@ void kernel_RTM(
     float8_24 pp_i[Par], dvv[Par], source[Par];
 
     for (int i=0; i <Par; i++) {
-        p[i][0]     =  burst_p[i][0];
-        pp_i[i]   =  burst_pp[i][0];
-        dvv[i]    =  burst_dvv[i][0];
-        source[i] =  burst_source[i][0];
+      cast2sff(p[i], burst_p[i], 8, 24);
+      cast2ff(pp_i[i], burst_pp[i], 8, 24);
+      cast2ff(dvv[i],  burst_dvv[i], 8, 24);
+      cast2ff(source[i], burst_source[i], 8, 24);
     }
 
     s_float8_24 inter[Par][Mul];
