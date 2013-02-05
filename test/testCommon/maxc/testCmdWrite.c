@@ -20,7 +20,7 @@ void kernel_Cmdwrite(int iniBursts,
     int32 wrap = (wordCount == wordsPerBurst - 1) & Enable;
     int32 burstCount = count_p(32, totalBursts, Burst_inc, wrap);
 
-    int32 wrap2 = (burstCount == totalBursts - 1) & wrap;
+    int32 wrap2 = (burstCount == totalBursts - Burst_inc) & wrap;
     int32 iterCount = count_p(32, iterations, 1, wrap2);
 
     int32 Control = (wordCount == 0) & Enable;

@@ -10,7 +10,7 @@ string Kernel::declaration() {
 string Kernel::imports() {
     string imps[] = { "*",
                       "types.base.HWVar",
-                      "stdlib.*",
+                     "stdlib.*",
                       "stdlib.core.*    ",
                       "stdlib.core.Count.*",
                       "stdlib.KernelMath.*",

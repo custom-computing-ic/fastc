@@ -114,7 +114,7 @@ public class AppManager extends CustomManager {
         a.setBuildEffort (Effort.HIGH);
 
         m.config.setDefaultStreamClockFrequency(100);
-        m.config.setOnCardMemoryFrequency(303);
+        m.config.setOnCardMemoryFrequency(400);
         m.setBuildConfig(a);
         m.build();
     }
