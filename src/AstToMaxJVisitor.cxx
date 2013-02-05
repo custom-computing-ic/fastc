@@ -490,6 +490,13 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
       string *mantissa = toExpr(*(++it));
       string type = "hwFloat("+*exponent+", "+*mantissa+")";
       *s += *out+" = "+*in+".cast("+type+")";
+    } else if (fname.compare("castf_f") == 0
+               || fname.compare("castf_sf") == 0) {
+      string *in  = toExpr(*it);
+      string *exponent = toExpr(*(++it));
+      string *mantissa = toExpr(*(++it));
+      string type = "hwFloat("+*exponent+", "+*mantissa+")";
+      *s += *in+".cast("+type+")";
     }
 
     if (s->size() == 0) {

@@ -59,4 +59,8 @@ void cast2ff(float8_24 out, s_float8_24 in, int exponent, int mantissa);
 
 void cast2sff(s_float8_24 out, s_float8_24 in, int exponent, int mantissa);
 
+float castf_f(float8_24 in, int exponent, int mantissa);
+
+float* castf_sf(s_float8_24 in, int exponent, int mantissa);
+
 #endif

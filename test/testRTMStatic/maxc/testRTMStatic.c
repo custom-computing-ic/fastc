@@ -1,8 +1,5 @@
 #include "../../../include/maxcc.h"
-#define Par 1
-#define Mul 1
-#define DspFactor 1
-#define realType 8, 24
+#include "../include/params_dse.h"
 
 #pragma class:scalar dir:in name:n1 type:uint32 func:kernel_RTM
 #pragma class:scalar dir:in name:n2 type:uint32 func:kernel_RTM
@@ -162,16 +159,15 @@ void kernel_RTM(
   //------------------------------Data output --------------------------------
 
   // control counter
-  s_array_f8_24 output_pp_inter = make_array_f(8, 24, Par);
-
-  s_array_f8_24 output_p        = make_array_f(8, 24, Par);
+    s_array_f8_24 output_pp_inter = make_array_f(8, 24, Par);
+    s_array_f8_24 output_p        = make_array_f(8, 24, Par);
 
   for (int i=0; i <Par; i++) {
-     output_p[i][0]  = inter[i][Mul-1][0];
-     output_pp_inter[i][0] = cur[Mul-1][6+i][5][5];
+    output_p[i][0]  = castf_f(inter[i][Mul-1][0], 8, 24);
+    output_pp_inter[i][0] = castf_f(cur[Mul-1][6+i][5][5], 8 ,24);
   }
 
-  output_iaf(ker_p, output_p, 8, 24, Par);
+  output_iaf(ker_p, output_p, 8, 24 , Par);
   output_iaf(output_pp, output_pp_inter, 8, 24, Par);
 
 }
