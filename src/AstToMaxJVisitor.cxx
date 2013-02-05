@@ -482,7 +482,16 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
         string *ifTrue = toExpr(*(++it));
         string *ifFalse = toExpr(*(++it));
         *s += "control.mux("+*exp+", "+*ifTrue+", "+*ifFalse+")";
+    } else if (fname.compare("cast2ff") == 0
+               || fname.compare("cast2sff") == 0) {
+      string *out = toExpr(*it);
+      string *in  = toExpr(*(++it));
+      string *exponent = toExpr(*(++it));
+      string *mantissa = toExpr(*(++it));
+      string type = "hwFloat("+*exponent+", "+*mantissa+")";
+      *s += *out+" = "+*in+".cast("+type+")";
     }
+
     if (s->size() == 0) {
         LOG_CERR();
         cerr << "Function definition not found: '"+fname+"'" << endl;

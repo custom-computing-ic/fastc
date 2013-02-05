@@ -54,4 +54,9 @@ s_array_f8_24 make_array_f(int mantissa, int exponent, int width);
 // optimization functions
 void pushDSPFactor(float factor);
 
+// casting functions
+void cast2ff(float8_24 out, s_float8_24 in, int exponent, int mantissa);
+
+void cast2sff(s_float8_24 out, s_float8_24 in, int exponent, int mantissa);
+
 #endif
