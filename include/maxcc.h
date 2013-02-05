@@ -53,6 +53,8 @@ s_array_f8_24 make_array_f(int mantissa, int exponent, int width);
 
 // optimization functions
 void pushDSPFactor(float factor);
+void pushRoundingMode( /*pushes RoundingMode.Truncate*/);
+void popRoundingMode();
 
 // casting functions
 void cast2ff(float8_24 out, s_float8_24 in, int exponent, int mantissa);
@@ -62,5 +64,12 @@ void cast2sff(s_float8_24 out, s_float8_24 in, int exponent, int mantissa);
 float castf_f(float8_24 in, int exponent, int mantissa);
 
 float* castf_sf(s_float8_24 in, int exponent, int mantissa);
+
+// math functions
+
+int sqrt_i(float min, float max, float8_24 input, int width);
+
+float8_24 exp(float8_24 power);
+
 
 #endif
