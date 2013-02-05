@@ -2,6 +2,7 @@
 #define Par 1
 #define Mul 1
 #define DspFactor 1
+#define realType 8, 24
 
 #pragma class:scalar dir:in name:n1 type:uint32 func:kernel_RTM
 #pragma class:scalar dir:in name:n2 type:uint32 func:kernel_RTM
@@ -61,10 +62,10 @@ void kernel_RTM(
     float8_24 pp_i[Par], dvv[Par], source[Par];
 
     for (int i=0; i <Par; i++) {
-      cast2sff(p[i], burst_p[i], 8, 24);
-      cast2ff(pp_i[i], burst_pp[i], 8, 24);
-      cast2ff(dvv[i],  burst_dvv[i], 8, 24);
-      cast2ff(source[i], burst_source[i], 8, 24);
+      cast2sff(p[i], burst_p[i], realType);
+      cast2ff(pp_i[i], burst_pp[i], realType);
+      cast2ff(dvv[i],  burst_dvv[i], realType);
+      cast2ff(source[i], burst_source[i], realType);
     }
 
     s_float8_24 inter[Par][Mul];
