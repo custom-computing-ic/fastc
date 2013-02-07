@@ -438,12 +438,8 @@
   the proposed approach.
 
 \end{abstract}
-% IEEEtran.cls defaults to using nonbold math in the Abstract.
-% This preserves the distinction between vectors and scalars. However,
 % if the conference you are submitting to favors bold math in the abstract,
-% then you can use LaTeX's standard command \boldmath at the very start
-% of the abstract to achieve this. Many IEEE journals/conferences frown on
-% math in the abstract anyway.
+% use LaTeX's standard command \boldmath at the very start
 
 % no keywords
 
@@ -547,7 +543,7 @@
 
 
 \section{Conclusion}
-The conclusion goes here.
+The conclusion goes here. \cite{thies2002streamit}
 
 
 % conference papers do not normally have an appendix
@@ -558,10 +554,6 @@ The conclusion goes here.
 
 
 The authors would like to thank...
-
-
-
-
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
@@ -585,13 +577,16 @@ The authors would like to thank...
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
 
-\end{thebibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{../../refdb/bibliography.bib}
+
+% \begin{thebibliography}{1}
+% \bibitem{IEEEhowto:kopka}
+% H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+%   0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+% \end{thebibliography}
 
 
 

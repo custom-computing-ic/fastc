@@ -1,20 +1,14 @@
 COMPILE=pdflatex
 TRASH=*.aux *.toc *.out *.log
-#TEXS=report.tex
-#PDFS=$(TEXS:.tex=.pdf)
-
-#BIBLIOGRAPHY=--bibliography=bib/bibliography.bib
-#TEMPLATE=--template=template/template.tex
-#CSL=--csl bib/acm-sig-proceedings.csl
-#OPTIONS=--listings
-
-#MD_SOURCES=report.md
+BIBTEX=bibtex
 
 TARGET=pgasap2013
 
 all: $(TARGET).pdf
 
 %.pdf : %.tex
+	$(COMPILE) $^
+	$(BIBTEX) $(TARGET).aux
 	$(COMPILE) $^
 	$(COMPILE) $^
 

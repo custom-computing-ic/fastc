@@ -49,3 +49,6 @@ exploded/*
 /test/testRTMStatic-64bit/engine/Cmdread.java
 /test/testRTMStatic-64bit/engine/Cmdwrite.java
 /test/testRTMStatic-64bit/engine/RTM.java
+/test/testRTMStatic/exploded/*
+*.bbl
+*.blg
