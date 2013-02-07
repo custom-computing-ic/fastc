@@ -1,0 +1,3 @@
+[submodule "doc/refdb"]
+	path = doc/refdb
+	url = https://github.com/paul-g/refdb.git
