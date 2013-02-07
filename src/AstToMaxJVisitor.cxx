@@ -150,6 +150,17 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         string t ="new KArrayType<HWVar>(" + type + "," + *width + ")";
         *s += "KArray<HWVar>" + variableName;
         *s += " = io.input(\"" + variableName + "\",  " + t +")";
+    } else if (fname == "sqrt_i") {
+        string* range_min = toExpr(*itt);
+        string* range_max = toExpr(*(++itt));
+        string* base      = toExpr(*(++itt));
+        string* width     = toExpr(*(++itt));
+        int num = 0; // XXX should be a unique identifier
+        string range="range"+lexical_cast<string>(num);
+        *s+= "KernelMath.Range "+range+ " = ";
+        *s+= "new KernelMath.Range("+*range_min+", "+*range_max+");\n";
+        string type = "hwUInt(" +*width+")";
+        *s+= "HWVar "+variableName+" = KernelMath.sqrt("+range+", "+*base+","+type+");\n";
     }
 
     if ( s->size() == 0 ) {
@@ -180,6 +191,12 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
         stringstream out;
         out << e->get_value();
         return new string("\"" + out.str() + "\"");
+    } else if (isSgConditionalExp(ex)){
+        SgConditionalExp* cex = isSgConditionalExp(ex);
+        string* cond = toExpr(cex->get_conditional_exp());
+        string* ifTrue = toExpr(cex->get_true_exp());
+        string* ifFalse = toExpr(cex->get_false_exp());
+        return new string(*cond+"?"+*ifTrue+":"+*ifFalse);
     } else if (isSgBinaryOp(ex)) {
 
         SgBinaryOp* e = isSgBinaryOp(ex);
@@ -484,19 +501,26 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
         *s += "control.mux("+*exp+", "+*ifTrue+", "+*ifFalse+")";
     } else if (fname.compare("cast2ff") == 0
                || fname.compare("cast2sff") == 0) {
-      string *out = toExpr(*it);
-      string *in  = toExpr(*(++it));
-      string *exponent = toExpr(*(++it));
-      string *mantissa = toExpr(*(++it));
-      string type = "hwFloat("+*exponent+", "+*mantissa+")";
-      *s += *out+" = "+*in+".cast("+type+")";
+        string *out = toExpr(*it);
+        string *in  = toExpr(*(++it));
+        string *exponent = toExpr(*(++it));
+        string *mantissa = toExpr(*(++it));
+        string type = "hwFloat("+*exponent+", "+*mantissa+")";
+        *s += *out+" = "+*in+".cast("+type+")";
     } else if (fname.compare("castf_f") == 0
                || fname.compare("castf_sf") == 0) {
-      string *in  = toExpr(*it);
-      string *exponent = toExpr(*(++it));
-      string *mantissa = toExpr(*(++it));
-      string type = "hwFloat("+*exponent+", "+*mantissa+")";
-      *s += *in+".cast("+type+")";
+        string *in  = toExpr(*it);
+        string *exponent = toExpr(*(++it));
+        string *mantissa = toExpr(*(++it));
+        string type = "hwFloat("+*exponent+", "+*mantissa+")";
+        *s += *in+".cast("+type+")";
+    } else if (fname == "exp") {
+        string* power = toExpr(*it);
+        *s += str(format("KernelMath.exp(%s)") % (*power));
+    } else if (fname == "pushRoundingMode") {
+        *s+= "optimization.pushRoundingMode(RoundingMode.TRUNCATE)";
+    } else if (fname == "popRoundingMode") {
+	*s+= "optimization.popRoundingMode()";
     }
 
     if (s->size() == 0) {

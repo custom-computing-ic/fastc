@@ -11,7 +11,7 @@ do
     do
         for mantissa in 24 # 16 18 20 22
         do
-            for MemFq in 303
+            for MemFq in 400 #303
             do
                 for KFq in 100
                 do
