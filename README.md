@@ -1,6 +1,17 @@
 MaxCC
 =====
 
+Cloning This Repo
+-----------------
+
+This project uses the external project [refdb](https://github.com/paul-g/refdb) 
+as a submodule, so you must remember to also run the submodule init & update functions after
+cloning the repository, if you intend to build documentation  that depends on this reference database.
+
+`git clone https://github.com/paul-g/maxcc.git`
+
+`git submodule init && git submodule update`
+
 Installation
 ------------
 To install maxcc run:
