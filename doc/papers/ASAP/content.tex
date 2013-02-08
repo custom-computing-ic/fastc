@@ -1,6 +1,6 @@
 \section{Introduction}
 
- Custom designs on FPGA devices can be used to improve performance and
+Custom designs on FPGA devices can be used to improve performance and
 power consumption of computationally intensive algorithms. However,
 creating custom designs is a difficult task and requires detailed
 knowledge of circuit design and underlying performance
@@ -8,44 +8,552 @@ considerations. Ideally we want to synthesize custom designs from
 existing high level implementations in C or other languages without
 compromising on performance and energy efficiency.
 
-We introduce a new C based meta-programming language and API for
-
-
-We propose a compilation flow from high-level C programs to a
-streaming dataflow architecture that captures and applies
-optimizations using LARA, an aspect oriented programming language for
-embedded systems [??]
-
-Our contributions include:
+We identify the following challenges:
 \begin{enumerate}
-
-\item We introduce MaxC, a C based meta-programming language and API
-  for specifying dataflow designs;
-
-\item We propose a DSE method based on MaxC and LARA for exploring
-  optimizations of streaming data flow kernel designs;
-
-\item We evaluate our approach using it to generate various
-  implementations of a high performance application based on the
-  Reverse Time Migration (RTM) technique for seismic imaging [??].
-
+\item Specifying dataflow designs, in an intuitive, well understood
+  language that is concise and facilitates the translation of existing
+  designs, but also expressive enough to support the requirements of
+  modern high-performance applications.
+\item Specifying optimization strategies, decoupled from the
+  application code in a manner that makes the specification easy to
+  reuse (portable) but also easy to customize and is comprehensive
+  enough to allow capturing of optimizations at various levels:
+  a. algorithmic transformations -- based on either functional or
+  non-functional requirements(e.g. power-consumption, compilation time
+  etc.) -- b. design level transformations (such as bitwise
+  optimisations) c. productivity related transformations (e.g. improve
+  support for debugging or increase compilation speed).
+\item Systematic design space exploration of dataflow designs driven
+  by these parameterizable optimization strategies, that increase
+  developer productivity and allow exploration of design level
+  trade-offs.
+\item Applying these design techniques to create and optimize high
+  performance applications from existing implementations
 \end{enumerate}
+
+In summary our contributions include:
+\begin{enumerate}
+\item We introduce MaxC, a dataflow language based on C that allows
+  that can be used to create high-performance designs and we implement
+  a compiler for MaxC.
+\item We introduce novel aspects for specifying optimisations
+  strategies at the algorithmic level, the design level and
+  transformation related methods. We implement these aspects using
+  LARA, an aspect oriented language for FPGA systems.
+\item We propose an automated method for design space exploration of
+  dataflow designs specified with MaxC, driven by the aspect
+  definitions.
+\item We evaluate our approach implementing a high performance design
+  for an application based on the Reverse Time Migration technique for
+  seismic imaging and compare this with existing CPU, GPU and FPGA
+  implementations in terms of performance, ease of use and
+  maintainability and portability.
+\end{enumerate}
+
+
+
+
 
 \section{Related Work}
 
 \subsection{Dataflow Languages}
 \begin{itemize}
 
-\item MaxJ
-\item StreamIt
-\item Streams-C
+\item Streams-C -
 
+\item StreamIt -, Sequoia++ - different, non-standard lanuages. [We
+  found them hard to learn/understand follow.]
+
+\item MaxJ - It’s difficult to manage the two components of the
+  projects: two different languages, complicates the build system and
+  teh design space exploration (since it is harder to share data
+  between designs, like we can in MaxC with headers). Java is more
+  verbose and in most designs this is not necessarilly useful (we may
+  not benefit that much from . In C we can use macros to capture
+  repetitive patterns. On the other hand C is imperative language, no
+  OO, so this may be bad for code reuse.
+
+\item ImpulseC
 
 \end{itemize}
 
-\subsection{Aspect Driven Desgin}
+\XXX{Add feature table}
 
-\subsection{Something about hardware?}
+\subsection{Aspect Driven Design}
+
+
+
+
+
+
+
+
+\section{The  MaxC Language}
+
+The MaxC language allows users to specify dataflow designs. It is
+based on the C99 standard, a widely used standard, so it should be
+familiar and easy to use for new users. At the same time, the
+simplicity of the constructs simplifies the development of aspects
+which together with MaxC create a flexible approach for generating and
+exploring the space of efficient dataflow designs.  MaxC is a
+meta-programming language in the sense that, unlike a regular C
+program, a MaxC program is not "executed"" but specifies a hardware
+design. MaxC is designed to be human readable and to facilitate
+integration with other tools. Being based on the C99 standard, the
+language interacts well with existing compilers or source to source
+translation frameworks (e.g. LARA, ROSE), allowing source level
+optimizations to be applied through different tools.
+
+We identify the following requirements for any dataflow language:
+\begin{enumerate}
+\item intuitive and easy to use
+\item facilitate translation of existing applications
+\item interacts well with high-level tools
+\end{enumerate}
+
+All MaxC designs described in this paper are translated by our
+compiler backend to MaxJ which are then compiled using MaxCompiler
+2012.1 and executed on a Max3424 Board with Virtex 6 FPGA chip and
+48GB of on-board DRAM.
+
+
+Hence, conceptually, MaxC uses the same execution model as MaxJ,
+\XXX{Why??}: a design is composed of one or more computational kernels
+(which implement the functionality we are interested in) which are
+connected to form a design. Communication between kernels is
+asynchronous, so kernels can operate independently of each other but
+computation within kernels is synchronous, so a kernel will compute
+only when all it's active inputs have values available.
+
+Figure \ref{fig:maxc-1dconv} shows an example kernel which implements
+a 1D convolution computation used to value European options.
+
+
+\lstset{style=MaxC}
+
+\begin{figure}
+\begin{lstlisting}
+void kernel_Convolution1D(
+  float* p,
+  float c_0_0_0, float c_p_0_0, float c_n_0_0,
+  int n1, int ORDER,
+  float* out)
+{
+  in(p);
+
+  float* i4 = count(1000, 1);
+  float* i1 = countChain(n1, 1, i4);
+
+  #pragma DSPBalance:full
+  int result =
+  p[0]  * c_0_0_0 +
+  p[1]  * c_p_0_0 +
+  p[-1] * c_n_0_0;
+
+  int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
+
+  out = stream_select(up, p, result);
+
+  out(out);
+}
+\end{lstlisting}
+\caption{Example MaxC design for a 1D convolution kernel.}
+\label{fig:maxc-1dconv}
+\end{figure}
+
+\subsection{Kernels}
+
+Kernels are defined as regular C functions, with the ``kernel\_''
+identifier prepended, as shown on Line 1. The inputs and outputs of
+the kernel are clearly specified in the header. At the kernel level
+MaxC captures the dataflow elements by use of one of the following:
+\begin{enumerate}
+
+\item \emph{regular C constructs} are used as much as possible to make
+  the language more intuitive. This includes standard C99 types and
+  conventions for implementing kernels.\XXX{Unlike StreamsC which uses
+    the comment style to define kernel bodies etc.}; We also
+  ``overload'' some operators such as the array access operator to
+  provide a more succinct syntax for accessing ``past'' or ``future''
+  stream elements (Lines 15 -- 17).
+
+\item \emph{pragma directives} are used to convey additional
+  information to the compiler for which C99 does not provide flexible
+  built-in constructs (e.g. specifying type width) or additional
+  optimization hints (e.g. the DSP balance, Line 13);
+
+\item \emph{specific API calls} are used for higher level constructs
+  such as inputs and outputs (Lines 8, 24), counters (Lines 10 -- 11).
+
+\end{enumerate}
+
+Lines 2-6 show the kernel declaration specifying the stream input "p"
+and output "out" as well as a number of scalar parameters configurable
+at run-time.
+
+
+The example illustrates the additional types we introduce as
+extensions to C99. These are meant to simplify the language and make
+it more expressive as well as provide additional verification and
+optimisation mechanisms (e.g. type safety). Maintaining compatibility
+with C99 simplifies the kernel simulation flow as discussed below.
+
+
+\subsection {Inputs and Outputs}
+
+% in(), out(), or kerneldef( “name”, in(), out() ) { /** Kernel Code **/
+% }
+
+\subsection{Control}
+API: fselect(cond, stream1, stream2)
+% C Constructs: if(){}  & conditional a?b:
+
+\subsection{Computation}
+Arithmetic expression as in regular C
+API functions for exp, sqrt, sin etc.
+
+Normal arithmetic operations can be used to operate on stream
+elements.
+
+
+\subsection{Streams}
+% s_float a; - a stream of floats; can use array access on streams
+% a[1] ⇒ stream.offset(s, 1)
+% how to handle offset expressions?
+
+% float b; - the value of the stream or a runtime contant;
+% b = *a or b = a[0] ---> b takes the value of the current stream element.
+
+const float c;  compile time constant, used to parametrize
+designs
+
+On lines 13-16 we use array index notation to access future (positive
+offset) or past (negative offset) stream elements.
+
+
+\subsection{Optimizations}
+% via Pragmas: #pragma class:kernelopt name:DSPBalance(1)
+via API calls:
+
+\subsection{API}
+The previous example also illustrates some of the MaxC API components:
+
+* output functions (e.g. output\_i) are used to connect an internal
+kernel stream to the output stream of a kernel
+
+* various counters and counter chain configurations can be
+instantiated using functions from the counter API as shown on lines
+8-9
+
+* functions such as stream\_select are used to multiplex between a
+number of streams based on the value of condition stream
+
+
+To allow decoupling of bit width specifications from the functional
+code we also provide the type s\_float, s\_int etc. In this
+situation we can specify the type using a pragma directive.
+
+\subsection{Designs}
+
+\XXX{Command read/write kernel}
+
+\XXX{Design diagram?}
+
+\XXX{Fiction Incoming !!!}
+
+MaxC also allows specification of designs from multiple kernel. This
+involves selecting the kernel instances and connecting them as well as
+setting a number of design configuration and compilation options such
+as operating frequency.
+
+Figure \ref{lst:maxc-design} illustrates the design for the 1D
+convolution example which places and connects memory read/write
+kernels to control the generation of memory streams and the actual
+computation kernels.
+
+On lines ?? we specify the kernel instances. On line ?? we connect
+these. On lines ?? we specify various configuration options.
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+  void design_Convolution1D() {
+    // kernels
+    kernel_t k1 = kernel_init(kernel_Convolution1D);
+    kernel_t k2 = kernel_init(kernel_Cmdwrite);
+    kernel_t k3 = kernel_init(kernel_Cmdread);
+
+    // connections
+    connect2(k1, k2);
+    connect3(k1, k2, ``a'');
+    connect4(k1, k3, ``a'', ``b'');
+
+    // configuration
+    set_frequency(150);
+    set_memory_frequency(333);
+    set_enable_debug(true);
+  }
+\end{lstlisting}
+\caption{MaxC design specification, connecting multiple kernels and
+  setting various configuration options}
+\label{lst:maxc-design}
+\end{figure}
+
+Table \ref{table:feature-comparison} summarizes the features of MaxC
+in comparison with other languages described in the related works
+section.
+
+\begin{table}[!h]
+  \renewcommand{\arraystretch}{1.3}
+  \centering
+  \caption{Feature comparison of MaxC and other dataflow languages.}
+  \label{table:feature-comparison}
+  \begin{tabular}{ l | c |  r |  c |  c |  c }
+    Test            & F1 & F2 & F3 & F4 & F5 \\ \hline
+    \XXX{MaxJ}      & F1 & F2 & F3 & F4 & F5 \\
+    \XXX{Streams-C} & F1 & F2 & F3 & F4 & F5 \\
+    \XXX{ImpulseC}  & F1 & F2 & F3 & F4 & F5 \\
+    \XXX{StreamIt}  & F1 & F2 & F3 & F4 & F5 \\
+    \XXX{Sequoia++} & F1 & F2 & F3 & F4 & F5 \\
+    \XXX{MaxC}      & F1 & F2 & F3 & F4 & F5 \\
+  \end{tabular}
+\end{table}
+
+\section{Aspects}
+
+MaxC was specifically designed to integrate well with the
+aspect-driven approach \XXX{How?}. This allows the MaxC designs to
+provide a neat description of a design's functionality and aspects to
+specify decoupled optimization and transformation strategies that
+operated on this design. This make the functionality of the
+application easier to understand since it is no longer obscured by
+various structural or algorithmic transformations (e.g. loop blocking
+or pipeline replication) or platform specific optimizations (e.g. DSP
+balance).
+
+We distinguish three categories of aspects:
+\begin{itemize}
+\item \emph{structural aspects} allow us to capture transformation or
+  optimization strategies that alter the structure or the algorithm of
+  the original code. (e.g. high-level source to source translation,
+  changes for reconfiguration)
+
+\item \emph{design aspects} allow us to capture low level design
+  optimizations (e..g bitwidth, parallelism, DSP usage)
+
+\item \emph{development aspects} allow us to capture concerns relating
+  to the development process: aspects for debugging time, strategies
+  that optimize for compilation speed or strategies to generate
+  software simulation designs
+
+\end{itemize}
+
+\subsection{Structural Aspects}
+
+Structural aspects apply substantial changes to the structure of the
+original source code. \XXX{More details}
+
+\subsubsection{Translation Aspects}
+
+Translation aspects tranform high-level source code to MaxC designs.
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+void kernel() {
+  // original 1D convolution kernel goes here
+
+  for(j=1; j<M_Z1-1; j++){
+    //node_j_k_l
+    real node_0_0_0  = source[j];
+
+    //node_j_k_l
+    real node_p1_0_0 = source[(j+1)];
+    real node_m1_0_0 = source[(j-1)];
+
+    target[j] =
+      node_0_0_0  * a_0_0_0
+      + node_p1_0_0 * a_p1_0_0
+      + node_m1_0_0 * a_m1_0_0;
+    }
+}
+\end{lstlisting}
+\caption{MaxC design specification, connecting multiple
+    kernels and setting various configuration options}
+\label{fig:maxc-design}
+\end{figure}
+
+Aspect steps:
+\begin{itemize}
+\item find accelaration candidates -- can profile the code, can look
+  for loops with computations (at varying nesting level)
+
+\item transform local arrays to dynamic arrays
+
+\item extract computational kernel. Here we have a few
+  possibilities: either we extract a kernel for each addition and
+  multiplication and run them n times ( 2 x n x 1 cycle), either the
+  kernel captures the whole for loop (2 x 1 x n cycles) or the kernel
+  captures both operations (1 x n cycles)
+\end{itemize}
+
+\subsubsection{Reconfiguration Aspects}
+
+Show changes required to the host, changes required to the design itself.
+
+\subsubsection{Parallelism}
+
+Change the design to replicate, use multiple pipelines>
+
+\subsection{Design Aspects}
+This class aspects focuses on design level optimizations. Strategies
+in this class allow us to explore various tradeoffs between resources.
+
+\subsubsection{Bitwise Optimisations}
+
+Floating point se we can apply the normal optimizations
+
+DSP Factor
+
+We must define the dsp factor to be used, the granularity (which
+decides if we break up arithmetic expressions to insert DSP Factors
+between them) and the number of independent applications
+
+\lstset{style=aspectp}
+\begin{lstlisting}
+aspectdef OptimizeDSPUsage(
+ dspFactor, granularity, applications)
+{
+    where
+    when
+    what
+}
+\end{lstlisting}
+
+On the design below:
+int b = a1 + a2 + a3;
+int a = a2 + a3;
+
+OptimizeDSPUsage(0.5, fine, 2) can yields:
+pushDsp(0.5)
+int b = a1 + a2;
+popDsp()
+b = b + a3;
+pushDsp(0.5)
+int a = a2 + a3;
+popDsp()
+
+May also want to use more complex aspctes, for example to
+allow more flexibility when specifying what DSP factor to use
+(e.g. if we estimate we will run out of DSPs map
+multiplications to DSPs rather than additions since these will
+take more LUTs/ FFs)
+
+Here we can present some nice resource usage data for using the maxj resource annotation
+
+
+
+Similarly we can adjust other optimizations like pipelining factor, global clock buffer etc.
+
+
+\subsection{Development Aspects}
+
+\subsubsection{Simulation Aspects}
+The combination of MaxC and LARA allows us to simulate in pure
+software our designs, without having to worry about our design
+actually compiling. This gives us more freedom when designing MaxC
+constructs, and allows us to provide a nicer syntax but also hides and
+automates the details of generating simulation designs from the
+developer.
+
+\XXX{Show code transformations required to generate simulation
+  designs}.
+
+
+The goal for the kernel simulation model is that it should be
+possible to compile and run it using the standard GCC
+toolchain, verifying the logical correctness of the design
+(i.e. not accounting for hardware effects such as stalls
+etc.).
+
+To achieve this we provide the type extensions described above
+as type definitions. Streams are modelled as pointers:
+% `typedef float* s\_float8\_24`. After each kernel cycle,
+stream pointers are incremented, as shown in the simulation
+loop below:
+
+\lstset{style=MaxC}
+
+\begin{lstlisting}
+  for (int i = 0 ; i < CYCLE_COUNT; i++) {
+    kernel_Convolution1d(p, out, 2);
+    update_stream_pointers(p, out);
+  }
+\end{lstlisting}
+
+The major limitation of this approach is that, due to the lack of
+support for polymorphism in C, in order to enable simulation support,
+users are required to add boilerplate code, that would otherwise not
+be required by the MaxCC backend. When compiling with MaxCC this
+boilerplate code is simply ignored, so any mistakes in this code will
+not be captured by the simulation model.
+
+This issue is illustrated in the example below where we must use the
+`stream\_init\_i(int stream\_id)` function, passing in a unique stream id
+to retrieve the appropriate stream values from the global data
+structures they are stored in. The function then either allocates a
+new stream or increments the stream pointer if the stream has already
+been allocated. Furthermore if we extend the example to use two
+counters, we similarly require unique identifiers for counters.
+
+\begin{lstlisting}
+  void kernel_Convolution1d(
+  sin_float8_24 in,
+  sout_float8_24 out,
+  float8_24 c)
+  {
+    float8_24 count = counter(10, 1);
+
+    s_int32 result = stream_init_i(0);
+    result[0] = c * (in[0] + in[1]);
+
+    int32 good = (count > 2) && (count < 5);
+
+    int32 inter = stream_selectfi(good, in, result);
+
+    output_i(out, inter);
+  }
+
+\end{lstlisting}
+
+\subsubsection{Debug Aspects}
+
+Allow us to  control the debugging of values. It is particularly
+important to separate debug aspects from the original application code
+since debug blocks can influence the compilation time and timing
+constraints as well as the behaviour of the design.
+
+\XXX{Show example of the debug aspect}
+\XXX{Also include some data on how this influences code size,
+  productivity etc.}
+
+\subsubsection{Compilation Aspects}
+
+Various Compilation aspects e.g for improving timing or
+compilation speed or performance. These are more “high level”
+than what MaxCompiler or FPGA vendors offer and they make
+sense.  For example when developing the application the
+developer wants to build it is a fast as possible since it
+usually requires at least a few iterations to get everything
+right.
+
+We can use these aspects to build in parallel more versions of the
+application that allow us to test the production version (maximum
+performance), a more naive version but which builds faster and a debug
+version which allows us to debug the naive version.
+
+\XXX{Need data about how aspects can influence compilation time}
+
 
 \section{Proposed design flow}
 
@@ -72,8 +580,12 @@ each optimization strategy in our repository we:
 
 \end{enumerate}
 
+\begin{figure}
+\caption{This is very long caption textasd. This is very long caption
+  textasd. This is very long caption textasd. This is very long
+  caption textasd.}
 \begin{center}
-\begin{tikzpicture}[node distance = 2cm, auto]
+  \begin{tikzpicture}[node distance = 2cm, auto]
     \node [block] (csrc) {C source};
     \node [block, below of=csrc, left of=csrc] (maxrt) {CPU Runtime code};
     \node [block, below of=csrc, right of=csrc] (maxc) {MaxC Design};
@@ -84,12 +596,12 @@ each optimization strategy in our repository we:
 
     \node [cloud, right of=csrc] (lara) {LARA};
     \node [cloud, left of=csrc] (maxcc) {MaxCC};
-%   \node [cloud, right of=init] (system) {system};
-%    \node [block, below of=init] (identify) {identify candidate models};
-%    \node [block, below of=identify] (evaluate) {evaluate candidate models};
-%    \node [block, left of=evaluate, node distance=3cm] (update) {update model};
-%    \node [decision, below of=evaluate] (decide) {is best candidate better?};
-%    \node [belock, below of=decide, node distance=3cm] (stop) {stop};
+    % \node [cloud, right of=init] (system) {system};
+    % \node [block, below of=init] (identify) {identify candidate models};
+    % \node [block, below of=identify] (evaluate) {evaluate candidate models};
+    % \node [block, left of=evaluate, node distance=3cm] (update) {update model};
+    % \node [decision, below of=evaluate] (decide) {is best candidate better?};
+    % \node [belock, below of=decide, node distance=3cm] (stop) {stop};
 
     \path [line] (csrc) -- (maxrt);
     \path [line] (csrc) -- (maxc);
@@ -101,15 +613,15 @@ each optimization strategy in our repository we:
     \path [line, dashed] (lara) -- (csrc);
     \path [line, dashed] (lara) -- (maxc);
 
-%    \path [line] (decide) -| node [near start] {yes} (update);
-%    \path [line] (update) |- (identify);
-%    \path [line] (decide) -- node {no}(stop);
-%    \path [line,dashed] (expert) -- (init);
-%    \path [line,dashed] (system) -- (init);
-%    \path [line,dashed] (system) |- (evaluate);
-\end{tikzpicture}
+    % \path [line] (decide) -| node [near start] {yes} (update);
+    % \path [line] (update) |- (identify);
+    % \path [line] (decide) -- node {no}(stop);
+    % \path [line,dashed] (expert) -- (init);
+    % \path [line,dashed] (system) -- (init);
+    % \path [line,dashed] (system) |- (evaluate);
+  \end{tikzpicture}
 \end{center}
-
+\end{figure}
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
 % For figures, \caption should occur after the \includegraphics.
@@ -123,15 +635,15 @@ each optimization strategy in our repository we:
 % option should be used if it is desired that the figures are to be
 % displayed while in draft mode.
 %
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex,
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation Results}
-%\label{fig_sim}
-%\end{figure}
+% \begin{figure}[!t]
+%   \centering
+%   \includegraphics[width=2.5in]{myfigure}
+%   where an .eps filename suffix will be assumed under latex,
+%   and a .pdf suffix will be assumed for pdflatex; or what has been declared
+%   via \DeclareGraphicsExtensions.
+%   \caption{Simulation Results}
+%   \label{fig_sim}
+% \end{figure}
 
 % Note that IEEE typically puts floats only at the top, even when this
 % results in a large percentage of a column being occupied by floats.
@@ -145,15 +657,15 @@ each optimization strategy in our repository we:
 % The subfigure.sty package works much the same way, except \subfigure is
 % used instead of \subfloat.
 %
-%\begin{figure*}[!t]
-%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
-%\label{fig_second_case}}}
-%\caption{Simulation results}
-%\label{fig_sim}
-%\end{figure*}
+% \begin{figure*}[!t]
+%   \centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
+%   \label{fig_first_case}}
+%   \hfil
+%   \subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
+%   \label{fig_second_case}}}
+%   \caption{Simulation results}
+%   \label{fig_sim}
+% \end{figure*}
 %
 % Note that often IEEE papers with subfigures do not employ subfigure
 % captions (using the optional argument to \subfloat), but instead will
@@ -165,228 +677,36 @@ each optimization strategy in our repository we:
 % \footnotesize as IEEE normally uses this smaller font for tables.
 % The \label must come after \caption as always.
 %
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
+% \begin{table}[!t]
+%%   increase table row spacing, adjust to taste
+%   \renewcommand{\arraystretch}{1.3}
+%   if using array.sty, it might be a good idea to tweak the value of
+%   \extrarowheight as needed to properly center the text within the cells
+%   \caption{An Example of a Table}
+%   \label{table_example}
+%   \centering
+%%   Some packages, such as MDW tools, offer better commands for making tables
+%%   than the plain LaTeX2e tabular which is used here.
+%   \begin{tabular}{|c||c|}
+%     \hline
+%     One & Two\\
+%     \hline
+%     Three & Four\\
+%     \hline
+%   \end{tabular}
+% \end{table}
 
 
 % Note that IEEE does not put floats in the very first column - or typically
 % anywhere on the first page for that matter. Also, in-text middle ("here")
 % positioning is not used. Most IEEE journals/conferences use top floats
 % exclusively. Note that, LaTeX2e, unlike IEEE journals/conferences, places
-% footnotes above bottom floats. This can be corrected via the \fnbelowfloat
-% command of the stfloats package.
 
 
-\section{The  MaxC Language}
 
-MaxC is a programing language and API based on the C99 standard. It
-provides a succinct means of specifying dataflow designs and is an
-intermediate representation in the proposed design flow. MaxC is a
-meta-programming language in the sense that, unlike a regular C
-program, a MaxC program is not "executed"" but specifies
-a hardware design. MaxC is designed to be human readable and to
-facilitate integration with other tools. Being based on the C99
-standard, the language interacts well with existing compilers or source
-to source translation frameworks (e.g. LARA, ROSE), allowing source
-level optimizations to be applied through different tools.
 
-The example below presents a simple kernel performing a 1d
-convolution.
 
-Lines 2-6 show the kernel declaration specifying the stream input "p"
-and output "out" as well as a number of scalar parameters configurable
-at run-time.
 
-On lines 13-16 we use array index notation to access future (positive
-offset) or past (negative offset) stream elements.
-
-Normal arithmetic operations can be used to operate on stream
-elements.
-
-\lstset{style=MaxC}
-
-\begin{lstlisting}
-#pragma stream:result type:uint32 func:kernel_Convolution1d
-void kernel_Convolution1d(
-  sin_float8_24 p,
-  sout_float8_24 out,
-  float8_24 c_0_0_0, float8_24 c_p_0_0, float8_24 c_n_0_0,
-  uint32 n1, uint32 ORDER)
-{
-    s_float8_24 i4 = count(1000, 1);
-    s_float8_24 i1 = countChain(n1, 1, i4);
-
-    s_int result =
-        p[0]  * c_0_0_0 +
-        p[1]  * c_p_0_0 +
-        p[-1] * c_n_0_0;
-
-    s_bool up = (i1 >= ORDER) && (i1 < n1 - ORDER);
-    s_int32 inter = stream_select(up, p, result);
-
-    output_i(out, inter);
-}
-\end{lstlisting}
-
-The example illustrates the additional types we introduce as
-extensions to C99. These are meant to simplify the language and make
-it more expressive as well as provide additional verification and
-optimisation mechanisms (e.g. type safety). Maintaining compatibility
-with C99 simplifies the kernel simulation flow as discussed below.
-
-\section{Implementation}
-
-The MaxCC backend is implemented using the ROSE compiler framework
-[@rose00]. It processes the Abstract Syntax Tree generated by the ROSE
-frontend into a data flow graph representation of the original MaxC
-design. It then traverses this graph in conjunction with the original
-AST emitting MaxJava code.
-
-MaxCC supports the following types, as extensions to C99:
-
-\begin{itemize}
-\item floati\_j (e.g float8\_24, float10\_22 etc.), uinti/inti
-  (e.g. uint32, int32) allow specification of custom width data
-  types
-
-\item s\_floati\_j, s\_inti\_j etc. (e.g. s\_float8\_24) allow specification of
-  stream data types
-\end{itemize}
-
-To allow decoupling of bit width specifications from the functional
-code we also provide the type s\_float, s\_int etc. In this
-situation we can specify the type using a pragma directive.
-
-The previous example also illustrates some of the MaxC API components:
-
- * output functions (e.g. output\_i) are used to connect an internal
-   kernel stream to the output stream of a kernel
-
- * various counters and counter chain configurations can be
-   instantiated using functions from the counter API as shown on lines
-   8-9
-
- * functions such as stream\_select are used to multiplex between a
-   number of streams based on the value of condition stream
-
-\section{Kernel Simulation}
-
-The goal for the kernel simulation model is that it should be possible
-to compile and run it using the standard GCC toolchain, verifying the
-logical correctness of the design (i.e. not accounting for hardware
-effects such as stalls etc.).
-
-To achieve this we provide the type extensions described above as type
-definitions. Streams are modelled as pointers: `typedef float*
-s\_float8\_24`. After each kernel cycle, stream pointers are
-incremented, as shown in the simulation loop below:
-
-\lstset{style=MaxC}
-
-\begin{lstlisting}
-for (int i = 0 ; i < CYCLE_COUNT; i++) {
-   kernel_Convolution1d(p, out, 2);
-   update_stream_pointers(p, out);
-}
-\end{lstlisting}
-
-The major limitation of this approach is that, due to the lack of
-support for polymorphism in C, in order to enable simulation support,
-users are required to add boilerplate code, that would otherwise not
-be required by the MaxCC backend. When compiling with MaxCC this
-boilerplate code is simply ignored, so any mistakes in this code will
-not be captured by the simulation model.
-
-This issue is illustrated in the example below where we must use the
-`stream\_init\_i(int stream\_id)` function, passing in a unique stream id
-to retrieve the appropriate stream values from the global data
-structures they are stored in. The function then either allocates a
-new stream or increments the stream pointer if the stream has already
-been allocated. Furthermore if we extend the example to use two
-counters, we similarly require unique identifiers for counters.
-
-\begin{lstlisting}
-void kernel_Convolution1d(
-    sin_float8_24 in,
-    sout_float8_24 out,
-    float8_24 c)
-{
-    float8_24 count = counter(10, 1);
-
-    s_int32 result = stream_init_i(0);
-	result[0] = c * (in[0] + in[1]);
-
-    int32 good = (count > 2) && (count < 5);
-
-    int32 inter = stream_selectfi(good, in, result);
-
-    output_i(out, inter);
-}
-
-\end{lstlisting}
-
-\section{Connecting Kernels}
-
-We create a simple configuration language for specifying kernel and
-host interconnections. The configuration file used for the RTM
-application is shown as an example below. This allows us to specify
-the kernel instances that form our design. The configuration file has
-two parts. First we specify the kernel instances. For example line 3
-in the listing below specifies that we will be creating 3 kernel
-instances based on a kernel named Cmdread. After specifying all kernel
-instances, we can specify the flow of data between kernels, host and
-memory. We can specify three types of flow:
-
-* kernel to kernel for example `Myapp0[out] > Myapp1[in]`. This will
-  connect the output of Myapp0 named "out" to the input of Myapp1
-  named "in";
-
-* memory to kernel, as shown on line 10 in the listing below; this
-  will connect a dram stream named "dram2knl0" to the input of Myapp0
-  "in"; the read sequence is provided by the output of Cmdread0 named
-  dram\_read; we can also specify a kernel to memory direction, as
-  shown on line 15 in which case the second argument specifies the
-  stream providing the write sequence;
-
-* finally, we can create host to memory and memory to host connections
-  as shown on lines 7 - 8.
-
-\lstset{style=MaxCconf}
-
-\begin{lstlisting}
-kernels:
-  Cmdread:  Cmdread0 Cmdread1 Cmdread2 Cmdread3 Cmdhostread
-  Cmdwrite: Cmdwrite0 Cmdwrite1 Cmdhostwrite
-  RTM:      MyApp0
-
-flow:
-  Host > Memory[dram2mgr, Cmdhostwrite.dram_write]
-  Memory[mgr2dram, Cmdhostread.dram_read] > Host
-
-  Memory[dram2knl0, Cmdread0.dram_read] > Myapp0[burst_p]
-  Memory[dram2knl1, Cmdread1.dram_read] > Myapp0[burst_pp]
-  Memory[dram2knl2, Cmdread2.dram_read] > Myapp0[burst_dvv]
-  Memory[dram2knl3, Cmdread3.dram_read] > Myapp0[burst_source]
-
-  MyApp0[ker_p] > Memory[knl2dram0, Cmdwrite0.dram_write]
-  MyApp0[output_pp] > Memory[knl2dram1, Cmdwrite1.dram_write]
-\end{lstlisting}
 
 
 \section{Evaluation}

@@ -1,5 +1,5 @@
 COMPILE=pdflatex
-TRASH=*.aux *.toc *.out *.log
+TRASH=*.aux *.toc *.out *.log *.bbl *.blg
 BIBTEX=bibtex
 
 TARGET=pgasap2013

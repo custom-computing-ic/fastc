@@ -80,27 +80,14 @@
 \usepackage{listings}
 
 
-% *** ALIGNMENT PACKAGES ***
-%
-%\usepackage{array}
-% Frank Mittelbach's and David Carlisle's array.sty patches and improves
-% the standard LaTeX2e array and tabular environments to provide better
-% appearance and additional user controls. As the default LaTeX2e table
-% generation code is lacking to the point of almost being broken with
-% respect to the quality of the end results, all users are strongly
-% advised to use an enhanced (at the very least that provided by array.sty)
-% set of table tools. array.sty is already installed on most systems. The
-% latest version and documentation can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/required/tools/
-
-
+\usepackage{array}
 \usepackage{mdwmath}
 \usepackage{mdwtab}
 
 \usepackage{eqparbox}
 \usepackage[tight,footnotesize]{subfigure}
-% \usepackage[caption=false]{caption}
-% \usepackage[font=footnotesize]{subfig}
+%\usepackage[caption=false]{caption}
+\usepackage[caption=false, font=footnotesize]{subfig}
 % subfig.sty, also written by Steven Douglas Cochran, is the modern
 % replacement for subfigure.sty. However, subfig.sty requires and
 % automatically loads Axel Sommerfeldt's caption.sty which will override
@@ -185,20 +172,35 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 
-\tikzstyle{decision} = [diamond, draw, fill=blue!20, text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
-\tikzstyle{block} = [rectangle, draw, fill=blue!20, text width=5em, text centered, rounded corners, minimum height=4em]
-\tikzstyle{line} = [draw, -latex'] \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm, minimum height=2em]
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, text width=4.5em,
+text badly centered, node distance=3cm, inner sep=0pt]
 
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, text width=5em,
+text centered, rounded corners, minimum height=4em]
 
+\tikzstyle{line} = [draw, -latex'] \tikzstyle{cloud} = [draw,
+ellipse,fill=red!20, node distance=3cm, minimum height=2em]
+
+\newcommand{\XXX}[1]{{\bf \color{red} XXX: #1}}
+
+%\usepackage[margin=1cm]{caption}
 
 \begin{document}
 
-\lstdefinestyle{MaxC}{language=C++, morekeywords={s_int32, int32,
-    float8_24, sin_float8_24, sout_float8_24, float8_24, s_int,
-    s_float8_24, s_bool}}
+\captionsetup{width=2cm}
 
-\lstdefinestyle{MaxCconf}{language=C++, morekeywords={kernels, flow,
-    Host, Memory} }
+\lstdefinestyle{aspectp}{ breaklines=true, frame=tb, morekeywords={},
+  xleftmargin=2em, numbers=left, captionpos=b,
+  morekeywords={aspectdef, where, when, what} }
+
+\lstdefinestyle{MaxC}{language=C++, breaklines=true, frame=tb,
+  xleftmargin=2em, numbers=left,
+  captionpos=b,basicstyle=\ttfamily\footnotesize,
+  morekeywords={s_int32, int32, float8_24, sin_float8_24,
+    sout_float8_24, float8_24, s_int, s_float8_24, s_bool}}
+
+\lstdefinestyle{MaxCconf}{language=C++, xleftmargin=2em,
+  morekeywords={kernels, flow, Host, Memory} }
 
 \title{MaxC: Aspect Driven Compilation for \\ Streaming Designs}
 
@@ -232,7 +234,7 @@
   simulated in software using the standard GCC stack. Optimisation
   strategies of generated designs are specified with LARA, to decouple
   design optimisation from MaxC design development. Reverse-Time
-  Migration (RTM), a high performance application, is developed with
+  Migration (RTM), a high performance application, is developed using
   the proposed approach.
 
 \end{abstract}
@@ -240,29 +242,6 @@
 \IEEEpeerreviewmaketitle
 
 \input{content}
-
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex,
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation Results}
-%\label{fig_sim}
-%\end{figure}
 
 % Note that IEEE typically puts floats only at the top, even when this
 % results in a large percentage of a column being occupied by floats.
