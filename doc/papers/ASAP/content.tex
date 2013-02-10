@@ -1,28 +1,43 @@
 \section{Introduction}
 
-Custom designs on FPGA devices can be used to improve performance and
-power consumption of computationally intensive algorithms. However,
-creating custom designs is a difficult task and requires detailed
-knowledge of circuit design and underlying performance
-considerations. Ideally we want to synthesize custom designs from
-existing high level implementations in C or other languages without
-compromising on performance and energy efficiency.
+The dataflow computing paradigm is more suitable for implementing high
+throughput, highly parallel applications that operate on large amounts
+of uniform data than general purpose architectures. Existing work
+shows that dataflow machines emulated on FPGAs achieve performance
+gains of up to several orders of magnitude compared to traditional
+control based architectures \cite{Flynn:Pell:Mencer:2012},
+\cite{Mencer:2012},
+\cite{Oriato:Tilbury:Marrocu:Pusceddu:2012}. Because they eliminate
+the fetch-decode-execute cycle of traditional von Neumann machines
+\cite{Neumann:1993}, dataflow designs require less area for caching
+and control (e.g. branch prediction) which leads to the increase in
+performance and decrease in power consumption. Another key aspect is
+that due to its regularity, a dataflow design can be statically
+scheduled into a deep hazard-free pipeline, effectively achieving the
+ideal throughput rate of one result per clock cycle. This makes
+dataflow designs more suitable for expressing high throughput, regular
+computations than general purpose computing devices. However, dataflow
+languages are not commonly used and even with the advent of more
+modern functional programming languages, imperative languages such as
+Java and C/C++ remain most popular \cite{Tiobe:2012}.
 
-We identify the following challenges:
+We identify the following challenges that should be overcome to
+facilitate the adoption of dataflow designs:
 \begin{enumerate}
 \item Specifying dataflow designs, in an intuitive, well understood
   language that is concise and facilitates the translation of existing
-  designs, but also expressive enough to support the requirements of
-  modern high-performance applications.
+  designs and expressive enough to support the requirements of modern
+  high-performance applications.
 \item Specifying optimization strategies, decoupled from the
   application code in a manner that makes the specification easy to
-  reuse (portable) but also easy to customize and is comprehensive
-  enough to allow capturing of optimizations at various levels:
-  a. algorithmic transformations -- based on either functional or
-  non-functional requirements(e.g. power-consumption, compilation time
-  etc.) -- b. design level transformations (such as bitwise
-  optimisations) c. productivity related transformations (e.g. improve
-  support for debugging or increase compilation speed).
+  reuse and customize and is comprehensive enough to allow capturing
+  of optimizations at various levels: \emph{algorithmic
+    transformations} that enable transformation of the original
+  application to expose parallelism or improve communication between
+  CPU and accelerator, \emph{design-level transformations} that
+  enable exploration of platform specific optimizations and
+  \emph{productivity related transformations} that improve developer
+  productivity.
 \item Systematic design space exploration of dataflow designs driven
   by these parameterizable optimization strategies, that increase
   developer productivity and allow exploration of design level
@@ -31,28 +46,26 @@ We identify the following challenges:
   performance applications from existing implementations
 \end{enumerate}
 
-In summary our contributions include:
+We propose a methodology for addressing these challenges based on the
+following contributions:
 \begin{enumerate}
-\item We introduce MaxC, a dataflow language based on C that allows
-  that can be used to create high-performance designs and we implement
-  a compiler for MaxC.
-\item We introduce novel aspects for specifying optimisations
+\item We introduce MaxC, a dataflow language based on C99 that can be
+  used to create high-performance designs. We implement a compiler
+  that translates MaxC designs to MaxJ an existing commercial dataflow
+  language. These are then compiled using MaxCompiler 2012.1 and
+  executed on a MAX3424 Board with a Virtex 6 FPGA chip and 48GB of
+  on-board DRAM.
+\item We introduce novel aspects for specifying optimisation
   strategies at the algorithmic level, the design level and
-  transformation related methods. We implement these aspects using
+  productivity level. We implement these aspects using
   LARA, an aspect oriented language for FPGA systems.
 \item We propose an automated method for design space exploration of
-  dataflow designs specified with MaxC, driven by the aspect
-  definitions.
+  MaxC dataflow designs, driven by the aspect definitions.
 \item We evaluate our approach implementing a high performance design
   for an application based on the Reverse Time Migration technique for
-  seismic imaging and compare this with existing CPU, GPU and FPGA
-  implementations in terms of performance, ease of use and
-  maintainability and portability.
+  seismic imaging and comparing it with existing CPU, GPU and FPGA
+  implementations.
 \end{enumerate}
-
-
-
-
 
 \section{Related Work}
 
@@ -90,19 +103,20 @@ In summary our contributions include:
 
 \section{The  MaxC Language}
 
-The MaxC language allows users to specify dataflow designs. It is
-based on the C99 standard, a widely used standard, so it should be
-familiar and easy to use for new users. At the same time, the
-simplicity of the constructs simplifies the development of aspects
-which together with MaxC create a flexible approach for generating and
-exploring the space of efficient dataflow designs.  MaxC is a
-meta-programming language in the sense that, unlike a regular C
-program, a MaxC program is not "executed"" but specifies a hardware
-design. MaxC is designed to be human readable and to facilitate
-integration with other tools. Being based on the C99 standard, the
-language interacts well with existing compilers or source to source
+MaxC is a novel language for specifying dataflow designs. It is based
+on the widely used C99 standard which makes it familiar and easy to
+adopt for developers facilitating translation of existing application
+code to dataflow designs. The simple syntax of C99 facilitates
+integration with other tools (such as aspect weavers), allowing the
+language to interact well with existing compilers or source to source
 translation frameworks (e.g. LARA, ROSE), allowing source level
-optimizations to be applied through different tools.
+optimizations to be applied through different tools. MaxC itself is a
+simple language, which is intended to be used for expressing the
+simplest form of a dataflow design. Optimizations and other
+transformations are encapsulated in aspects which are developed
+separately and applied through aspect weaving. This results in a more
+flexible approach for generating and exploring the space of efficient
+dataflow designs.
 
 We identify the following requirements for any dataflow language:
 \begin{enumerate}
@@ -111,22 +125,23 @@ We identify the following requirements for any dataflow language:
 \item interacts well with high-level tools
 \end{enumerate}
 
-All MaxC designs described in this paper are translated by our
+
+All MaxC designs described in this paper are translated by the
 compiler backend to MaxJ which are then compiled using MaxCompiler
-2012.1 and executed on a Max3424 Board with Virtex 6 FPGA chip and
+2012.1 and executed on a MAX3424 Board with Virtex 6 FPGA chip and
 48GB of on-board DRAM.
 
+Hence, conceptually, MaxC uses the same execution model as MaxJ: a
+design is composed of one or more computational kernels (which
+implement the functionality we are interested in) which are connected
+to form a design. Communication between kernels is asynchronous, so
+kernels can operate independently of each other but computation within
+kernels is synchronous, so a kernel will compute only when all it's
+active inputs have values available.
 
-Hence, conceptually, MaxC uses the same execution model as MaxJ,
-\XXX{Why??}: a design is composed of one or more computational kernels
-(which implement the functionality we are interested in) which are
-connected to form a design. Communication between kernels is
-asynchronous, so kernels can operate independently of each other but
-computation within kernels is synchronous, so a kernel will compute
-only when all it's active inputs have values available.
-
-Figure \ref{fig:maxc-1dconv} shows an example kernel which implements
-a 1D convolution computation used to value European options.
+Figure \ref{fig:maxc-1dconv} shows an example MaxC dataflow kernel
+which implements a 1D convolution computation used to value European
+options.
 
 
 \lstset{style=MaxC}
@@ -146,9 +161,9 @@ void kernel_Convolution1D(
 
   #pragma DSPBalance:full
   int result =
-  p[0]  * c_0_0_0 +
-  p[1]  * c_p_0_0 +
-  p[-1] * c_n_0_0;
+    p[0]  * c_0_0_0 +
+    p[1]  * c_p_0_0 +
+    p[-1] * c_n_0_0;
 
   int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
 
@@ -164,18 +179,17 @@ void kernel_Convolution1D(
 \subsection{Kernels}
 
 Kernels are defined as regular C functions, with the ``kernel\_''
-identifier prepended, as shown on Line 1. The inputs and outputs of
-the kernel are clearly specified in the header. At the kernel level
-MaxC captures the dataflow elements by use of one of the following:
-\begin{enumerate}
+identifier prepended (Line 1). The inputs and outputs of the kernel
+are clearly specified in the header, inputs followed by outputs. At
+the kernel level MaxC captures the dataflow elements by using:
 
+\begin{itemize}
 \item \emph{regular C constructs} are used as much as possible to make
   the language more intuitive. This includes standard C99 types and
-  conventions for implementing kernels.\XXX{Unlike StreamsC which uses
-    the comment style to define kernel bodies etc.}; We also
-  ``overload'' some operators such as the array access operator to
-  provide a more succinct syntax for accessing ``past'' or ``future''
-  stream elements (Lines 15 -- 17).
+  conventions for implementing kernels. Some overloaded operators are
+  provided such as the array access operators to provide a more
+  succinct syntax for accessing ``past'' or ``future'' stream elements
+  (Lines 15 -- 17).
 
 \item \emph{pragma directives} are used to convey additional
   information to the compiler for which C99 does not provide flexible
@@ -185,83 +199,66 @@ MaxC captures the dataflow elements by use of one of the following:
 \item \emph{specific API calls} are used for higher level constructs
   such as inputs and outputs (Lines 8, 24), counters (Lines 10 -- 11).
 
+\end{itemize}
+
+
+Figure \ref{fig:maxc-1dconv} shows the main elements of a MaxC design:
+
+\begin{enumerate}
+\item \emph{inputs and outputs} are declared in the kernel header and
+  connected in the kernel body. Lines 2-6 show the kernel declaration
+  specifying the stream input "p" and output "out" as well as a number
+  of scalar parameters configurable at run-time.
+
+\item \emph{control} elements are implement either via standard C99
+  constructs (such as conditional statements or operators) or via API
+  calls that enable multiplexing between 2 or more streams; API:
+  fselect(cond, stream1, stream2)
+
+\item \emph{computation} is implemented using regular C99 syntax and
+  semantics. API functions are provided for hardware blocks that
+  implement common functions such as square root, exponential,
+  logarithms.
+
+
+\item \emph{streams} are represented as regular C99 pointers. For
+  example Line 2 declares a stream of float values names ``p''. We can
+  use normal array notation to generate either previous (negative
+  indices) or future values (positive indices) or dereference the
+  stream to get the current stream value. Negative indices are allowed
+  (as on Line 16). const float c; compile time constant, used to
+  parametrize designs On lines 13-16 we use array index notation to
+  access future (positive offset) or past (negative offset) stream
+  elements.
+
+\item \emph{compile time constructs} such as loops are supported as
+  long as their bounds are known at compile time.
+
+\item \emph{optimizations} can be applied via pragmas (Line 12) or API
+  calls. Additional type information can also be provided via pragmas.
+
 \end{enumerate}
 
-Lines 2-6 show the kernel declaration specifying the stream input "p"
-and output "out" as well as a number of scalar parameters configurable
-at run-time.
+The MaxC API provides a number of useful, higher-level constructs.
+such as output functions that are used to connect an internal kernel
+stream to the output stream of a kernel, various counters and counter
+chain configurations that can be instantiated using functions from the
+counter API (Lines 9 -- 10) or functions such as stream\_select that
+are used to multiplex between a number of streams based on the value
+of condition stream.
 
 
-The example illustrates the additional types we introduce as
-extensions to C99. These are meant to simplify the language and make
-it more expressive as well as provide additional verification and
-optimisation mechanisms (e.g. type safety). Maintaining compatibility
-with C99 simplifies the kernel simulation flow as discussed below.
 
-
-\subsection {Inputs and Outputs}
-
-% in(), out(), or kerneldef( “name”, in(), out() ) { /** Kernel Code **/
-% }
-
-\subsection{Control}
-API: fselect(cond, stream1, stream2)
-% C Constructs: if(){}  & conditional a?b:
-
-\subsection{Computation}
-Arithmetic expression as in regular C
-API functions for exp, sqrt, sin etc.
-
-Normal arithmetic operations can be used to operate on stream
-elements.
-
-
-\subsection{Streams}
-% s_float a; - a stream of floats; can use array access on streams
-% a[1] ⇒ stream.offset(s, 1)
-% how to handle offset expressions?
-
-% float b; - the value of the stream or a runtime contant;
-% b = *a or b = a[0] ---> b takes the value of the current stream element.
-
-const float c;  compile time constant, used to parametrize
-designs
-
-On lines 13-16 we use array index notation to access future (positive
-offset) or past (negative offset) stream elements.
-
-
-\subsection{Optimizations}
-% via Pragmas: #pragma class:kernelopt name:DSPBalance(1)
-via API calls:
-
-\subsection{API}
-The previous example also illustrates some of the MaxC API components:
-
-* output functions (e.g. output\_i) are used to connect an internal
-kernel stream to the output stream of a kernel
-
-* various counters and counter chain configurations can be
-instantiated using functions from the counter API as shown on lines
-8-9
-
-* functions such as stream\_select are used to multiplex between a
-number of streams based on the value of condition stream
-
-
-To allow decoupling of bit width specifications from the functional
-code we also provide the type s\_float, s\_int etc. In this
-situation we can specify the type using a pragma directive.
 
 \subsection{Designs}
 
-\XXX{Command read/write kernel}
+%\XXX{Command read/write kernel}
 
-\XXX{Design diagram?}
+%\XXX{Design diagram?}
 
-\XXX{Fiction Incoming !!!}
+%\XXX{Fiction Incoming !!!}
 
-MaxC also allows specification of designs from multiple kernel. This
+MaxC also allows specification of designs using multiple kernels. This
 involves selecting the kernel instances and connecting them as well as
 setting a number of design configuration and compilation options such
 as operating frequency.
@@ -274,7 +271,7 @@ computation kernels.
 On lines ?? we specify the kernel instances. On line ?? we connect
 these. On lines ?? we specify various configuration options.
 
-\begin{figure}
+\begin{figure}[!h]
 \centering
 \begin{lstlisting}
   void design_Convolution1D() {

@@ -169,7 +169,10 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
+\usepackage[normalem]{ulem}
 \usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{lipsum}
 \usetikzlibrary{shapes,arrows}
 
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, text width=4.5em,
@@ -182,6 +185,9 @@ text centered, rounded corners, minimum height=4em]
 ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 
 \newcommand{\XXX}[1]{{\bf \color{red} XXX: #1}}
+\newcommand\reduline{\bgroup\markoverwith
+  {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
+\newcommand{\FIC}[1]{\reduline{#1}}
 
 %\usepackage[margin=1cm]{caption}
 
@@ -202,7 +208,7 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 \lstdefinestyle{MaxCconf}{language=C++, xleftmargin=2em,
   morekeywords={kernels, flow, Host, Memory} }
 
-\title{MaxC: Aspect Driven Compilation for \\ Streaming Designs}
+\title{MaxC: Aspect Driven Compilation for \\ Dataflow Designs}
 
 \author{
   \IEEEauthorblockN{
@@ -219,23 +225,30 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 
 \begin{abstract}
 
-  The streaming (or dataflow) model of computation is a convenient
-  paradigm for expressing high-throughput parallel computations,
-  enabling synthesis of deeply pipelined hardware architectures
-  directly from a program's dataflow graph. Dataflow machines can be
-  conveniently emulated on Field Programmable Gate Array (FPGA) based
-  systems which combine the advantage of a fully customizable logic
-  circuit with low time to market. We propose a design flow for
-  creating dataflow designs for FPGA systems based on LARA, a
-  domain-specific aspect oriented programming language and MaxC. In
-  this paper we introduce MaxC, a new meta-programming language based
-  on C. Inputs, outputs, computation and control parts of hardware
-  designs can be captured with high-level MaxC descriptions, and
-  simulated in software using the standard GCC stack. Optimisation
-  strategies of generated designs are specified with LARA, to decouple
-  design optimisation from MaxC design development. Reverse-Time
-  Migration (RTM), a high performance application, is developed using
-  the proposed approach.
+  The dataflow model of computation is a convenient paradigm for
+  expressing high-throughput parallel computations. It enables
+  synthesis of deeply pipelined hardware architectures directly from a
+  program's dataflow graph. Dataflow designs can be conveniently
+  implemented on Field Programmable Gate Arrays which combine the
+  advantage of fully customizable logic with low time to
+  market. However, the manual development process used until now is
+  challenging, error-prone and counter-productive. We propose a design
+  flow that uses aspects to decouple design development from design
+  optimisation, thus improving maintainability, portability and
+  developer productivity while enabling automated exploration of
+  design trade-offs that can lead to increased performance. The
+  proposed approach uses MaxC, a novel language for specifying
+  dataflow designs. In this paper we introduce MaxC and show how
+  inputs, outputs, computation and control parts of hardware designs
+  can be captured with high-level MaxC descriptions, and simulated in
+  software using the standard GCC stack. Optimisation strategies for
+  the generated designs are then specified with LARA, a
+  domain-specific aspect oriented programming language, and MaxC. We
+  evaluate our approach by developing an implementation for a high
+  performance application based on Reverse-Time Migration
+  (RTM). Preliminary results show that our design achieves comparable
+  performance to state of the art FPGA implementations, \FIC{while
+  improving developer productivity}.
 
 \end{abstract}
 
