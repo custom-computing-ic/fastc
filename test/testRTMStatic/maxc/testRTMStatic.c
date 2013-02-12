@@ -69,8 +69,8 @@ void kernel_RTM(
 
     float8_24 cur[Mul][11+Par+1][11][11], result[Par][Mul];
 
-    s_offset nx  = make_offset(24 / Par, 48 / Par);
-    s_offset nxy = make_offset(32 * nx, 32 * nx);
+    s_offset nx  = make_offset(min_nx / Par, max_nx / Par);
+    s_offset nxy = make_offset(dim_y * nx, dim_y * nx);
 
     // setup the optimisation factor to transfer operations between DSPs and Luts
 
