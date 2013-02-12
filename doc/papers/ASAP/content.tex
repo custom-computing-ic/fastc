@@ -67,34 +67,7 @@ following contributions:
   implementations.
 \end{enumerate}
 
-\section{Related Work}
 
-\TODO Half page of related work on dataflow languages and aspect
-driven design.
-
-\subsection{Dataflow Languages}
-
-\begin{itemize}
-
-\item Streams-C -
-
-\item StreamIt -, Sequoia++ - different, non-standard lanuages. [We
-  found them hard to learn/understand follow.]
-
-\item MaxJ - It’s difficult to manage the two components of the
-  projects: two different languages, complicates the build system and
-  teh design space exploration (since it is harder to share data
-  between designs, like we can in MaxC with headers). Java is more
-  verbose and in most designs this is not necessarilly useful (we may
-  not benefit that much from high-level constructs) . In C we can use
-  macros to capture repetitive patterns. On the other hand C is not an
-  OO language, so this may be bad for code reuse.
-
-\item ImpulseC - commercial version of Streams-C
-
-\end{itemize}
-
-\subsection{Aspect Driven Design}
 
 
 \section{The  MaxC Language}
@@ -452,7 +425,7 @@ Lines 13 -- 17 of Figure \ref{fig:maxc-1dconv}.
 Using LARA we can implement and combine these aspects to enable
 systematic design space exploration of all the optimisations options
 exposed by the MaxC backend resulting in the generation of a large
-number of designs. The feedback-direct compilation process of LARA can
+number of designs. The feedback-directed compilation process of LARA can
 be used to capture and extract feedback from the backend reports
 pertaining to resource usage or timing information and automatically
 adjust the compilation process.
@@ -536,6 +509,57 @@ Aspect steps:
 
 \lstset{style=MaxC}
 
+
+\begin{table*}
+%  \renewcommand{\arraystretch}{1.3}
+  \centering
+  \caption{Results of aspect transformations on the original MaxC
+    design for the RTM kernel.}
+  \label{table:feature-comparison}
+  \begin{tabular}{ p{2cm}  | p{1cm} | c|  p{1cm} |  p{1cm} |  p{1cm} |  p{1cm} | c | p{1cm} |c | c | c}
+   Aspect                           & DSP Balance    & Par & LUT               & FF                & BRAM           & DSP            & Frequency & Compile Time & LOC & Speedup & Throughput \\ \hline
+  \multirow{4}{*}{OptimizeDSPUsage} & none           & 1   & 67327 (22.62\%)   & 92607  (15.56\%)  & 248 (23.31\%)  & 0  (0.00\%)    & 303/100   & 2 h 9        & LOC & Speedup & Throughput \\
+                                    & balanced       & 1   & 59202 (19.89\%)   & 84101 (14.13\%)   & 248 (23.31\%)  & 34 / (1.69\%)  & 303/100   & 1h 49        & LOC & Speedup & Throughput \\
+                                    & full           & 1   & 52619  (17.68\%)  & 76107  (12.79\%)  & 248  (23.31\%) & 117  (5.80\%)  & 303/100   & 2 h 2        & LOC & Speedup & Throughput \\ \hline
+                                    & none           & 2   & 92109 (30.95\%)   & 122224 (20.53\%)  & 261 (24.53\%)  & 0 (0.00\%)     & 303/100   & 3h5          & LOC & Speedup & Throughput \\
+                                    & balanced       & 2   & 75719 (25.44\%)   & 75719 (25.44\%)   & 261 (24.53\%)  & 68 (3.37\%)    & 303/100   & 2h30         & LOC & Speedup & Throughput \\
+                                    & full           & 2   & 63032  (21.18\%)  & 89284  (15.00\%)  & 260  (24.44\%) & 234  (11.61\%) & 303/100   & 2 h 8        & LOC & Speedup & Throughput \\
+\hline
+                                    & none           & 3   & 116532 (39.16\%)  & 152406 (25.61\%)  & 256 (24.06\%)  & 0 (0.00\%)     & 303/100   & 3 h 20       & LOC & Speedup & Throughput \\
+                                    & balanced       & 3   & 93911 (31.56\%)   & 126888 (21.32\%)  & 256 (24.06\%)  & 102 (5.06\%)   & 303/100   & 2h30         & LOC & Speedup & Throughput \\
+                                    & full           & 3   & 74575  (25.06\%)  & 102965  (17.30\%) & 255  (23.97\%) & 351  (17.41)\% & 303/100   & 2 h 18       & LOC & Speedup & Throughput \\
+\hline
+                                    & \TODO none     & 6   & 116532 (39.16\%)  & 152406 (25.61\%)  & 256 (24.06\%)  & 0 (0.00\%)     & 303/100   & 3 h 20       & LOC & Speedup & Throughput \\
+                                    & \TODO balanced & 6   & 92109 (30.95\%)   & 122224 (20.53\%)  & 261 (24.53\%)  & 0 (0.00\%)     & 303/100   & 3h5          & LOC & Speedup & Throughput \\
+                                    & full           & 6   & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%) & 702  (34.82\%) & 303/100   & 3h 42        & LOC & Speedup & Throughput \\
+   \end{tabular}
+\end{table*}
+
+\begin{table*}
+ % \renewcommand{\arraystretch}{1.3}
+  \centering
+  \caption{Results of aspect transformations on the original MaxC
+    design for the RTM kernel.}
+  \label{table:feature-comparison}
+  \begin{tabular}{ p{2cm}  | p{1cm} | c|  p{1cm} |  p{1cm} | p{1cm} |   p{1cm} |  p{1cm} | c | p{1cm} |c | c | c}
+Aspect                               & Word Width & Burst & Par & LUT               & FF                & BRAM                 & DSP             & Frequency & Compile Time & LOC & Speedup & Throughput \\ \hline
+\multirow{4}{*}{Optimize word width} & 8, 24      & 64    & 2   & 63447  (21.32\%)  & 89150  (14.98\%)  & 260  (24.44\%))      & 234  (11.61\%)  & 400/100   & 2 h 30       & LOC & Speedup & Throughput \\
+                                     & 8, 24      & 64    & 3   & 75676  (25.4\%)   & 102831  (17.28\%) & 255  (23.97\%)       & 351  (17.41\%)  & 400/100   & 2 h 35       & LOC & Speedup & Throughput \\
+                                     & 8, 24      & 64    & 6   & 101578  (34.13\%) & 143374  (24.09\%) & 248  	295  (27.73\%) & 702  (34.82\%)  & 400/100   & 4 h 17       & LOC & Speedup & Throughput \\ \hline
+                                     & 8, 24      & 1     & 6   & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%)       & 702  (34.82\%)  & 303/100   & 3h 42        & LOC & Speedup & Throughput \\
+                                     & 8, 22      & 1     & 6   & 133973  (45.02\%) & 185520  (31.17\%) & 295  (27.73\%)       & 306  (15.18\%)  & 303/100   & 3 h 13       & LOC & Speedup & Throughput \\
+                                     & 8, 20      & 1     & 6   & 129581  (43.54\%) & 178333  (29.96\%) & 289  (27.16\%)       & 306  (15.18\%)  & 303/100   & 3 h 30       & LOC & Speedup & Throughput \\ \hline
+                                     & 8, 18      & 1     & 6   & 121439  (40.81\%) & 170721  (28.68\%) & 286  (26.88\%)       & 306  (15.18\%)) & 303/100   & 3h 19        & LOC & Speedup & Throughput \\
+                                     & 8, 16      & 1   & 6   & 117904  (39.62\%) & 157359  (26.44\%) & 283  (26.60\%)       & 204  (10.12\%)  & 400/100   & 2 h 50       & LOC & Speedup & Throughput \\ \hline
+
+   \end{tabular}
+\end{table*}
+
+\begin{comment}
+
+			6	400	100	8_24	0.082965		1.723236			101578  (34.13%)	143374  (24.09%)	295  (27.73%)	702  (34.82%)	4 h 17		~/maxcc/projects	exp_testRTMStatic_6P_1DSP_400Mem_100Str_f8_24_b64
+Debug
+\end{comment}
 \subsubsection{Debug Aspects}
 
 Because the current execution model does not provide for runtime
@@ -585,11 +609,19 @@ version which allows debugging the naive version.
 \TODO Add an example aspect?
 
 
-\section{Proposed Design Flow}
+\section{Design Flow}
 
-We perform a DSE step until we find a design that fits the chip,
-achieves timing closure and meets non functional requirements.  For
-each optimization strategy in our repository we:
+The proposed design flow is illustrated in Figure
+\ref{fig:design-flow}. MaxC is used to specify dataflow
+designs. Transformations specified through aspects are applied to the
+original design, generating new MaxC designs. These are then compiled
+by the MaxC backend to generate MaxJ design for hardware or
+simulation.
+
+The design space exploration process can be automated and ran until a
+dataflow design that achieves timing closure and meets non functional
+requirements is generated.  For each optimization strategy in our
+repository we:
 
 \begin{enumerate}
 
@@ -597,8 +629,7 @@ each optimization strategy in our repository we:
   the strategy (e.g. setting DSP balance).
 
 \item  we compile the optimized
-  design using the MaxCC backend to MaxJava, Maxeler's own dataflow
-  language
+  design using the MaxCC backend to MaxJ
 
 \item we start the backend compilation toolchain (MaxCompiler
   and Xilinx) and perform an analysis of the reporting information,
@@ -609,13 +640,11 @@ each optimization strategy in our repository we:
   is not met we restart using a different optimization strategy
 
 \end{enumerate}
-
+\begin{comment}
 \begin{figure}
-\caption{This is very long caption textasd. This is very long caption
-  textasd. This is very long caption textasd. This is very long
-  caption textasd.}
+\caption{The proposed design flow.}
 \begin{center}
-  \begin{tikzpicture}[node distance = 2cm, auto]
+  \begin{tikzpicture}[node distance = 2cm, auto, scale=0.5]
     \node [block] (csrc) {C source};
     \node [block, below of=csrc, left of=csrc] (maxrt) {CPU Runtime code};
     \node [block, below of=csrc, right of=csrc] (maxc) {MaxC Design};
@@ -652,121 +681,57 @@ each optimization strategy in our repository we:
   \end{tikzpicture}
 \end{center}
 \end{figure}
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-% \begin{figure}[!t]
-%   \centering
-%   \includegraphics[width=2.5in]{myfigure}
-%   where an .eps filename suffix will be assumed under latex,
-%   and a .pdf suffix will be assumed for pdflatex; or what has been declared
-%   via \DeclareGraphicsExtensions.
-%   \caption{Simulation Results}
-%   \label{fig_sim}
-% \end{figure}
+\end{comment}
 
-% Note that IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
-
-
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command, the
-% \label for the overall figure must come after \caption.
-% \hfil must be used as a separator to get equal spacing.
-% The subfigure.sty package works much the same way, except \subfigure is
-% used instead of \subfloat.
-%
-% \begin{figure*}[!t]
-%   \centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
-%   \label{fig_first_case}}
-%   \hfil
-%   \subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
-%   \label{fig_second_case}}}
-%   \caption{Simulation results}
-%   \label{fig_sim}
-% \end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-
-
-% An example of a floating table. Note that, for IEEE style tables, the
-% \caption command should come BEFORE the table. Table text will default to
-% \footnotesize as IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-% \begin{table}[!t]
-%%   increase table row spacing, adjust to taste
-%   \renewcommand{\arraystretch}{1.3}
-%   if using array.sty, it might be a good idea to tweak the value of
-%   \extrarowheight as needed to properly center the text within the cells
-%   \caption{An Example of a Table}
-%   \label{table_example}
-%   \centering
-%%   Some packages, such as MDW tools, offer better commands for making tables
-%%   than the plain LaTeX2e tabular which is used here.
-%   \begin{tabular}{|c||c|}
-%     \hline
-%     One & Two\\
-%     \hline
-%     Three & Four\\
-%     \hline
-%   \end{tabular}
-% \end{table}
-
-
-% Note that IEEE does not put floats in the very first column - or typically
-% anywhere on the first page for that matter. Also, in-text middle ("here")
-% positioning is not used. Most IEEE journals/conferences use top floats
-% exclusively. Note that, LaTeX2e, unlike IEEE journals/conferences, places
-
-
-
-
-
-
-
+\begin{figure}
+\includegraphics[scale=0.5, trim=30 180 0 50]{lara_maxcc.pdf}
+\caption{The proposed design flow.}
+\label{fig:design-flow}
+\end{figure}
 
 \section{Evaluation}
 
-\subsection{Performance}
+We evaluate the proposed approach by implementing a high-performance
+application based on the Reverse Time Migration method for seismic
+imaging. We use MaxC to implement the dataflow kernel and aspects to
+generate multiple configurations for the design. Table shows a
+comparison of the various generated design with results for CPU and
+FPGA published in \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
 
-Can we create efficient designs, with high performance?  Yes, we
-evaluate our approach by writing a design for RTM. This achieves
-performance equal to state-of-the art published results.
+\TODO Interpret results
 
-\subsection{Ease of Use}
-
-Is the language easy to use?
-Yes, it is intuitive based on C constructs.
-
-\subsection{Code Reuse, Maintainability etc.}
+\section{Related Work}
 
 
+\subsection{Dataflow Languages}
 
-RTM
+\TODO Add more specific details.
 
-Scan ocean floor to find oil and gas [Surface? HUGE]
-Huge data volume, complex physics [??]
+\begin{itemize}
 
-Isotropic vs anisotropic
+\item Streams-C and ImpulseC (commercial version of Streams-C) use a
+  model based on Communicating Sequential Process. Streams-C designs
+  are specified using non-standard syntax such as special comment
+  blocks.
 
-* Isotropic
-* TTI
-* VTI
-* 30 Hz vs 60 Hz
+\item StreamIt and Sequoia++ use a different, non-standard syntax
+  which is not intuitive for new users. This also complicates the
+  translation process of existing imperative code.
 
-* Convolution
-* Sparse Matrix
+\item MaxJ is a commercial implementation which provides a Java API
+  for constructing dataflow designs. However, since the runtime
+  library is C this means that developers have to manage two separate
+  project components which complicates both interaction between them
+  (e.g. if common design parameters are to be shared) and the design
+  space exploration process. Additionally Java is a more verbose
+  language and in most designs this is not necessarily useful (we may
+  not benefit that much from high-level constructs). In C we can use
+  macros to capture repetitive patterns. On the other hand C is not an
+  OO language, so this may be bad for code reuse.
+
+\end{itemize}
+
+\subsection{Aspect Driven Design}
+
+
+\TODO Add section on aspect driven design

@@ -16,6 +16,6 @@ all: $(TARGET).pdf
 #       pandoc $(TEMPLATE) $(CSL) $(BIBLIOGRAPHY) $(OPTIONS) -f markdown -t latex $^ -o $@
 
 clean:
-	rm -rf $(TRASH) *.pdf
+	rm -rf $(TRASH) $(TARGET).pdf
 
 .PHONY: all
