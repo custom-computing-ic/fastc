@@ -101,52 +101,52 @@ repository we:
 
 \end{enumerate}
 \begin{comment}
-\begin{figure}[!h]
-\caption{The proposed design flow.}
-\begin{center}
-  \begin{tikzpicture}[node distance = 2cm, auto, scale=0.5]
-    \node [block] (csrc) {C source};
-    \node [block, below of=csrc, left of=csrc] (maxrt) {CPU Runtime code};
-    \node [block, below of=csrc, right of=csrc] (maxc) {MaxC Design};
-    \node [block, below of=maxc] (maxj) {MaxJ Design};
-    \node [block, below of=maxj] (maxfile) {Maxfile};
-    \node [block, below of=maxfile, left of=maxfile] (app) {Application executable};
-    \node [block, below of=app] (maxnode) {MaxNode, MaxStation};
+  \begin{figure}[!h]
+    \caption{The proposed design flow.}
+    \begin{center}
+      \begin{tikzpicture}[node distance = 2cm, auto, scale=0.5]
+        \node [block] (csrc) {C source};
+        \node [block, below of=csrc, left of=csrc] (maxrt) {CPU Runtime code};
+        \node [block, below of=csrc, right of=csrc] (maxc) {MaxC Design};
+        \node [block, below of=maxc] (maxj) {MaxJ Design};
+        \node [block, below of=maxj] (maxfile) {Maxfile};
+        \node [block, below of=maxfile, left of=maxfile] (app) {Application executable};
+        \node [block, below of=app] (maxnode) {MaxNode, MaxStation};
 
-    \node [cloud, right of=csrc] (lara) {LARA};
-    \node [cloud, left of=csrc] (maxcc) {MaxCC};
-    % \node [cloud, right of=init] (system) {system};
-    % \node [block, below of=init] (identify) {identify candidate models};
-    % \node [block, below of=identify] (evaluate) {evaluate candidate models};
-    % \node [block, left of=evaluate, node distance=3cm] (update) {update model};
-    % \node [decision, below of=evaluate] (decide) {is best candidate better?};
-    % \node [belock, below of=decide, node distance=3cm] (stop) {stop};
+        \node [cloud, right of=csrc] (lara) {LARA};
+        \node [cloud, left of=csrc] (maxcc) {MaxCC};
+        % \node [cloud, right of=init] (system) {system};
+        % \node [block, below of=init] (identify) {identify candidate models};
+        % \node [block, below of=identify] (evaluate) {evaluate candidate models};
+        % \node [block, left of=evaluate, node distance=3cm] (update) {update model};
+        % \node [decision, below of=evaluate] (decide) {is best candidate better?};
+        % \node [belock, below of=decide, node distance=3cm] (stop) {stop};
 
-    \path [line] (csrc) -- (maxrt);
-    \path [line] (csrc) -- (maxc);
-    \path [line] (maxc) -- (maxj);
-    \path [line] (maxj) -- (maxfile);
-    \path [line] (maxfile) -- (app);
-    \path [line] (maxrt) -- (app);
-    \path [line] (app) -- (maxnode);
-    \path [line, dashed] (lara) -- (csrc);
-    \path [line, dashed] (lara) -- (maxc);
+        \path [line] (csrc) -- (maxrt);
+        \path [line] (csrc) -- (maxc);
+        \path [line] (maxc) -- (maxj);
+        \path [line] (maxj) -- (maxfile);
+        \path [line] (maxfile) -- (app);
+        \path [line] (maxrt) -- (app);
+        \path [line] (app) -- (maxnode);
+        \path [line, dashed] (lara) -- (csrc);
+        \path [line, dashed] (lara) -- (maxc);
 
-    % \path [line] (decide) -| node [near start] {yes} (update);
-    % \path [line] (update) |- (identify);
-    % \path [line] (decide) -- node {no}(stop);
-    % \path [line,dashed] (expert) -- (init);
-    % \path [line,dashed] (system) -- (init);
-    % \path [line,dashed] (system) |- (evaluate);
-  \end{tikzpicture}
-\end{center}
-\end{figure}
+        % \path [line] (decide) -| node [near start] {yes} (update);
+        % \path [line] (update) |- (identify);
+        % \path [line] (decide) -- node {no}(stop);
+        % \path [line,dashed] (expert) -- (init);
+        % \path [line,dashed] (system) -- (init);
+        % \path [line,dashed] (system) |- (evaluate);
+      \end{tikzpicture}
+    \end{center}
+  \end{figure}
 \end{comment}
 
 \begin{figure}[!h]
-\includegraphics[scale=0.5, trim=50 180 0 50]{lara_maxcc.pdf}
-\caption{The proposed design flow.}
-\label{fig:design-flow}
+  \includegraphics[scale=0.5, trim=50 180 0 50]{lara_maxcc.pdf}
+  \caption{The proposed design flow.}
+  \label{fig:design-flow}
 \end{figure}
 
 
@@ -168,13 +168,13 @@ flexible approach for generating and exploring the space of efficient
 dataflow designs.
 
 \begin{comment}
-We identify the following requirements for any dataflow language:
-\begin{enumerate}
-\item intuitive and easy to use
-\item facilitate translation of existing applications
-\item interacts well with
-high-level tools
-\end{enumerate}
+  We identify the following requirements for any dataflow language:
+  \begin{enumerate}
+  \item intuitive and easy to use
+  \item facilitate translation of existing applications
+  \item interacts well with
+    high-level tools
+  \end{enumerate}
 \end{comment}
 
 Since MaxC is compiled to MaxJ it uses the same execution model: a
@@ -193,30 +193,30 @@ options.
 \lstset{style=MaxC}
 
 \begin{figure}
-\begin{lstlisting}
-void kernel_Convolution1D(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER, float* out)
-{
+  \begin{lstlisting}
+    void kernel_Convolution1D(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER, float* out)
+    {
 
-  in(p);
+      in(p);
 
-  float* i4 = count(1000, 1);
-  float* i1 = countChain(n1, 1, i4);
+      float* i4 = count(1000, 1);
+      float* i1 = countChain(n1, 1, i4);
 
-  #pragma maxc DSPBalance:full
-  int result =
-    p[0]  * c_0_0_0 +
-    p[1]  * c_p_0_0 +
-    p[-1] * c_n_0_0;
+      #pragma maxc DSPBalance:full
+      int result =
+      p[0]  * c_0_0_0 +
+      p[1]  * c_p_0_0 +
+      p[-1] * c_n_0_0;
 
-  int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
+      int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
 
-  out = stream_select(up, p, result);
+      out = up ? result : p;
 
-  out(out);
-}
-\end{lstlisting}
-\caption{Example MaxC design for a 1D convolution kernel.}
-\label{fig:maxc-1dconv}
+      out(out);
+    }
+  \end{lstlisting}
+  \caption{Example MaxC design for a 1D convolution kernel.}
+  \label{fig:maxc-1dconv}
 \end{figure}
 
 \subsection{Kernels}
@@ -256,24 +256,25 @@ Figure \ref{fig:maxc-1dconv} shows the main elements of a MaxC design:
 
 \item \emph{control} elements are implemented either via standard C99
   constructs (such as conditional statements or operators) or via API
-  calls that enable multiplexing between 2 or more streams; API:
-  fselect(cond, stream1, stream2)
+  calls that enable multiplexing between 2 or more streams;
 
 \item \emph{computation} is implemented using regular C99 syntax and
-  semantics. API functions are provided for hardware blocks that
-  implement common functions such as square root, exponential,
-  logarithms.
-
+  semantics. The MaxCC backend will also automatically translate
+  standard functions in the C99 math library to hardware blocks for
+  common functions such as square root, exponential, logarithms.
 
 \item \emph{streams} are represented as regular C99 pointers. For
   example Line 2 declares a stream of float values names ``p''.
   Normal array notation can be used to generate either previous
   (negative indices) or future values (positive indices) or
   dereference the stream to get the current stream value. Negative
-  indices are allowed (as on Line 16). const float c; compile time
-  constant, used to parametrize designs On lines 13-16 we use array
+  indices are allowed (as on Line 16). On lines 13-16 we use array
   index notation to access future (positive offset) or past (negative
-  offset) stream elements.
+  offset) stream elements. Supported offset expressions are linear
+  expressions comprised of constants or variables (either loop
+  induction variables, or normal variables but for which a compile
+  time range of values is specified -- this is required to generate
+  efficient hardware).
 
 \item \emph{compile time constructs} such as loops are supported as
   long as their bounds are known at compile time.
@@ -292,13 +293,7 @@ are used to multiplex between a number of streams based on the value
 of condition stream.
 
 
-
-
 \subsection{Designs}
-
-%\XXX{Command read/write kernel}
-
-%\XXX{Design diagram?}
 
 MaxC also allows specification of designs using multiple kernels. This
 involves selecting the kernel instances and connecting them as well as
@@ -315,28 +310,28 @@ connect these. Lines 13 -- 15 specify the design frequency, the memory
 clock frequency and enable the addition of debug elements.
 
 \begin{figure}[!h]
-\centering
-\begin{lstlisting}
-  void design_Convolution1D() {
-    // kernels
-    kernel_t k1 = kernel_init(kernel_Convolution1D);
-    kernel_t k2 = kernel_init(kernel_Cmdwrite);
-    kernel_t k3 = kernel_init(kernel_Cmdread);
+  \centering
+  \begin{lstlisting}
+    void design_Convolution1D() {
+      // kernels
+      kernel_t k1 = kernel_init(kernel_Convolution1D);
+      kernel_t k2 = kernel_init(kernel_Cmdwrite);
+      kernel_t k3 = kernel_init(kernel_Cmdread);
 
-    // connections
-    connect2(k1, k2);
-    connect3(k1, k2, ``a'');
-    connect4(k1, k3, ``a'', ``b'');
+      // connections
+      connect2(k1, k2);
+      connect3(k1, k2, ``a'');
+      connect4(k1, k3, ``a'', ``b'');
 
-    // configuration
-    set_frequency(150);
-    set_memory_frequency(333);
-    set_enable_debug(true);
-  }
-\end{lstlisting}
-\caption{MaxC design specification, connecting multiple kernels and
-  setting various configuration options}
-\label{lst:maxc-design}
+      // configuration
+      set_frequency(150);
+      set_memory_frequency(333);
+      set_enable_debug(true);
+    }
+  \end{lstlisting}
+  \caption{MaxC design specification, connecting multiple kernels and
+    setting various configuration options}
+  \label{lst:maxc-design}
 \end{figure}
 
 
@@ -351,78 +346,62 @@ understand, more maintainable and portable since it is no longer
 obscured by various structural or algorithmic transformations or
 platform specific optimizations.
 
-We distinguish three categories of aspects: \emph{structural aspects},
-\emph{design aspects} and \emph{development aspects}.
+We distinguish four categories of aspects: \emph{system aspects},
+\emph{exploration aspects}, \emph{implementation aspects} and
+\emph{development aspects}
 
-\subsection{Structural Aspects}
+\subsection{System Aspects}
 
-Structural aspects capture transformation or optimization strategies
-that alter the structure or the algorithm of the original application
-in order to expose parallelism or improve communication between CPU
-and accelerator via hardware/software partitioning.
+System aspects capture transformation or optimization strategies that
+affect the whole application such as those concerning
+hardware/software portioning, or run-time reconfiguration
+capabilities. The goal is to expose parallelism, improve communication
+between CPU and accelerator via hardware/software partitioning or
+remove idle functions from the accelerator using run-time
+reconfiguration. These aspects act on the original C application level
+as well as on the partitioned C (software) and MaxC design (hardware).
 
-\subsubsection{Translation}
-
-Translation aspects tranform high-level source code to MaxC designs.
-
-Aspect steps:
-\begin{enumerate}
-
-\item identify acceleration candidates by profiling the
-  computation. In particular analyse loops with computations and
-  profile at various degrees of nesting;
-
-\item transform local arrays to dynamic arrays;
-
-\item extract computational kernel by mapping the outer loop to the
-  stream loop;
-
-\item generate runtime API (currently using MaxCompilerRT).
-
-\end{enumerate}
-
-This aspect will map the C99 application shown in Figure
-\ref{fig:c-design} to Lines 12 -- 16 of the 1D Convolution kernel in
-Figure \ref{fig:maxc-1dconv}.
-
-
-\begin{figure}[!h]
-\centering
-\begin{lstlisting}
-void kernel(int source[], int m, float a_0_0_0, float a_p1_0_0, float a_m1_0_0) {
-
-  for(j=1; j<m; j++){
-    target[j] =
-        source[j]  * a_0_0_0
-      + source[j + 1] * a_p1_0_0
-      + source[j - 1] * a_m1_0_0;
-    }
-
-}
-\end{lstlisting}
-\caption{Original C99 source code for the 1D convolution kernel in
-  Figure \ref{fig:maxc-1dconv}.}
-\label{fig:c-design}
-\end{figure}
 
 \subsubsection{\TODO Reconfiguration}
 
+\subsection{Exploration aspects}
 
-\subsubsection{\TODO Parallelism}
+Exploration deal with strategies that generate multiple designs based
+on parametrisation and can act on any level of the design flow (C
+code, C and MaxC, or MaxC design). They enable systematic exploration
+of trade-offs and. An example LARA aspect for design space exploration
+is show below. It highlights the feedback capabilities of the design
+flow: the aspect will generate a MaxC designs and build the DFE
+configuration until this passes a specified LUT threshold, at each
+step increasing the parallelism of the design (by replicating the
+computational pipeline).
 
-\subsection{Design Aspects}
+\begin{lstlisting}
+  aspectdef DSEStrategy
+  var config = { 'Dsp_factor': 1,
+    'Exponent'  : 8,
+    'Mantissa'  : 24 };
+  var par = 0, lut_threshold = 10000;
+  do {
+    par++;
+    config['Par'] = par;
+    var designName = genName(config);
+    call genMaxC(designName, config);
+    buildMaxC(designName);
+  } while (@hw[designName].lut < lut_threshold);
+  end
+\end{lstlisting}
+
+\subsection{Implementation Aspects}
 
 Design aspects capture low level design optimizations that can be
-applied in order to improve timing or explore various resource usage
-trade-offs.
+applied to the MaxC designs in order to improve timing or explore
+various resource usage trade-offs.
 
-For example aspects can be used to enable design space exploration of
-resource usage vs. accuracy trade-offs by varying the word lengths.
-
-\TODO Example?
-
-Alternatively we can use them to explore resource trade-offs by
-mapping computation to specialised FPGA blocks. For example, the
+Aspects can be used to enable design space exploration of resource
+usage vs. accuracy trade-offs by varying the word
+lengths. Alternatively we can use them to explore resource trade-offs
+by mapping computation to specialised FPGA blocks. For example, the
 aspect in Figure \ref{fig:aspect-DSP} can be used to map arithmetic
 expressions to DSP blocks. We define the DSP balance factor to be used
 (none, normal, full), the granularity (which decides if we break up
@@ -431,19 +410,19 @@ number of independent applications.
 
 \lstset{style=aspectp}
 \begin{figure}[!h]
-\centering
-\begin{lstlisting}
-aspectdef OptimizeDSPUsage(
- DSPBalance, granularity, applications)
-{
-    where: arithmetic expression occurs
-    what:
+  \centering
+  \begin{lstlisting}
+    aspectdef OptimizeDSPUsage(
+    DSPBalance, granularity, applications)
+    {
+      where: arithmetic expression occurs
+      what:
       split expression if it has more than granularity operations
       insert DSP balance pragma
-}
-\end{lstlisting}
-\caption{Aspect for exploring mapping of computation to DSP blocks.}
-\label{fig:aspect-DSP}
+    }
+  \end{lstlisting}
+  \caption{Aspect for exploring mapping of computation to DSP blocks.}
+  \label{fig:aspect-DSP}
 \end{figure}
 
 Aspects steps:
@@ -451,27 +430,27 @@ Aspects steps:
 \begin{enumerate}
 \item Identify arithmetic expressions;
 \item Split them according to granularity;
-\item Insert pragma to adjust DSP usage;
+\item Insert annotation to adjust DSP usage;
 \item Repeat for a given number of applications.
 \end{enumerate}
 
 \newsavebox{\secondlisting}
 \begin{lrbox}{\secondlisting}% Store second listing
-\lstinputlisting[firstline=8]{code.txt}
+  \lstinputlisting[firstline=8]{code.txt}
 \end{lrbox}
 
 \begin{figure}
-\begin{lstlisting}
-  #pragma balanceDSP=full
-  int result = p[0]  * c_0_0_0;
-  int result = result + p[1]  * c_p_0_0;
-  #pragma balanceDSP=full
-  int result = result + p[-1] * c_n_0_0;
-\end{lstlisting}
-\caption{One possible result of applying
-  \texttt{OptimizeDSPUsage(full, fine, 2)} to Lines 13 -- 17 of Figure
-  \ref{fig:maxc-1dconv}.}
-\label{fig:maxc-1dconv-aspect}
+  \begin{lstlisting}
+    #pragma balanceDSP=full
+    int result = p[0]  * c_0_0_0;
+    int result = result + p[1]  * c_p_0_0;
+    #pragma balanceDSP=full
+    int result = result + p[-1] * c_n_0_0;
+  \end{lstlisting}
+  \caption{One possible result of applying
+    \texttt{OptimizeDSPUsage(full, fine, 2)} to Lines 13 -- 17 of Figure
+    \ref{fig:maxc-1dconv}.}
+  \label{fig:maxc-1dconv-aspect}
 \end{figure}
 
 Figure \ref{fig:maxc-1dconv-aspect} shows one of the possible results
@@ -485,10 +464,6 @@ number of designs. The feedback-directed compilation process of LARA can
 be used to capture and extract feedback from the backend reports
 pertaining to resource usage or timing information and automatically
 adjust the compilation process.
-
-\TODO include some exploration data for the 1D Convolution example;
-could also use some resource annotation data to show the effect of
-pushing the DSP factor
 
 \subsection{Development Aspects}
 
@@ -525,23 +500,21 @@ Aspect steps:
 \begin{enumerate}
 
 \item insert kernel simulation loop in hostcode %(Figure )
-
-
-\begin{figure}[!h]
-\begin{lstlisting}
-  for (int i = 0 ; i < CYCLE_COUNT; i++) {
-    kernel_Convolution1d(p, out, 2);
-    update_stream_pointers(p, out);
-  }
-\end{lstlisting}
-%\caption{Stream simulation loop.}
-%\label{fig:maxc-simulation}
-\end{figure}
+  \begin{figure}[!h]
+    \begin{lstlisting}
+      for (int i = 0 ; i < CYCLE_COUNT; i++) {
+        kernel_Convolution1d(p, out, 2);
+        update_stream_pointers(p, out);
+      }
+    \end{lstlisting}
+    %\caption{Stream simulation loop.}
+    %\label{fig:maxc-simulation}
+  \end{figure}
 
 \item insert boilerplate code in the dataflow design to enable simulation.
- % The result of applying the simulation aspect to the dataflow in
-%  Figure \ref{fig:maxc-1dconv} is shown in Figure
-%  \ref{fig:maxc-sim-aspect}.
+  % The result of applying the simulation aspect to the dataflow in
+  %  Figure \ref{fig:maxc-1dconv} is shown in Figure
+  %  \ref{fig:maxc-sim-aspect}.
   For example any stream and counter used in the kernel body need to
   be declared using special calls that also pass in unique identifiers
   which are used to store and retrieve the values at each cycle in a
@@ -549,73 +522,23 @@ Aspect steps:
     stream\_id)}). On each kernel cycle, the function then either
   allocates a new stream or increments the stream pointer if the
   stream has already been allocated.
-\begin{comment}
-\begin{figure}[!h]
-\begin{lstlisting}
-  float* i4 = count_i(1000, 1, 0);
-  float* i1 = countChain_i(n1, 1, i4, 0);
-\end{lstlisting}
-\caption{Applying the simulation aspect to the dataflow design in
-  Figure \ref{fig:maxc-1dconv}}
-\label{fig:maxc-sim-aspect}
-\end{figure}
-\end{comment}
+  \begin{comment}
+    \begin{figure}[!h]
+      \begin{lstlisting}
+        float* i4 = count_i(1000, 1, 0);
+        float* i1 = countChain_i(n1, 1, i4, 0);
+      \end{lstlisting}
+      \caption{Applying the simulation aspect to the dataflow design in
+        Figure \ref{fig:maxc-1dconv}}
+      \label{fig:maxc-sim-aspect}
+    \end{figure}
+  \end{comment}
 
 \end{enumerate}
 
 \lstset{style=MaxC}
 
 
-\begin{table*}
-%  \renewcommand{\arraystretch}{1.3}
-  \centering
-  \caption{Results of aspect transformations on the original MaxC
-    design for the RTM kernel.}
-  \label{table:feature-comparison}
-  \begin{tabular}{ p{2cm}  | p{1cm} | c|  p{1cm} |  p{1cm} |  p{1cm} |  p{1cm} | c | p{1cm} |c | c | c}
-   Aspect                           & DSP Balance    & Par & LUT               & FF                & BRAM           & DSP            & Frequency & Compile Time & LOC & Speedup & Throughput \\ \hline
-  \multirow{4}{*}{OptimizeDSPUsage} & none           & 1   & 67327 (22.62\%)   & 92607  (15.56\%)  & 248 (23.31\%)  & 0  (0.00\%)    & 303/100   & 2 h 9        & LOC & Speedup & Throughput \\
-                                    & balanced       & 1   & 59202 (19.89\%)   & 84101 (14.13\%)   & 248 (23.31\%)  & 34 / (1.69\%)  & 303/100   & 1h 49        & LOC & Speedup & Throughput \\
-                                    & full           & 1   & 52619  (17.68\%)  & 76107  (12.79\%)  & 248  (23.31\%) & 117  (5.80\%)  & 303/100   & 2 h 2        & LOC & Speedup & Throughput \\ \hline
-                                    & none           & 2   & 92109 (30.95\%)   & 122224 (20.53\%)  & 261 (24.53\%)  & 0 (0.00\%)     & 303/100   & 3h5          & LOC & Speedup & Throughput \\
-                                    & balanced       & 2   & 75719 (25.44\%)   & 75719 (25.44\%)   & 261 (24.53\%)  & 68 (3.37\%)    & 303/100   & 2h30         & LOC & Speedup & Throughput \\
-                                    & full           & 2   & 63032  (21.18\%)  & 89284  (15.00\%)  & 260  (24.44\%) & 234  (11.61\%) & 303/100   & 2 h 8        & LOC & Speedup & Throughput \\
-\hline
-                                    & none           & 3   & 116532 (39.16\%)  & 152406 (25.61\%)  & 256 (24.06\%)  & 0 (0.00\%)     & 303/100   & 3 h 20       & LOC & Speedup & Throughput \\
-                                    & balanced       & 3   & 93911 (31.56\%)   & 126888 (21.32\%)  & 256 (24.06\%)  & 102 (5.06\%)   & 303/100   & 2h30         & LOC & Speedup & Throughput \\
-                                    & full           & 3   & 74575  (25.06\%)  & 102965  (17.30\%) & 255  (23.97\%) & 351  (17.41)\% & 303/100   & 2 h 18       & LOC & Speedup & Throughput \\
-\hline
-                                    & \TODO none     & 6   & 116532 (39.16\%)  & 152406 (25.61\%)  & 256 (24.06\%)  & 0 (0.00\%)     & 303/100   & 3 h 20       & LOC & Speedup & Throughput \\
-                                    & \TODO balanced & 6   & 92109 (30.95\%)   & 122224 (20.53\%)  & 261 (24.53\%)  & 0 (0.00\%)     & 303/100   & 3h5          & LOC & Speedup & Throughput \\
-                                    & full           & 6   & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%) & 702  (34.82\%) & 303/100   & 3h 42        & LOC & Speedup & Throughput \\
-   \end{tabular}
-\end{table*}
-
-\begin{table*}
- % \renewcommand{\arraystretch}{1.3}
-  \centering
-  \caption{Results of aspect transformations on the original MaxC
-    design for the RTM kernel.}
-  \label{table:feature-comparison}
-  \begin{tabular}{ p{2cm}  | p{1cm} | c|  p{1cm} |  p{1cm} | p{1cm} |   p{1cm} |  p{1cm} | c | p{1cm} |c | c | c}
-Aspect                               & Word Width & Burst & Par & LUT               & FF                & BRAM                 & DSP             & Frequency & Compile Time & LOC & Speedup & Throughput \\ \hline
-\multirow{4}{*}{Optimize word width} & 8, 24      & 64    & 2   & 63447  (21.32\%)  & 89150  (14.98\%)  & 260  (24.44\%))      & 234  (11.61\%)  & 400/100   & 2 h 30       & LOC & Speedup & Throughput \\
-                                     & 8, 24      & 64    & 3   & 75676  (25.4\%)   & 102831  (17.28\%) & 255  (23.97\%)       & 351  (17.41\%)  & 400/100   & 2 h 35       & LOC & Speedup & Throughput \\
-                                     & 8, 24      & 64    & 6   & 101578  (34.13\%) & 143374  (24.09\%) & 248  	295  (27.73\%) & 702  (34.82\%)  & 400/100   & 4 h 17       & LOC & Speedup & Throughput \\ \hline
-                                     & 8, 24      & 1     & 6   & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%)       & 702  (34.82\%)  & 303/100   & 3h 42        & LOC & Speedup & Throughput \\
-                                     & 8, 22      & 1     & 6   & 133973  (45.02\%) & 185520  (31.17\%) & 295  (27.73\%)       & 306  (15.18\%)  & 303/100   & 3 h 13       & LOC & Speedup & Throughput \\
-                                     & 8, 20      & 1     & 6   & 129581  (43.54\%) & 178333  (29.96\%) & 289  (27.16\%)       & 306  (15.18\%)  & 303/100   & 3 h 30       & LOC & Speedup & Throughput \\ \hline
-                                     & 8, 18      & 1     & 6   & 121439  (40.81\%) & 170721  (28.68\%) & 286  (26.88\%)       & 306  (15.18\%)) & 303/100   & 3h 19        & LOC & Speedup & Throughput \\
-                                     & 8, 16      & 1   & 6   & 117904  (39.62\%) & 157359  (26.44\%) & 283  (26.60\%)       & 204  (10.12\%)  & 400/100   & 2 h 50       & LOC & Speedup & Throughput \\ \hline
-
-   \end{tabular}
-\end{table*}
-
-\begin{comment}
-
-			6	400	100	8_24	0.082965		1.723236			101578  (34.13%)	143374  (24.09%)	295  (27.73%)	702  (34.82%)	4 h 17		~/maxcc/projects	exp_testRTMStatic_6P_1DSP_400Mem_100Str_f8_24_b64
-Debug
-\end{comment}
 \subsubsection{Debug Aspects}
 
 Because the current execution model does not provide for runtime
@@ -628,23 +551,19 @@ constraints as well as the behaviour of the design.
 
 \lstset{style=aspectp}
 \begin{figure}[!h]
-\centering
-\begin{lstlisting}
-aspectdef DebugValues()
-{
-    where: variable assignment
-    what:
+  \centering
+  \begin{lstlisting}
+    aspectdef DebugValues()
+    {
+      where: variable assignment
+      what:
       log value before assignment
       log value after assignment
-}
-\end{lstlisting}
-\caption{Aspect for exploring mapping of computation to DSP blocks.}
-\label{fig:aspect-DSP}
+    }
+  \end{lstlisting}
+  \caption{Aspect for exploring mapping of computation to DSP blocks.}
+  \label{fig:aspect-DSP}
 \end{figure}
-
-
-\TODO Include some data on how this influences code size,
-  productivity
 
 \subsubsection{Compilation Aspects}
 
@@ -655,55 +574,221 @@ blocks or applying design-level optimizations that can resolve timing
 constraints. Naturally reducing the compilation time increases
 developer productivity.
 
-The various aspects can be used to build in parallel more versions of
-the application that allow testing the production version (maximum
-performance), a more naive version which builds faster and a debug
-version which allows debugging the naive version.
-
-\TODO Add data about how aspects can influence compilation time
-
-\TODO Add an example aspect?
-
+Different compilation aspects can be used to build in parallel more
+versions of the application that allow incremental testing (in order
+of compilation times):
+\begin{enumerate}
+\item Fastest design to build will be a naive version, optimized for
+  compile time (minimum design and memory frequency, disabled debug
+  blocks, no arithmetic optimizations). This allows verifying
+  application correctness;
+\item The debug version (enabled debug blocks) is built in parallel to
+  allow debugging of errors identified in the previous step;
+\item Finally a version optimized for performance (maximum frequency,
+  no debug block, arithmetic optimisations) is compiled to allow
+  testing of non-functional requirement.
+\end{enumerate}
 
 \section{Evaluation}
 
+\begin{comment}
+
+  \begin{table*}
+    %  \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Results of aspect transformations on the original MaxC
+      design for the RTM kernel.}
+    \label{table:feature-comparison}
+    \begin{tabular}{ p{2cm}  | p{1cm} | c|  p{1cm} |  p{1cm} |  p{1cm} |  p{1cm} | c | p{1cm} |c | c | c}
+      Aspect                           & DSP Balance    & Par & LUT               & FF                & BRAM           & DSP            & Frequency & Compile Time & LOC & Speedup & Throughput \\ \hline
+      \multirow{4}{*}{OptimizeDSPUsage} & none           & 1   & 67327 (22.62\%)   & 92607  (15.56\%)  & 248 (23.31\%)  & 0  (0.00\%)    & 303/100   & 2 h 9        & LOC & Speedup & Throughput \\
+      & balanced       & 1   & 59202 (19.89\%)   & 84101 (14.13\%)   & 248 (23.31\%)  & 34 / (1.69\%)  & 303/100   & 1h 49        & LOC & Speedup & Throughput \\
+      & full           & 1   & 52619  (17.68\%)  & 76107  (12.79\%)  & 248  (23.31\%) & 117  (5.80\%)  & 303/100   & 2 h 2        & LOC & Speedup & Throughput \\ \hline
+      & none           & 2   & 92109 (30.95\%)   & 122224 (20.53\%)  & 261 (24.53\%)  & 0 (0.00\%)     & 303/100   & 3h5          & LOC & Speedup & Throughput \\
+      & balanced       & 2   & 75719 (25.44\%)   & 75719 (25.44\%)   & 261 (24.53\%)  & 68 (3.37\%)    & 303/100   & 2h30         & LOC & Speedup & Throughput \\
+      & full           & 2   & 63032  (21.18\%)  & 89284  (15.00\%)  & 260  (24.44\%) & 234  (11.61\%) & 303/100   & 2 h 8        & LOC & Speedup & Throughput \\
+      \hline
+      & none           & 3   & 116532 (39.16\%)  & 152406 (25.61\%)  & 256 (24.06\%)  & 0 (0.00\%)     & 303/100   & 3 h 20       & LOC & Speedup & Throughput \\
+      & balanced       & 3   & 93911 (31.56\%)   & 126888 (21.32\%)  & 256 (24.06\%)  & 102 (5.06\%)   & 303/100   & 2h30         & LOC & Speedup & Throughput \\
+      & full           & 3   & 74575  (25.06\%)  & 102965  (17.30\%) & 255  (23.97\%) & 351  (17.41)\% & 303/100   & 2 h 18       & LOC & Speedup & Throughput \\
+      \hline
+      & \TODO none     & 6   & 116532 (39.16\%)  & 152406 (25.61\%)  & 256 (24.06\%)  & 0 (0.00\%)     & 303/100   & 3 h 20       & LOC & Speedup & Throughput \\
+      & \TODO balanced & 6   & 92109 (30.95\%)   & 122224 (20.53\%)  & 261 (24.53\%)  & 0 (0.00\%)     & 303/100   & 3h5          & LOC & Speedup & Throughput \\
+      & full           & 6   & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%) & 702  (34.82\%) & 303/100   & 3h 42        & LOC & Speedup & Throughput \\
+    \end{tabular}
+  \end{table*}
+
+  \begin{table*}
+    % \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Results of aspect transformations on the original MaxC
+      design for the RTM kernel.}
+    \label{table:feature-comparison}
+    \begin{tabular}{ p{2cm}  | p{1cm} | c|  p{1cm} |  p{1cm} | p{1cm} |   p{1cm} |  p{1cm} | c | p{1cm} |c | c | c}
+      Aspect                               & Word Width & Burst & Par & LUT               & FF                & BRAM                 & DSP             & Frequency & Compile Time & LOC & Speedup & Throughput \\ \hline
+      \multirow{4}{*}{Optimize word width} & 8, 24      & 64    & 2   & 63447  (21.32\%)  & 89150  (14.98\%)  & 260  (24.44\%))      & 234  (11.61\%)  & 400/100   & 2 h 30       & LOC & Speedup & Throughput \\
+      & 8, 24      & 64    & 3   & 75676  (25.4\%)   & 102831  (17.28\%) & 255  (23.97\%)       & 351  (17.41\%)  & 400/100   & 2 h 35       & LOC & Speedup & Throughput \\
+      & 8, 24      & 64    & 6   & 101578  (34.13\%) & 143374  (24.09\%) & 248          295  (27.73\%) & 702  (34.82\%)  & 400/100   & 4 h 17       & LOC & Speedup & Throughput \\ \hline
+      & 8, 24      & 1     & 6   & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%)       & 702  (34.82\%)  & 303/100   & 3h 42        & LOC & Speedup & Throughput \\
+      & 8, 22      & 1     & 6   & 133973  (45.02\%) & 185520  (31.17\%) & 295  (27.73\%)       & 306  (15.18\%)  & 303/100   & 3 h 13       & LOC & Speedup & Throughput \\
+      & 8, 20      & 1     & 6   & 129581  (43.54\%) & 178333  (29.96\%) & 289  (27.16\%)       & 306  (15.18\%)  & 303/100   & 3 h 30       & LOC & Speedup & Throughput \\ \hline
+      & 8, 18      & 1     & 6   & 121439  (40.81\%) & 170721  (28.68\%) & 286  (26.88\%)       & 306  (15.18\%)) & 303/100   & 3h 19        & LOC & Speedup & Throughput \\
+      & 8, 16      & 1   & 6   & 117904  (39.62\%) & 157359  (26.44\%) & 283  (26.60\%)       & 204  (10.12\%)  & 400/100   & 2 h 50       & LOC & Speedup & Throughput \\ \hline
+
+    \end{tabular}
+  \end{table*}
+\end{comment}
+
+
+\subsection{RTM}
 We evaluate the proposed approach by implementing a high-performance
 application based on the Reverse Time Migration method for seismic
-imaging. We use MaxC to implement the dataflow kernel and aspects to
-generate multiple configurations for the design. Table shows a
-comparison of the various generated design with results for CPU and
-FPGA published in \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
+imaging. This models the propagation of injected waves using the
+isotropic acoustic wave equation \cite{araya2011assessing}. We
+approximate the differential equation using stencil computation to
+perform a fifth-order Taylor expansion in space and first-order Taylor
+expansion in time.
 
-\TODO Interpret results
+\subsection{Results}
+We use MaxC to implement the dataflow kernel and aspects to
+generate multiple configurations for the design.
+
+Results of the design space exploration using the word length aspect
+illustrate the trade-offs between accuracy and resource usage.  We
+observe irregular, large variations when decreasing the mantissa from
+18 16 and 24 to 22. The latter difference is unexpected, halving the
+number of required DSPs (although increasing the LUT and FF usage by
+30\%), with little impact on accuracy. This is the effect of the
+backend tools implementing arithmetic operations using a combination
+of both DSPs and LUT/FF elements. The mantissa boundaries at which
+this optimization occurs are platform specific (depending on the
+architecture of the DSPs). Hence automating this optimization via
+aspects and decoupling it from the original source code makes the
+application more portable and facilitates discovery of interesting
+trade-off opportunities using design space exploration.
+
+
+\begin{table}[!h]
+  %  \renewcommand{\arraystretch}{1.1}
+  \centering
+  \caption{Results of varying the word length.}
+  \label{table:aspect-wl}
+  \begin{tabular}{ p{1cm} p{1cm} p{1cm} p{1cm} p{1cm}  p{1cm} }
+    Word Width & LUT               & FF                & BRAM           & DSP             & Relative Error \\ \hline
+    8, 24      & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%) & 702  (34.82\%)  & \TODO          \\
+    8, 22      & 133973  (45.02\%) & 185520  (31.17\%) & 295  (27.73\%) & 306  (15.18\%)  & \TODO          \\
+    8, 20      & 129581  (43.54\%) & 178333  (29.96\%) & 289  (27.16\%) & 306  (15.18\%)  & \TODO          \\
+    8, 18      & 121439  (40.81\%) & 170721  (28.68\%) & 286  (26.88\%) & 306  (15.18\%)  & \TODO          \\
+    8, 16      & 117904  (39.62\%) & 157359  (26.44\%) & 283  (26.60\%) & 204  (10.12\%)  & \TODO          \\
+  \end{tabular}
+\end{table}
+
+Design space exploration using the parallelism aspect can be used to
+illustrate design scalability. Figure \ref{fig:scalability} shows that
+performance scales linearly with the number of parallel
+pipelines. This type of exploration can also be used to expose
+bottlenecks. This aspect can be combined with others such as adjusting
+memory and stream frequency to understand the combined effect of these
+optimizations. This would be useful in investigating the trade-off of
+performance versus compilation time. In particular, it is not always
+necessary to use maximum stream or memory frequency (e.g. in the case
+of memory or compute bound applications respectively) but this can
+significantly increase compilation time.
+
+\begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[xlabel=Pipes,ylabel=Execution time(s)]
+      \addplot coordinates {
+        (1, 21.630226)
+        (2, 10.86542)
+        (3, 7.210907)
+        (6, 3.606188)
+      };
+      \legend{300 Mhz, 333 Mhz. 400 Mhz}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Scalability of the MaxC dataflow design -- performance
+    increases linearly with the number of parallel pipelines.}
+  \label{fig:scalability}
+\end{figure}
+
+
+The DSP aspect allows to explore the resource trade-offs of
+implementing arithmetic operations in either DSPs or LUTs and
+FFs. This can help avoiding over mapping on DSPs for arithmetic
+intensive applications.
+
+
+Finally table \ref{speedup} shows speedups obtained by the MaxC
+dataflow design compared to CPU, GPU and other FPGA
+implementations. This shows that our approach can match the
+performance of the static reference version achieving a significant
+speedup of up to 50x over software only versions.
+
+\begin{table}[!h]
+  %  \renewcommand{\arraystretch}{1.1}
+  \centering
+  \caption{Speed up results compared to CPU, GPU and other FPGA implementations. Size s = 128x128x128.}
+  \label{speedup}
+  \begin{tabular}{ ccccc}
+    Size & Pipes & Time  & vs CPU & Throughput (GFlop/s) \\ \hline
+    s    & 6     & 3.60  & 50.4X  & 61                   \\
+    s    & 3     & 7.21  & 25.2X  & 30.5                 \\
+    s    & 2     & 10.86 & 16.7X  & 15.2                 \\
+    s    & 1     & 21.63 & 8.4X   & 7.6                  \\\hline
+    m    & 6     & -     & -      & -                    \\
+    m    & 3     & -     & -      & -                    \\
+    m    & 2     & -     & -      & -                    \\
+    m    & 1     & -     & -      & -                    \\ \hline
+    l    & 6     & -     & -      & -                    \\
+    l    & 3     & -     & -      & -                    \\
+    l    & 2     & -     & -      & -                    \\
+    l    & 1     & -     & -      & -                    \\
+  \end{tabular}
+\end{table}
+
+
+
+
+
+
+
 
 \section{Related Work}
 
-
 \subsection{Dataflow Languages}
 
-\TODO Add more specific details.
+
+Given the advantage that dataflow architectures have when implementing with
+uniform computation over general purpose-architecture, it is no
+surprise that a number of dataflow language have been developed
+targeting FPGAs but also multi-core platforms.
 
 \begin{itemize}
 
-\item Streams-C and ImpulseC (commercial version of Streams-C) use a
-  model based on Communicating Sequential Process. Streams-C designs
-  are specified using non-standard syntax such as special comment
-  blocks.
+\item Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
+  ImpulseC\cite{ImpulseC} (commercial version of Streams-C) use a model based on
+  Communicating Sequential Process. Streams-C designs are specified
+  using non-standard syntax such as special comment blocks which is
+  used to annotate C application code.
 
-\item StreamIt and Sequoia++ use a different, non-standard syntax
-  which is not intuitive for new users. This also complicates the
-  translation process of existing imperative code.
+\item StreamIt\cite{Thies:Karczmarek:Amarasinghe:2002} and Sequoia++
+  use a different, non-standard syntax which is not intuitive for new
+  users. This also complicates the translation process of existing
+  imperative code.
 
-\item MaxJ is a commercial implementation which provides a Java API
-  for constructing dataflow designs. However, since the runtime
-  library is C this means that developers have to manage two separate
-  project components which complicates both interaction between them
-  (e.g. if common design parameters are to be shared) and the design
-  space exploration process. Additionally Java is a more verbose
-  language and in most designs this is not necessarily useful (we may
-  not benefit that much from high-level constructs). In C we can use
-  macros to capture repetitive patterns. On the other hand C is not an
-  OO language, so this may be bad for code reuse.
+\item MaxJ \cite{MaxelerTechnologies:2012} is a commercial
+  implementation which provides a Java API for constructing dataflow
+  designs. However, since the runtime library is C this means that
+  developers have to manage two separate project components which
+  complicates both interaction between them (e.g. if common design
+  parameters are to be shared) and the design space exploration
+  process. Additionally Java is a more verbose language and in most
+  designs this is not necessarily useful since we don't always benefit
+  that from high-level constructs. In C we can use macros to capture
+  repetitive patterns, but since C is not an Object Oriented language,
+  it can be considerably wore in terms of code reuse.
 
 \end{itemize}
 
@@ -711,9 +796,6 @@ FPGA published in \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
 
 
 \subsection{Comparison with Other Dataflow Languages}
-
-\TODO Identify relevant comparison features after Related Work section
-is finished.
 
 Table \ref{table:feature-comparison} summarizes the features of MaxC
 in comparison with other languages described in the related works
@@ -726,12 +808,61 @@ section.
   \label{table:feature-comparison}
   \begin{tabular}{ l | c |  p{1cm} |  p{1cm} |  c |  c }
     Language  & Syntax & FPGA Support & Execution Model & Debugging & Simulation \\ \hline
-    MaxJ      & Java   & Yes          & F3              & F4        & F5         \\
-    Streams-C & F1     & F2           & F3              & F4        & F5         \\
-    ImpulseC  & F1     & F2           & F3              & F4        & F5         \\
-    StreamIt  & F1     & F2           & F3              & F4        & F5         \\
-    Sequoia++ & F1     & F2           & F3              & F4        & F5         \\
-    MaxC      & C99    & Yes          & F3              & F4        & F5         \\
+    MaxJ      & -      & -            & -               & -         & -          \\
+    Streams-C & -      & -            & -               & -         & -          \\
+    ImpulseC  & -      & -            & -               & -         & -          \\
+    StreamIt  & -      & -            & -               & -         & -          \\
+    Sequoia++ & -      & -            & -               & -         & -          \\
+    MaxC      & -      & -            & -               & -         & -          \\
   \end{tabular}
 \end{table}
-\TODO Add section on aspect driven design
+
+
+\begin{comment}
+  \subsubsection{Translation}
+
+  Translation aspects tranform high-level source code to MaxC designs.
+
+  Aspect steps:
+  \begin{enumerate}
+
+  \item identify acceleration candidates by profiling the
+    computation. In particular analyse loops with computations and
+    profile at various degrees of nesting;
+
+  \item transform local arrays to dynamic arrays;
+
+  \item extract computational kernel by mapping the outer loop to the
+    stream loop;
+
+  \item generate runtime API (currently using MaxCompilerRT).
+
+  \end{enumerate}
+
+  This aspect will map the C99 application shown in Figure
+  \ref{fig:c-design} to Lines 12 -- 16 of the 1D Convolution kernel in
+  Figure \ref{fig:maxc-1dconv}.
+
+
+  \begin{figure}[!h]
+    \centering
+    \begin{lstlisting}
+      void kernel(int source[], int m, float a_0_0_0, float a_p1_0_0, float a_m1_0_0) {
+
+        for(j=1; j<m; j++){
+          target[j] =
+          source[j]  * a_0_0_0
+          + source[j + 1] * a_p1_0_0
+          + source[j - 1] * a_m1_0_0;
+        }
+
+      }
+    \end{lstlisting}
+    \caption{Original C99 source code for the 1D convolution kernel in
+      Figure \ref{fig:maxc-1dconv}.}
+    \label{fig:c-design}
+  \end{figure}
+\end{translation}
+
+\subsubsection{\TODO Parallelism}
+\end{comment}
