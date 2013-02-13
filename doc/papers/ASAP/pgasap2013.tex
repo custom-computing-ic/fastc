@@ -226,39 +226,17 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 
 \maketitle
 
-
-\begin{abstract}
-
-  The dataflow model of computation is a convenient paradigm for
-  expressing high-throughput parallel computations. It enables
-  synthesis of deeply pipelined hardware architectures directly from a
-  program's dataflow graph. Dataflow designs can be conveniently
-  implemented on Field Programmable Gate Arrays which combine the
-  advantage of fully customizable logic with low time to
-  market. However, the manual development process used until now is
-  challenging, error-prone and counter-productive. We propose a design
-  flow that uses aspects to decouple design development from design
-  optimisation, thus improving maintainability, portability and
-  developer productivity while enabling automated exploration of
-  design trade-offs that can lead to increased performance. The
-  proposed approach uses MaxC, a novel language for specifying
-  dataflow designs. In this paper we introduce MaxC and show how
-  inputs, outputs, computation and control parts of hardware designs
-  can be captured with high-level MaxC descriptions, and simulated in
-  software using the standard GCC stack. Optimisation strategies for
-  the generated designs are then specified with LARA, a
-  domain-specific aspect oriented programming language, and MaxC. We
-  evaluate our approach by developing an implementation for a high
-  performance application based on Reverse-Time Migration
-  (RTM). Preliminary results show that our design achieves comparable
-  performance to state of the art FPGA implementations, while
-  improving developer productivity.
-
-\end{abstract}
+\input{sections/abstract.tex}
 
 \IEEEpeerreviewmaketitle
 
-\input{content}
+\input{sections/intro.tex}
+\input{sections/design_flow.tex}
+\input{sections/maxc.tex}
+\input{sections/aspects.tex}
+\input{sections/eval.tex}
+\input{sections/related_work.tex}
+\input{sections/conclusion.tex}
 
 % Note that IEEE typically puts floats only at the top, even when this
 % results in a large percentage of a column being occupied by floats.
@@ -311,16 +289,6 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 % command of the stfloats package.
 
 
-\section{Conclusion}
-
-In this paper we present an automated design flow for design space
-exploration of dataflow designs based on a novel language, MaxC, and
-aspect-driven compilation. We show that MaxC can be used to specify
-dataflow designs for interesting high-performance applications. We
-show that by using LARA to implement aspects that encapsulate
-structural transformations as well as design level transformations and
-development related transformations we can create maintainable and
-portable designs, increasing developer productivity.
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page

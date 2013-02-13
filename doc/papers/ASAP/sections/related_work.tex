@@ -1,0 +1,111 @@
+\section{Related Work}
+
+\subsection{Dataflow Languages}
+
+
+Given the advantage that dataflow architectures have when implementing with
+uniform computation over general purpose-architecture, it is no
+surprise that a number of dataflow language have been developed
+targeting FPGAs but also multi-core platforms.
+
+\begin{itemize}
+
+\item Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
+  ImpulseC\cite{ImpulseC} (commercial version of Streams-C) use a model based on
+  Communicating Sequential Process. Streams-C designs are specified
+  using non-standard syntax such as special comment blocks which is
+  used to annotate C application code.
+
+\item StreamIt\cite{Thies:Karczmarek:Amarasinghe:2002} and Sequoia++
+  use a different, non-standard syntax which is not intuitive for new
+  users. This also complicates the translation process of existing
+  imperative code.
+
+\item MaxJ \cite{MaxelerTechnologies:2012} is a commercial
+  implementation which provides a Java API for constructing dataflow
+  designs. However, since the runtime library is C this means that
+  developers have to manage two separate project components which
+  complicates both interaction between them (e.g. if common design
+  parameters are to be shared) and the design space exploration
+  process. Additionally Java is a more verbose language and in most
+  designs this is not necessarily useful since we don't always benefit
+  that from high-level constructs. In C we can use macros to capture
+  repetitive patterns, but since C is not an Object Oriented language,
+  it can be considerably wore in terms of code reuse.
+
+\end{itemize}
+
+\subsection{Aspect Driven Design}
+
+
+\subsection{Comparison with Other Dataflow Languages}
+
+Table \ref{table:feature-comparison} summarizes the features of MaxC
+in comparison with other languages described in the related works
+section.
+
+\begin{table}[!h]
+  \renewcommand{\arraystretch}{1.3}
+  \centering
+  \caption{Feature comparison of MaxC and other dataflow languages.}
+  \label{table:feature-comparison}
+  \begin{tabular}{ l | c |  p{1cm} |  p{1cm} |  c |  c }
+    Language  & Syntax & FPGA Support & Execution Model & Debugging & Simulation \\ \hline
+    MaxJ      & -      & -            & -               & -         & -          \\
+    Streams-C & -      & -            & -               & -         & -          \\
+    ImpulseC  & -      & -            & -               & -         & -          \\
+    StreamIt  & -      & -            & -               & -         & -          \\
+    Sequoia++ & -      & -            & -               & -         & -          \\
+    MaxC      & -      & -            & -               & -         & -          \\
+  \end{tabular}
+\end{table}
+
+
+\begin{comment}
+  \subsubsection{Translation}
+
+  Translation aspects tranform high-level source code to MaxC designs.
+
+  Aspect steps:
+  \begin{enumerate}
+
+  \item identify acceleration candidates by profiling the
+    computation. In particular analyse loops with computations and
+    profile at various degrees of nesting;
+
+  \item transform local arrays to dynamic arrays;
+
+  \item extract computational kernel by mapping the outer loop to the
+    stream loop;
+
+  \item generate runtime API (currently using MaxCompilerRT).
+
+  \end{enumerate}
+
+  This aspect will map the C99 application shown in Figure
+  \ref{fig:c-design} to Lines 12 -- 16 of the 1D Convolution kernel in
+  Figure \ref{fig:maxc-1dconv}.
+
+
+  \begin{figure}[!h]
+    \centering
+    \begin{lstlisting}
+      void kernel(int source[], int m, float a_0_0_0, float a_p1_0_0, float a_m1_0_0) {
+
+        for(j=1; j<m; j++){
+          target[j] =
+          source[j]  * a_0_0_0
+          + source[j + 1] * a_p1_0_0
+          + source[j - 1] * a_m1_0_0;
+        }
+
+      }
+    \end{lstlisting}
+    \caption{Original C99 source code for the 1D convolution kernel in
+      Figure \ref{fig:maxc-1dconv}.}
+    \label{fig:c-design}
+  \end{figure}
+\end{translation}
+
+\subsubsection{\TODO Parallelism}
+\end{comment}

@@ -1,0 +1,255 @@
+\section{Aspects}
+
+MaxC was designed to integrate with aspect weaving tools by using
+standard C99 syntax. This allows MaxC specifications to describe the
+simplest form of a dataflow design while aspects specify decoupled
+optimization and transformation strategies that operate on this
+design. This make the functionality of the application easier to
+understand, more maintainable and portable since it is no longer
+obscured by various structural or algorithmic transformations or
+platform specific optimizations.
+
+We distinguish four categories of aspects: \emph{system aspects},
+\emph{exploration aspects}, \emph{implementation aspects} and
+\emph{development aspects}
+
+\subsection{System Aspects}
+
+System aspects capture transformation or optimization strategies that
+affect the whole application such as those concerning
+hardware/software portioning, or run-time reconfiguration
+capabilities. The goal is to expose parallelism, improve communication
+between CPU and accelerator via hardware/software partitioning or
+remove idle functions from the accelerator using run-time
+reconfiguration. These aspects act on the original C application level
+as well as on the partitioned C (software) and MaxC design (hardware).
+
+
+\subsubsection{\TODO Reconfiguration}
+
+\subsection{Exploration aspects}
+
+Exploration deal with strategies that generate multiple designs based
+on parametrisation and can act on any level of the design flow (C
+code, C and MaxC, or MaxC design). They enable systematic exploration
+of trade-offs and. An example LARA aspect for design space exploration
+is show below. It highlights the feedback capabilities of the design
+flow: the aspect will generate a MaxC designs and build the DFE
+configuration until this passes a specified LUT threshold, at each
+step increasing the parallelism of the design (by replicating the
+computational pipeline).
+
+\begin{lstlisting}
+  aspectdef DSEStrategy
+  var config = { 'Dsp_factor': 1,
+    'Exponent'  : 8,
+    'Mantissa'  : 24 };
+  var par = 0, lut_threshold = 10000;
+  do {
+    par++;
+    config['Par'] = par;
+    var designName = genName(config);
+    call genMaxC(designName, config);
+    buildMaxC(designName);
+  } while (@hw[designName].lut < lut_threshold);
+  end
+\end{lstlisting}
+
+\subsection{Implementation Aspects}
+
+Design aspects capture low level design optimizations that can be
+applied to the MaxC designs in order to improve timing or explore
+various resource usage trade-offs.
+
+Aspects can be used to enable design space exploration of resource
+usage vs. accuracy trade-offs by varying the word
+lengths. Alternatively we can use them to explore resource trade-offs
+by mapping computation to specialised FPGA blocks. For example, the
+aspect in Figure \ref{fig:aspect-DSP} can be used to map arithmetic
+expressions to DSP blocks. We define the DSP balance factor to be used
+(none, normal, full), the granularity (which decides if we break up
+arithmetic expressions to insert DSP Factors between them) and the
+number of independent applications.
+
+\lstset{style=aspectp}
+\begin{figure}[!h]
+  \centering
+  \begin{lstlisting}
+    aspectdef OptimizeDSPUsage(
+    DSPBalance, granularity, applications)
+    {
+      where: arithmetic expression occurs
+      what:
+      split expression if it has more than granularity operations
+      insert DSP balance pragma
+    }
+  \end{lstlisting}
+  \caption{Aspect for exploring mapping of computation to DSP blocks.}
+  \label{fig:aspect-DSP}
+\end{figure}
+
+Aspects steps:
+
+\begin{enumerate}
+\item Identify arithmetic expressions;
+\item Split them according to granularity;
+\item Insert annotation to adjust DSP usage;
+\item Repeat for a given number of applications.
+\end{enumerate}
+
+\newsavebox{\secondlisting}
+\begin{lrbox}{\secondlisting}% Store second listing
+  \lstinputlisting[firstline=8]{code.txt}
+\end{lrbox}
+
+\begin{figure}
+  \begin{lstlisting}
+    #pragma balanceDSP=full
+    int result = p[0]  * c_0_0_0;
+    int result = result + p[1]  * c_p_0_0;
+    #pragma balanceDSP=full
+    int result = result + p[-1] * c_n_0_0;
+  \end{lstlisting}
+  \caption{One possible result of applying
+    \texttt{OptimizeDSPUsage(full, fine, 2)} to Lines 13 -- 17 of Figure
+    \ref{fig:maxc-1dconv}.}
+  \label{fig:maxc-1dconv-aspect}
+\end{figure}
+
+Figure \ref{fig:maxc-1dconv-aspect} shows one of the possible results
+of applying the aspect \texttt{OptimizeDSPUsage(full, fine, 2 } to
+Lines 13 -- 17 of Figure \ref{fig:maxc-1dconv}.
+
+Using LARA we can implement and combine these aspects to enable
+systematic design space exploration of all the optimisations options
+exposed by the MaxC backend resulting in the generation of a large
+number of designs. The feedback-directed compilation process of LARA can
+be used to capture and extract feedback from the backend reports
+pertaining to resource usage or timing information and automatically
+adjust the compilation process.
+
+\subsection{Development Aspects}
+
+Development aspects capture transformations that have an impact on the
+development process such as debugging, simulating kernels or improving
+compilation speed. Separating these concerns makes the original
+application code easier to maintain and enables the automatic
+application of these transformations to a wide range of designs, thus
+improving developer productivity.
+
+\subsubsection{Simulation Aspects}
+
+The goal for the MaxC kernel simulation model is that it should be
+possible to compile and run dataflow designs using the standard GCC
+toolchain in order to verify the logical correctness of the
+design. However, this often leads to the need of adding boilerplate
+code that would otherwise not be required by the MaxC backend, just to
+enable simulation. Since this process is itself manual and hence
+error-prone it defeats the very purpose of testing the design. One
+approach would be to require users to always use the simulation
+API. However this unnecessarily complicates the dataflow design. Our
+solution is to use separate aspects to generate the simulation
+designs.
+
+Simulation aspects can be applied to the original dataflow design to
+enable pure software simulation. This approach gives more freedom when
+designing MaxC constructs -- since we are not necessarily concerned
+weather they compile using the standard GCC toolchain. This in turn
+allows us to provide a neater syntax but also hides and automates the
+details of generating simulation designs from the developer.
+
+Aspect steps:
+
+\begin{enumerate}
+
+\item insert kernel simulation loop in hostcode %(Figure )
+  \begin{figure}[!h]
+    \begin{lstlisting}
+      for (int i = 0 ; i < CYCLE_COUNT; i++) {
+        kernel_Convolution1d(p, out, 2);
+        update_stream_pointers(p, out);
+      }
+    \end{lstlisting}
+    %\caption{Stream simulation loop.}
+    %\label{fig:maxc-simulation}
+  \end{figure}
+
+\item insert boilerplate code in the dataflow design to enable simulation.
+  % The result of applying the simulation aspect to the dataflow in
+  %  Figure \ref{fig:maxc-1dconv} is shown in Figure
+  %  \ref{fig:maxc-sim-aspect}.
+  For example any stream and counter used in the kernel body need to
+  be declared using special calls that also pass in unique identifiers
+  which are used to store and retrieve the values at each cycle in a
+  separate data structure (e.g. \texttt{`stream\_init\_i(int
+    stream\_id)}). On each kernel cycle, the function then either
+  allocates a new stream or increments the stream pointer if the
+  stream has already been allocated.
+  \begin{comment}
+    \begin{figure}[!h]
+      \begin{lstlisting}
+        float* i4 = count_i(1000, 1, 0);
+        float* i1 = countChain_i(n1, 1, i4, 0);
+      \end{lstlisting}
+      \caption{Applying the simulation aspect to the dataflow design in
+        Figure \ref{fig:maxc-1dconv}}
+      \label{fig:maxc-sim-aspect}
+    \end{figure}
+  \end{comment}
+
+\end{enumerate}
+
+\lstset{style=MaxC}
+
+
+\subsubsection{Debug Aspects}
+
+Because the current execution model does not provide for runtime
+debugging of hardware designs the easiest solution to debug designs is
+to log the values of various streams during execution. The insertion
+of debug statements can be encapsulated in aspects. It is particularly
+important to separate debug aspects from the original application code
+since debug blocks can influence the compilation time and timing
+constraints as well as the behaviour of the design.
+
+\lstset{style=aspectp}
+\begin{figure}[!h]
+  \centering
+  \begin{lstlisting}
+    aspectdef DebugValues()
+    {
+      where: variable assignment
+      what:
+      log value before assignment
+      log value after assignment
+    }
+  \end{lstlisting}
+  \caption{Aspect for exploring mapping of computation to DSP blocks.}
+  \label{fig:aspect-DSP}
+\end{figure}
+
+\subsubsection{Compilation Aspects}
+
+Compilation aspects can be applied during the development process to
+create versions of the dataflow design that compile faster. They apply
+changes such as reducing the operating frequency, removing debug
+blocks or applying design-level optimizations that can resolve timing
+constraints. Naturally reducing the compilation time increases
+developer productivity.
+
+Different compilation aspects can be used to build in parallel more
+versions of the application that allow incremental testing (in order
+of compilation times):
+\begin{enumerate}
+\item Fastest design to build will be a naive version, optimized for
+  compile time (minimum design and memory frequency, disabled debug
+  blocks, no arithmetic optimizations). This allows verifying
+  application correctness;
+\item The debug version (enabled debug blocks) is built in parallel to
+  allow debugging of errors identified in the previous step;
+\item Finally a version optimized for performance (maximum frequency,
+  no debug block, arithmetic optimisations) is compiled to allow
+  testing of non-functional requirement.
+\end{enumerate}
+
+

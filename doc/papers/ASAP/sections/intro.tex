@@ -1,0 +1,70 @@
+\section{Introduction}
+
+The dataflow computing paradigm is more suitable for implementing high
+throughput, highly parallel applications that operate on large amounts
+of uniform data than general purpose architectures. Existing work
+shows that dataflow machines emulated on FPGAs achieve performance
+gains of up to several orders of magnitude compared to traditional
+control based architectures \cite{Flynn:Pell:Mencer:2012},
+\cite{Mencer:2012},
+\cite{Oriato:Tilbury:Marrocu:Pusceddu:2012}. Because they eliminate
+the fetch-decode-execute cycle of traditional von Neumann machines
+\cite{Neumann:1993}, dataflow designs require less area for caching
+and control (e.g. branch prediction) which leads to the increase in
+performance and decrease in power consumption. Another key aspect is
+that due to its regularity, a dataflow design can be statically
+scheduled into a deep hazard-free pipeline, effectively achieving the
+ideal throughput rate of one result per clock cycle. This makes
+dataflow designs more suitable for expressing high throughput, regular
+computations than general purpose computing devices. However, dataflow
+languages are not commonly used and even with the advent of more
+modern functional programming languages, imperative languages such as
+Java and C/C++ remain most popular \cite{Tiobe:2012}.
+
+We identify the following challenges that should be overcome to
+facilitate the adoption of dataflow designs:
+\begin{enumerate}
+\item Specifying dataflow designs, in an intuitive, well understood
+  language that is concise and facilitates the translation of existing
+  designs and expressive enough to support the requirements of modern
+  high-performance applications.
+\item Specifying optimization strategies, decoupled from the
+  application code in a manner that makes the specification easy to
+  reuse and customize and is comprehensive enough to allow capturing
+  of optimizations at various levels: \emph{algorithmic
+    transformations} that enable transformation of the original
+  application to expose parallelism or improve communication between
+  CPU and accelerator, \emph{design-level transformations} that
+  enable exploration of platform specific optimizations and
+  \emph{productivity related transformations} that improve developer
+  productivity.
+\item Systematic design space exploration of dataflow designs driven
+  by these parameterizable optimization strategies, that increase
+  developer productivity and allow exploration of design level
+  trade-offs.
+\item Applying these design techniques to create and optimize high
+  performance applications from existing implementations
+\end{enumerate}
+
+We propose a methodology for addressing these challenges based on the
+following contributions:
+\begin{enumerate}
+\item We introduce MaxC, a dataflow language based on C99 that can be
+  used to create high-performance designs. We implement a compiler
+  that translates MaxC designs to MaxJ an existing commercial dataflow
+  language. These are then compiled using MaxCompiler 2012.1 and
+  executed on a MAX3424 Board with a Virtex 6 FPGA chip and 48GB of
+  on-board DRAM.
+\item We introduce novel aspects for specifying optimisation
+  strategies at the algorithmic level, the design level and
+  productivity level. We implement these aspects using
+  LARA, an aspect oriented language for FPGA systems.
+\item We propose an automated method for design space exploration of
+  MaxC dataflow designs, driven by the aspect definitions.
+\item We evaluate our approach implementing a high performance design
+  for an application based on the Reverse Time Migration technique for
+  seismic imaging and comparing it with existing CPU, GPU and FPGA
+  implementations.
+\end{enumerate}
+
+
