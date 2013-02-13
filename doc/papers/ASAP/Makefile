@@ -6,11 +6,14 @@ TARGET=pgasap2013
 
 all: $(TARGET).pdf
 
-%.pdf : %.tex
-	$(COMPILE) $^
+SRCS := $(shell find . -name '*.tex')
+
+%.pdf : $(SRCS) 
+	$(COMPILE) $(TARGET).tex
 	$(BIBTEX) $(TARGET).aux
-	$(COMPILE) $^
-	$(COMPILE) $^
+	$(COMPILE) $(TARGET).tex
+	$(COMPILE) $(TARGET).tex
+
 
 # report.tex: $(MD_SOURCES)
 #       pandoc $(TEMPLATE) $(CSL) $(BIBLIOGRAPHY) $(OPTIONS) -f markdown -t latex $^ -o $@
