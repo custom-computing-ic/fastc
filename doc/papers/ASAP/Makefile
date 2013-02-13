@@ -6,9 +6,9 @@ TARGET=pgasap2013
 
 all: $(TARGET).pdf
 
-SRCS := $(shell find . -name '*.tex')
+SRCS := $(shell find sections -name '*.tex')
 
-%.pdf : $(SRCS) 
+$(TARGET).pdf : $(TARGET).tex $(SRCS) 
 	$(COMPILE) $(TARGET).tex
 	$(BIBTEX) $(TARGET).aux
 	$(COMPILE) $(TARGET).tex

@@ -11,7 +11,8 @@ platform specific optimizations.
 
 We distinguish four categories of aspects: \emph{system aspects},
 \emph{exploration aspects}, \emph{implementation aspects} and
-\emph{development aspects}
+\emph{development aspects}.
+ 
 
 \subsection{System Aspects}
 
@@ -39,6 +40,7 @@ configuration until this passes a specified LUT threshold, at each
 step increasing the parallelism of the design (by replicating the
 computational pipeline).
 
+\lstset{style=lara}
 \begin{lstlisting}
   aspectdef DSEStrategy
   var config = { 'Dsp_factor': 1,
@@ -71,18 +73,31 @@ expressions to DSP blocks. We define the DSP balance factor to be used
 arithmetic expressions to insert DSP Factors between them) and the
 number of independent applications.
 
-\lstset{style=aspectp}
+\lstset{style=lara}
 \begin{figure}[!h]
   \centering
   \begin{lstlisting}
-    aspectdef OptimizeDSPUsage(
-    DSPBalance, granularity, applications)
-    {
-      where: arithmetic expression occurs
-      what:
-      split expression if it has more than granularity operations
-      insert DSP balance pragma
-    }
+aspectdef dspFactor   
+var op_granularity =  
+ [{DspFactor: 'full', MultiplyOp: 20, AddOp: 5 },
+  {DspFactor: 'normal', MultiplyOp: 3}];
+                           
+select function.statement end
+apply 
+   for (var i in op_granularity) {
+      var gprofile = op_granularity[i]; 
+      var match = true;
+      for (var k in gprofile) {
+         if (k != 'DspFactor') {
+            match &= ($statement.num_construct(k) 
+                      >= gprofile[k]);}}
+      if (match) {
+         var pragma = '#pragma maxc balanceDSP:'  
+                      + gprofile.DspFactor;
+         $statement.insert before "[[pragma]]"; 
+         break;}}
+   end   
+end
   \end{lstlisting}
   \caption{Aspect for exploring mapping of computation to DSP blocks.}
   \label{fig:aspect-DSP}
@@ -212,7 +227,7 @@ important to separate debug aspects from the original application code
 since debug blocks can influence the compilation time and timing
 constraints as well as the behaviour of the design.
 
-\lstset{style=aspectp}
+\lstset{style=lara}
 \begin{figure}[!h]
   \centering
   \begin{lstlisting}
