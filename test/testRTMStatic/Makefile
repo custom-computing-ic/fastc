@@ -79,7 +79,7 @@ run-sim: $(EXE_SIM)
 # ---- Hardware ----
 
 $(MAXFILE_HW): $(BUILDER).class
-	MAXAPPJCP=. $(JAVA) $(BUILDER) $(BUILD_NAME)_HW HW
+	MAXSOURCEDIRS=engine MAXAPPJCP=. $(JAVA) $(BUILDER) $(BUILD_NAME)_HW HW
 
 $(MAXFILE_OBJ_HW): $(MAXFILE_HW)
 	$(FILEC) $< $@ $(APP)
