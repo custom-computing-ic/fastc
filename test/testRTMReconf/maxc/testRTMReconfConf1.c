@@ -1,14 +1,6 @@
 #include "../../../include/maxcc.h"
 #include "../include/params_dse.h"
 
-
-// XXX need to also evaluate Par before evaluating macro
-
-
-#define burst_in  8, 24, 6
-#define t_burst_p 8, 24, 2
-#define burst_out 8, 24, 6
-
 #pragma class:scalar dir:in name:n1 type:uint32 func:kernel_MyApp
 #pragma class:scalar dir:in name:n2 type:uint32 func:kernel_MyApp
 #pragma class:scalar dir:in name:n3 type:uint32 func:kernel_MyApp
@@ -27,8 +19,8 @@ void kernel_MyApp(
                   s_array_f8_24 output_pp
                   ) {
 
-    burst_input = make_input_array_f(burst_in);
-    burst_p     = make_input_array_f(t_burst_p);
+    burst_input = make_input_array_f(8 ,24, Par * 6);
+    burst_p     = make_input_array_f(8, 24, Par * 2);
 
     int32 i4 = count(1000, 1);
     int32 i3 = count_chain(n3, 1, i4);
@@ -62,11 +54,11 @@ void kernel_MyApp(
 
     s_float8_24 pb[Par];
     float8_24 ppb_i[Par], dvvb[Par];
-    float8_24 image[1][1];
+    float8_24 image[Par][Mul];
 
     for (int i=0; i < Par; i++) {
-        cast2sff(p[i], burst_p[1*0+i], realType);
-        cast2sff(pb[i], burst_p[1*1+i], realType);
+        cast2sff(p[i], burst_p[Par*0+i], realType);
+        cast2sff(pb[i], burst_p[Par*1+i], realType);
     }
 
     for (int i=0; i <Par; i++) {
@@ -199,15 +191,15 @@ void kernel_MyApp(
 
 
 
-    float8_24 curb[1][11 + Par + Mul][11][11], resultb[1][1];
-    s_float8_24 interb[1][1];
+    float8_24 curb[1][11 + Par + Mul][11][11], resultb[Par][Mul];
+    s_float8_24 interb[Par][Mul];
 
     pushDSPFactor(1);
     //Cache
-    for (int i=0; i <1; i++)
+    for (int i=0; i < Par; i++)
         {
-            int k = -6/1;
-            for (int x=-6; x<=6; x+=1)
+            int k = -6/Par;
+            for (int x=-6; x<=6; x+=Par)
                 {
                     for (int y=-5; y<=5; y++)
                         for (int z=-5; z<=5; z++)
@@ -218,7 +210,7 @@ void kernel_MyApp(
 
 
 
-    for (int i=0; i <1; i++) {
+    for (int i=0; i < Par; i++) {
         ppb_i[i]     = ppb_i[i] * scale;
         resultb[i][0]=(
                        curb[0][6+i][5][5] * 2.0 -
@@ -245,12 +237,12 @@ void kernel_MyApp(
         interb[i][0][0]  = (up[i]) ? resultb[i][0] : ppb_i[i];
     }
 
-    for (int j=1; j <1; j++)
+    for (int j=1; j < Mul; j++)
     {
-      for (int i=0; i <1; i++)
+      for (int i=0; i < Par; i++)
       {
-        int k = -6/1;
-        for (int x=-6; x<=6; x+=1)
+        int k = -6/Par;
+        for (int x=-6; x<=6; x+=Par)
         {
           for (int y=-5; y<=5; y++)
             for (int z=-5; z<=5; z++)
@@ -287,25 +279,25 @@ void kernel_MyApp(
     }
 #pragma class:kernelopt name:popDSP
 
-    for (int j =0; j< 1-1; j++)
-	for (int i = 0; i < 1; i++)
+    for (int j =0; j<  Mul -1; j++)
+	for (int i = 0; i < Par; i++)
 	    image[i][j+1] = image[i][j] + inter[i][j][0] * interb[i][j][0];
 
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < Par; i++)
 	image[i][1-1]  = image[i][1-1] + inter[i][1-1][0] * interb[i][1-1][0];
 
     //------------------------------Data output --------------------------------
 
     // control counter
-    s_array_f8_24 output_p        = make_array_f(t_burst_p);
-    s_array_f8_24 burst_output    = make_array_f(burst_out);
+    s_array_f8_24 output_p        = make_array_f(8, 24, Par * 2);
+    s_array_f8_24 burst_output    = make_array_f(8, 24, Par * 6);
 
-    for (int i=0; i <1; i++) {
+    for (int i=0; i < Par; i++) {
       output_p[Par*0+i][0] = castf_f(inter[i][1-1][0], 8, 24);
       output_p[Par*1+i][0] = castf_f(interb[i][1-1][0], 8,24);
     }
 
-    for (int i=0; i <1; i++) {
+    for (int i=0; i < Par; i++) {
       burst_output[Par*0+i][0] = castf_f(cur[1-1][6+i][5][5], 8,24);
       burst_output[Par*1+i][0] = castf_f(dvv[i], 8, 24);
       burst_output[Par*2+i][0] = castf_f(source[i], 8, 24);
@@ -314,7 +306,7 @@ void kernel_MyApp(
       burst_output[Par*5+i][0] = castf_f(image[i][1-1], 8,24);
     }
 
-    output_iaf(output_p, output_p, t_burst_p);
-    output_iaf(output_pp, burst_output, burst_out);
+    output_iaf(output_p, output_p, 8, 24, Par * 2);
+    output_iaf(output_pp, burst_output, 8, 24, Par * 6);
 
 }
