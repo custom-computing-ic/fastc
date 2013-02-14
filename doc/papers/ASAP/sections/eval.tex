@@ -105,8 +105,6 @@ design space exploration.
 \end{table}
 \end{comment}
 
-
-
 Design space exploration using the parallelism aspect can be used to
 illustrate design scalability. Figure \ref{fig:scalability} shows that
 performance scales linearly with the number of parallel
@@ -119,6 +117,7 @@ necessary to use maximum stream or memory frequency (e.g. in the case
 of memory or compute bound applications respectively) but this can
 significantly increase compilation time.
 
+\begin{comment}
 \begin{figure}[!h]
   \centering
   \begin{tikzpicture}
@@ -136,6 +135,7 @@ significantly increase compilation time.
     increases linearly with the number of parallel pipelines.}
   \label{fig:scalability}
 \end{figure}
+\end{comment}
 
 
 The DSP aspect allows to explore the resource trade-offs of
@@ -157,23 +157,33 @@ performance of the static reference version achieving a significant
 speedup of up to 50x over software only versions.
 
 \begin{table}[!h]
-  %  \renewcommand{\arraystretch}{1.1}
+  \renewcommand{\arraystretch}{1.1}
   \centering
-  \caption{Speed up results compared to CPU, GPU and other FPGA implementations. Size s = 128x128x128.}
+  \caption{Execution time, throughput and speed up results for RTM compared to CPU and GPU
+    implementations (Sizes s = 128x128x128, m=128x256x256,
+    l=256x512x512, 1000 iterations). Results are shown for both the static (S) and run-time reconfigurable version (R).}
   \label{speedup}
-  \begin{tabular}{ ccccc}
-    Size & Pipes & Time  & vs CPU & Throughput (GFlop/s) \\ \hline
-    s    & 6     & 3.60  & 50.4X  & 61                   \\
-    s    & 3     & 7.21  & 25.2X  & 30.5                 \\
-    s    & 2     & 10.86 & 16.7X  & 15.2                 \\
-    s    & 1     & 21.63 & 8.4X   & 7.6                  \\\hline
-    m    & 6     & -     & -      & -                    \\
-    m    & 3     & -     & -      & -                    \\
-    m    & 2     & -     & -      & -                    \\
-    m    & 1     & -     & -      & -                    \\ \hline
-    l    & 6     & -     & -      & -                    \\
-    l    & 3     & -     & -      & -                    \\
-    l    & 2     & -     & -      & -                    \\
-    l    & 1     & -     & -      & -                    \\
+  \begin{tabular}{p{1cm}|cc|cc|cc|cc}
+    \hline
+    \multirow{2}{*}{\bf{Size, Pipes} }           &
+    \multicolumn{2}{c|}{\bf{Time(s)}} & \multicolumn{2}{c|}{\bf{GFLOP/s}} &
+    \multicolumn{2}{c|}{\bf{vs CPU}}  & \multicolumn{2}{c}{\bf{vs GPU}}                                                      \\
+                                      &                               S      & R & S     & R & S     & R & S    & R    \\\hline \hline
+    S, 12                                                              & 1.80   & - & 70.6  & - & 50.4  & - & 1.09 & 1.14 \\
+    S, 6                                                                 & 3.60   & - & 35.3  & - & 25.2  & - & 0.54 & 0.57 \\
+    S, 3                                                                 & 7.21   & - & 17.6  & - & 12.6  & - & 0.27 & 0.28 \\
+    S, 2                                                                 & 10.86  & - & 11.73 & - & 8.4   & - & 0.18 & 0.18 \\
+    S, 1                                                                 & 21.63  & - & 5.86  & - & 4.2   & - & 0.09 & 0.09 \\ \hline
+    M, 12                                                               & 9.1    & - & 68.2  & - & 81    &   & 1.05 & 1.35 \\
+    M, 6                                                                 & 18.21  & - & 34.1  & - & 40.5  &   & 0.52 & 0.67 \\
+    M, 3                                                                 & 36.44  & - & 17.05 & - & 20.25 &   & 0.26 & 0.33 \\
+    M, 2                                                                 & 72.91  & - & 11.36 & - & 13.5  &   & 0.17 & 0.22 \\
+    M, 1                                                                 & 145.76 & - & 5.68  & - & 6.75  &   & 0.08 & 0.11 \\ \hline
+    L, 12                                                               & 147.91 & - & 66.8  & - & 37.6  &   & 1.03 & 1.52 \\
+    L, 6                                                                 & 295.6  & - & 33.4  & - & 18.8  &   & 0.51 & 0.76 \\
+    L, 3                                                                 & 590.6  & - & 16.7  & - & 9.4   &   & 0.25 & 0.38 \\
+    L, 2                                                                 & 1183.8 & - & 8.35  & - & 6.26  &   & 0.17 & 0.25 \\
+    L, 1                                                                 & 2366.4 & - & 4.17  & - & 3.13  &   & 0.08 & 0.12 \\\hline \hline
+
   \end{tabular}
 \end{table}
