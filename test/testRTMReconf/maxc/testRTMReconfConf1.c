@@ -66,12 +66,12 @@ void kernel_MyApp(
     }
 
     for (int i=0; i <Par; i++) {
-        cast2ff(pp_i[i], burst_input[Par * 0 + i], realType);
-        cast2ff(dvv[i],  burst_input[Par * 1 + i], realType);
-        cast2ff(source[i], burst_input[Par * 2 + i], realType);
-        cast2ff(ppb_i[i], burst_input[Par * 3 + i], realType);
-        cast2ff(dvvb[i], burst_input[Par * 4 + i], realType);
-        cast2ff(image[i][0], burst_input[Par * 5 + i], realType);
+        cast2fsf(pp_i[i], burst_input[Par * 0 + i], realType);
+        cast2fsf(dvv[i],  burst_input[Par * 1 + i], realType);
+        cast2fsf(source[i], burst_input[Par * 2 + i], realType);
+        cast2fsf(ppb_i[i], burst_input[Par * 3 + i], realType);
+        cast2fsf(dvvb[i], burst_input[Par * 4 + i], realType);
+        cast2fsf(image[i][0], burst_input[Par * 5 + i], realType);
     }
 
     //------------------------------boundary control--------------------------
@@ -92,19 +92,14 @@ void kernel_MyApp(
 
     int32 it_buf  = (it  < SPONGE) ? it : SPONGE;
     cast2ff(it_buf, it_buf, 8, 24);
-    //    it_buf  =  it_buf.cast(hwFloat(8,24));
 
     int32 power = bc * it_buf;
     //    int32 pow   =(power).cast(hwFix(2, 30, HWFix.SignMode.TWOSCOMPLEMENT));
-    int32 pow = power; //cast(power)
+    int32 pow = cast_fix_i(power, 2, 30);
 
     //KernelMath.Range powrange = new KernelMath.Range(-0.1, 0.0);
     float8_24 scale = (it > 0) ? exp(pow) : 1;
-    //    scale    = scale.cast(hwFloat(8,24));
-
-    // TODO implement exponent
-
-    //------------------------------boundary control--------------------------
+    cast2ff(scale, scale, 8, 24);
 
     s_float8_24 inter[Par][Mul];
 

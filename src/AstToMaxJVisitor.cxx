@@ -70,7 +70,7 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
     SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
     string fname = fsymbol->get_name();
 
-    if (fname.compare("count") == 0) {
+    if (fname == "count") {
         string *wrap = toExpr(*itt);
 
         SgIntVal *inc = isSgIntVal(*(++itt));
@@ -89,7 +89,7 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         *s += "HWVar " + variableName + " = " + name + ".addCounter("
             + *wrap + ", " + i + ");\n";
         counterMap[variableName] = name;
-    } else if (fname.compare("count_chain") == 0) {
+    } else if (fname == "count_chain" ) {
         string *wrap = toExpr(*itt);
         SgIntVal *inc = isSgIntVal(*(++itt));
         string i;
@@ -106,7 +106,7 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         *s += "HWVar " + variableName + " = " + chainDeclaration
             + ".addCounter(" + *wrap + ", " + i + ");\n";
         counterMap[variableName] = chainDeclaration;
-    } else if (fname.compare("count_p") == 0) {
+    } else if (fname == "count_p") {
         string param = "param" + lexical_cast<string>(paramCount);
         string *width = toExpr(*(itt));
         string *max   = toExpr(*(++itt));
@@ -122,19 +122,18 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         *s += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
         *s += "HWVar " + variableName + " = " + counter + ".getCount();\n";
         paramCount++;
-    } else if (fname.compare("fselect") == 0
-               || fname.compare("fselect_sf_f") == 0 ) {
+    } else if (fname == "fselect" || fname == "fselect_sf_f" ) {
         string *exp = toExpr(*itt);
         string *ifTrue = toExpr(*(++itt));
         string *ifFalse = toExpr(*(++itt));
         *s += "HWVar " + variableName + " = control.mux(" + (*exp) + ", "
             + (*ifTrue) + ", " + (*ifFalse) + ");\n";
-    } else if (fname.compare("make_offset") == 0) {
+    } else if (fname == "make_offset") {
         string *min  = toExpr(*itt);
         string *max  = toExpr(*(++itt));
         *s += "OffsetExpr " + variableName;
         *s += " = stream.makeOffsetParam(\""+ variableName + "\"," + *min + "," + *max + ");\n";
-    } else if (fname.compare("make_array_f") == 0) {
+    } else if (fname == "make_array_f") {
         string *mantissa = toExpr(*itt);
         string *exponent = toExpr(*++itt);
         string *width    = toExpr(*++itt);
@@ -142,7 +141,7 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         *s += "KArray<HWVar>" + variableName;
         *s += " = (new KArrayType<HWVar>("+type+",";
         *s += *width+")).newInstance(this);\n";
-    } else if (fname.compare("make_input_array_f") == 0) {
+    } else if (fname == "make_input_array_f") {
         string *mantissa = toExpr(*itt);
         string *exponent = toExpr(*++itt);
         string *width    = toExpr(*++itt);
@@ -161,6 +160,12 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
         *s+= "new KernelMath.Range("+*range_min+", "+*range_max+");\n";
         string type = "hwUInt(" +*width+")";
         *s+= "HWVar "+variableName+" = KernelMath.sqrt("+range+", "+*base+","+type+");\n";
+    } else if (fname == "cast_fix_i") {
+        string *in = toExpr(*itt);
+        string *exp = toExpr(*(++itt));
+        string *mant = toExpr(*(++itt));
+        *s += str(format("HWVar %s = %s.cast(hwFix(%s, %s, HWFix.SignMode.TWOSCOMPLEMENT));\n")
+                  % variableName % *in % *exp % *mant);
     }
 
     if ( s->size() == 0 ) {
@@ -488,27 +493,24 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
             + *interrupt
             + ")";
 
-    } else if (fname.compare("pushDSPFactor") == 0) {
+    } else if (fname == "pushDSPFactor") {
         string *exp = toExpr(*it);
         *s += "optimization.pushDSPFactor(" + *exp + ")";
-    } else if (fname.compare("popDSPFactor") == 0 ) {
+    } else if (fname == "popDSPFactor" ) {
         *s += "optimization.popDSPFactor()";
-    } else if (fname.compare("fselect") == 0
-               || fname.compare("fselect_sf_f") == 0 ) {
+    } else if (fname == "fselect" || fname == "fselect_sf_f" ) {
         string *exp = toExpr(*it);
         string *ifTrue = toExpr(*(++it));
         string *ifFalse = toExpr(*(++it));
         *s += "control.mux("+*exp+", "+*ifTrue+", "+*ifFalse+")";
-    } else if (fname.compare("cast2ff") == 0
-               || fname.compare("cast2sff") == 0) {
+    } else if (fname == "cast2ff" || fname == "cast2sff" || fname == "cast2fsf") {
         string *out = toExpr(*it);
         string *in  = toExpr(*(++it));
         string *exponent = toExpr(*(++it));
         string *mantissa = toExpr(*(++it));
         string type = "hwFloat("+*exponent+", "+*mantissa+")";
         *s += *out+" = "+*in+".cast("+type+")";
-    } else if (fname.compare("castf_f") == 0
-               || fname.compare("castf_sf") == 0) {
+    } else if (fname == "castf_f" || fname == "castf_sf") {
         string *in  = toExpr(*it);
         string *exponent = toExpr(*(++it));
         string *mantissa = toExpr(*(++it));
@@ -520,7 +522,7 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
     } else if (fname == "pushRoundingMode") {
         *s+= "optimization.pushRoundingMode(RoundingMode.TRUNCATE)";
     } else if (fname == "popRoundingMode") {
-	*s+= "optimization.popRoundingMode()";
+        *s+= "optimization.popRoundingMode()";
     }
 
     if (s->size() == 0) {
