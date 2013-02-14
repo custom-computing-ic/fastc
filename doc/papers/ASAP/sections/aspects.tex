@@ -1,18 +1,23 @@
 \section{Aspects}
 
-MaxC was designed to integrate with aspect weaving tools by using
-standard C99 syntax. This allows MaxC specifications to describe the
-simplest form of a dataflow design while aspects specify decoupled
-optimization and transformation strategies that operate on this
-design. This make the functionality of the application easier to
-understand, more maintainable and portable since it is no longer
-obscured by various structural or algorithmic transformations or
-platform specific optimizations.
+Aspects are standalone modules used to capture cross-cutting concerns
+(such as logging or platform specific optimizations) and separate them
+from the original application code \cite{Kiczales:2001}. An aspect
+weaver reads the modules and generates appropriate code which is
+injected at the specified points in the source application. MaxC was
+designed to integrate with aspect weaving tools by using standard C99
+syntax. This allows MaxC specifications to describe the simplest form
+of a dataflow design while aspects specify decoupled optimization and
+transformation strategies that operate on this design. This make the
+functionality of the application easier to understand, more
+maintainable and portable since it is no longer obscured by various
+structural or algorithmic transformations or platform specific
+optimizations.
 
 We distinguish four categories of aspects: \emph{system aspects},
 \emph{exploration aspects}, \emph{implementation aspects} and
 \emph{development aspects}.
- 
+
 
 \subsection{System Aspects}
 
@@ -77,26 +82,26 @@ number of independent applications.
 \begin{figure}[!h]
   \centering
   \begin{lstlisting}
-aspectdef dspFactor   
-var op_granularity =  
+aspectdef dspFactor
+var op_granularity =
  [{DspFactor: 'full', MultiplyOp: 20, AddOp: 5 },
   {DspFactor: 'normal', MultiplyOp: 3}];
-                           
+
 select function.statement end
-apply 
+apply
    for (var i in op_granularity) {
-      var gprofile = op_granularity[i]; 
+      var gprofile = op_granularity[i];
       var match = true;
       for (var k in gprofile) {
          if (k != 'DspFactor') {
-            match &= ($statement.num_construct(k) 
+            match &= ($statement.num_construct(k)
                       >= gprofile[k]);}}
       if (match) {
-         var pragma = '#pragma maxc balanceDSP:'  
+         var pragma = '#pragma maxc balanceDSP:'
                       + gprofile.DspFactor;
-         $statement.insert before "[[pragma]]"; 
+         $statement.insert before "[[pragma]]";
          break;}}
-   end   
+   end
 end
   \end{lstlisting}
   \caption{Aspect for exploring mapping of computation to DSP blocks.}
@@ -266,5 +271,3 @@ of compilation times):
   no debug block, arithmetic optimisations) is compiled to allow
   testing of non-functional requirement.
 \end{enumerate}
-
-
