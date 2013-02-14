@@ -103,7 +103,7 @@ public class MyApp extends Kernel {
     it_buf  =  it_buf.cast(hwFloat(8,24));
 
 	HWVar power = (bc * it_buf);
-    HWVar pow   =(power).cast(hwFix(2, 30, HWFix.SignMode.TWOSCOMPLEMENT));
+	HWVar pow = power.cast(hwFix(2, 30, HWFix.SignMode.TWOSCOMPLEMENT));
 
     HWVar scale = (it > 0) ? KernelMath.exp(pow) : 1;
     scale    = scale.cast(hwFloat(8,24));

@@ -57,13 +57,18 @@ void pushRoundingMode( /*pushes RoundingMode.Truncate*/);
 void popRoundingMode();
 
 // casting functions
-void cast2ff(float8_24 out, s_float8_24 in, int exponent, int mantissa);
+void cast2ff(float8_24 out, float8_24 in, int exponent, int mantissa);
 
-void cast2sff(s_float8_24 out, s_float8_24 in, int exponent, int mantissa);
+void cast2fsf(float8_24 out, s_float8_24 in, int exponent, int mantissa);
+
+void cast2sfsf(s_float8_24 out, s_float8_24 in, int exponent, int mantissa);
 
 float castf_f(float8_24 in, int exponent, int mantissa);
 
 float* castf_sf(s_float8_24 in, int exponent, int mantissa);
+
+/*Uses TWOSCOMPLEMENT*/
+int cast_fix_i(int in, int exponent, int mantissa);
 
 // math functions
 
