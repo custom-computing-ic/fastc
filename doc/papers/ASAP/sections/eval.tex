@@ -52,31 +52,43 @@
 \subsection{RTM}
 We evaluate the proposed approach by implementing a high-performance
 application based on the Reverse Time Migration method for seismic
-imaging. This models the propagation of injected waves using the
-isotropic acoustic wave equation \cite{araya2011assessing}. We
-approximate the differential equation using stencil computation to
+imaging which is used to detect geological structures, based on the
+Earth's response to injected acoustic waves. The technique models the
+propagation of injected waves using the isotropic acoustic wave
+equation \cite{araya2011assessing}:
+\begin{align}
+\frac{d^2p(r,t)}{dt^2} + {dvv(r)}^2\bigtriangledown^2p(r,t) = f(r,t)
+\end{align}
+We approximate the differential equation using stencil computation to
 perform a fifth-order Taylor expansion in space and first-order Taylor
-expansion in time.
+expansion in time. We use MaxC to implement the dataflow kernel and
+aspects to generate multiple configurations for the design.
 
 \subsection{Results}
-We use MaxC to implement the dataflow kernel and aspects to
-generate multiple configurations for the design.
+
 
 Results of the design space exploration using the word length aspect
-illustrate the trade-offs between accuracy and resource usage.  We
-observe irregular, large variations when decreasing the mantissa from
-18 16 and 24 to 22. The latter difference is unexpected, halving the
-number of required DSPs (although increasing the LUT and FF usage by
-30\%), with little impact on accuracy. This is the effect of the
-backend tools implementing arithmetic operations using a combination
-of both DSPs and LUT/FF elements. The mantissa boundaries at which
-this optimization occurs are platform specific (depending on the
-architecture of the DSPs). Hence automating this optimization via
-aspects and decoupling it from the original source code makes the
-application more portable and facilitates discovery of interesting
-trade-off opportunities using design space exploration.
+illustrate the trade-offs between accuracy and resource usage as shown
+in Figure \ref{fig:precision}.  We observe irregular, large variations
+when decreasing the mantissa from 18 16 and 24 to 22. The latter
+difference is unexpected, halving the number of required DSPs
+(although increasing the LUT and FF usage by 30\%), with little impact
+on accuracy. This is the effect of the backend tools implementing
+arithmetic operations using a combination of both DSPs and LUT/FF
+elements. The mantissa boundaries at which this optimization occurs
+are platform specific (depending on the architecture of the
+DSPs). Hence automating this optimization via aspects and decoupling
+it from the original source code makes the application more portable
+and facilitates discovery of interesting trade-off opportunities using
+design space exploration.
 
+\begin{figure}[!h]
+\includegraphics[scale=0.7]{figs/pre}
+\caption{Exploration of accuracy vs resource usage trade-offs.}
+\label{fig:precision}
+\end{figure}
 
+\begin{comment}
 \begin{table}[!h]
   %  \renewcommand{\arraystretch}{1.1}
   \centering
@@ -91,6 +103,9 @@ trade-off opportunities using design space exploration.
     8, 16      & 117904  (39.62\%) & 157359  (26.44\%) & 283  (26.60\%) & 204  (10.12\%)  & \TODO          \\
   \end{tabular}
 \end{table}
+\end{comment}
+
+
 
 Design space exploration using the parallelism aspect can be used to
 illustrate design scalability. Figure \ref{fig:scalability} shows that
@@ -124,10 +139,16 @@ significantly increase compilation time.
 
 
 The DSP aspect allows to explore the resource trade-offs of
-implementing arithmetic operations in either DSPs or LUTs and
-FFs. This can help avoiding over mapping on DSPs for arithmetic
-intensive applications.
+implementing arithmetic operations in either DSPs or LUTs and FFs as
+shown in Figure \ref{fig:arith}. This can help avoiding over mapping
+on DSPs for arithmetic intensive applications.
 
+\begin{figure}[!h]
+\includegraphics[scale=0.7]{figs/arith}
+\caption{Exploration of DSP and LUT/FF balancing for arithmetic
+  operations.}
+\label{fig:arith}
+\end{figure}
 
 Finally table \ref{speedup} shows speedups obtained by the MaxC
 dataflow design compared to CPU, GPU and other FPGA
