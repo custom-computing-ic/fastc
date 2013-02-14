@@ -57,12 +57,8 @@ void kernel_MyApp(
     for (int i=0; i <Par; i++)
         up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
 
-    s_float8_24 p[Par];
-    float8_24 pp_i[Par], dvv[Par], source[Par];
-
-    s_float8_24 pb[Par];
-    float8_24 ppb_i[Par], dvvb[Par];
-    float8_24 image[1][1];
+    s_float8_24 p[Par], pb[Par];
+    float8_24 pp_i[Par], dvv[Par], source[Par], ppb_i[Par], dvvb[Par], image[Par][Mul];
 
     for (int i=0; i < Par; i++) {
         cast2sff(p[i], burst_p[1*0+i], realType);
@@ -85,8 +81,8 @@ void kernel_MyApp(
     int32 f2 = i2 <  SPONGE        ? (SPONGE - i2) :
       ((i2 >= (n2 - SPONGE))? (i2-(n2-SPONGE)+1) : 0);
     int32 f2s= (f2 * f2);
-    int32 f1 = i1*1 <  SPONGE        ? (SPONGE - i1*1) :
-      ((i1 >= (n1 - SPONGE))? (i1*1-(n1-SPONGE)+1) : 0);
+    int32 f1 = i1* Par <  SPONGE        ? (SPONGE - i1* Par) :
+      ((i1 >= (n1 - SPONGE))? (i1* Par -(n1-SPONGE)+1) : 0);
     int32 f1s= (f1 * f1);
     int32 is = f1s + f2s + f3s;
 
