@@ -18,6 +18,34 @@ We distinguish four categories of aspects: \emph{system aspects},
 \emph{exploration aspects}, \emph{implementation aspects} and
 \emph{development aspects}.
 
+\newcommand{\blt}{\raise .2ex\hbox{\tiny$\bullet$ }}
+
+\begin{table}[tp]
+\caption{Types of Aspects}
+\centering
+\begin{tabular}{l|l|l}
+\hline
+\bf{Aspect Type} & \bf{Aspect Name} & \bf{Description} \\
+\hline
+\hline
+\multirow{3}{*}{system} & \multirow{2}{*}{\blt hw/sw partitioning} & capture mapping between  \\
+&   \multirow{2}{*}{\blt reconfiguration} & application modules and \\
+ & & GPP/GPU/FPGA accelerators\\
+\hline
+\multirow{3}{*}{exploration} & \multirow{2}{*}{\blt parameterisation} & generate multiple implemen- \\
+ & \multirow{2}{*}{\blt metaheuristic} & tations based on design  \\
+ & & space exploration strategies \\
+\hline
+\multirow{2}{*}{implementation} &\blt operator optimisation &  capture low-level hardware \\
+& \blt design configuration & optimisations  \\
+\hline 
+\multirow{3}{*}{development} & \blt simulation & \multirow{2}{*}{improve developer}  \\
+& \blt monitorisation & \multirow{2}{*}{productivity} \\
+& \blt compilation &  \\
+\hline
+\end{tabular}
+\label{tab:aspects}
+\end{table}
 
 \subsection{System Aspects}
 
