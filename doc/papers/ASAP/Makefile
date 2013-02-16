@@ -9,10 +9,10 @@ all: $(TARGET).pdf
 SRCS := $(shell find sections -name '*.tex')
 
 $(TARGET).pdf : $(TARGET).tex $(SRCS) 
-	$(COMPILE) $(TARGET).tex
-	$(BIBTEX) $(TARGET).aux
-	$(COMPILE) $(TARGET).tex
-	$(COMPILE) $(TARGET).tex
+	$(COMPILE) $(TARGET).tex || rm -rf $(TARGET).pdf
+	$(BIBTEX) $(TARGET).aux 
+	$(COMPILE) $(TARGET).tex || rm -rf $(TARGET).pdf
+	$(COMPILE) $(TARGET).tex || rm -rf $(TARGET).pdf
 
 
 # report.tex: $(MD_SOURCES)
