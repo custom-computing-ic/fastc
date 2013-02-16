@@ -14,6 +14,9 @@
 %\usepackage{ifpdf}
 \usepackage{cite}
 \usepackage{pgfplots}
+\usepackage{microtype}
+
+
 %\usepackage{booktabs}
 
 % *** GRAPHICS RELATED PACKAGES ***
@@ -165,7 +168,7 @@
 \usepackage{verbatim}
 \usepackage{multirow}
 \usepackage{multicol}
-\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{shapes,arrows,fit}
 
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, text width=4.5em,
 text badly centered, node distance=3cm, inner sep=0pt]
@@ -183,6 +186,18 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 \newcommand{\FIC}[1]{\reduline{#1}}
 
 %\usepackage[margin=1cm]{caption}
+
+\newcounter{nodemarkers}
+\newcommand\marktext[1]{%
+    \tikz[overlay,remember picture] 
+        \node (marker-\arabic{nodemarkers}-a) at (0,1.5ex) {};%
+    #1%
+    \tikz[overlay,remember picture]
+        \node (marker-\arabic{nodemarkers}-b) at (0,0){};%
+    \tikz[overlay,remember picture,inner sep=2pt]
+        \node[draw,dotted,rectangle,fit=(marker-\arabic{nodemarkers}-a.center) (marker-\arabic{nodemarkers}-b.center)] {};%
+    \stepcounter{nodemarkers}%
+}
 
 
 \begin{filecontents*}{code.txt}
@@ -205,13 +220,14 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 
 \lstdefinestyle{lara}{ language=C++, breaklines=true, % frame=tb,
   xleftmargin=2em, numbers=left, captionpos=b,
-  morekeywords={aspectdef, var, apply, select, condition, begin, end} }
+  morekeywords={aspectdef, var, apply, select, condition, begin, end, input} }
 
 \lstdefinestyle{MaxC}{language=C++, breaklines=true, %frame=tb,
   xleftmargin=2em, numbers=left,
   captionpos=b,basicstyle=\ttfamily\footnotesize,
   morekeywords={s_int32, int32, float8_24, sin_float8_24,
-    sout_float8_24, float8_24, s_int, s_float8_24, s_bool}}
+    sout_float8_24, float8_24, s_int, s_float8_24, s_bool},
+    deletekeywords={static}}
 
 \title{MaxC: Aspect Driven Compilation for \\ Dataflow Designs}
 
