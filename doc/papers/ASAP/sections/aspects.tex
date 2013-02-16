@@ -1,27 +1,24 @@
 \section{Aspects}
 
-Aspects are standalone modules used to capture cross-cutting concerns
-(such as logging or platform specific optimizations) and separate them
-from the original application code \cite{Kiczales:2001}. An aspect
-weaver reads the modules and generates appropriate code which is
-injected at the specified points in the source application. MaxC was
-designed to integrate with aspect weaving tools by using standard C99
-syntax. This allows MaxC specifications to describe the simplest form
-of a dataflow design while aspects specify decoupled optimization and
-transformation strategies that operate on this design. This make the
+Aspects are standalone modules that capture functional cross-cutting concerns 
+that are decoupled from the primary function a program. AspectJ~\cite{Kiczales:2001}, which is the standard language for Aspect-Oriented Programming (AOP),  captures program execution points (such as method calls), and allows new code to be executed before, after or in place of a particular execution point, through a run-time process called \emph{weaving}. The main motivation behind AspectJ in particular, and AOP in general, is to solve the modularization problem when dealing with multiple cross-cutting functional concerns. 
+
+The LARA aspect-oriented design-flow~\cite{Cardoso:Carvalho:Coutinho:Luk:Nobre:Diniz:Petrov:2012}, on the other hand, performs the weaving process at compile-time to satisfy non-functional concerns, such as to improve performance on a particular hardware platform. For this purpose, the LARA weaving process manipulates and transforms the application sources. These new generated sources (woven code) incoorporate the functional elements of the original sources and non-functional elements captured by the LARA aspects.
+
+In this paper, we combine the LARA aspect design-flow with MaxC dataflow designs. In particular, MaxC uses standard C99 syntax to capture dataflow computations while aspects specify decoupled optimization and transformation strategies that operate on MaxC descriptions. This makes the
 functionality of the application easier to understand, more
 maintainable and portable since it is no longer obscured by various
 structural or algorithmic transformations or platform specific
 optimizations.
 
-We distinguish four categories of aspects: \emph{system aspects},
-\emph{exploration aspects}, \emph{implementation aspects} and
-\emph{development aspects}.
+In this paper, we distinguish four categories of aspects (Table~\ref{tbl:aspects}): \emph{system aspects}, \emph{exploration aspects}, \emph{implementation aspects} and
+\emph{development aspects}, which we explain next.
 
 \newcommand{\blt}{\raise .2ex\hbox{\tiny$\bullet$ }}
 
 \begin{table}[tp]
 \caption{Types of Aspects}
+\label{tbl:aspects}
 \centering
 \begin{tabular}{l|l|l}
 \hline
@@ -32,8 +29,8 @@ We distinguish four categories of aspects: \emph{system aspects},
 &   \multirow{2}{*}{\blt reconfiguration} & application modules and \\
  & & GPP/GPU/FPGA accelerators\\
 \hline
-\multirow{3}{*}{exploration} & \multirow{2}{*}{\blt parameterisation} & generate multiple implemen- \\
- & \multirow{2}{*}{\blt metaheuristic} & tations based on design  \\
+\multirow{3}{*}{exploration} & \multirow{2}{*}{\blt metaheuristic} & generate multiple implemen- \\
+ & \multirow{2}{*}{\blt parameterisation} & tations based on design  \\
  & & space exploration strategies \\
 \hline
 \multirow{2}{*}{implementation} &\blt operator optimisation &  capture low-level hardware \\
@@ -44,22 +41,110 @@ We distinguish four categories of aspects: \emph{system aspects},
 & \blt compilation &  \\
 \hline
 \end{tabular}
-\label{tab:aspects}
 \end{table}
 
 \subsection{System Aspects}
 
 System aspects capture transformation or optimization strategies that
 affect the whole application such as those concerning
-hardware/software portioning, or run-time reconfiguration
-capabilities. The goal is to expose parallelism, improve communication
+hardware/software partitioning, or run-time reconfiguration
+capabilities. The goal is to improve communication
 between CPU and accelerator via hardware/software partitioning or
 remove idle functions from the accelerator using run-time
-reconfiguration. These aspects act on the original C application level
-as well as on the partitioned C (software) and MaxC design (hardware).
+reconfiguration. 
 
+As mentioned in the previous section, maxc functions can be embedded within the C application but cannot be invoked directly by software functions. Instead, a maxc pragma can be used on top of software functions definitions or C calls to indicate alternate hardware implementations. For instance, the following C code:
 
-\subsubsection{\TODO Reconfiguration}
+\noindent\texttt{\footnotesize\marktext{void maxc\_f() \{\emph{/* dataflow implementation */}\}} \\
+void f() \{\emph{/* software implementation */}\} \\
+\marktext{\#pragma maxc hw:maxc\_f} \\
+f(); \\
+}
+
+\noindent indicates that the software implementation of f() can be mapped to the dataflow implementation described in maxc\_f(). This way, the maxcc compiler can automatically switch from software to hardware implementations. 
+
+Hence, a hardware/software partitioning strategy can be performed in five steps: (i)~detecting hotspots in the program, (ii)~detecting code patterns from hotspots that are suited for dataflow computation and acceleration, (iii)~performing the outlining transformation so that each candidate for acceleration is enclosed in a function $f$, (iv)~deriving a dataflow version $max\_f$ from state-based $f$, (v)~placing a maxc pragma on top of each function call to $f$ associating it to the corresponding $maxc\_f$ function. Each of these steps can be described as separate LARA aspect and combined to form a hardware/software partitioning strategy. For instance, the following aspect can be used to find potential hotspots for step (i):
+
+\lstset{style=lara}
+\begin{lstlisting}
+aspectdef FindHotspots
+select function.loop{is_innermost} end
+apply 
+    $loop.insert before 
+       %{monitor_instanceI("[[$loop.key]]");}%;
+    $loop.insert after 
+       %{monitor_instanceE("[[$loop.key]]");}%;
+end
+
+select function.loop{is_innermost}.entry end
+apply $begin.insert after 
+       %{monitor_iterI("[[$loop.key]]");}%;
+end
+select function.loop{is_innermost}.exit end
+apply $begin.insert before 
+       %{monitor_iterE("[[$loop.key]]");}%;
+end
+end
+\end{lstlisting}
+
+\noindent The above aspect automatically instruments any C application to self-monitor its innermost loops at run-time, as they are natural candidates for dataflow-based acceleration. In particular, this monitorization aspect can compute for every innermost loop: (a) the average number of times it has been executed, (b) the average number of iterations, (c) the loop average time, and (d) the loop iteration average time. For this purpose, we use a monitoring API composed by 4 functions to mark the beginning and end of the loop (monitor\_instanceI and monitor\_instanceE respectively), and to mark the beginning and end of an iteration (monitor\_iterI and monitor\_iterE respectively). These monitoring functions keep an account of the frequency of execution and the time to complete the whole loop and a single interation.  The aspect code is as follows: Line~2 selects all loops in the application that are innermost (loops with no other loops enclosed); Lines~3--8 place an instance monitor call before and after each selected loop; Lines 10~13 select all entry points inside the loop and insert a monitoring call to mark the beginning of each iteration; Lines~14--17 place an instance monitor call to mark the end of each iteration. The following table shows an example of applying this aspect on a code containing a loop:
+
+{\footnotesize
+\fontfamily{pcr}\selectfont
+\begin{tabular}{l|l}
+\hline
+\bf{original code} & \bf{woven code}  \\
+\hline
+\hline
+void f() \{ & void f() \{ \\
+%\hspace{3ex}$\ldots$         & \hspace{3ex}$\ldots$ \\
+                             & \hspace{3ex}\marktext{monitor\_instanceI("f:1");} \\
+\hspace{3ex}while (i < N) \{ & \hspace{3ex}while (i < N) \{ \\
+                             & \hspace{6ex}\marktext{monitor\_iterI("f:1");} \\
+\hspace{6ex}i++;             & \hspace{6ex}i++; \\
+                             & \hspace{6ex}\marktext{monitor\_iterE("f:1");} \\
+\hspace{3ex}\}               & \hspace{3ex}\} \\                                 
+                             & \hspace{3ex}\marktext{monitor\_instanceE("f:1");} \\
+%\hspace{3ex}$\ldots$         & \hspace{3ex}$\ldots$ \\
+\hline
+\end{tabular}
+}
+\vspace{2ex}
+
+\noindent It can be seen in the woven code that each monitoring call receives as a parameter the loop key, which uniquely identifies the loop within the application. The loop key concatanates the function name with the position of the loop within the abstract syntax tree. For instance, \emph{f:2:1} corresponds to the 1st loop inside the 2nd outermost loop of function $f$. The hotspots can be identified by an aspect (not shown) that takes the profiling information generated by the monitorization API calls, and uses an heuristic to compute the most profitable computations to be offloaded to hardware.
+
+To support runtime reconfiguration, we specify the configuration associated with the function call in the maxc pragma. For instance:
+
+\noindent\texttt{\footnotesize{\marktext{\#pragma maxc hw:maxc\_f0 cfg:c0}\\
+x = f(0); \\
+\marktext{\#pragma maxc hw:maxc\_f1 cfg:c1}\\
+y = f(x); \\
+\marktext{\#pragma maxc hw:maxc\_g cfg:c1}\\
+z = g(x); \\
+}}
+
+\noindent With the above code annotations, the maxcc compiler can generate multiple configurations, each containing  a number of MaxC function implementations that can be executed in parallel. If the configuration name is not specified in the MaxC pragma, then the maxcc compiler assumes a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. Instead, these resources can be used to support active functions. For this purpose, we execute the whole application by selecting various configurations at different points in time to maximize the utilization of FPGA resources. A valid partition is a set of configurations that allows the system to   In the above example, the \emph{maxc\_f0} implementation is alone in configuration c0, and thus could use more resources and be potentially faster than the \emph{maxc\_f1} version which must share configuration \emph{c1} with \emph{maxc\_g}. 
+
+The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an approach for extracting valid and efficient partitions. To realize a partition, we use the following aspect:
+
+\lstset{style=lara}
+\begin{lstlisting}
+aspectdef ReconfigAspect
+input 
+   partition  
+end
+select function.call end 
+apply
+   if ($call.key in partition) {
+      var cfg = partition[$call.key];
+      $call.insert before %{ 
+         #pragma maxc cfg: [[cfg]] 
+      }%;
+   }
+end
+end
+\end{lstlisting}
+
 
 \subsection{Exploration aspects}
 
