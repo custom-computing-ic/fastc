@@ -2,38 +2,54 @@
 
 \subsection{Dataflow Languages}
 
+A number of dataflow languages have been developed targeting FPGAs but
+also multi-core platforms. Lucid \cite{ashcroft1977lucid} is an early
+example of a functional pipeline based dataflow language. No
+performance benefits are described in \cite{ashcroft1977lucid} and
+\cite{ashcroft1980some} shows that there are Lucid programs which
+cannot be converted to dataflow graphs. The language is platform
+agnostic, but no implementations for FPGAs exist -- only pLucid
+\cite{pLucid} for UNIX is available. SISAL \cite{gurd1987implicit},
+\cite{mcgraw1983sisal} is another example of a functional style
+dataflow programming language. It can be used to output a dataflow
+graph in the IF1 representation. Results show that parallel SISAL
+designs can be faster \cite{archambault2010fine} than C or Fortran on
+traditional shared memory multiprocessors but no figures exist for
+FPGA architectures. Various extensions for control flow and
+synchronization have been investigated in \cite{143862} and
+\cite{183202}. Lustre \cite{halbwachs1991synchronous} is a dataflow
+language based on the synchronous programming paradigm which is
+focused on building and proving the correctness of safety critical
+software \cite{halbwachs1992programming} rather than performance.  All
+approaches described so far use a functional programming style which
+would complicate the translation of existing imperative applications,
+the predominant style currently in use. Furthermore none have existing
+implementations for FPGAs, so a performance comparison is not possible
+and extensions would be required to support creation of
+high-performance designs that enable platform specific optimisations.
+Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
+ImpulseC\cite{ImpulseC} use a model based on Communicating Sequential
+Processes and introduce non-standard syntax and constructs for
+specifying designs such as special comment blocks which are used to
+annotate the C application code. This makes the languages harder to
+integrate with existing source-to-source translation or aspect weaving
+frameworks.
 
-Given the advantage that dataflow architectures have when implementing with
-uniform computation over general purpose-architecture, it is no
-surprise that a number of dataflow language have been developed
-targeting FPGAs but also multi-core platforms.
-
-\begin{itemize}
-
-\item Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
-  ImpulseC\cite{ImpulseC} (commercial version of Streams-C) use a model based on
-  Communicating Sequential Process. Streams-C designs are specified
-  using non-standard syntax such as special comment blocks which is
-  used to annotate C application code.
-
-\item StreamIt\cite{Thies:Karczmarek:Amarasinghe:2002} and Sequoia++
-  use a different, non-standard syntax which is not intuitive for new
-  users. This also complicates the translation process of existing
-  imperative code.
-
-\item MaxJ \cite{MaxelerTechnologies:2012} is a commercial
-  implementation which provides a Java API for constructing dataflow
-  designs. However, since the runtime library is C this means that
-  developers have to manage two separate project components which
-  complicates both interaction between them (e.g. if common design
-  parameters are to be shared) and the design space exploration
-  process. Additionally Java is a more verbose language and in most
-  designs this is not necessarily useful since we don't always benefit
-  that from high-level constructs. In C we can use macros to capture
-  repetitive patterns, but since C is not an Object Oriented language,
-  it can be considerably wore in terms of code reuse.
-
-\end{itemize}
+Hybrid approaches such as MaxCompiler \cite{MaxelerTechnologies:2012}
+exist that have been specifically designed for accelerating software
+applications with an FPGA based accelerator. MaxCompiler separates the
+CPU runtime part of the application from the accelerated part,
+providing an imperative C based runtime environment and a Java
+dataflow API for specifying the dataflow accelerator designs. This
+leads to a separation between the two components and complicates the
+development process, since developers have to manage the two
+separately (using two different languages and tool sets). This
+complicates information sharing between the two components (such as
+common design parameters) and, consequently, the design space
+exploration process. One of the advantages of using Java as a
+programming language is that it improves code modularisation but we
+find that in practice, dataflow designs rarely reach sizes which make
+this a serious benefit.
 
 \subsection{Aspect Driven Design}
 

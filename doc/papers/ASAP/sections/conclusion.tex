@@ -2,9 +2,21 @@
 
 In this paper we present an automated design flow for design space
 exploration of dataflow designs based on a novel language, MaxC, and
-aspect-driven compilation. We show that MaxC can be used to specify
-dataflow designs for interesting high-performance applications. We
-show that by using LARA to implement aspects that encapsulate
-structural transformations as well as design level transformations and
-development related transformations we can create maintainable and
-portable designs, increasing developer productivity.
+aspect-driven compilation. We show that our approach can be used to
+specify high-performance designs which achieve significant speedups of
+up to 100X over software only versions by exploiting the run-time
+reconfiguration capabilities of FPGAs. This is achieved using an
+automated compilation and design space exploration approach that
+increases developer productivity and improves design portability by
+allowing the optimisation process to be reproduced on other platforms.
+
+Future work includes extending our approach by introducing new system
+aspects that guide the translation and optimisation process from
+existing C applications to dataflow designs. This includes the
+development of system aspects that can be used to explore structural
+transformations of the original application that improve parallelism
+and computation versus communication ratio. The introduction of these
+aspects could lead to a transparent design flow, that does not require
+manual development of dataflow designs, greatly simplifying the
+translation of existing software applications to high-performance
+custom designs.
