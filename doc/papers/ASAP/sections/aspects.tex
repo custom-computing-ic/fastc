@@ -123,27 +123,52 @@ y = f(x); \\
 z = g(x); \\
 }}
 
-\noindent With the above code annotations, the maxcc compiler can generate multiple configurations, each containing  a number of MaxC function implementations that can be executed in parallel. If the configuration name is not specified in the MaxC pragma, then the maxcc compiler assumes a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. Instead, these resources can be used to support active functions. For this purpose, we execute the whole application by selecting various configurations at different points in time to maximize the utilization of FPGA resources. A valid partition is a set of configurations that allows the system to   In the above example, the \emph{maxc\_f0} implementation is alone in configuration c0, and thus could use more resources and be potentially faster than the \emph{maxc\_f1} version which must share configuration \emph{c1} with \emph{maxc\_g}. 
+\noindent With the above code annotations, the maxcc compiler can generate multiple configurations, each containing  a number of MaxC function implementations that can be executed in parallel. If the configuration name is not specified using the MaxC pragma, then the maxcc compiler assumes a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximize the utilization of FPGA resources. Within this context, we define a valid partition as a set of configurations that allows the system to complete an application. In the above example, configuration c0 contains a single implementation for f (\emph{maxc\_f0}), and thus could use more resources and be potentially faster than the \emph{maxc\_f1} version which must share configuration \emph{c1} with \emph{maxc\_g}. 
 
-The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an approach for extracting valid and efficient partitions. To realize a partition, we use the following aspect:
+The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an approach for extracting valid and efficient partitions. To realize runtime reconfiguration with maxcc, and experiment the effects of multiple partitions without modifying the original sources, we use the following aspect:
 
 \lstset{style=lara}
 \begin{lstlisting}
 aspectdef ReconfigAspect
 input 
-   partition  
+   partition 
 end
 select function.call end 
 apply
    if ($call.key in partition) {
-      var cfg = partition[$call.key];
+      var cfg = partition[$call.key].cfg;
+      var hw = partition[$call.key].hw;      
       $call.insert before %{ 
-         #pragma maxc cfg: [[cfg]] 
+         #pragma maxc hw:[[hw]] cfg:[[cfg]] 
       }%;
    }
 end
 end
 \end{lstlisting}
+
+\noindent The input to the aspect is a partition (lines 2--4). The partition is implemented as 
+a hash table that maps a function call (key) to a hardware implementation, represented as tuple containing the hardware implementation name (hw) and the configuration name (cfg). An example of a hash table is as follows:
+
+{\footnotesize
+\fontfamily{pcr}\selectfont
+\begin{tabular}{c|c|c}
+\hline
+\multicolumn{3}{c}{\bf{partition}} \\
+\hline
+\bf{\$call.key} & \bf{hw} & \bf{cfg}  \\
+\hline
+main:f:1 & maxc\_f0 & c0 \\
+main:f:2 & maxc\_f1 & c1 \\
+main:g:3 & maxc\_g & c1 \\
+\hline
+\end{tabular}
+}
+
+
+
+
+The hash table key uniquely identifies a function call in the application. The key (e.g. main:f:1) is formed by concatanating the name of the caller function (main), the name of the invoked function (e.g. f) and a counter (1).  Line~5 in the aspect above selects all function calls, and for each call found in the partition (line~7), we set the appropriate pragma on top of the invocation (lines 10--12). 
+
 
 
 \subsection{Exploration aspects}
@@ -152,11 +177,7 @@ Exploration deal with strategies that generate multiple designs based
 on parametrisation and can act on any level of the design flow (C
 code, C and MaxC, or MaxC design). They enable systematic exploration
 of trade-offs and. An example LARA aspect for design space exploration
-is show below. It highlights the feedback capabilities of the design
-flow: the aspect will generate a MaxC designs and build the DFE
-configuration until this passes a specified LUT threshold, at each
-step increasing the parallelism of the design (by replicating the
-computational pipeline).
+is shown below. For instance, we can generate
 
 \lstset{style=lara}
 \begin{lstlisting}
