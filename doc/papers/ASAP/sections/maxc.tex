@@ -21,7 +21,7 @@ required by the proposed flow:
   Figure \ref{fig:maxc-1dconv} can be compiled with the GCC toolchain
   without any issues, but when using the MaxC compiler, the pragma
   indicates the link between the software and hardware, which results
-  in an accelerated SW/HW solution.
+  in an accelerated hardware software/solution.
 \item Supports datapath and control path generation. MaxC allows
   specifying both datapath and control operations that are
   automatically mapped to stream multiplexers.
@@ -32,9 +32,6 @@ while optimizations and other transformations are encapsulated in
 aspects which are developed separately and applied through aspect
 weaving. This results in a more flexible approach for generating and
 exploring the space of efficient dataflow designs.
-
-
-
 
 Since MaxC is compiled to MaxJ it uses the same execution model: a
 design is composed of one or more computational kernels (which
