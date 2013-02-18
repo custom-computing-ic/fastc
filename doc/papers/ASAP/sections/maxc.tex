@@ -4,7 +4,7 @@
 MaxC is a novel language for specifying dataflow designs that are used
 as a starting point for the design proposed in Section
 \ref{sec:design-flow}. MaxC provides the following features that are
-are required by the proposed flow:
+required by the proposed flow:
 
 \begin{itemize}
 \item Imperative specification of dataflow designs. Being based on the
@@ -12,29 +12,37 @@ are required by the proposed flow:
   developers, facilitating translation of existing application code to
   dataflow designs.
 \item Good interaction with existing source level translation and
-  weaving tools. The simple syntax of C99 facilitates integration with
-  other tools (such as aspect weavers), allowing the language to
-  interact well with existing compilers or source to source
-  translation frameworks (e.g. LARA, ROSE), allowing source level
-  optimizations to be applied through different tools.
+  weaving tools. Simple syntax allows the language to interact well
+  with existing compilers or source to source translation frameworks,
+  allowing source level optimizations to be applied through different
+  tools.
 \item Combined hardware/software design. Specifications of dataflow
   kernels and CPU runtime software can be mixed. The example shown in
   Figure \ref{fig:maxc-1dconv} can be compiled with the GCC toolchain
-  without any issues, but when using maxcc, the pragma indicates the
-  link between the software and hardware, which results in an
-  accelerated SW/HW solution.
+  without any issues, but when using the MaxC compiler, the pragma
+  indicates the link between the software and hardware, which results
+  in an accelerated SW/HW solution.
 \item Supports datapath and control path generation. MaxC allows
   specifying both datapath and control operations that are
-  automatically mapped to stream multiplexers. This increases the
-  flexibility in specifying designs without degrading performance.
+  automatically mapped to stream multiplexers.
 \end{itemize}
 
-MaxC itself is a simple language, which is intended to be used for
-expressing the simplest form of a dataflow design. Optimizations and
-other transformations are encapsulated in aspects which are developed
-separately and applied through aspect weaving. This results in a more
-flexible approach for generating and exploring the space of efficient
-dataflow designs.
+MaxC is designed to express the simplest form of a dataflow design
+while optimizations and other transformations are encapsulated in
+aspects which are developed separately and applied through aspect
+weaving. This results in a more flexible approach for generating and
+exploring the space of efficient dataflow designs.
+
+
+
+
+Since MaxC is compiled to MaxJ it uses the same execution model: a
+design is composed of one or more computational kernels (which
+implement the functionality we are interested in) which are connected
+to form a design. Communication between kernels is asynchronous, so
+kernels can operate independently of each other but computation within
+kernels is synchronous, so a kernel will compute only when all it's
+active inputs have values available.
 
 \begin{table}[!h]
   \centering
@@ -45,153 +53,87 @@ dataflow designs.
 \hline
 \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
 \hline\hline
-  \multirow{2}{*}{Input/Output}         & Declared in kernel header          & C99 (line 1)                                 \\\cline{2-3}       & Connected in kernel body  & MaxC API (lines 4,17) \\
+  \multirow{2}{*}{Input/Output}         & Declared in kernel header          & C99 (line 1)                                 \\\cline{2-3}       & Connected in kernel body  & MaxC API (lines 2,11) \\
 \hline
-  \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 15)                                \\\cline{2-3}      & Stream multiplexing       & MaxC API  \\
+  \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 11)                                \\\cline{2-3}      & Stream multiplexing       & MaxC API  \\
 \hline
-  \multirow{2}{*}{Computation} & +, *, /, -                         & C99 (lines 10--13)                           \\\cline{2-3} & log, exp, sqrt, sin etc.  & \#include $<$math.h$>$  \\
+\multirow{2}{*}{Computation} & +, *, /, -                         & C99 (line 8)                           \\\cline{2-3} & log, exp, sqrt, sin etc.  & \#include $<$math.h$>$  \\
 \hline
-  \multirow{2}{*}{Streams}     & Declared as pointers               & C99 (line 1)                                 \\\cline{2-3}       & Accessed with array index & C99 (lines 11--13) \\
+  \multirow{2}{*}{Streams}     & Declared as pointers               & C99 (line 1)                                 \\\cline{2-3}       & Accessed with array index & C99 (line 8) \\
 \hline
-  Optimization                 & Compiler pragmas                   & C99 (line 9)                                 \\
+  Optimization                 & Compiler pragmas                   & C99 (line 7)                                 \\
 \hline
   Parameterization             & Loops, variables                   & C99                                          \\
 \hline
-HW mapping                  & Compiler pragmas                   & C99 (line 24)                                \\
+HW mapping                  & Compiler pragmas                   & C99 (line 17)                                \\
 
 \end{tabular}
 \end{table}
+
+Table \ref{table:maxc-features} summarizes the features of MaxC and
+Figure \ref{fig:maxc-1dconv} shows an example dataflow kernel which
+implements a 1D convolution computation used to value European
+options.  Kernels are defined as regular C functions with inputs
+clearly defined in the kernel header. Streams are represented as
+regular C99 pointers.  Normal array notation can be used to generate
+either previous or future values or dereference the stream to get the
+current stream value. Negative indices are allowed for accessing
+previous stream values and supported offset expressions are linear
+expressions comprised of constants or variables (either loop induction
+variables, or normal variables but for which a compile time range of
+values is specified -- this is required to generate efficient
+hardware). Constructs such as loops are supported as long as their
+bounds are known at compile time and are used to parametrize dataflow
+designs with values known at compilation time.
 
 \lstset{style=MaxC}
 
 \begin{figure}[!h]
   \begin{lstlisting}
-    void kernel_Convolution1D(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER)
-    {
-
+    void Convolution1D_FPGA(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER) {
       in(p);
 
       float* i4 = count(1000, 1);
       float* i1 = countChain(n1, 1, i4);
 
       #pragma maxc DSPBalance:full
-      int result =
-        p[0]  * c_0_0_0 +
-        p[1]  * c_p_0_0 +
-        p[-1] * c_n_0_0;
+      int result = p[0]  * c_0_0_0 + p[1]  * c_p_0_0 + p[-1] * c_n_0_0;
 
       int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
-
       out(up ? result : p);
     }
 
-    void Convolution1D(...) {...}
+    void Convolution1D_CPU(...) {...}
 
     int main() {
-      ...
-      #pragma maxc hw:kernel_Convolution1D
-      Convolution1D(...);
+      #pragma maxc hw:Convolution1D_FPGA
+      Convolution1D_CPU(...);
     }
   \end{lstlisting}
   \caption{Example MaxC design for a 1D convolution kernel.}
   \label{fig:maxc-1dconv}
 \end{figure}
 
-Since MaxC is compiled to MaxJ it uses the same execution model: a
-design is composed of one or more computational kernels (which
-implement the functionality we are interested in) which are connected
-to form a design. Communication between kernels is asynchronous, so
-kernels can operate independently of each other but computation within
-kernels is synchronous, so a kernel will compute only when all it's
-active inputs have values available.
 
-Table \ref{table:maxc-features} summarizes the features of MaxC and
-Figure \ref{fig:maxc-1dconv} shows an example dataflow kernel which
-implements a 1D convolution computation used to value European
-options.  Kernels are defined as regular C functions, with the
-``kernel\_'' identifier prepended (Line 1). The inputs and outputs of
-the kernel are clearly specified in the header, inputs followed by
-outputs. Streams are represented as regular C99 pointers. For example
-Line 2 declares a stream of float values names ``p''.  Normal array
-notation can be used to generate either previous (negative indices) or
-future values (positive indices) or dereference the stream to get the
-current stream value. Negative indices are allowed (as on Line 16). On
-lines 13-16 we use array index notation to access future (positive
-offset) or past (negative offset) stream elements. Supported offset
-expressions are linear expressions comprised of constants or variables
-(either loop induction variables, or normal variables but for which a
-compile time range of values is specified -- this is required to
-generate efficient hardware).  Compile time constructs such as loops
-are supported as long as their bounds are known at compile time. These
-allow a to parametrise the dataflow design with values known at
-compilation time.
+The MaxC API provides a number of higher-level constructs, such as I/O
+functions, various counter configurations that can be instantiated
+using functions from the counter API (Figure \ref{fig:maxc-1dconv},
+Lines 4 -- 5) or functions that are used to multiplex streams.
 
-The MaxC API provides a number of higher-level constructs, such as
-output functions that are used to connect an internal kernel stream to
-the output stream of a kernel, various counter configurations that can
-be instantiated using functions from the counter API (Lines 9 -- 10)
-or functions that are used to multiplex streams.
-
-At the kernel level MaxC captures these dataflow elements by using:
+At the kernel level these dataflow elements are represented using:
 
 \begin{itemize}
 \item \emph{regular C constructs} are used as much as possible to make
   the language more intuitive. This includes standard C99 types and
   conventions for implementing kernels. Some overloaded operators are
   provided such as the array access operators to provide a more
-  succinct syntax for accessing ``past'' or ``future'' stream elements
-  (Lines 15 -- 17).
+  succinct syntax for accessing past or future stream elements;
 
 \item \emph{pragma directives} are used to convey additional
   information to the compiler for which C99 does not provide flexible
-  built-in constructs (e.g. specifying type width) or additional
-  optimization hints (e.g. the DSP balance, Line 13);
+  built-in constructs (e.g. type width) or additional optimization
+  hints (e.g. DSP balance, Line 7);
 
-\item \emph{specific API calls} are used for higher level constructs
-  such as inputs and outputs (Lines 8, 24), counters (Lines 10 -- 11).
+\item \emph{specific API calls} are used for higher level constructs.
 
 \end{itemize}
-
-
-\begin{comment}
-\subsection{Designs}
-
-MaxC also allows specification of designs using multiple kernels. This
-involves selecting the kernel instances and connecting them as well as
-setting a number of design configuration and compilation options such
-as operating frequency.
-
-Figure \ref{lst:maxc-design} illustrates the design for the 1D
-convolution example which places and connects memory command kernels
-to control the generation of memory streams and the actual computation
-kernels.
-
-On Lines 3-6 we specify the kernel instances. On Lines 8 -- 10 we
-connect these. Lines 13 -- 15 specify the design frequency, the memory
-clock frequency and enable the addition of debug elements.
-
-\begin{figure}[!h]
-  \centering
-  \begin{lstlisting}
-    void design_Convolution1D() {
-      // kernels
-      kernel_t k1 = kernel_init(kernel_Convolution1D);
-      kernel_t k2 = kernel_init(kernel_Cmdwrite);
-      kernel_t k3 = kernel_init(kernel_Cmdread);
-
-      // connections
-      connect2(k1, k2);
-      connect3(k1, k2, ``a'');
-      connect4(k1, k3, ``a'', ``b'');
-
-      // configuration
-      set_frequency(150);
-      set_memory_frequency(333);
-      set_enable_debug(true);
-    }
-  \end{lstlisting}
-  \caption{MaxC design specification, connecting multiple kernels and
-    setting various configuration options}
-  \label{lst:maxc-design}
-\end{figure}
-\end{comment}
