@@ -2,13 +2,20 @@
 
 In this paper we present an automated design flow for design space
 exploration of dataflow designs based on a novel language, MaxC, and
-aspect-driven compilation. We show that our approach can be used to
-specify high-performance designs which achieve significant speedups of
-up to 100X over software only versions by exploiting the run-time
-reconfiguration capabilities of FPGAs. This is achieved using an
-automated compilation and design space exploration approach that
-increases developer productivity and improves design portability by
-allowing the optimisation process to be reproduced on other platforms.
+aspect-driven compilation. We show that this approach meets the
+initial performance, portability, integration and productivity
+requirements. We implement a high performance dataflow design for RTM
+to show that our approach can be used to achieve significant speedups
+of up to 100X over software only versions by exploiting the run-time
+reconfiguration capabilities of FPGAs. The automated optimization
+process driven by exploration and implementation aspects improves
+productivity and design portability, allowing optimisations strategies
+to be automatically adapted to various platforms. Compilation aspects
+can be used to identify design configurations that improve compilation
+speed, further speeding up the development process. Finally MaxC is
+more concise than MaxJ (based on the number LOC count) and maintaining
+compatibility with C99 simplifies the translation of existing
+applications.
 
 Future work includes extending our approach by introducing new system
 aspects that guide the translation and optimisation process from
