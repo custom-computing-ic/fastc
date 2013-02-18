@@ -36,8 +36,7 @@ productivity. Finally, systematic design space exploration is used to
 identify maximum performance configurations, subject to platform
 specific constraints.
 
-The proposed design flow is illustrated in Figure
-\ref{fig:design-flow} and follows the steps: (i) a C application
+The proposed design flow is illustrated in Fig.~\ref{fig:design-flow} and follows the steps: (i) a C application
 containing an embedded high-level dataflow design is developed from
 the original source application (implemented using MaxC, described in
 Section \ref{sec:maxc}), (ii) the dataflow design is transformed
@@ -62,14 +61,8 @@ Compared to existing work described in
 \cite{cardoso2011new} our approach emphasises and provides more
 freedom in the exploration of design level optimization (such as word
 length optimizations and mapping of arithmetic blocks to DSPs) by
-using a combination of implementation aspects (shown in Figure
-\ref{fig:design-flow}) and MaxC optimization options.  Additionally
+using a combination of implementation aspects (shown in Fig.~\ref{fig:design-flow}) and MaxC optimization options.  Additionally
 our approach targets a dataflow architecture as opposed to the von
 Neumann architecture (GPP + Custom accelerator) proposed in the
 related work. We explicitly consider and implement run-time
-reconfiguration to achieve performance improvements. Finally we use
-the C language itself to capture the dataflow computation and instead
-of heavily relying on API libraries to specify the design (as in MaxJ
-\cite{MaxelerTechnologies:2012} or Streams-C
-\cite{Gokhale:Stone:Arnold:Kalinowski:2000}) we use aspects to
-implement the transformations required for the actual implementation.
+reconfiguration to achieve performance improvements. 

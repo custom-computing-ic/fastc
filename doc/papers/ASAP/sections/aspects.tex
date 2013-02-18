@@ -151,7 +151,7 @@ z = g(x); \\
 The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
 approach for extracting valid and efficient hardware partitions. To realize
 runtime reconfiguration with maxcc without modifiying the original code we use the
-aspect shown in Figure \ref{fig:aspect-reconf}.  The input to the
+aspect shown in Fig.~\ref{fig:aspect-reconf}.  The input to the
 aspect is a hardware partition (lines 2--4). The partition is implemented as a
 hash table that maps a function call (key) to a hardware
 implementation, represented as tuple containing the hardware
@@ -215,7 +215,7 @@ Aspects can be used to enable design space exploration of resource
 usage vs. accuracy trade-offs by varying the word
 lengths. Alternatively we can use them to explore resource trade-offs
 by mapping computation to specialised FPGA blocks. For example, the
-aspect in Figure \ref{fig:aspect-DSP} can be used to map arithmetic
+aspect in Fig.~\ref{fig:aspect-DSP} can be used to map arithmetic
 expressions to DSP blocks. We define the DSP balance factor to be used
 (none, normal, full), the granularity (which decides if we break up
 arithmetic expressions to insert DSP Factors between them) and the
@@ -269,14 +269,13 @@ Aspects steps:
     int result = result + p[-1] * c_n_0_0;
   \end{lstlisting}
   \caption{One possible result of applying
-    \texttt{OptimizeDSPUsage(full, fine, 2)} to Lines 13 -- 17 of Figure
-    \ref{fig:maxc-1dconv}.}
+    \texttt{OptimizeDSPUsage(full, fine, 2)} to Lines 13--17 of Fig.~\ref{fig:maxc-1dconv}.}
   \label{fig:maxc-1dconv-aspect}
 \end{figure}
 
-Figure \ref{fig:maxc-1dconv-aspect} shows one of the possible results
+Fig.~\ref{fig:maxc-1dconv-aspect} shows one of the possible results
 of applying the aspect \texttt{OptimizeDSPUsage(full, fine, 2 } to
-Lines 13 -- 17 of Figure \ref{fig:maxc-1dconv}.
+Lines 13--17 of Fig.~\ref{fig:maxc-1dconv}.
 
 Using LARA we can implement and combine these aspects to enable
 systematic design space exploration of all the optimisations options
@@ -289,7 +288,7 @@ adjust the compilation process.
 \subsection{Iterative Design Exploration Aspect}
 
  An example LARA aspect for design space exploration is
-shown in Figure \ref{fig:aspect-exploration}. It highlights the feedback capabilities of the design
+shown in Fig.~\ref{fig:aspect-exploration}. It highlights the feedback capabilities of the design
 flow: the aspect will generate and build the MaxC designs until the
 resource usage passes a specified LUT threshold, at each step
 increasing the parallelism of the design (by replicating the

@@ -3,7 +3,14 @@
 
 MaxC is a novel language for specifying dataflow designs that are used
 as a starting point for the design proposed in Section
-\ref{sec:design-flow}. MaxC provides the following features that are
+\ref{sec:design-flow}. In particular, we use
+the C language as an intermediate language to capture the dataflow computation, and instead
+of heavily relying on API libraries to specify the design (as in MaxJ
+\cite{MaxelerTechnologies:2012} or Streams-C
+\cite{Gokhale:Stone:Arnold:Kalinowski:2000}) we use aspects to
+implement the transformations required for the actual implementation.
+
+MaxC provides the following features that are
 required by the proposed flow:
 
 \begin{itemize}
@@ -18,7 +25,7 @@ required by the proposed flow:
   tools.
 \item Combined hardware/software design. Specifications of dataflow
   kernels and CPU runtime software can be mixed. The example shown in
-  Figure \ref{fig:maxc-1dconv} can be compiled with the GCC toolchain
+  Fig.~\ref{fig:maxc-1dconv} can be compiled with the GCC toolchain
   without any issues, but when using the MaxC compiler, the pragma
   indicates the link between the software and hardware, which results
   in an accelerated hardware software/solution.
@@ -50,25 +57,25 @@ active inputs have values available.
 \hline
 \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
 \hline\hline
-  \multirow{2}{*}{Input/Output}         & Declared in kernel header          & C99 (line 1)                                 \\\cline{2-3}       & Connected in kernel body  & MaxC API (lines 2,11) \\
+  \multirow{2}{*}{Input/Output}         & Declared in function header          & C99 (line 1)                                 \\\cline{2-3}       & \texttt{in()},\texttt{out()}  & MaxC API (lines 2,11) \\
 \hline
-  \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 11)                                \\\cline{2-3}      & Stream multiplexing       & MaxC API  \\
+  \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 11)                                \\\cline{2-3}      & Stream mux (\texttt{mux()})       & MaxC API  \\
 \hline
 \multirow{2}{*}{Computation} & +, *, /, -                         & C99 (line 8)                           \\\cline{2-3} & log, exp, sqrt, sin etc.  & \#include $<$math.h$>$  \\
 \hline
   \multirow{2}{*}{Streams}     & Declared as pointers               & C99 (line 1)                                 \\\cline{2-3}       & Accessed with array index & C99 (line 8) \\
 \hline
-  Optimization                 & Compiler pragmas                   & C99 (line 7)                                 \\
+  Optimization                 & C pragmas                   & C99 (line 7)                                 \\
 \hline
-  Parameterization             & Loops, variables                   & C99                                          \\
+  Parameterization             & Constants, variables                   & C99                                          \\
 \hline
-HW mapping                  & Compiler pragmas                   & C99 (line 17)                                \\
+HW mapping                  & C pragmas                   & C99 (line 17)                                \\
 
 \end{tabular}
 \end{table}
 
-Table \ref{table:maxc-features} summarizes the features of MaxC and
-Figure \ref{fig:maxc-1dconv} shows an example dataflow kernel which
+Table~\ref{table:maxc-features} summarizes the features of MaxC and
+Fig.~\ref{fig:maxc-1dconv} shows an example dataflow kernel which
 implements a 1D convolution computation used to value European
 options.  Kernels are defined as regular C functions with inputs
 clearly defined in the kernel header. Streams are represented as
@@ -112,25 +119,20 @@ designs with values known at compilation time.
 \end{figure}
 
 
-The MaxC API provides a number of higher-level constructs, such as I/O
-functions, various counter configurations that can be instantiated
-using functions from the counter API (Figure \ref{fig:maxc-1dconv},
-Lines 4 -- 5) or functions that are used to multiplex streams.
+The MaxC API provides a limited number of higher-level constructs, such as I/O
+functions (\texttt{in()} and \texttt{out()}, counters (Fig.~\ref{fig:maxc-1dconv},
+Lines 4--5) and functions to multiplex streams (\texttt{mux()}).
 
-At the kernel level these dataflow elements are represented using:
-
-\begin{itemize}
-\item \emph{regular C constructs} are used as much as possible to make
-  the language more intuitive. This includes standard C99 types and
-  conventions for implementing kernels. Some overloaded operators are
-  provided such as the array access operators to provide a more
-  succinct syntax for accessing past or future stream elements;
-
-\item \emph{pragma directives} are used to convey additional
-  information to the compiler for which C99 does not provide flexible
-  built-in constructs (e.g. type width) or additional optimization
-  hints (e.g. DSP balance, Line 7);
-
-\item \emph{specific API calls} are used for higher level constructs.
-
-\end{itemize}
+%At the kernel level these dataflow elements are represented using:
+%\begin{itemize}
+%\item \emph{regular C constructs} are used as much as possible to make
+%  the language more intuitive. This includes standard C99 types and
+%  conventions for implementing kernels. Some overloaded operators are
+%  provided such as the array access operators to provide a more
+%  succinct syntax for accessing past or future stream elements;
+%\item \emph{pragma directives} are used to convey additional
+%  information to the compiler for which C99 does not provide flexible
+%  built-in constructs (e.g. type width) or additional optimization
+%  hints (e.g. DSP balance, Line 7);
+%\item \emph{specific API calls} are used for higher level constructs.
+%\end{itemize}
