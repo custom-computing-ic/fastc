@@ -184,6 +184,7 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 \newcommand\reduline{\bgroup\markoverwith
   {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
 \newcommand{\FIC}[1]{\reduline{#1}}
+\newcommand{\blt}{\raise .2ex\hbox{\tiny$\bullet$ }}
 
 %\usepackage[margin=1cm]{caption}
 
@@ -198,21 +199,6 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
         \node[draw,dotted,rectangle,fit=(marker-\arabic{nodemarkers}-a.center) (marker-\arabic{nodemarkers}-b.center)] {};%
     \stepcounter{nodemarkers}%
 }
-
-
-\begin{filecontents*}{code.txt}
-    static uint64_t i = 0;
-    void every_cycle()
-    {
-        if (i > 0)
-            i--;
-    }
-
-        uint64_t next_num()
-    {
-        return (i += 0x100);
-    }
-\end{filecontents*}
 
 \begin{document}
 

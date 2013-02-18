@@ -14,7 +14,7 @@ optimizations.
 In this paper, we distinguish four categories of aspects (Table~\ref{tbl:aspects}): \emph{system aspects}, \emph{exploration aspects}, \emph{implementation aspects} and
 \emph{development aspects}, which we explain next.
 
-\newcommand{\blt}{\raise .2ex\hbox{\tiny$\bullet$ }}
+
 
 \begin{table}[tp]
 \caption{Types of Aspects}
@@ -262,7 +262,7 @@ apply
                       >= gprofile[k]);}}
       if (match) {
          var pragma = '#pragma maxc balanceDSP:'
-                      + gprofile.DspFactor;
+                      + gprofile.aDspFactor;
          $statement.insert before "[[pragma]]";
          break;}}
    end
