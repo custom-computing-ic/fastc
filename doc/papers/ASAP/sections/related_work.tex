@@ -1,45 +1,35 @@
 \section{Related Work}
 
-\subsection{Dataflow Languages}
-
 A number of dataflow languages have been developed targeting FPGAs but
 also multi-core platforms. Table \ref{table:feature-comparison}
 summarizes some of the important features of these languages compared
-to MaxC. Lucid \cite{ashcroft1977lucid} and SISAL
-\cite{gurd1987implicit}, \cite{mcgraw1983sisal} are examples of
-functional pipelined dataflow programming languages. Performance
-results for the latter show that parallel SISAL applications can be
-faster \cite{archambault2010fine} than C or Fortran on traditional
-shared memory multiprocessors. Lustre \cite{halbwachs1991synchronous}
-is a dataflow language based on the synchronous programming paradigm
-which is focused on building and proving the correctness of safety
-critical software \cite{halbwachs1992programming} rather than
-performance.  All three approaches use a functional programming style
-which would complicate the translation of existing imperative
-applications. None have existing implementations for FPGAs, so a
-performance comparison is not possible and extensions would be
-required to support creation of high-performance designs that enable
-platform specific optimisations.
+to MaxC. Lucid \cite{ashcroft1977lucid}, SISAL
+\cite{gurd1987implicit}, \cite{mcgraw1983sisal} and Lustre
+\cite{halbwachs1991synchronous}, are examples of functional dataflow
+languages. The latter is based on a synchronous programming model,
+facilitating safety verification for critical software
+\cite{halbwachs1992programming} rather than performance. The
+functional programming style complicates the translation of existing
+imperative applications and none have existing implementations for
+FPGAs, so a performance comparison is not possible.
 Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
 ImpulseC\cite{ImpulseC} use imperative ANSI C syntax and an execution
 model based on Communicating Sequential Processes and introduce
 non-standard syntax and constructs for specifying designs such as
 special comment blocks which are used to annotate the C application
 code. This makes the languages harder to integrate with existing
-source-to-source translation or aspect weaving frameworks.
-
-Hybrid approaches such as MaxCompiler \cite{MaxelerTechnologies:2012}
-separate the CPU runtime part of the application from the accelerated
-part, providing an imperative C based runtime environment and a Java
-dataflow API for building the accelerator designs. This leads to a
-separation between the two components and complicates the development
-process, since developers have to manage the two separately. This
-complicates information sharing between the two components (such as
-common design parameters) and, consequently, the design space
+source-to-source translation or aspect weaving frameworks. Hybrid
+approaches such as MaxCompiler \cite{MaxelerTechnologies:2012}
+separate the CPU runtime component from the accelerated one, providing
+an imperative C based runtime environment and a Java dataflow API for
+building the accelerator designs. This separation complicates the
+development process, since the two components have to be managed
+separately and hinders information sharing between the two components
+(such as common design parameters) and, consequently, the design space
 exploration process.
 
 \begin{table}[!h]
-  \renewcommand{\arraystretch}{1.3}
+  \renewcommand{\arraystretch}{1.2}
   \centering
   \caption{Feature comparison of MaxC and other dataflow languages.}
   \label{table:feature-comparison}
@@ -57,28 +47,17 @@ exploration process.
   \end{tabular}
 \end{table}
 
-\subsection{Aspect Driven Compilation}
-
 The use of LARA aspects in guiding the compilation process of C
 application is also described in
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} but the backend compilation targets a von
-Neumann architecture (GPP + custom accelerator units). The dataflow
-architecture proposed in this paper can lead to larger speedups and
-efficiency gains for data intensive, uniform applications. The
-approach described in
-\cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
-\cite{cardoso2011new} relies on high-level source transformation
+Neumann architecture (GPP + custom accelerator units) unlike the
+dataflow architecture proposed in this paper. The approach described
+in \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
+\cite{cardoso2011new} relies more on high-level source transformation
 whereas our approach is based on a more systematic design level
-exploration process. By specifying dataflow kernels in MaxC we are
-able to use the aspects to guide the optimization and design space
-exploration process at hardware design level, which enables the
-analysis of more low-level optimisations (e.g. finely adjusting word
-width and mapping of various arithmetic operations to DSP
-blocks). Additional, dataflow specific optimizations such as adjusting
-the pipelining degree of the circuit to trade-off between resource
-usage and operating frequency can also be explored using our
-approach. Finally,
+exploration process, which enables the analysis of more low-level
+optimisations. Finally,
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} do not consider development aspects which can be
 used to improve developer productivity and run-time reconfiguration
