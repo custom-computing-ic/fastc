@@ -17,16 +17,16 @@ repository we:
 \item apply the set of specific low-level optimizations comprised in
   the strategy (e.g. setting DSP balance).
 
-\item  we compile the optimized
-  design using the MaxCC backend to MaxJ
+\item compile the optimized design using the MaxCC backend to MaxJ
 
-\item we start the backend compilation toolchain (MaxCompiler
+\item start the backend compilation toolchain (MaxCompiler
   and Xilinx) and perform an analysis of the reporting information,
   based on which we either restart the flow with the next optimization
   strategy step or proceed to the next step
 
-\item we measure NFRs such as performance or latency and if our target
-  is not met we restart using a different optimization strategy
+\item measure non-functional requirements such as performance or
+  latency and if our target is not met we restart using a different
+  optimization strategy
 
 \end{enumerate}
 \begin{comment}
@@ -77,4 +77,3 @@ repository we:
   \caption{The proposed design flow.}
   \label{fig:design-flow}
 \end{figure}
-

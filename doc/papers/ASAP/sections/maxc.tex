@@ -52,11 +52,11 @@ options.
 
       #pragma maxc DSPBalance:full
       int result =
-      p[0]  * c_0_0_0 +
-      p[1]  * c_p_0_0 +
-      p[-1] * c_n_0_0;
+        p[0]  * c_0_0_0 +
+        p[1]  * c_p_0_0 +
+        p[-1] * c_n_0_0;
 
-      int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
+      int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
 
       out = up ? result : p;
 
