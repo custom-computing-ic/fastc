@@ -1,46 +1,65 @@
 \section{The  MaxC Language}
 
-MaxC is a novel language for specifying dataflow designs. It is based
-on the widely used C99 standard which makes it familiar and easy to
-adopt for developers facilitating translation of existing application
-code to dataflow designs. The simple syntax of C99 facilitates
-integration with other tools (such as aspect weavers), allowing the
-language to interact well with existing compilers or source to source
-translation frameworks (e.g. LARA, ROSE), allowing source level
-optimizations to be applied through different tools. MaxC itself is a
-simple language, which is intended to be used for expressing the
-simplest form of a dataflow design. Optimizations and other
-transformations are encapsulated in aspects which are developed
+MaxC is a novel language for specifying dataflow designs.
+
+\begin{itemize}
+\item Imperative specification of dataflow designs. Behind based on the
+  widely used C99 standard makes it familiar and easy to adopt for
+  developers, facilitating translation of existing application code to
+  dataflow designs.
+\item Good interaction with existing source level translation and
+  weaving tools. The simple syntax of C99 facilitates integration with
+  other tools (such as aspect weavers), allowing the language to
+  interact well with existing compilers or source to source
+  translation frameworks (e.g. LARA, ROSE), allowing source level
+  optimizations to be applied through different tools.
+\item Combined hardware/software design. Specifications of dataflow
+  kernels and CPU runtime software can be mixed. The example shown in
+  Figure \ref{fig:maxc-1dconv} can be compiled with the GCC toolchain
+  without any issues, but when using maxcc, the pragma indicates the
+  link between the software and hardware, which results in an
+  accelerated SW/HW solution.
+\item Supports datapath and control path generation. MaxC allows
+  specifying both datapath and control operations that are
+  automatically mapped to stream multiplexers. This increases the
+  flexibility in specifying designs without degrading performance.
+\end{itemize}
+
+MaxC itself is a simple language, which is intended to be used for
+expressing the simplest form of a dataflow design. Optimizations and
+other transformations are encapsulated in aspects which are developed
 separately and applied through aspect weaving. This results in a more
 flexible approach for generating and exploring the space of efficient
-dataflow designs.
+dataflow designs. Table \ref{table:maxc-features} summarizes the
+features of MaxC and Figure \ref{fig:maxc-1dconv} shows an example
+dataflow kernel which implements a 1D convolution computation used to
+value European options.
 
-\begin{comment}
-  We identify the following requirements for any dataflow language:
-  \begin{enumerate}
-  \item intuitive and easy to use
-  \item facilitate translation of existing applications
-  \item interacts well with
-    high-level tools
-  \end{enumerate}
-\end{comment}
-
-Since MaxC is compiled to MaxJ it uses the same execution model: a
-design is composed of one or more computational kernels (which
-implement the functionality we are interested in) which are connected
-to form a design. Communication between kernels is asynchronous, so
-kernels can operate independently of each other but computation within
-kernels is synchronous, so a kernel will compute only when all it's
-active inputs have values available.
-
-Figure \ref{fig:maxc-1dconv} shows an example MaxC dataflow kernel
-which implements a 1D convolution computation used to value European
-options.
-
+\begin{table}[!h]
+  \centering
+\renewcommand{\arraystretch}{1.2}
+\caption{Table summarizing the features of the MaxC language.}
+\label{table:maxc-features}
+\begin{tabular}{c|c|c|c}
+  \hline
+  \bf{Feature}         & \bf{Description}                & \bf{Method} & \bf{Lines} \\ \hline \hline
+  \multirow{2}{*}{I/O} & \blt Declared  in kernel header & Declaration & 1          \\
+  \                    & \blt Connected  in kernel body  & API call    & 4, 17      \\ \hline
+  Control              & \blt Ternary op., If statement  & C99 Syntax  & 15         \\
+                       & \blt Stream multiplexing        & API Call    & --         \\ \hline
+  Computation          & \blt +, *, /, -                 & C99 Syntax  & 10 -- 13   \\
+                       & \blt log, exp, sqrt, sin etc.   & math.h      & --         \\ \hline
+  Streams              & \blt Declared as pointers       & Declaration & 1          \\
+                       & \blt Accessed with array index  & C99 Syntax  & 11 -- 13   \\ \hline
+  Optimization         & \blt Compiler pragmas                    & C99 Syntax  & 9          \\ \hline
+  Parametrization      & \blt Loops, variables           & C99 Syntax  & --         \\   \hline
+HW/SW mapping          & \blt Compiler pragmas                    & C99 Syntax  & 24         \\
+\end{tabular}
+\end{table}
 
 \lstset{style=MaxC}
 
-\begin{figure}
+\begin{figure}[!h]
   \begin{lstlisting}
     void kernel_Convolution1D(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER, float* out)
     {
@@ -58,14 +77,28 @@ options.
 
       int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
 
-      out = up ? result : p;
+      out(up ? result : p);
+    }
 
-      out(out);
+    void Convolution1D(...) {...}
+
+    int main() {
+      ...
+      #pragma maxc hw:kernel_Convolution1D
+      Convolution1D(...);
     }
   \end{lstlisting}
   \caption{Example MaxC design for a 1D convolution kernel.}
   \label{fig:maxc-1dconv}
 \end{figure}
+
+Since MaxC is compiled to MaxJ it uses the same execution model: a
+design is composed of one or more computational kernels (which
+implement the functionality we are interested in) which are connected
+to form a design. Communication between kernels is asynchronous, so
+kernels can operate independently of each other but computation within
+kernels is synchronous, so a kernel will compute only when all it's
+active inputs have values available.
 
 \subsection{Kernels}
 
