@@ -40,20 +40,27 @@ value European options.
 \renewcommand{\arraystretch}{1.2}
 \caption{Table summarizing the features of the MaxC language.}
 \label{table:maxc-features}
-\begin{tabular}{c|c|c|c}
-  \hline
-  \bf{Feature}         & \bf{Description}               & \bf{Method} & \bf{Fig. \ref{fig:maxc-1dconv} Line} \\ \hline \hline
-  \multirow{2}{*}{I/O} & \blt Declared in kernel header & Declaration & 1                                     \\
-  \                    & \blt Connected in kernel body  & API call    & 4, 17                                 \\ \hline
-  Control              & \blt Ternary op., If statement & C99 Syntax  & 15                                    \\
-                       & \blt Stream multiplexing       & API Call    & --                                    \\ \hline
-  Computation          & \blt +, *, /, -                & C99 Syntax  & 10 -- 13                              \\
-                       & \blt log, exp, sqrt, sin etc.  & math.h      & --                                    \\ \hline
-  Streams              & \blt Declared as pointers      & Declaration & 1                                     \\
-                       & \blt Accessed with array index & C99 Syntax  & 11 -- 13                              \\ \hline
-  Optimization         & \blt Compiler pragmas          & C99 Syntax  & 9                                     \\ \hline
-  Parametrization      & \blt Loops, variables          & C99 Syntax  & --                                    \\   \hline
-HW/SW mapping          & \blt Compiler pragmas          & C99 Syntax  & 24                                    \\
+\begin{tabular}{c|l|l}
+\hline
+\bf{Feature}         & \bf{Description}               & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\ 
+\hline\hline
+  \multirow{2}{*}{I/O} & Declared in kernel header & C99 (line 1) \\\cline{2-3}
+                       & Connected in kernel body  & MaxC API (lines 4,17) \\ 
+\hline
+  \multirow{2}{*}{Control}  &  Ternary op., \texttt{if} statement & C99 (line 15) \\\cline{2-3}
+                            & Stream multiplexing       & MaxC API  \\ 
+\hline
+  \multirow{2}{*}{Computation}  & +, *, /, -  & C99 (lines 10--13) \\\cline{2-3}
+                               & log, exp, sqrt, sin etc.  & \#include $<$math.h$>$  \\ 
+\hline
+  \multirow{2}{*}{Streams}              &  Declared as pointers      & C99 (line 1) \\\cline{2-3}
+                       & Accessed with array index & C99 (lines 11--13) \\
+\hline
+  Optimization         & Compiler pragmas          & C99 (line 9) \\ 
+\hline
+  Parameterization      & Loops, variables          & C99  \\   
+\hline
+HW/SW mapping          & Compiler pragmas          & C99 (line 24)   \\
 \end{tabular}
 \end{table}
 
