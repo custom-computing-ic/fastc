@@ -1,9 +1,13 @@
 \section{The  MaxC Language}
+\label{sec:maxc}
 
-MaxC is a novel language for specifying dataflow designs.
+MaxC is a novel language for specifying dataflow designs that are used
+as a starting point for the design proposed in Section
+\ref{sec:design-flow}. MaxC provides the following features that are
+are required by the proposed flow:
 
 \begin{itemize}
-\item Imperative specification of dataflow designs. Behind based on the
+\item Imperative specification of dataflow designs. Being based on the
   widely used C99 standard makes it familiar and easy to adopt for
   developers, facilitating translation of existing application code to
   dataflow designs.
@@ -38,22 +42,22 @@ value European options.
 \begin{table}[!h]
   \centering
 \renewcommand{\arraystretch}{1.2}
-\caption{Table summarizing the features of the MaxC language.}
+\caption{Table summarizing the main components of the MaxC language.}
 \label{table:maxc-features}
-\begin{tabular}{c|c|c|c}
+\begin{tabular}{l|l|c|p{.75cm}}
   \hline
-  \bf{Feature}         & \bf{Description}               & \bf{Method} & \bf{Fig. \ref{fig:maxc-1dconv} Line} \\ \hline \hline
-  \multirow{2}{*}{I/O} & \blt Declared in kernel header & Declaration & 1                                     \\
-  \                    & \blt Connected in kernel body  & API call    & 4, 17                                 \\ \hline
-  Control              & \blt Ternary op., If statement & C99 Syntax  & 15                                    \\
-                       & \blt Stream multiplexing       & API Call    & --                                    \\ \hline
-  Computation          & \blt +, *, /, -                & C99 Syntax  & 10 -- 13                              \\
-                       & \blt log, exp, sqrt, sin etc.  & math.h      & --                                    \\ \hline
-  Streams              & \blt Declared as pointers      & Declaration & 1                                     \\
-                       & \blt Accessed with array index & C99 Syntax  & 11 -- 13                              \\ \hline
-  Optimization         & \blt Compiler pragmas          & C99 Syntax  & 9                                     \\ \hline
-  Parametrization      & \blt Loops, variables          & C99 Syntax  & --                                    \\   \hline
-HW/SW mapping          & \blt Compiler pragmas          & C99 Syntax  & 24                                    \\
+  \bf{Feature}                 & \bf{Description}               & \bf{Method} & \bf{Fig. \ref{fig:maxc-1dconv} } \\ \hline \hline
+  \multirow{2}{*}{I/O}         & \blt Declared in kernel header & Decl.       & 1                                \\
+  \                            & \blt Connected in kernel body  & API         & 4, 17                            \\ \hline
+  \multirow{2}{*}{Control}     & \blt Ternary op., If statement & C99         & 15                               \\
+                               & \blt Stream multiplexing       & API         & --                               \\ \hline
+  \multirow{2}{*}{Computation} & \blt +, *, /, -                & C99         & 10, 13                           \\
+                               & \blt log, exp, sqrt, sin etc.  & math.h      & --                               \\ \hline
+  \multirow{2}{*}{Streams}     & \blt Declared as pointers      & Decl.       & 1                                \\
+                               & \blt Accessed with array index & C99         & 11, 13                           \\ \hline
+  Optimization                 & \blt Compiler pragmas          & C99         & 9                                \\ \hline
+  Parametrization              & \blt Loops, variables          & C99         & --                               \\ \hline
+  HW Mapping                   & \blt Compiler pragmas          & C99         & 24                               \\
 \end{tabular}
 \end{table}
 
@@ -100,8 +104,6 @@ kernels can operate independently of each other but computation within
 kernels is synchronous, so a kernel will compute only when all it's
 active inputs have values available.
 
-\subsection{Kernels}
-
 Kernels are defined as regular C functions, with the ``kernel\_''
 identifier prepended (Line 1). The inputs and outputs of the kernel
 are clearly specified in the header, inputs followed by outputs. At
@@ -126,7 +128,8 @@ the kernel level MaxC captures the dataflow elements by using:
 \end{itemize}
 
 
-Figure \ref{fig:maxc-1dconv} shows the main elements of a MaxC design:
+Some of the main elements of a MaxC design are illustrated in Figure
+\ref{fig:maxc-1dconv} and summarised in Table \ref{table}.
 
 \begin{enumerate}
 \item \emph{inputs and outputs} are declared in the kernel header and
