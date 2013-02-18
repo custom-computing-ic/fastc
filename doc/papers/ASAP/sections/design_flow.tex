@@ -21,47 +21,35 @@ addressing key areas in developing hardware acceleration solutions:
   boilerplate code automatically.
 \end{enumerate}
 
-We propose to address these requirements as follows:
-\begin{itemize}
-\item We introduce MaxC (described in Section \ref{sec:maxc}), a novel
-  language for specifying dataflow designs that provides support for
-  run-time reconfiguration. We specify the accelerated portion of the
-  original applications using MaxC dataflow kernels;
-\item By maintaining compatibility with the C99 standard we improve
-  developer productivity by providing a familiar language and
-  introduce the possibility of mixing hardware/software
-  specifications;
-\item By using an aspect driven compilation flow we decouple
-  optimization from design development, improving design portability,
-  and we automate the generation of code and design space exploration
-  improving productivity. Finally, systematic design space exploration
-  is used to identify maximum performance configurations, subject to
-  platform specific constraints.
-\end{itemize}
-
-
+To meet these requirements we propose the following approach. Firstly,
+we introduce MaxC (described in Section \ref{sec:maxc}), a novel
+language for specifying dataflow designs that provides support for
+run-time reconfiguration. We specify the accelerated portion of the
+original applications using MaxC dataflow kernels. By maintaining
+compatibility with the C99 standard we improve developer productivity
+by providing a familiar language and introduce the possibility of
+mixing hardware/software specifications. Secondly, by using an aspect
+driven compilation flow we decouple optimization from design
+development, improving design portability, and we automate the
+generation of code and design space exploration improving
+productivity. Finally, systematic design space exploration is used to
+identify maximum performance configurations, subject to platform
+specific constraints.
 
 The proposed design flow is illustrated in Figure
-\ref{fig:design-flow} and follows the steps described below:
-\begin{enumerate}
-\item The starting point is a C application containing an embedded
-  high-level dataflow design. In our approach the latter is
-  implemented using MaxC.
-\item This is ``woven'' using the aspects in the aspect repository to
-  generate new designs. The various categories of aspects are covered
-  in more detail in Section \ref{sec:aspects}. For example the
-  runtime reconfiguration aspect is responsible for partitioning and
-  scheduling the application in a manner that achieves maximum
-  performance. Design exploration aspects are used to control the
-  design space exploration process based on feedback from the backend
-  tools and user input (e.g. resource usage threshold)
-\item Finally these are compiled using a backend compilation toolchain
-  to FPGA designs. Our implementation uses MaxCompiler and translates
-  the MaxC dataflow designs to MaxJ.  The feedback from the
-  compilation process is used to drive the design space exploration
-  process, repeating the weaving and compilation process until user
-  specified requirements are met.
-\end{enumerate}
+\ref{fig:design-flow} and follows the steps: (i) a C application
+containing an embedded high-level dataflow design is developed from
+the original source application (implemented using MaxC, described in
+Section \ref{sec:maxc}), (ii) the dataflow design is transformed
+(``woven'') by the aspects in the repository to generate new designs
+(e.g with support for run-time reconfiguration, with various
+word-length configurations and various compilation times -- these are
+covered in detail in Section \ref{sec:aspects}), (iii) the generated
+configurations are compiled using a backend compilation toolchain (in
+our case MaxCompiler) to FPGA designs, (iv) the feedback from the
+compilation process is used to drive the design space exploration,
+repeating the weaving and compilation process until user specified
+requirements are met.
 
 Compared to existing work described in
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
