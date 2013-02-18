@@ -60,7 +60,7 @@
 % http://www.tug.org/applications/pdftex
 
 \usepackage[cmex10]{amsmath}
-
+%\usepackage{amssymb}
 
 % *** SPECIALIZED LIST PACKAGES ***
 %
@@ -189,7 +189,7 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 
 \newcounter{nodemarkers}
 \newcommand\marktext[1]{%
-    \tikz[overlay,remember picture] 
+    \tikz[overlay,remember picture]
         \node (marker-\arabic{nodemarkers}-a) at (0,1.5ex) {};%
     #1%
     \tikz[overlay,remember picture]

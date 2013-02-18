@@ -3,24 +3,26 @@
 \subsection{Dataflow Languages}
 
 A number of dataflow languages have been developed targeting FPGAs but
-also multi-core platforms. Lucid \cite{ashcroft1977lucid} is an early
-example of a functional pipeline based dataflow language. No
-performance benefits are described in \cite{ashcroft1977lucid} and
-\cite{ashcroft1980some} shows that there are Lucid programs which
-cannot be converted to dataflow graphs. The language is platform
-agnostic, but no implementations for FPGAs exist -- only pLucid
-\cite{pLucid} for UNIX is available. SISAL \cite{gurd1987implicit},
-\cite{mcgraw1983sisal} is another example of a functional style
-dataflow programming language. It can be used to output a dataflow
-graph in the IF1 representation. Results show that parallel SISAL
-designs can be faster \cite{archambault2010fine} than C or Fortran on
-traditional shared memory multiprocessors but no figures exist for
-FPGA architectures. Various extensions for control flow and
-synchronization have been investigated in \cite{143862} and
-\cite{183202}. Lustre \cite{halbwachs1991synchronous} is a dataflow
-language based on the synchronous programming paradigm which is
-focused on building and proving the correctness of safety critical
-software \cite{halbwachs1992programming} rather than performance.  All
+also multi-core platforms. Table \ref{table:feature-comparison}
+summarizes some of the important features of these languages compared
+to MaxC. Lucid \cite{ashcroft1977lucid} is an early example of a
+functional pipeline based dataflow language. No performance benefits
+are described in \cite{ashcroft1977lucid} and \cite{ashcroft1980some}
+shows that there are Lucid programs which cannot be converted to
+dataflow graphs. The language is platform agnostic, but no
+implementations for FPGAs exist -- only pLucid \cite{pLucid} for UNIX
+is available. SISAL \cite{gurd1987implicit}, \cite{mcgraw1983sisal} is
+another example of a functional style dataflow programming
+language. It can be used to output a dataflow graph in the IF1
+representation. Results show that parallel SISAL designs can be faster
+\cite{archambault2010fine} than C or Fortran on traditional shared
+memory multiprocessors but no figures exist for FPGA
+architectures. Various extensions for control flow and synchronization
+have been investigated in \cite{143862} and \cite{183202}. Lustre
+\cite{halbwachs1991synchronous} is a dataflow language based on the
+synchronous programming paradigm which is focused on building and
+proving the correctness of safety critical software
+\cite{halbwachs1992programming} rather than performance.  All
 approaches described so far use a functional programming style which
 would complicate the translation of existing imperative applications,
 the predominant style currently in use. Furthermore none have existing
@@ -51,31 +53,68 @@ programming language is that it improves code modularisation but we
 find that in practice, dataflow designs rarely reach sizes which make
 this a serious benefit.
 
-\subsection{Aspect Driven Design}
-
-
-\subsection{Comparison with Other Dataflow Languages}
-
-Table \ref{table:feature-comparison} summarizes the features of MaxC
-in comparison with other languages described in the related works
-section.
-
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.3}
   \centering
   \caption{Feature comparison of MaxC and other dataflow languages.}
   \label{table:feature-comparison}
-  \begin{tabular}{ l | c |  p{1cm} |  p{1cm} |  c |  c }
-    Language  & Syntax & FPGA Support & Execution Model & Debugging & Simulation \\ \hline
-    MaxJ      & -      & -            & -               & -         & -          \\
-    Streams-C & -      & -            & -               & -         & -          \\
-    ImpulseC  & -      & -            & -               & -         & -          \\
-    StreamIt  & -      & -            & -               & -         & -          \\
-    Sequoia++ & -      & -            & -               & -         & -          \\
-    MaxC      & -      & -            & -               & -         & -          \\
+  \begin{tabular}{ c |  c |  c |  c |  c }
+    \hline
+    \         & \bf{Syntax} & \bf{Paradigm} & \bf{Impl.} & \bf{HW/SW} \\
+    \hline \hline
+    Lucid     & Lucid       & Func.         & Multiproc. & N/A        \\
+    SISAL     & SISAL       & Func.         & Multiproc  & N/A        \\
+    Lustre    & Lustre      & Sync.         & Multiproc  & N/A        \\
+    MaxJ      & C \& Java   & Imp.          & FPGA       & N          \\
+    Streams-C & C           & Imp./CSP      & FPGA       & -          \\
+    ImpulseC  & C           & Imp./CSP      & FPGA       & -          \\
+    MaxC      & C           & Imp           & FPGA       & Y          \\
   \end{tabular}
 \end{table}
 
+\subsection{Aspect Driven Compilation}
+
+The use of LARA aspects in guiding the compilation process of C
+application is also described in
+\cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
+\cite{cardoso2011new} describe. The approach described in both papers
+relies on high-level source transformation such as loop optimisations
+(e.g. blocking, fission, tilling) that improve memory reference
+locality, reduce communication overhead with the accelerator and
+improve parallelism allowing the mapping of computation to multiple
+cores. The backend for the compilation process is the CatapultC
+\cite{CatapultC} compiler which targets a von Neumann architecture
+consisting of a general purpose processor with custom accelerator
+units to which the computation is mapped. The dataflow architecture
+proposed in this paper leads to larger speedups and efficiency gains
+for data intensive, uniform applications. Additionally our approach is
+based on more systematic design level exploration. By specifying
+dataflow kernels in MaxC we are able to use the aspects to guide the
+optimization and design space exploration process at hardware design
+level, which enables the analysis of more low-level optimisations
+(such as finely adjusting word width and mapping of various arithmetic
+operations to DSP blocks). Additional, dataflow specific optimizations
+such as adjusting the pipelining degree of the circuit to trade-off
+between resource usage and operating frequency can also be explored
+using our approach. Finally,
+\cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
+\cite{cardoso2011new} do not mention development aspects -- used to
+improve developer productivity -- and do not include aspects for
+run-time reconfiguration that can lead to improved performance.
+
+The use of aspect-oriented programming and LARA for specifying
+strategies that enable run-time adaptation of FPGA designs to varying
+inputs is discussed in \cite{6322875}. This is different than the
+static process considered in this paper in which the run-time
+reconfiguration aspects generate and schedule all partitions of the
+application at compile time, to achieve optimal performance as
+described in \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}. One advantage of
+our approach is that an optimal allocation is generated which does not
+have to wait for the implementation to adapt itself to the optimal
+configuration. However we do not have the flexibility of adapting the
+design to the input conditions, for example we will not be able to
+adapt our implementation if we detect a change in the input pattern
+(e.g. if less precision is required to perform computations).
 
 \begin{comment}
   \subsubsection{Translation}
