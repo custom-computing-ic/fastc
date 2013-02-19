@@ -17,30 +17,31 @@ expansion in time.
 We use MaxC to implement the dataflow kernels and aspects to generate
 multiple configurations for the design by creating two kernels that
 are used to control the memory command read and write streams
-(CmdRead, CmdWrite) and the computation kernel (RTM). Table
-\ref{table:loc} compares the number of lines of code, person-months
-and development cost required to implement the kernels in MaxC and
-MaxJ, based on the basic COCOMO model\cite{boehm1984software}. The
-25\% reduction in code size results from removing the Java boilerplate
-code (import statements, class definitions etc) and simplifying
-computation, stream offset expressions and some commonly used API
-calls (e.g. for creating counters).
+(CmdRead, CmdWrite) and the computation kernel (RTM).  To illustrate
+the potential benefits of our approach we analyse the results of using
+the \texttt{DebugValues} aspect described in Section
+\ref{sec:dbg-aspect}.  Table \ref{table:loc} compares the number of
+lines of code required for the original MaxC + Aspect implementation
+with the equivalent MaxJ implementation showing a reduction in code
+size of 56\% for the run-time reconfigurable design and a reduction in
+the number of API calls (including debug calls) of 33\% which
+translate into increase productivity.
 
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.3}
   \centering
-  \caption{Measures based on the COCOMO model for the RTM kernels comparing the MaxC and MaxJ
-    implementation. Generated using David A. Wheeler's 'SLOCCount'.}
+  \caption{Code measures for the RTM kernels comparing MaxC and
+    MaxJ.}
   \label{table:loc}
-  \begin{tabular}{c|ccc|ccc}
+  \begin{tabular}{c|ccc|cc}
     \hline
-    \multirow{2}{*}{\bf{Kernel}} & \multicolumn{3}{c|}{\bf{MaxC}} & \multicolumn{3}{c}{\bf{MaxJ}}                       \\
-    \                            & \bf{LOC}                       & \bf{PM} & \bf{Cost} & \bf{LOC} & \bf{PM} & \bf{Cost} \\
+    \multirow{2}{*}{\bf{Kernel}} & \bf{Aspect } & \multicolumn{2}{c|}{\bf{MaxC}} & \multicolumn{2}{c}{\bf{MaxJ}}                   \\
+    \                            & \bf{LOC}     & \bf{LOC}                       & \bf{\# API calls} & \bf{LOC} & \bf{\#API Calls} \\
     \hline \hline
-    CmdRead                      & 26                             & 0.05    & 585       & 39       & 0.08    & 896       \\
-    CmdWrite                     & 28                             & 0.06    & 633       & 47       & 0.10    & 1090      \\
-    RTM Static                   & 246                            & 0.55    & 6916      & 303      & 0.36    & 4100      \\
-    RTM RTR                      & 377                            & 0.83    & 9393      & 469      & 1.05    & 12812     \\
+    CmdRead                      & 12           & 26                             &      6         & 59       &      39        \\
+    CmdWrite                     & 12           & 28                             &      39        & 79      &       56         \\
+    RTM Static                   & 12           & 246                            &     43         & 403     &       175        \\
+    RTM RTR                      & 12           & 377                            &     91         & 669     &       275       \\
   \end{tabular}
 \end{table}
 
