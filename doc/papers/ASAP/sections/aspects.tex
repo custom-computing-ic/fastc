@@ -9,7 +9,7 @@ The LARA aspect-oriented design-flow~\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Di
 In this paper, we combine the LARA aspect design-flow with MaxC dataflow designs. In particular, MaxC uses standard C99 syntax to capture dataflow computations while aspects specify decoupled optimization and transformation strategies that operate on MaxC descriptions. This makes the
 functionality of the application easier to understand, more
 maintainable and portable since it is no longer obscured by various
-structural or algorithmic transformations, and platform specific
+structural or algorithmic transformations, as well as platform specific
 optimizations. In addition, strategies coded in LARA can be re-applied automatically in different applications, thus improving design productivity.
 
 In this paper, we report four types of aspects (Table~\ref{tbl:aspects}) used with MaxC designs:
@@ -21,19 +21,28 @@ capabilities. The goal of hardware/software partitioning is to improve the overa
 execution time by identifying parts of the code to be offloaded to hardware (Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the application code to extract run-time behaviour, and uncover opportunities for optimisation (Section~\ref{sect:asp_mon}). Runtime reconfiguration (Section~\ref{sect:asp_reconfig}) removes idle functions from the accelerator at specific points in time, to use more resources for functions that are active.
 
 \vspace*{0.5ex}
-\noindent{\bf Implementation Aspects.} Implementation aspects focus on low level design optimizations that can be applied to the MaxC designs in order to improve timing or resource usage. For instance, operator optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map operators in the program to dedicated hardware resources.
+\noindent{\bf Implementation Aspects.} Implementation aspects focus on low level design optimizations that can be applied to the MaxC designs in order to improve timing or resource usage. For instance, operator optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map operators in the program to dedicated hardware resources. Word-length aspects
+specify the numerical representation of variables and expressions in the design.
 
 \vspace*{0.5ex}
 \noindent{\bf Exploration Aspects.} Exploration aspects deal with strategies that generate multiple designs to find optimal design based on user requirements. Exploration aspects can act on any level of the design flow (C code, C and MaxC, or MaxC functions). They enable
-systematic exploration of trade-offs and optimisation opportunities. Examples of exploration aspects include simple iterative and metaheuristic.
+systematic exploration of trade-offs and optimisation opportunities. Examples of exploration aspects include iterative aspects (Section~\ref{sect:asp_it}) which generate a sequence of solutions until a termination criteria is satisfied, and metaheuristic-based aspects to find optimal solutions in a very large design space.
 
 \vspace*{0.5ex}
 \noindent{\bf Development Aspects.} Development aspects capture transformations that have an impact on the
-development process such as debugging, simulating kernels or improving
+development process such as debugging (Section~\ref{sect:asp_debug}), simulating kernels or improving
 compilation speed. Separating these concerns makes the original
 application code easier to maintain and enables the automatic
 application of these transformations to a wide range of designs, thus
-improving developer productivity.
+improving developer productivity. The goal for the MaxC kernel simulation model is that it should be possible to compile and run dataflow designs using the standard GCC
+toolchain in order to verify the logical correctness of the
+design. Hence, simulation aspects can be applied to the original dataflow design to
+enable pure software simulation. Compilation aspects, on the other hand, can be applied during the development process to create versions of the dataflow design that compile faster. They apply
+changes such as reducing the operating frequency, removing debug
+blocks or applying design-level optimizations that can resolve timing
+constraints. Naturally reducing the compilation time increases
+developer productivity.
+
 
 \begin{table}[tp]
 \caption{Types of Aspects used in MaxC}
@@ -46,13 +55,13 @@ improving developer productivity.
 \hline
 \multirow{3}{*}{system} & \blt hw/sw partitioning & capture mapping between  \\
                         & \blt monitorisation & application modules and \\
-                        & \blt reconfiguration & GPP/GPU/FPGA accelerators\\
+                        & \blt reconfiguration & GPP/FPGA accelerators\\
 \hline
 \multirow{2}{*}{implementation} &\blt operator optimisation &  capture low-level hardware \\
-& \blt design configuration & optimisations  \\
+& \blt word-length spec & optimisations  \\
 \hline
-\multirow{3}{*}{exploration} & \multirow{2}{*}{\blt metaheuristic} & generate multiple implemen- \\
- & \multirow{2}{*}{\blt iterative} & tations based on design  \\
+\multirow{3}{*}{exploration} & \multirow{2}{*}{\blt iterative} & generate multiple implemen- \\
+ & \multirow{2}{*}{\blt metaheuristic} & tations based on design  \\
  & & space exploration strategies \\
 \hline
 \multirow{3}{*}{development} & \blt simulation & \multirow{2}{*}{improve developer}  \\
@@ -73,7 +82,7 @@ void f() \{\emph{/* software implementation */}\} \\
 f(); \\
 }
 
-\noindent indicates that the software implementation of f() can be mapped to the dataflow implementation described in maxc\_f(). This way, the maxcc compiler can automatically switch from
+\noindent indicates that the software implementation of f() can be mapped to the dataflow implementation described in maxc\_f(). This way, our design-flow can automatically switch from 
 a pure software application to a software/hardware design.
 
 Hence, a hardware/software partitioning strategy can be performed in five steps: (i)~detecting hotspots in the program, (ii)~detecting code patterns from hotspots that are suited for dataflow computation and acceleration, (iii)~performing the outlining transformation so that each candidate for acceleration is enclosed in a function $f$, (iv)~deriving a dataflow version $max\_f$ from state-based $f$, (v)~placing a maxc pragma on top of each function call to $f$ and associate it to the corresponding $maxc\_f$ function. Each of these steps can be described as separate LARA aspect and combined to form a hardware/software partitioning strategy.
@@ -132,7 +141,7 @@ void f() \{ & void f() \{ \\
 }
 \vspace{2ex}
 
-\noindent It can be seen in the woven code that each monitoring call receives as a parameter the loop key, which uniquely identifies the loop within the application. The loop key concatenates the function name with the position of the loop within the abstract syntax tree. For instance, \emph{f:2:1} corresponds to the 1st loop inside the 2nd outermost loop of function $f$. The hotspots can be identified by an aspect (not shown) that takes the profiling information generated by the monitorization API calls, and uses an heuristic to compute the most profitable computations to be offloaded to hardware.
+\noindent Each monitoring call in the woven code receives as a parameter the loop key, which uniquely identifies the loop within the application. The loop key is generated by concatenating the function name with the hierchical position of the loop within the abstract syntax tree. For instance, \emph{f:2:1} corresponds to the 1st loop inside the 2nd outermost loop of function $f$. The hotspots can be identified by an aspect (not shown) that takes the profiling information generated by the monitorization API calls, and that uses an heuristic to compute the most profitable computations to be offloaded to hardware.
 
 \subsection{Reconfiguration Aspect}
 \label{sect:asp_reconfig}
@@ -146,15 +155,15 @@ y = f(x); \\
 z = g(x); \\
 }}
 
-\noindent With the above code annotations, the maxcc compiler can generate multiple configurations, each containing  a number of MaxC function implementations that can be executed in parallel. If the configuration name is not specified using the MaxC pragma, then the maxcc compiler assumes a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximize the utilization of FPGA resources. Within this context, we use a hardware partition, which contains a set of configurations that are used to support reconfiguration during the life cycle of an application. In the above example, configuration c0 contains a single implementation of f (\emph{maxc\_f0}), and thus can potentially use more resources and be faster than the \emph{maxc\_f1} version which must share the same configuration (\emph{c1}) with \emph{maxc\_g}.
+\noindent With the above code annotations, our design-flow can generate multiple configurations, each containing a set of MaxC implementations that can be executed in parallel. If the configuration name is not specified using the MaxC pragma, then we assume a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximize the utilization of FPGA resources. Within this context, we use a hardware partition, which contains a set of configurations that are used to support reconfiguration during the life cycle of an application. In the above example, configuration c0 contains a single implementation of f (\emph{maxc\_f0}), and thus can potentially use more resources and be faster than the \emph{maxc\_f1} version which must share the same configuration (\emph{c1}) with \emph{maxc\_g}.
 
 The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
 approach for extracting valid and efficient hardware partitions. To realize
-runtime reconfiguration with maxcc without modifiying the original code we use the
+runtime reconfiguration without modifiying the original code we use the
 aspect shown in Fig.~\ref{fig:aspect-reconf}.  The input to the
 aspect is a hardware partition (lines 2--4). The partition is implemented as a
 hash table that maps a function call (key) to a hardware
-implementation, represented as tuple containing the hardware
+implementation, represented as a tuple containing the hardware
 implementation name (hw) and the associated configuration (cfg).
 
 \lstset{style=lara}
@@ -184,15 +193,15 @@ Table \ref{fig:aspect-hash} shows an example of a hash table representing
 a hardware partition. The key (e.g. main:f:1) identifies a function call in the application, and is
 formed by concatenating the name of the caller function (main), the name of the invoked function (e.g. f) and a
 unique number (1).  Line~5 in the aspect shown in Fig.~\ref{fig:aspect-reconf} selects all function calls,
-and for each call found in the partition (line~7), we set the
+and for each call found in the input partition (line~7), we set the
 appropriate pragma on top of the call statement (lines 10--12). We can now realize and experiment
-various reconfiguration designs by invoking this aspect with different hardware partitions.
+different reconfiguration designs by invoking this aspect with different hardware partitions.
 
 
 %{\footnotesize
 %\fontfamily{pcr}\selectfont
 \begin{table}[!h]
-\caption{An example of a hardware partition, represented as a hash table, used in the reconfiguration aspect (Fig.~\ref{fig:aspect-reconf})}
+\caption{An example of a hardware partition, represented as a hash table, used with the reconfiguration aspect (Fig.~\ref{fig:aspect-reconf})}
 \label{fig:aspect-hash}
 \centering
 \begin{tabular}{c|c|c}
@@ -225,7 +234,7 @@ number of independent applications.
 \begin{figure}[!h]
   \centering
   \begin{lstlisting}
-aspectdef dspFactor
+aspectdef DspBalancing
 var op_granularity =
  [{DspFactor: 'full', MultiplyOp: 20, AddOp: 5 },
   {DspFactor: 'normal', MultiplyOp: 3}];
@@ -251,32 +260,8 @@ end
   \label{fig:aspect-DSP}
 \end{figure}
 
-Aspects steps:
-
-\begin{enumerate}
-\item Identify arithmetic expressions;
-\item Split them according to granularity;
-\item Insert annotation to adjust DSP usage;
-\item Repeat for a given number of applications.
-\end{enumerate}
-
-\begin{figure}
-  \begin{lstlisting}
-    #pragma balanceDSP=full
-    int result = p[0]  * c_0_0_0;
-    int result = result + p[1]  * c_p_0_0;
-    #pragma balanceDSP=full
-    int result = result + p[-1] * c_n_0_0;
-  \end{lstlisting}
-  \caption{One possible result of applying
-    \texttt{OptimizeDSPUsage(full, fine, 2)} to Lines 13--17 of Fig.~\ref{fig:maxc-1dconv}.}
-  \label{fig:maxc-1dconv-aspect}
-\end{figure}
-
-Fig.~\ref{fig:maxc-1dconv-aspect} shows one of the possible results
-of applying the aspect \texttt{OptimizeDSPUsage(full, fine, 2 } to
-Lines 13--17 of Fig.~\ref{fig:maxc-1dconv}.
-
+\subsection{Iterative Aspect}
+\label{sect:asp_it}
 Using LARA we can implement and combine these aspects to enable
 systematic design space exploration of all the optimisations options
 exposed by the MaxC backend resulting in the generation of a large
@@ -285,55 +270,54 @@ be used to capture and extract feedback from the backend reports
 pertaining to resource usage or timing information and automatically
 adjust the compilation process.
 
-\subsection{Iterative Design Exploration Aspect}
-\label{sec:dse-aspect}
-
- An example LARA aspect for design space exploration is
+An example LARA aspect for design space exploration is
 shown in Fig.~\ref{fig:aspect-exploration}. It highlights the feedback capabilities of the design
 flow: the aspect will generate and build the MaxC designs until the
 resource usage passes a specified LUT threshold, at each step
-increasing the parallelism of the design (by replicating the
-computational pipeline).
-% For instance, we can generate
+increasing a particular design attribute, such as exponent, mantissa or the parallelism of the design (by replicating the computational pipeline). 
 
 \lstset{style=lara}
 \begin{figure}[!h]
 \begin{lstlisting}
-  aspectdef DSEStrategy
-  var config = { 'Dsp_factor': 1,
-    'Exponent'  : 8,
-    'Mantissa'  : 24 };
-  var par = 0, lut_threshold = 10000;
-  do {
-    par++;
-    config['Par'] = par;
+  aspectdef DesignExploration
+  input
+     attribute,
+     start, step,
+     lut_threshold,
+     config
+  end
+  config[attribute] = start; 
+  var i = 0;
+  do {        
     var designName = genName(config);
     call genMaxC(designName, config);
     buildMaxC(designName);
-  } while (@hw[designName].lut < lut_threshold);
+    config[attribute] += step; i++;
+  } while (@hw[designName].lut < lut_threshold 
+           && i < LIMIT);
   end
 \end{lstlisting}
-\caption{Aspect for increasing design parallelism subject to a LUT
-  threshold.}
+\caption{Exploration aspect that generates MaxC designs by varying a design attribute (e.g. number of kernels or mantissa) until a LUT threshold is reached.}
 \label{fig:aspect-exploration}
 \end{figure}
 
 
 \subsection{Debugging Aspect}
-\label{sec:dbg-aspect}
+\label{sect:asp_debug}
 Because the current execution model does not provide runtime debugging
 of hardware designs, the easiest solution to debug designs is to log
 the values of various streams during execution. The insertion of debug
 statements can be encapsulated in aspects. It is particularly
 important to separate debug aspects from the original application code
 since debug blocks can influence the compilation time and timing
-constraints as well as the behaviour of the design (Fig~\ref{fig:aspect-debug}).
+constraints as well as the behaviour of the design. As an example,
+the aspect in Fig~\ref{fig:aspect-debug} instruments the code to log every time a variable changes its value.
 
 \lstset{style=lara}
 \begin{figure}[!h]
   \centering
 \begin{lstlisting}
-aspectdef DebugValues
+aspectdef WatchVar
 
 select function.vref end
 apply
@@ -346,6 +330,6 @@ condition $vref.is_out end
 
 end
 \end{lstlisting}
-  \caption{Aspect for automatically inserting debug blocks.}
+  \caption{Aspect for automatically instrumenting the code to watch any change in the value of a  variable in the program.}
   \label{fig:aspect-debug}
 \end{figure}
