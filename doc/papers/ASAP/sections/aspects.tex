@@ -220,15 +220,15 @@ main:g:3 & maxc\_g & c1 \\
 
 \subsection{Operator Optimisation Aspect}
 \label{sect:asp_ops}
-Aspects can be used to enable design space exploration of resource
-usage vs. accuracy trade-offs by varying the word
-lengths. Alternatively we can use them to explore resource trade-offs
-by mapping computation to specialised FPGA blocks. For example, the
-aspect in Fig.~\ref{fig:aspect-DSP} can be used to map arithmetic
-expressions to DSP blocks. We define the DSP balance factor to be used
-(none, normal, full), the granularity (which decides if we break up
-arithmetic expressions to insert DSP Factors between them) and the
-number of independent applications.
+To provide architectural details to MaxC designs, such as mapping operators to dedicated hardware resources, 
+such as DSP blocks, we can use the following MaxC pragma on top of a statement (including code blocks):
+
+\noindent\texttt{\footnotesize\marktext{\#pragma maxc balanceDSP:balanced} \\
+\{x = x *y; x++; \}}
+
+The balancing parameter corresponds to the degree of utilization of DSP blocks in a statement. 
+The aspect shown in Fig.~\ref{fig:aspect-DSP} is strategy for balancing DSP blocks in statements. Instead
+of adding the above pragma manually, we provide a set of rules (lines~3--4) that define where to place the balanceDSP pragma. In this example, we estabilished the rule that full DSP block utilization is performed to any statement that has more or equal 20 multipliers and 5 adders, balanced if just more than 3 multipliers, and no DSP utilization otherwise.
 
 \lstset{style=lara}
 \begin{figure}[!h]
@@ -236,8 +236,8 @@ number of independent applications.
   \begin{lstlisting}
 aspectdef DspBalancing
 var op_granularity =
- [{DspFactor: 'full', MultiplyOp: 20, AddOp: 5 },
-  {DspFactor: 'normal', MultiplyOp: 3}];
+ [{DspBalance:'full',MultiplyOp: 20,AddOp: 5 },
+  {DspBalance:'balanced',MultiplyOp:3}];
 
 select function.statement end
 apply
@@ -245,7 +245,7 @@ apply
       var gprofile = op_granularity[i];
       var match = true;
       for (var k in gprofile) {
-         if (k != 'DspFactor') {
+         if (k != 'DspBalance') {
             match &= ($statement.num_construct(k)
                       >= gprofile[k]);}}
       if (match) {
@@ -297,7 +297,7 @@ increasing a particular design attribute, such as exponent, mantissa or the para
            && i < LIMIT);
   end
 \end{lstlisting}
-\caption{Exploration aspect that generates MaxC designs by varying a design attribute (e.g. number of kernels or mantissa) until a LUT threshold is reached.}
+\caption{Exploration aspect that generates multiple MaxC designs by varying a design attribute (e.g. number of kernels or mantissa) until a LUT threshold is reached.}
 \label{fig:aspect-exploration}
 \end{figure}
 
