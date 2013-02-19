@@ -19,13 +19,13 @@ multiple configurations for the design by creating two kernels that
 are used to control the memory command read and write streams
 (CmdRead, CmdWrite) and the computation kernel (RTM).  To illustrate
 the potential benefits of our approach we analyse the results of using
-the \texttt{DebugValues} aspect described in Section
-\ref{sec:dbg-aspect}.  Table \ref{table:loc} compares the number of
-lines of code required for the original MaxC + Aspect implementation
-with the equivalent MaxJ implementation showing a reduction in code
-size of up to 42\% for the run-time reconfigurable design and a
-reduction in the number of API calls (including debug calls) of up to
-67\% which translate to increase productivity.
+the debugging aspect of Section \ref{sect:asp_debug}. Table
+\ref{table:loc} compares the number of lines of code required for the
+original MaxC + Aspect implementation with the equivalent MaxJ
+implementation showing a reduction in code size of up to 42\% for the
+run-time reconfigurable design and a reduction in the number of API
+calls (including debug calls) of up to 67\% which translate to
+increase productivity.
 
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.3}
@@ -48,50 +48,52 @@ reduction in the number of API calls (including debug calls) of up to
 
 \subsection{Results}
 
-Results of the design space exploration using the word length aspect
-illustrate the trade-offs between accuracy and resource usage (Fig.~\ref{fig:precision}). We observe irregular, large variations when
-decreasing the mantissa from 18 to 16 and 24 to 22. These non-linear
-differences are counter-intuitive, halving the number of required DSPs
-with little relative impact on accuracy. This is the effect of the
-backend tools mapping arithmetic to a combination of both DSPs and
-LUT/FF elements. The mantissa boundaries at which this optimization
-occurs are platform specific, depending on the architecture of the
-DSPs. Hence automating this optimization via aspects and decoupling it
-from the original source code makes the application more portable and
-facilitates discovery of interesting trade-off opportunities using
-design space exploration.
+Results of the design space exploration using the aspect in
+Fig.~\ref{fig:aspect-exploration} with variable mantissa illustrate
+the trade-offs between accuracy and resource usage
+(Fig.~\ref{fig:precision}). We observe irregular, large variations
+when decreasing the mantissa from 18 to 16 and 24 to 22. This is the
+effect of the backend tools mapping arithmetic to a combination of
+both DSPs and LUT/FF elements. The mantissa boundaries at which this
+optimisation occurs are platform specific, depending on the
+architecture of the DSPs. Hence automating this optimisation via
+aspects and decoupling it from the original source code makes the
+application more portable and facilitates discovery of interesting
+trade-off opportunities using design space exploration.
 
 \begin{figure}[!h]
 \includegraphics[scale=0.7]{figs/pre}
-\caption{Exploration of accuracy vs resource usage trade-offs using the aspect 
+\caption{Exploration of accuracy vs resource usage trade-offs using the aspect
 shown in Fig.~\ref{fig:aspect-exploration} with variable mantissa.}
 \label{fig:precision}
   \vspace{-2mm}
 \end{figure}
 
-The DSP aspect allows to explore the resource trade-offs of
-implementing arithmetic operations in either DSPs or LUTs and FFs
-(Fig.~\ref{fig:arith}). This helps to avoid over mapping on DSPs for
-arithmetic intensive applications.
+The DSP balancing aspect shown in Fig.~\ref{fig:aspect-DSP} allows to
+explore the resource trade-offs of implementing arithmetic operations
+in either DSPs or LUTs and FFs (Fig.~\ref{fig:arith}). This helps to
+avoid over mapping on DSPs for arithmetic intensive applications.
 
 \begin{figure}[!h]
 \includegraphics[scale=0.7]{figs/arith}
 \caption{Exploration of DSP and LUT/FF balancing for arithmetic
-  operations using the aspect showin in Fig.~\ref{fig:aspect-DSP}.}
+  operations using the aspect shown in Fig.~\ref{fig:aspect-DSP}.}
 \label{fig:arith}
   \vspace{-2mm}
 \end{figure}
 
-Design space exploration using the parallelism aspect can be used to
-investigate design scalability. For example for the described RTM
-implementation, Fig.~\ref{fig:scalability} shows that performance
-scales linearly with the number of parallel pipelines. This also shows
-that significant speedups can be obtained by the MaxC dataflow design
-compared to the CPU only implementation. Depending on the problem
-size, our approach can be used to achieve a significant speedup over
-software only versions which is comparable with the best published
-FPGA results for static designs
-\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, \cite{araya2011assessing}.
+Design space exploration using the aspect in
+Fig.~\ref{fig:aspect-exploration} with increasing parallelism level
+can be used to investigate design scalability. For example for the
+described RTM implementation, Fig.~\ref{fig:scalability} shows that
+performance scales linearly with the number of parallel
+pipelines. This also shows that significant speedups can be obtained
+by the MaxC dataflow design compared to the CPU only
+implementation. Depending on the problem size, our approach can be
+used to achieve a significant speedup over software only versions
+which is comparable with the best published FPGA results for static
+designs \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012},
+\cite{araya2011assessing}.
 
 \pgfplotsset{every axis x label/.style={
   at={(0.5,0)},
@@ -175,22 +177,22 @@ FPGA results for static designs
       };2
     \end{axis}
   \end{tikzpicture}
-  \caption{Scalability of the RTM dataflow design explored using the aspect 
+  \caption{Scalability of the RTM dataflow design explored using the aspect
 shown in Fig.~\ref{fig:aspect-exploration}.}
   \label{fig:scalability}
-  \vspace{-5mm}
+  \vspace{-2mm}
 \end{figure}
 
 Fig.~\ref{fig:scalability} also shows the performance benefits of
-using a run-time reconfiguration implementation. This is generated by
-using the reconfiguration aspect to create two configurations for the
-RTM MaxC kernel. Since during the first half of the execution the
-backward propagation and imaging functions are idle, the first
-configuration requires only half the resources. This allows doubling
-the number of parallel pipelines and halves the execution time of the
-first configuration. The speedup obtained is comparable to
+using a run-time reconfiguration implementation which is generated by
+using the reconfiguration aspect of Fig. 4 to create two
+configurations for the RTM MaxC kernel. Since during the first half of
+the execution the backward propagation and imaging functions are idle,
+the first configuration requires only half the resources. This allows
+doubling the number of parallel pipelines and halves the execution
+time of the first configuration. The speedup obtained is comparable to
 \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, but the partitioning and
-optimization exploration process is automated via aspects, which
+optimisation exploration process is automated via aspects, which
 increases developer productivity. The automated process improves
 portability of the design, allowing optimisations based on design
 space exploration to be carried out on various platforms (hence
