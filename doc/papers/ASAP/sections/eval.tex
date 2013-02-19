@@ -63,7 +63,9 @@ design space exploration.
 
 \begin{figure}[!h]
 \includegraphics[scale=0.7]{figs/pre}
-\caption{Exploration of accuracy vs resource usage trade-offs.}
+\caption{Exploration of accuracy vs resource usage trade-offs using an
+  instantiation of Aspect \ref{sec:dse-aspect} with variable
+  mantissa.}
 \label{fig:precision}
 \end{figure}
 
@@ -93,7 +95,7 @@ arithmetic intensive applications.
 \begin{figure}[!h]
 \includegraphics[scale=0.7]{figs/arith}
 \caption{Exploration of DSP and LUT/FF balancing for arithmetic
-  operations.}
+  operations using Aspect \ref{sect:asp_ops}.}
 \label{fig:arith}
 \end{figure}
 
@@ -107,8 +109,6 @@ size, our approach can be used to achieve a significant speedup over
 software only versions which is comparable with the best published
 FPGA results for static designs
 \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, \cite{araya2011assessing}.
-
-
 
 \pgfplotsset{every axis x label/.style={
   at={(0.5,0)},
@@ -192,7 +192,7 @@ FPGA results for static designs
       };2
     \end{axis}
   \end{tikzpicture}
-  \caption{Scalability of the RTM MaxC dataflow design.}
+  \caption{Scalability of the RTM dataflow design explored using Aspect \ref{sec:dse-aspect}.}
   \label{fig:scalability}
 \end{figure}
 
