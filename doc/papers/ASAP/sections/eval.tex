@@ -23,9 +23,9 @@ the \texttt{DebugValues} aspect described in Section
 \ref{sec:dbg-aspect}.  Table \ref{table:loc} compares the number of
 lines of code required for the original MaxC + Aspect implementation
 with the equivalent MaxJ implementation showing a reduction in code
-size of 56\% for the run-time reconfigurable design and a reduction in
-the number of API calls (including debug calls) of 33\% which
-translate into increase productivity.
+size of up to 42\% for the run-time reconfigurable design and a
+reduction in the number of API calls (including debug calls) of up to
+67\% which translate to increase productivity.
 
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.3}
@@ -43,8 +43,8 @@ translate into increase productivity.
     RTM Static                   & 12           & 246                            &     43         & 403     &       175        \\
     RTM RTR                      & 12           & 377                            &     91         & 669     &       275       \\
   \end{tabular}
+  \vspace{-3mm}
 \end{table}
-
 
 \subsection{Results}
 
@@ -66,25 +66,8 @@ design space exploration.
 \caption{Exploration of accuracy vs resource usage trade-offs using the aspect 
 shown in Fig.~\ref{fig:aspect-exploration} with variable mantissa.}
 \label{fig:precision}
+  \vspace{-2mm}
 \end{figure}
-
-\begin{comment}
-\begin{table}[!h]
-  %  \renewcommand{\arraystretch}{1.1}
-  \centering
-  \caption{Results of varying the word length.}
-  \label{table:aspect-wl}
-  \begin{tabular}{ p{1cm} p{1cm} p{1cm} p{1cm} p{1cm}  p{1cm} }
-    Word Width & LUT               & FF                & BRAM           & DSP             & Relative Error \\ \hline
-    8, 24      & 106033  (35.63\%) & 143508  (24.11\%) & 295  (27.73\%) & 702  (34.82\%)  & \TODO          \\
-    8, 22      & 133973  (45.02\%) & 185520  (31.17\%) & 295  (27.73\%) & 306  (15.18\%)  & \TODO          \\
-    8, 20      & 129581  (43.54\%) & 178333  (29.96\%) & 289  (27.16\%) & 306  (15.18\%)  & \TODO          \\
-    8, 18      & 121439  (40.81\%) & 170721  (28.68\%) & 286  (26.88\%) & 306  (15.18\%)  & \TODO          \\
-    8, 16      & 117904  (39.62\%) & 157359  (26.44\%) & 283  (26.60\%) & 204  (10.12\%)  & \TODO          \\
-  \end{tabular}
-\end{table}
-\end{comment}
-
 
 The DSP aspect allows to explore the resource trade-offs of
 implementing arithmetic operations in either DSPs or LUTs and FFs
@@ -96,6 +79,7 @@ arithmetic intensive applications.
 \caption{Exploration of DSP and LUT/FF balancing for arithmetic
   operations using the aspect showin in Fig.~\ref{fig:aspect-DSP}.}
 \label{fig:arith}
+  \vspace{-2mm}
 \end{figure}
 
 Design space exploration using the parallelism aspect can be used to
@@ -194,6 +178,7 @@ FPGA results for static designs
   \caption{Scalability of the RTM dataflow design explored using the aspect 
 shown in Fig.~\ref{fig:aspect-exploration}.}
   \label{fig:scalability}
+  \vspace{-5mm}
 \end{figure}
 
 Fig.~\ref{fig:scalability} also shows the performance benefits of

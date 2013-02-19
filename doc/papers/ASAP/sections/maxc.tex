@@ -44,9 +44,8 @@ Since MaxC is compiled to MaxJ it uses the same execution model: a
 design is composed of one or more computational kernels (which
 implement the functionality we are interested in) which are connected
 to form a design. Communication between kernels is asynchronous, so
-kernels can operate independently of each other but computation within
-kernels is synchronous, so a kernel will compute only when all it's
-active inputs have values available.
+kernels can operate independently of each other, and a kernel will
+compute only when all it's active inputs have values available.
 
 \begin{table}[!h]
   \centering
@@ -70,7 +69,6 @@ active inputs have values available.
   Parameterization             & Constants, variables                   & C99                                          \\
 \hline
 HW mapping                  & C pragmas                   & C99 (line 17)                                \\
-
 \end{tabular}
 \end{table}
 
