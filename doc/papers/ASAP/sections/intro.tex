@@ -21,20 +21,20 @@ dataflow designs:
   language that is concise and facilitates the translation of existing
   designs and expressive enough to support the requirements of modern
   high-performance applications.
-\item Specifying optimization strategies, decoupled from the
+\item Specifying optimisation strategies, decoupled from the
   application code in a manner that makes the specification easy to
-  reuse and customize and is comprehensive enough to allow capturing
-  of optimizations at various levels: \emph{algorithmic
+  reuse and customise and is comprehensive enough to allow capturing
+  of optimisations at various levels: \emph{algorithmic
     transformations} of the original application to expose parallelism
   or improve communication between CPU and accelerator,
   \emph{design-level transformations} that enable exploration of
-  platform specific optimizations and \emph{productivity related
+  platform specific optimisations and \emph{productivity related
     transformations} that improve developer productivity.
 \item Systematic design space exploration of dataflow designs driven
-  by these parameterizable optimization strategies, that increase
+  by these parameterizable optimisation strategies, that increase
   developer productivity and allow exploration of design level
   trade-offs.
-\item Applying these design techniques to create and optimize high
+\item Applying these design techniques to create and optimise high
   performance applications.
 \end{enumerate}
 
@@ -49,8 +49,10 @@ following contributions:
   on-board DRAM.
 \item We introduce novel aspects for specifying optimisation
   strategies at the system level, the implementation level, the
-  exploration level and development level. We implement these aspects using LARA~\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}, an aspect
-  oriented language for embedded reconfigurable systems.
+  exploration level and development level. We implement these aspects
+  using
+  LARA~\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}, an
+  aspect oriented language for embedded reconfigurable systems.
 \item We propose an automated method for design space exploration of
   MaxC dataflow designs, driven by the aspect definitions.
 \item We evaluate our approach by implementing a high performance
