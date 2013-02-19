@@ -1,25 +1,11 @@
 \section{Conclusion}
 
-In this paper we present an automated design flow for design space
-exploration of dataflow designs based on a novel language, MaxC, and
-aspect-driven compilation. We show that this approach meets the
-initial performance, portability, integration and productivity
-requirements. We implement a high performance dataflow design for RTM
-to show that we can achieve significant speedups over software only
-versions by exploiting the run-time reconfiguration. The automated
-aspect-driven optimisation process improves productivity and design
-portability, allowing optimisations strategies to be automatically
-adapted to various platforms.  Finally we show that MaxC is a concise
-language and that maintaining compatibility with C99 simplifies the
-translation of existing applications.
-
-Future work includes extending our approach by introducing new system
-aspects that guide the translation and optimisation process from
-existing C applications to dataflow designs. This includes the
-development of system aspects that can be used to explore structural
-transformations of the original application that improve parallelism
-and computation versus communication ratio. The introduction of these
-aspects could lead to a transparent design flow, that does not require
-manual development of dataflow designs, greatly simplifying the
-translation of existing software applications to high-performance
-custom designs.
+This paper presents a novel development approach for dataflow designs
+based on the MaxC language, which supports aspect-driven
+compilation. We show that this approach meets the requirements in
+performance, portability, integration and productivity. The approach
+has been used in producing run-time reconfigurable designs for seismic
+imaging based on the RTM algorithm, which are over 100 times faster
+than the corresponding software versions. Current and future work
+includes aspect descriptions and the required facilities that cover
+systems with different types of accelerators, and their optimisation.
