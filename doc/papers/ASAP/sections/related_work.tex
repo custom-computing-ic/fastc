@@ -2,7 +2,7 @@
 
 A number of dataflow languages have been developed targeting FPGAs but
 also multi-core platforms. Table \ref{table:feature-comparison}
-summarizes some of the important features of these languages compared
+summarises some of the important features of these languages compared
 to MaxC. Lucid \cite{ashcroft1977lucid}, SISAL
 \cite{gurd1987implicit}, \cite{mcgraw1983sisal} and Lustre
 \cite{halbwachs1991synchronous}, are examples of functional dataflow
@@ -20,8 +20,8 @@ special comment blocks which are used to annotate the C application
 code. This makes the languages harder to integrate with existing
 source-to-source translation or aspect weaving frameworks. Hybrid
 approaches such as MaxCompiler \cite{MaxelerTechnologies:2012}
-separate the CPU runtime component from the accelerated one, providing
-an imperative C based runtime environment and a Java dataflow API for
+separate the CPU run-time component from the accelerated one, providing
+an imperative C based run-time environment and a Java dataflow API for
 building the accelerator designs. This separation complicates the
 development process, since the two components have to be managed
 separately and hinders information sharing between the two components
@@ -45,7 +45,6 @@ exploration process.
     ImpulseC  & C           & Imp./CSP      & Both       & Combined     \\
     MaxC      & C           & Imp.          & FPGA       & Combined     \\
   \end{tabular}
-  \vspace{-3mm}
 \end{table}
 
 The use of LARA aspects in guiding the compilation process of C
