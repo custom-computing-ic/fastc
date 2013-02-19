@@ -12,7 +12,7 @@ maintainable and portable since it is no longer obscured by various
 structural or algorithmic transformations, as well as platform specific
 optimizations. In addition, strategies coded in LARA can be re-applied automatically in different applications, thus improving design productivity.
 
-In this paper, we report four types of aspects (Table~\ref{tbl:aspects}) used with MaxC designs:
+We report four types of aspects (Table~\ref{tbl:aspects}) used with MaxC designs:
 
 \vspace*{0.5ex}
 \noindent{\bf System Aspects.} System aspects capture transformation or optimization strategies that affect the whole application such as those concerning
@@ -220,15 +220,14 @@ main:g:3 & maxc\_g & c1 \\
 
 \subsection{Operator Optimisation Aspect}
 \label{sect:asp_ops}
-To provide architectural details to MaxC designs, such as mapping operators to dedicated hardware resources, 
-such as DSP blocks, we can use the following MaxC pragma on top of a statement (including code blocks):
+To provide architectural details to MaxC designs, such as mapping operators to DSP blocks, we can use the following MaxC pragma on top of a statement (including code blocks):
 
 \noindent\texttt{\footnotesize\marktext{\#pragma maxc balanceDSP:balanced} \\
 \{x = x *y; x++; \}}
 
 The balancing parameter corresponds to the degree of utilization of DSP blocks in a statement. 
-The aspect shown in Fig.~\ref{fig:aspect-DSP} is strategy for balancing DSP blocks in statements. Instead
-of adding the above pragma manually, we provide a set of rules (lines~3--4) that define where to place the balanceDSP pragma. In this example, we estabilished the rule that full DSP block utilization is performed to any statement that has more or equal 20 multipliers and 5 adders, balanced if just more than 3 multipliers, and no DSP utilization otherwise.
+The aspect shown in Fig.~\ref{fig:aspect-DSP} is strategy for balancing DSP blocks in every statement of an application. Instead
+of adding the above pragma manually, we provide a set of rules (lines~3--4) that define where to place the balanceDSP pragma. In this example, we estabilished the rule that full DSP block utilization is performed to any statement that has 5 or more multipliers and adders, balanced if 3 or more multipliers, and no DSP utilization otherwise.
 
 \lstset{style=lara}
 \begin{figure}[!h]
@@ -236,7 +235,7 @@ of adding the above pragma manually, we provide a set of rules (lines~3--4) that
   \begin{lstlisting}
 aspectdef DspBalancing
 var op_granularity =
- [{DspBalance:'full',MultiplyOp: 20,AddOp: 5 },
+ [{DspBalance:'full',MultiplyOp: 5,AddOp: 5 },
   {DspBalance:'balanced',MultiplyOp:3}];
 
 select function.statement end
@@ -270,10 +269,10 @@ be used to capture and extract feedback from the backend reports
 pertaining to resource usage or timing information and automatically
 adjust the compilation process.
 
-An example LARA aspect for design space exploration is
+An example of a LARA aspect for design space exploration is
 shown in Fig.~\ref{fig:aspect-exploration}. It highlights the feedback capabilities of the design
 flow: the aspect will generate and build the MaxC designs until the
-resource usage passes a specified LUT threshold, at each step
+resource usage passes a specified LUT threshold, and at each step
 increasing a particular design attribute, such as exponent, mantissa or the parallelism of the design (by replicating the computational pipeline). 
 
 \lstset{style=lara}
@@ -318,7 +317,6 @@ the aspect in Fig~\ref{fig:aspect-debug} instruments the code to log every time 
   \centering
 \begin{lstlisting}
 aspectdef WatchVar
-
 select function.vref end
 apply
    $vref.parent_stmt.insert before
@@ -327,7 +325,6 @@ apply
     %{ log("[[$vref.name]]", [[$vref.name]]); }%
 end
 condition $vref.is_out end
-
 end
 \end{lstlisting}
   \caption{Aspect for automatically instrumenting the code to watch any change in the value of a  variable in the program.}
