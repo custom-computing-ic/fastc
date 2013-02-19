@@ -21,7 +21,7 @@ required by the proposed flow:
 \item Good interaction with existing source level translation and
   weaving tools. Simple syntax allows the language to interact well
   with existing compilers or source to source translation frameworks,
-  allowing source level optimizations to be applied through different
+  allowing source level optimisations to be applied through different
   tools.
 \item Combined hardware/software design. Specifications of dataflow
   kernels and CPU runtime software can be mixed. The example shown in
@@ -35,7 +35,7 @@ required by the proposed flow:
 \end{itemize}
 
 MaxC is designed to express the simplest form of a dataflow design
-while optimizations and other transformations are encapsulated in
+while optimisations and other transformations are encapsulated in
 aspects which are developed separately and applied through aspect
 weaving. This results in a more flexible approach for generating and
 exploring the space of efficient dataflow designs.
@@ -50,7 +50,7 @@ compute only when all it's active inputs have values available.
 \begin{table}[!h]
   \centering
 \renewcommand{\arraystretch}{1.2}
-\caption{Table summarizing the main components of the MaxC language.}
+\caption{Table summarising the main components of the MaxC language.}
 \label{table:maxc-features}
 \begin{tabular}{l|l|l}
 \hline
@@ -64,7 +64,7 @@ compute only when all it's active inputs have values available.
 \hline
   \multirow{2}{*}{Streams}     & Declared as pointers               & C99 (line 1)                                 \\\cline{2-3}       & Accessed with array index & C99 (line 8) \\
 \hline
-  Optimization                 & C pragmas                   & C99 (line 7)                                 \\
+  Optimisation                 & C pragmas                   & C99 (line 7)                                 \\
 \hline
   Parameterization             & Constants, variables                   & C99                                          \\
 \hline
@@ -72,7 +72,7 @@ HW mapping                  & C pragmas                   & C99 (line 17)       
 \end{tabular}
 \end{table}
 
-Table~\ref{table:maxc-features} summarizes the features of MaxC and
+Table~\ref{table:maxc-features} summarises the features of MaxC and
 Fig.~\ref{fig:maxc-1dconv} shows an example dataflow kernel which
 implements a 1D convolution computation used to value European
 options.  Kernels are defined as regular C functions with inputs
@@ -120,17 +120,3 @@ designs with values known at compilation time.
 The MaxC API provides a limited number of higher-level constructs, such as I/O
 functions (\texttt{in()} and \texttt{out()}, counters (Fig.~\ref{fig:maxc-1dconv},
 Lines 4--5) and functions to multiplex streams (\texttt{mux()}).
-
-%At the kernel level these dataflow elements are represented using:
-%\begin{itemize}
-%\item \emph{regular C constructs} are used as much as possible to make
-%  the language more intuitive. This includes standard C99 types and
-%  conventions for implementing kernels. Some overloaded operators are
-%  provided such as the array access operators to provide a more
-%  succinct syntax for accessing past or future stream elements;
-%\item \emph{pragma directives} are used to convey additional
-%  information to the compiler for which C99 does not provide flexible
-%  built-in constructs (e.g. type width) or additional optimization
-%  hints (e.g. DSP balance, Line 7);
-%\item \emph{specific API calls} are used for higher level constructs.
-%\end{itemize}
