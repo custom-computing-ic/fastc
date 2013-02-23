@@ -60,9 +60,9 @@ void kernel_RTM(
 
     for (int i=0; i <Par; i++) {
       cast2sff(p[i], burst_p[i], realType);
-      cast2ff(pp_i[i], burst_pp[i], realType);
-      cast2ff(dvv[i],  burst_dvv[i], realType);
-      cast2ff(source[i], burst_source[i], realType);
+      cast2fsf(pp_i[i], burst_pp[i], realType);
+      cast2fsf(dvv[i],  burst_dvv[i], realType);
+      cast2fsf(source[i], burst_source[i], realType);
     }
 
     s_float8_24 inter[Par][Mul];
@@ -75,6 +75,7 @@ void kernel_RTM(
     // setup the optimisation factor to transfer operations between DSPs and Luts
 
     //#pragma class:kernelopt name:pushDSP factor:1
+
     pushDSPFactor(DspFactor);
 
     //Cache

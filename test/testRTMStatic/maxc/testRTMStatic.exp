@@ -11,11 +11,11 @@ import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
 import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
 
 public class RTM extends Kernel {
- 
+
   public RTM(KernelParameters parameters) {
     super(parameters);
 
-   
+
 
     HWVar n1    = io.scalarInput("n1",    hwUInt(32));
     HWVar n2    = io.scalarInput("n2",    hwUInt(32));
@@ -115,8 +115,9 @@ public class RTM extends Kernel {
 	KArray<HWVar>output_p = (new KArrayType<HWVar>(hwFloat(8,24),1)).newInstance(this);
 
 	for (int i = 0;i < 1;i++) {
-		output_p[i] <== inter[i][1 - 1];
-		output_pp_inter[i] <== cur[1 - 1][6 + i][5][5];
+           output_p[i] <== inter[i][1 - 1].cast(hwFloat(8, 24));
+           output_pp_inter[i] <== cur[1 - 1][6 + i][5][5].cast(hwFloat(8, 24));
+
 	}
 
 	io.output("ker_p", output_p, new KArrayType<HWVar>(hwFloat(8, 24),  1));
