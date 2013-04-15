@@ -7,15 +7,15 @@ traditional control based architectures \cite{Flynn:Pell:Mencer:2012},
 von Neumann architectures \cite{Neumann:1993}, dataflow designs
 require less area for caching and control which increases performance
 and decreases power consumption. Due to its regularity, a dataflow
-design can be statically scheduled into a deep hazard-free pipeline,
-achieving ideal throughput rates of one result per clock cycle. This
-makes dataflow designs more suitable for implementing high throughput,
-highly parallel applications that operate on large amounts of uniform
-data than general purpose architectures. However, dataflow languages
-are not commonly used and imperative languages such as Java, C and C++
-are most popular \cite{Tiobe:2012}. We identify the following
-challenges that should be overcome to facilitate the adoption of
-dataflow designs:
+design can be statically scheduled into a deep hazard-free pipeline
+through which data is streamed, achieving ideal throughput rates of
+one result per clock cycle. The stream based execution model is better
+suited for implementing high throughput, highly parallel applications
+that operate on large amounts of uniform data streams than general
+purpose architectures. However, dataflow languages are not commonly
+used and imperative languages such as Java, C and C++ are most popular
+\cite{Tiobe:2012}. We identify the following challenges that should be
+overcome to facilitate the adoption of dataflow designs:
 \begin{enumerate}
 \item Specifying dataflow designs, in an intuitive, well understood
   language that is concise and facilitates the translation of existing
