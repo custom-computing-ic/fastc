@@ -1,16 +1,16 @@
-\section{The  MaxC Language}
+\section{The \MAXC{} Language}
 \label{sec:maxc}
 
-MaxC is a novel language for specifying dataflow designs that are used
-as a starting point for the design proposed in Section
-\ref{sec:design-flow}. In particular, we use
-the C language as an intermediate language to capture the dataflow computation, and instead
-of heavily relying on API libraries to specify the design (as in MaxJ
-\cite{MaxelerTechnologies:2012} or Streams-C
+\MAXC{} is a novel language for specifying dataflow designs that are
+used as a starting point for the design proposed in Section
+\ref{sec:design-flow}. In particular, we use the C language as an
+intermediate language to capture the dataflow computation, and instead
+of heavily relying on API libraries to specify the design (as in
+MaxCompiler \cite{MaxelerTechnologies:2012} or Streams-C
 \cite{Gokhale:Stone:Arnold:Kalinowski:2000}) we use aspects to
 implement the transformations required for the actual implementation.
 
-MaxC provides the following features that are
+\MAXC{} provides the following features that are
 required by the proposed flow:
 
 \begin{itemize}
@@ -26,39 +26,40 @@ required by the proposed flow:
 \item Combined hardware/software design. Specifications of dataflow
   kernels and CPU run-time software can be mixed. The example shown in
   Fig.~\ref{fig:maxc-1dconv} can be compiled with the GCC toolchain
-  without any issues, but when using the MaxC compiler, the pragma
+  without any issues, but when using the \MAXC{} compiler, the pragma
   indicates the link between the software and hardware, which results
   in an accelerated hardware software/solution.
-\item Supports datapath and control path generation. MaxC allows
+\item Supports datapath and control path generation. \MAXC{} allows
   specifying both datapath and control operations that are
   automatically mapped to stream multiplexers.
 \end{itemize}
 
-MaxC is designed to express the simplest form of a dataflow design
+\MAXC{} is designed to express the simplest form of a dataflow design
 while optimisations and other transformations are encapsulated in
 aspects which are developed separately and applied through aspect
 weaving. This results in a more flexible approach for generating and
 exploring the space of efficient dataflow designs.
 
-Since MaxC is compiled to MaxJ it uses the same execution model: a
-design is composed of one or more computational kernels (which
-implement the functionality we are interested in) which are connected
-to form a design. Communication between kernels is asynchronous, so
-kernels can operate independently of each other, and a kernel will
-compute only when all it's active inputs have values available.
+Since \MAXC{} is compiled to a MaxCompiler design it uses the same
+execution model: a design is composed of one or more computational
+kernels (which implement the functionality we are interested in) which
+are connected to form a design. Communication between kernels is
+asynchronous, so kernels can operate independently of each other, and
+a kernel will compute only when all it's active inputs have values
+available.
 
 \begin{table}[!h]
   \centering
 \renewcommand{\arraystretch}{1.2}
-\caption{Table summarising the main components of the MaxC language.}
+\caption{Table summarising the main components of the \MAXC{} language.}
 \label{table:maxc-features}
 \begin{tabular}{l|l|l}
 \hline
 \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
 \hline\hline
-  \multirow{2}{*}{Input/Output}         & Declared in function header          & C99 (line 1)                                 \\\cline{2-3}       & \texttt{in()},\texttt{out()}  & MaxC API (lines 2,11) \\
+  \multirow{2}{*}{Input/Output}         & Declared in function header          & C99 (line 1)                                 \\\cline{2-3}       & \texttt{in()},\texttt{out()}  & \MAXC{} API (lines 2,11) \\
 \hline
-  \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 11)                                \\\cline{2-3}      & Stream mux (\texttt{mux()})       & MaxC API  \\
+  \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 11)                                \\\cline{2-3}      & Stream mux (\texttt{mux()})       & \MAXC{} API  \\
 \hline
 \multirow{2}{*}{Computation} & +, *, /, -                         & C99 (line 8)                           \\\cline{2-3} & log, exp, sqrt, sin etc.  & \#include $<$math.h$>$  \\
 \hline
@@ -72,7 +73,7 @@ HW mapping                  & C pragmas                   & C99 (line 17)       
 \end{tabular}
 \end{table}
 
-Table~\ref{table:maxc-features} summarises the features of MaxC and
+Table~\ref{table:maxc-features} summarises the features of \MAXC{} and
 Fig.~\ref{fig:maxc-1dconv} shows an example dataflow kernel which
 implements a 1D convolution computation used to value European
 options.  Kernels are defined as regular C functions with inputs
@@ -112,11 +113,11 @@ designs with values known at compilation time.
       Convolution1D_CPU(...);
     }
   \end{lstlisting}
-  \caption{Example MaxC design for a 1D convolution kernel.}
+  \caption{Example \MAXC{} design for a 1D convolution kernel.}
   \label{fig:maxc-1dconv}
 \end{figure}
 
 
-The MaxC API provides a limited number of higher-level constructs, such as I/O
+The \MAXC{} API provides a limited number of higher-level constructs, such as I/O
 functions (\texttt{in()} and \texttt{out()}, counters (Fig.~\ref{fig:maxc-1dconv},
 Lines 4--5) and functions to multiplex streams (\texttt{mux()}).

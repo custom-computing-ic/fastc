@@ -21,10 +21,10 @@ generated sources (woven code) incorporate functional elements of the
 original sources, and non-functional concerns captured by LARA
 aspects.
 
-In this paper, we combine the LARA aspect design-flow with MaxC
-dataflow designs. In particular, MaxC uses standard C99 syntax to
+In this paper, we combine the LARA aspect design-flow with \MAXC{}
+dataflow designs. In particular, \MAXC{} uses standard C99 syntax to
 capture dataflow computations while aspects specify decoupled
-optimisation and transformation strategies that operate on MaxC
+optimisation and transformation strategies that operate on \MAXC{}
 descriptions. This makes the functionality of the application easier
 to understand, more maintainable and portable since it is no longer
 obscured by various structural or algorithmic transformations, as well
@@ -32,7 +32,7 @@ as platform specific optimisations. In addition, strategies coded in
 LARA can be re-applied automatically in different applications, thus
 improving design productivity.
 
-We report four types of aspects (Table~\ref{tbl:aspects}) used with MaxC designs:
+We report four types of aspects (Table~\ref{tbl:aspects}) used with \MAXC{} designs:
 
 \vspace*{0.5ex}
 \noindent{\bf System Aspects.} System aspects capture transformation or optimisation strategies that affect the whole application such as those concerning
@@ -41,14 +41,14 @@ capabilities. The goal of hardware/software partitioning is to improve the overa
 execution time by identifying parts of the code to be offloaded to hardware (Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the application code to extract run-time behaviour, and uncover opportunities for optimisation (Section~\ref{sect:asp_mon}). Run-time reconfiguration (Section~\ref{sect:asp_reconfig}) removes idle functions from the accelerator at specific points in time, to use more resources for functions that are active.
 
 \vspace*{0.5ex}
-\noindent{\bf Implementation Aspects.} Implementation aspects focus on low level design optimisations that can be applied to the MaxC designs in order to improve timing or resource usage. For instance, operator optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map operators in the program to dedicated hardware resources. Word-length aspects
+\noindent{\bf Implementation Aspects.} Implementation aspects focus on low level design optimisations that can be applied to the \MAXC{} designs in order to improve timing or resource usage. For instance, operator optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map operators in the program to dedicated hardware resources. Word-length aspects
 specify the numerical representation of variables and expressions in the design.
 
 \vspace*{0.5ex}
 \noindent{\bf Exploration Aspects.} Exploration aspects deal with
 strategies that generate multiple designs to find an optimal
 implementation based on user requirements. Exploration aspects can act
-on any level of the design flow (C code, C and MaxC, or MaxC
+on any level of the design flow (C code, C and \MAXC{}, or \MAXC{}
 functions). They enable systematic exploration of trade-offs and
 optimisation opportunities. Examples of exploration aspects include
 iterative aspects (Section~\ref{sect:asp_it}) which generate a
@@ -62,7 +62,7 @@ development process such as debugging (Section~\ref{sect:asp_debug}), simulating
 compilation speed. Separating these concerns makes the original
 application code easier to maintain and enables the automatic
 application of these transformations to a wide range of designs, thus
-improving developer productivity. The goal for the MaxC kernel simulation model is that it should be possible to compile and run dataflow designs using the standard GCC
+improving developer productivity. The goal for the \MAXC{} kernel simulation model is that it should be possible to compile and run dataflow designs using the standard GCC
 toolchain in order to verify the logical correctness of the
 design. Hence, simulation aspects can be applied to the original dataflow design to
 enable pure software simulation. Compilation aspects, on the other hand, can be applied during the development process to create versions of the dataflow design that compile faster. They apply
@@ -73,7 +73,7 @@ developer productivity.
 
 
 \begin{table}[tp]
-\caption{Types of Aspects used in MaxC}
+\caption{Types of Aspects used in \MAXC{}}
 \label{tbl:aspects}
 \centering
 \begin{tabular}{l|l|l}
@@ -101,9 +101,9 @@ developer productivity.
 
 \subsection{HW/SW partitioning}
 \label{sect:asp_hsp}
-MaxC functions describing dataflow computations can be embedded within
+\MAXC{} functions describing dataflow computations can be embedded within
 the C application but cannot be invoked directly by software C
-functions.  Instead, a MaxC pragma must be used on top of software
+functions.  Instead, a \MAXC{} pragma must be used on top of software
 function definitions or C calls to indicate an alternate hardware
 implementation. For instance, the following C code:
 
@@ -205,7 +205,7 @@ void f() \{ & void f() \{ \\
 
 \subsection{Reconfiguration Aspect}
 \label{sect:asp_reconfig}
-To support run-time reconfiguration, we specify the configuration associated with the function call in the MaxC pragma. For instance:
+To support run-time reconfiguration, we specify the configuration associated with the function call in the \MAXC{} pragma. For instance:
 
 \vspace{3mm}
 
@@ -217,7 +217,7 @@ y = f(x); \\
 z = g(x); \\
 }}
 
-\noindent With the above code annotations, our design-flow can generate multiple configurations, each containing a set of MaxC implementations that can be executed in parallel. If the configuration name is not specified using the MaxC pragma, then we assume a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximise the utilisation of FPGA resources. Within this context, we use a hardware partition, which contains a set of configurations that are used to support reconfiguration during the life cycle of an application. In the above example, configuration c0 contains a single implementation of f (\emph{maxc\_f0}), and thus can potentially use more resources and be faster than the \emph{maxc\_f1} version which must share the same configuration (\emph{c1}) with \emph{maxc\_g}.
+\noindent With the above code annotations, our design-flow can generate multiple configurations, each containing a set of \MAXC{} implementations that can be executed in parallel. If the configuration name is not specified using the \MAXC{} pragma, then we assume a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximise the utilisation of FPGA resources. Within this context, we use a hardware partition, which contains a set of configurations that are used to support reconfiguration during the life cycle of an application. In the above example, configuration c0 contains a single implementation of f (\emph{maxc\_f0}), and thus can potentially use more resources and be faster than the \emph{maxc\_f1} version which must share the same configuration (\emph{c1}) with \emph{maxc\_g}.
 
 The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
 approach for extracting valid and efficient hardware partitions. To realize
@@ -282,7 +282,7 @@ main:g:3 & maxc\_g & c1 \\
 
 \subsection{Operator Optimisation Aspect}
 \label{sect:asp_ops}
-To provide architectural details to MaxC designs, such as mapping operators to DSP blocks, we can use the following MaxC pragma on top of a statement (including code blocks):
+To provide architectural details to \MAXC{} designs, such as mapping operators to DSP blocks, we can use the following \MAXC{} pragma on top of a statement (including code blocks):
 \vspace{2mm}
 
 \noindent\texttt{\footnotesize\marktext{\#pragma maxc balanceDSP:balanced} \\
@@ -333,7 +333,7 @@ end
 \label{sect:asp_it}
 Using LARA we can implement and combine these aspects to enable
 systematic design space exploration of all the optimisation options
-exposed by the MaxC backend resulting in the generation of a large
+exposed by the \MAXC{} backend resulting in the generation of a large
 number of designs. The feedback-directed compilation process of LARA
 can be used to capture and extract feedback from the backend reports
 pertaining to resource usage or timing information and automatically
@@ -341,7 +341,7 @@ adjust the compilation process.
 
 An example of a LARA aspect for design space exploration is
 shown in Fig.~\ref{fig:aspect-exploration}. It highlights the feedback capabilities of the design
-flow: the aspect will generate and build the MaxC designs until the
+flow: the aspect will generate and build the \MAXC{} designs until the
 resource usage passes a specified LUT threshold, and at each step
 increasing a particular design attribute, such as exponent, mantissa or the parallelism of the design (by replicating the computational pipeline).
 \vspace{-3mm}
@@ -366,7 +366,7 @@ increasing a particular design attribute, such as exponent, mantissa or the para
            && i < LIMIT);
   end
 \end{lstlisting}
-\caption{Exploration aspect that generates multiple MaxC designs by varying a design attribute (e.g. number of kernels or mantissa) until a LUT threshold is reached.}
+\caption{Exploration aspect that generates multiple \MAXC{} designs by varying a design attribute (e.g. number of kernels or mantissa) until a LUT threshold is reached.}
 \label{fig:aspect-exploration}
 \vspace{-3mm}
 \end{figure}

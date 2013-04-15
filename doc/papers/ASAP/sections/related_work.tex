@@ -3,7 +3,7 @@
 A number of dataflow languages have been developed targeting FPGAs but
 also multi-core platforms. Table \ref{table:feature-comparison}
 summarises some of the important features of these languages compared
-to MaxC. Lucid \cite{ashcroft1977lucid}, SISAL
+to \MAXC{}. Lucid \cite{ashcroft1977lucid}, SISAL
 \cite{gurd1987implicit}, \cite{mcgraw1983sisal} and Lustre
 \cite{halbwachs1991synchronous}, are examples of functional dataflow
 languages. The latter is based on a synchronous programming model,
@@ -31,19 +31,19 @@ exploration process.
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.2}
   \centering
-  \caption{Feature comparison of MaxC and other dataflow languages.}
+  \caption{Feature comparison of \MAXC{} and other dataflow languages.}
   \label{table:feature-comparison}
   \begin{tabular}{ c |  c |  c |  c |  c }
     \hline
-    \         & \bf{Syntax} & \bf{Paradigm} & \bf{Impl.} & \bf{Support} \\
+    \           & \bf{Syntax} & \bf{Paradigm} & \bf{Impl.} & \bf{Support} \\
     \hline \hline
-    Lucid     & Lucid       & Func.         & Multiproc. & Software     \\
-    SISAL     & SISAL       & Func.         & Multiproc. & Software     \\
-    Lustre    & Lustre      & Sync.         & Multiproc. & Software     \\
-    MaxJ      & Java        & Imp.          & FPGA       & Hardware     \\
-    Streams-C & C           & Imp./CSP      & FPGA       & Combined     \\
-    ImpulseC  & C           & Imp./CSP      & Both       & Combined     \\
-    MaxC      & C           & Imp.          & FPGA       & Combined     \\
+    Lucid       & Lucid       & Func.         & Multiproc. & Software     \\
+    SISAL       & SISAL       & Func.         & Multiproc. & Software     \\
+    Lustre      & Lustre      & Sync.         & Multiproc. & Software     \\
+    MaxCompiler & Java        & Imp.          & FPGA       & Hardware     \\
+    Streams-C   & C           & Imp./CSP      & FPGA       & Combined     \\
+    ImpulseC    & C           & Imp./CSP      & Both       & Combined     \\
+    \MAXC{}     & C           & Imp.          & FPGA       & Combined     \\
   \end{tabular}
 \end{table}
 

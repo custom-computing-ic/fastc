@@ -22,10 +22,10 @@ addressing key areas in developing hardware acceleration solutions:
 \end{enumerate}
 
 To meet these requirements we propose the following approach. Firstly,
-we introduce MaxC (described in Section \ref{sec:maxc}), a novel
+we introduce \MAXC{} (described in Section \ref{sec:maxc}), a novel
 language for specifying dataflow designs that provides support for
 run-time reconfiguration. We specify the accelerated portion of the
-original applications using MaxC dataflow kernels. By maintaining
+original applications using \MAXC{} dataflow kernels. By maintaining
 compatibility with the C99 standard we improve developer productivity
 by providing a familiar language and introduce the possibility of
 mixing hardware/software specifications. Secondly, by using an aspect
@@ -39,7 +39,7 @@ specific constraints.
 The proposed design flow is illustrated in Fig.~\ref{fig:design-flow}
 and follows the steps: (i) a C application containing an embedded
 high-level dataflow design is developed from the original source
-application (implemented using MaxC, described in Section
+application (implemented using \MAXC{}, described in Section
 \ref{sec:maxc}), (ii) the dataflow design is transformed (\emph{woven})
 by the aspects in the repository to generate new designs (e.g with
 support for run-time reconfiguration, with various word-length
@@ -64,7 +64,7 @@ Compared to existing work described in
 freedom in the exploration of design level optimisation (such as word
 length optimisations and mapping of arithmetic blocks to DSPs) by
 using a combination of implementation aspects (shown in
-Fig.~\ref{fig:design-flow}) and MaxC optimisation options.
+Fig.~\ref{fig:design-flow}) and \MAXC{} optimisation options.
 Additionally our approach targets a dataflow architecture as opposed
 to the von Neumann architecture (GPP + Custom accelerator) proposed in
 the related work. We explicitly consider and implement run-time
