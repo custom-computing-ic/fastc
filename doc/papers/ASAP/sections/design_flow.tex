@@ -5,10 +5,10 @@ We propose a novel design flow for aspect-driven compilation of
 dataflow designs to meet the following requirements and design goals,
 addressing key areas in developing hardware acceleration solutions:
 \begin{enumerate}
-\item \emph{Performance:} specify high-performance dataflow designs, that
-  achieve significant speedup over software only versions; exploit the
-  run-time reconfiguration capability of FPGA devices to improve
-  performance and efficiency;
+\item \emph{Performance:} specify high-performance dataflow designs,
+  that achieve significant speedup over sequentially executed
+  implementations; exploit the run-time reconfiguration capability of
+  FPGA devices to improve performance and efficiency;
 \item \emph{Portability:} improve portability of dataflow designs, to
   allow reuse of optimisation strategies on various platforms;
 \item \emph{Integration:} simplify translation of existing
@@ -40,16 +40,16 @@ The proposed design flow is illustrated in Fig.~\ref{fig:design-flow}
 and follows the steps: (i) a C application containing an embedded
 high-level dataflow design is developed from the original source
 application (implemented using \MAXC{}, described in Section
-\ref{sec:maxc}), (ii) the dataflow design is transformed (\emph{woven})
-by the aspects in the repository to generate new designs (e.g with
-support for run-time reconfiguration, with various word-length
-configurations and various compilation times -- these are covered in
-detail in Section \ref{sec:aspects}), (iii) the generated
-configurations are compiled using a backend compilation toolchain (in
-our case MaxCompiler) to FPGA designs, (iv) the feedback from the
-compilation process is used to drive the design space exploration,
-repeating the weaving and compilation process until user specified
-requirements are met.
+\ref{sec:maxc}), (ii) the dataflow design is transformed
+(\emph{woven}) by the aspects in the repository to generate new
+designs (e.g with support for run-time reconfiguration, with various
+word-length configurations and various compilation times -- these are
+covered in detail in Section \ref{sec:aspects}), (iii) the generated
+configurations are compiled using a backend compilation toolchain
+(currently MaxCompiler) to dataflow designs implemented on FPGAs, (iv)
+the feedback from the compilation process is used to drive the design
+space exploration, repeating the weaving and compilation process until
+user specified requirements are met.
 
 \begin{figure}[!h]
   \includegraphics[scale=0.48, trim=60 50 0 0]{figs/design-flow}
