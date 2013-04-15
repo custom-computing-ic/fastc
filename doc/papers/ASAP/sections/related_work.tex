@@ -17,16 +17,16 @@ ImpulseC\cite{ImpulseC} use imperative ANSI C syntax and an execution
 model based on Communicating Sequential Processes and introduce
 non-standard syntax and constructs for specifying designs such as
 special comment blocks which are used to annotate the C application
-code. This makes the languages harder to integrate with existing
-source-to-source translation or aspect weaving frameworks. Hybrid
-approaches such as MaxCompiler \cite{MaxelerTechnologies:2012}
-separate the CPU run-time component from the accelerated one, providing
-an imperative C based run-time environment and a Java dataflow API for
-building the accelerator designs. This separation complicates the
-development process, since the two components have to be managed
-separately and hinders information sharing between the two components
-(such as common design parameters) and, consequently, the design space
-exploration process.
+code. The specialised syntax makes the languages harder to integrate
+with existing source-to-source translation or aspect weaving
+frameworks. Hybrid approaches such as MaxCompiler
+\cite{MaxelerTechnologies:2012} separate the CPU run-time component
+from the accelerated one, providing an imperative C based run-time
+environment and a Java dataflow API for building the accelerator
+designs. The separation complicates the development process, since
+the two components have to be managed separately and hinders
+information sharing between the two components (such as common design
+parameters) and, consequently, the design space exploration process.
 
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.2}
@@ -64,12 +64,11 @@ used to improve developer productivity and run-time reconfiguration
 aspects that can lead to improved performance.
 
 The use of aspect-oriented programming for specifying strategies for
-run-time adaptation of FPGA designs is discussed in
-\cite{6322875}. This is different than the static process considered
-in this paper in which the run-time reconfiguration aspects generate
-and schedule all partitions of the application at compile time, to
-achieve optimal performance as described in
-\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}. One advantage of our approach
-is that an optimal allocation is generated from the start. However we
-do not have the flexibility of adapting the design to varying input
-conditions.
+run-time adaptation of FPGA designs discussed in \cite{6322875}
+differs from the static process considered in this paper in which the
+run-time reconfiguration aspects generate and schedule all partitions
+of the application at compile time, to achieve optimal performance as
+described in \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}. One advantage of
+our approach is that an optimal allocation is generated from the
+start. However we do not have the flexibility of adapting the design
+to varying input conditions.

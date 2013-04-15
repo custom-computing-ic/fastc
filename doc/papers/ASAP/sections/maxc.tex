@@ -14,10 +14,9 @@ implement the transformations required for the actual implementation.
 required by the proposed flow:
 
 \begin{itemize}
-\item Imperative specification of dataflow designs. Being based on the
-  widely used C99 standard makes it familiar and easy to adopt for
-  developers, facilitating translation of existing application code to
-  dataflow designs.
+\item Imperative specification of dataflow designs. The C99 syntax
+  makes it familiar and easy to adopt for developers, facilitating
+  translation of existing application code to dataflow designs.
 \item Good interaction with existing source level translation and
   weaving tools. Simple syntax allows the language to interact well
   with existing compilers or source to source translation frameworks,
@@ -37,8 +36,8 @@ required by the proposed flow:
 \MAXC{} is designed to express the simplest form of a dataflow design
 while optimisations and other transformations are encapsulated in
 aspects which are developed separately and applied through aspect
-weaving. This results in a more flexible approach for generating and
-exploring the space of efficient dataflow designs.
+weaving. This approach results in a more flexible approach for
+generating and exploring the space of efficient dataflow designs.
 
 Since \MAXC{} is compiled to a MaxCompiler design it uses the same
 execution model: a design is composed of one or more computational
@@ -76,18 +75,18 @@ HW mapping                  & C pragmas                   & C99 (line 17)       
 Table~\ref{table:maxc-features} summarises the features of \MAXC{} and
 Fig.~\ref{fig:maxc-1dconv} shows an example dataflow kernel which
 implements a 1D convolution computation used to value European
-options.  Kernels are defined as regular C functions with inputs
-clearly defined in the kernel header. Streams are represented as
-regular C99 pointers.  Normal array notation can be used to generate
-either previous or future values or dereference the stream to get the
-current stream value. Negative indices are allowed for accessing
-previous stream values and supported offset expressions are linear
-expressions comprised of constants or variables (either loop induction
-variables, or normal variables but for which a compile time range of
-values is specified -- this is required to generate efficient
-hardware). Constructs such as loops are supported as long as their
-bounds are known at compile time and are used to parametrize dataflow
-designs with values known at compilation time.
+options. Kernels are defined as regular C functions with inputs
+clearly defined as arguments in the function signature. Streams are
+represented as regular C99-style pointers.  Normal array notation can be
+used to generate either previous or future values or dereference the
+stream to get the current stream value. Negative indices are allowed
+for accessing previous stream values and supported offset expressions
+are linear expressions comprised of constants or variables (either
+loop induction variables, or normal variables but for which a compile
+time range of values is specified -- this is required to generate
+efficient hardware). Constructs such as loops are supported as long as
+their bounds are known at compile time and are used to parametrize
+dataflow designs with values known at compilation time.
 
 \lstset{style=MaxC}
 
