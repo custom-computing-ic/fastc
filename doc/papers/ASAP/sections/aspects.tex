@@ -3,16 +3,17 @@
 
 Aspects are standalone modules that capture functional cross-cutting
 concerns that are decoupled from the primary function of a
-program. AspectJ~\cite{Kiczales:2001}, which is the standard language
-for Aspect-Oriented Programming (AOP), captures program execution
-points (such as method calls) at run-time to allow new code to be
-executed before, after or in place of these execution points through a
-process called \emph{weaving}. The main motivation behind AspectJ in
-particular, and AOP in general, is to solve the modularization problem
-when dealing with multiple cross-cutting functional concerns.
+program. AspectJ\cite{Kiczales:2005:AP:1062455.1062640}, an implementation of
+Aspect-Oriented Programming (AOP) for the Java programming language,
+captures program execution points (such as method calls) at run-time
+to allow new code to be executed before, after or in place of these
+execution points through a process called \emph{weaving}. The main
+motivation behind AspectJ in particular, and AOP in general, is to
+solve the modularization problem when dealing with multiple
+cross-cutting functional concerns.
 
 The LARA aspect-oriented
-design-flow~\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012},
+design-flow \cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012},
 on the other hand, performs the weaving process at compile-time to
 satisfy non-functional concerns, such as to improve performance on a
 particular hardware platform. For this purpose, the LARA weaving
@@ -25,12 +26,12 @@ In this paper, we combine the LARA aspect design-flow with \MAXC{}
 dataflow designs. In particular, \MAXC{} uses standard C99 syntax to
 capture dataflow computations while aspects specify decoupled
 optimisation and transformation strategies that operate on \MAXC{}
-descriptions. This makes the functionality of the application easier
-to understand, more maintainable and portable since it is no longer
-obscured by various structural or algorithmic transformations, as well
-as platform specific optimisations. In addition, strategies coded in
-LARA can be re-applied automatically in different applications, thus
-improving design productivity.
+descriptions. This approach makes the functionality of the application
+easier to understand, more maintainable and portable since it is no
+longer obscured by various structural or algorithmic transformations,
+as well as platform specific optimisations. In addition, strategies
+coded in LARA can be re-applied automatically in different
+applications, thus improving design productivity.
 
 We report four types of aspects (Table~\ref{tbl:aspects}) used with \MAXC{} designs:
 
@@ -63,7 +64,7 @@ compilation speed. Separating these concerns makes the original
 application code easier to maintain and enables the automatic
 application of these transformations to a wide range of designs, thus
 improving developer productivity. The goal for the \MAXC{} kernel simulation model is that it should be possible to compile and run dataflow designs using the standard GCC
-toolchain in order to verify the logical correctness of the
+toolchain in order to verify the functional correctness of the
 design. Hence, simulation aspects can be applied to the original dataflow design to
 enable pure software simulation. Compilation aspects, on the other hand, can be applied during the development process to create versions of the dataflow design that compile faster. They apply
 changes such as reducing the operating frequency, removing debug
