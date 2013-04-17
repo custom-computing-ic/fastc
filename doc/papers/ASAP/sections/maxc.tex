@@ -3,10 +3,10 @@
 
 \MAXC{} (Facile Aspect-driven Source Transformation) is a novel
 language for specifying dataflow designs that are used as a starting
-point for the design proposed in Section \ref{sec:design-flow}. In
-particular, we use the C language as an intermediate language to
-capture the dataflow computation, and instead of heavily relying on
-API libraries to specify the design (as in MaxCompiler
+point for the design flow proposed in Section
+\ref{sec:design-flow}. In particular, we use C syntax to capture
+dataflow computations, and instead of heavily relying on API libraries
+to specify the design (as in MaxCompiler
 \cite{MaxelerTechnologies:2012} or Streams-C
 \cite{Gokhale:Stone:Arnold:Kalinowski:2000}) we use aspects to
 implement the transformations required for the actual implementation.
@@ -17,7 +17,7 @@ required by the proposed flow:
 \begin{itemize}
 \item Imperative specification of dataflow designs. C99 syntax is
   enforced by the \MAXC{} compiler which is based on the ROSE
-  Framework (with EDG as a frontend) and makes the language familiar
+  Framework (with EDG as a front-end) and makes the language familiar
   and easy to adopt for developers, facilitating translation of
   existing application code to dataflow designs.
 \item Good interaction with existing source level translation and
@@ -27,13 +27,13 @@ required by the proposed flow:
   tools.
 \item Combined hardware/software design. Specifications of dataflow
   kernels and CPU run-time software can be mixed. The example shown in
-  Fig.~\ref{fig:maxc-1dconv} can be compiled with the GCC toolchain
-  without any issues, but when using the \MAXC{} compiler, the pragma
-  indicates the link between the software and hardware, which results
-  in an accelerated hardware software/solution.
-\item Supports datapath and control path generation. \MAXC{} allows
-  specifying both datapath and control operations that are
-  automatically mapped to stream multiplexers.
+  Fig.~\ref{fig:maxc-1dconv} can be compiled with the GCC toolchain,
+  but when using the \MAXC{} compiler, the pragma indicates the link
+  between the software and hardware, which results in an accelerated
+  hardware software/solution.
+\item Supports data path and control path generation. \MAXC{} allows
+  specifying both data and control operations that are automatically
+  mapped to stream multiplexers.
 \end{itemize}
 
 \MAXC{} is used to express the simplest form of a dataflow design
@@ -50,7 +50,7 @@ all active inputs have available data.
 \begin{table}[!h]
   \centering
 \renewcommand{\arraystretch}{1.2}
-\caption{Table summarising the main components of the \MAXC{} language.}
+\caption{Summary of the main features of the \MAXC{} language.}
 \label{table:maxc-features}
 \begin{tabular}{l|l|l}
 \hline

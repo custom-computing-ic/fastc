@@ -74,21 +74,21 @@ design space.
 \vspace*{0.5ex}
 \noindent{\bf Development Aspects.} Development aspects capture
 transformations that have an impact on the development process such as
-debugging (Section~\ref{sect:asp_debug}), simulating kernels or
-improving compilation speed. Separating these concerns makes the
-original application code easier to maintain and enables the automatic
-application of these transformations to a wide range of designs, thus
-improving developer productivity. The goal for the \MAXC{} kernel
-simulation model is that it should be possible to compile and run
-dataflow designs using the standard GCC toolchain in order to verify
-the functional correctness of the design. Hence, simulation aspects
-can be applied to the original dataflow design to enable pure software
-simulation. Compilation aspects, on the other hand, can be applied
-during the development process to create versions of the dataflow
-design that compile faster. They apply changes such as reducing the
+debugging (Section~\ref{sect:asp_debug}), and, potentially, simulating
+kernels or improving compilation speed. Separating these concerns
+makes the original application code easier to maintain and enables the
+automatic application of these transformations to a wide range of
+designs, thus improving developer productivity. The goal for the
+\MAXC{} kernel simulation model is that it should be possible to
+compile and run dataflow designs using the standard GCC toolchain in
+order to verify the functional correctness of the design. Hence,
+simulation aspects could be applied to the original dataflow design to
+enable pure software simulation. Compilation aspects, on the other
+hand, could be applied during the development process to create
+versions of the dataflow design that compile faster by reducing the
 operating frequency, removing debug blocks or applying design-level
-optimisations that can resolve timing constraints. Naturally reducing
-the compilation time increases developer productivity.
+optimisations that can resolve timing constraints. Naturally, reducing
+the compilation time would increase developer productivity.
 
 
 \begin{table}[tp]
@@ -143,11 +143,11 @@ Hence, a hardware/software partitioning strategy can be performed in
 five steps: (i)~detecting hotspots in the program, (ii)~detecting code
 patterns from hotspots that are suited for dataflow computation and
 acceleration, (iii)~performing the outlining transformation so that
-each candidate for acceleration is enclosed in a function $f$,
-(iv)~deriving a dataflow version $fast\_f$ from state-based $f$,
-(v)~placing a FAST pragma on top of each function call to $f$ and
-associate it to the corresponding $fast\_f$ function. Each of these
-steps can be described as separate LARA aspect and combined to form a
+each candidate for acceleration is enclosed in a function \texttt{f},
+(iv)~deriving a dataflow version \texttt{fast\_f} from state-based \texttt{f},
+(v)~placing a FAST pragma on top of each function call to \texttt{f} and
+associate it to the corresponding \texttt{fast\_f} function. Each of these
+steps can be described as a separate LARA aspect and combined to form a
 hardware/software partitioning strategy.
 
 \subsection{Monitorisation Aspect}
@@ -191,20 +191,20 @@ can compute the following information for every innermost loop: (a)
 the average number of times it has been executed, (b) the average
 number of iterations, (c) the loop average time, and (d) the loop
 iteration average time. For this purpose, we use a monitoring API
-composed by 4 functions to mark the beginning and end of the loop
-(monitor\_instanceI and monitor\_instanceE respectively), and to mark
-the beginning and end of an iteration (monitor\_iterI and
-monitor\_iterE respectively). These monitoring functions keep an
-account of the frequency of execution and the time to complete the
-whole loop and a single iteration.  The aspect code is as follows:
-line~2 selects all loops in the application that are innermost (loops
-with no other loops enclosed); lines~3--8 place an instance monitor
-call before and after each selected loop; lines 10--13 select all entry
-points inside the loop and insert a monitoring call to mark the
-beginning of each iteration; lines~14--17 place an instance monitor
-call to mark the end of each iteration. The following table shows an
-example of applying the aspect from Fig.~\ref{fig:hotspot} on a C code
-containing a loop:
+composed of 4 functions to mark the beginning and end of the loop
+(\texttt{monitor\_instanceI} and \texttt{monitor\_instanceE}
+respectively), and to mark the beginning and end of an iteration
+(\texttt{monitor\_iterI} and \texttt{monitor\_iterE}
+respectively). These monitoring functions keep an account of the
+frequency of execution and the time to complete the whole loop and a
+single iteration.  The aspect code is as follows: line~2 selects all
+loops in the application that are innermost (loops with no other loops
+enclosed); lines~3--8 place an instance monitor call before and after
+each selected loop; lines 10--13 select all entry points inside the
+loop and insert a monitoring call to mark the beginning of each
+iteration; lines~14--17 place an instance monitor call to mark the end
+of each iteration. The following table shows an example of applying
+the aspect from Fig.~\ref{fig:hotspot} on a C code containing a loop:
 \vspace{2mm}
 
 {\footnotesize
@@ -229,13 +229,21 @@ void f() \{ & void f() \{ \\
 }
 \vspace{2ex}
 
-\noindent Each monitoring call in the woven code receives as a parameter the loop key, which uniquely identifies the loop within the application. The loop key is generated by concatenating the function name with the hierarchical position of the loop within the abstract syntax tree. For instance, \emph{f:2:1} corresponds to the 1st loop inside the 2nd outermost loop of function $f$. The hotspots can be identified by an aspect (not shown) that takes the profiling information generated by the monitorization API calls, and that uses an heuristic to compute the most profitable computations to be offloaded to hardware.
+\noindent Each monitoring call in the woven code receives as a
+parameter the loop key, which uniquely identifies the loop within the
+application. The loop key is generated by concatenating the function
+name with the hierarchical position of the loop within the abstract
+syntax tree. For instance, \emph{f:2:1} corresponds to the 1st loop
+inside the 2nd outermost loop of function \texttt{f}. The hotspots can
+be identified by an aspect (not shown) that takes the profiling
+information generated by the monitorization API calls, and that uses
+an heuristic to compute the most profitable computations to be
+offloaded to hardware.
 
 \subsection{Reconfiguration Aspect}
 \label{sect:asp_reconfig}
-To support run-time reconfiguration, we specify the configuration associated with the function call in the \MAXC{} pragma. For instance:
-
-\vspace{3mm}
+To support run-time reconfiguration, we specify the configuration
+associated with the function call in the \MAXC{} pragma. For instance:
 
 \noindent\texttt{\footnotesize{\marktext{\#pragma FAST hw:fast\_f0 cfg:c0}\\
 x = f(0); \\
@@ -245,7 +253,23 @@ y = f(x); \\
 z = g(x); \\
 }}
 
-\noindent With the above code annotations, our design-flow can generate multiple configurations, each containing a set of \MAXC{} implementations that can be executed in parallel. If the configuration name is not specified using the \MAXC{} pragma, then we assume a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximise the utilisation of FPGA resources. Within this context, we use a hardware partition, which contains a set of configurations that are used to support reconfiguration during the life cycle of an application. In the above example, configuration c0 contains a single implementation of f (\emph{fast\_f0}), and thus can potentially use more resources and be faster than the \emph{fast\_f1} version which must share the same configuration (\emph{c1}) with \emph{fast\_g}.
+\noindent With the above code annotations, our design-flow can
+generate multiple configurations, each containing a set of \MAXC{}
+implementations that can be executed in parallel. If the configuration
+name is not specified using the \MAXC{} pragma, then we assume a
+default configuration. Having a single configuration can lead to
+situations where at any point in time and due to data dependencies,
+part of the functions are idle. With run-time reconfiguration, we can
+exploit unused resources to support active functions. In particular,
+during the execution of an application, we select various
+configurations at different points in time to maximise the utilisation
+of FPGA resources. Within this context, we use a hardware partition,
+which contains a set of configurations that are used to support
+reconfiguration during the life cycle of an application. In the above
+example, configuration \texttt{c0} contains a single implementation of
+\texttt{f} (\texttt{fast\_f0}), and thus can potentially use more
+resources and be faster than the \texttt{fast\_f1} version which must
+share the same configuration (\texttt{c1}) with \texttt{fast\_g}.
 
 The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
 approach for extracting valid and efficient hardware partitions. To realize
@@ -321,7 +345,7 @@ utilisation of DSP blocks in a statement.  The aspect shown in
 Fig.~\ref{fig:aspect-DSP} is the strategy for balancing DSP blocks in
 every statement of an application. Instead of adding the above pragma
 manually, we provide a set of rules (lines~3--4) that define where to
-place the balanceDSP pragma. In this example, we established the rule
+place the \texttt{balanceDSP} pragma. In this example, we established the rule
 that full DSP block utilisation is performed to any statement that has
 5 or more multipliers and adders, balanced if 3 or more multipliers,
 and no DSP utilisation otherwise.
