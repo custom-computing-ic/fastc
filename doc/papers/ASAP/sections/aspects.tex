@@ -33,17 +33,31 @@ as well as platform specific optimisations. In addition, strategies
 coded in LARA can be re-applied automatically in different
 applications, thus improving design productivity.
 
-We report four types of aspects (Table~\ref{tbl:aspects}) used with \MAXC{} designs:
+We report four types of aspects (Table~\ref{tbl:aspects}) used with
+designs in \MAXC{}:
 
 \vspace*{0.5ex}
-\noindent{\bf System Aspects.} System aspects capture transformation or optimisation strategies that affect the whole application such as those concerning
-hardware/software partitioning, monitorisation and run-time reconfiguration
-capabilities. The goal of hardware/software partitioning is to improve the overall
-execution time by identifying parts of the code to be offloaded to hardware (Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the application code to extract run-time behaviour, and uncover opportunities for optimisation (Section~\ref{sect:asp_mon}). Run-time reconfiguration (Section~\ref{sect:asp_reconfig}) removes idle functions from the accelerator at specific points in time, to use more resources for functions that are active.
+\noindent{\bf System Aspects.} System aspects capture transformation
+or optimisation strategies that affect the whole application such as
+those concerning hardware/software partitioning, monitorisation and
+run-time reconfiguration capabilities. The goal of hardware/software
+partitioning is to improve the overall execution time by identifying
+parts of the code to be offloaded to hardware
+(Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the
+application code to extract run-time behaviour, and uncover
+opportunities for optimisation (Section~\ref{sect:asp_mon}). Run-time
+reconfiguration (Section~\ref{sect:asp_reconfig}) removes idle
+functions from the accelerator at specific points in time, to use more
+resources for functions that are active.
 
 \vspace*{0.5ex}
-\noindent{\bf Implementation Aspects.} Implementation aspects focus on low level design optimisations that can be applied to the \MAXC{} designs in order to improve timing or resource usage. For instance, operator optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map operators in the program to dedicated hardware resources. Word-length aspects
-specify the numerical representation of variables and expressions in the design.
+\noindent{\bf Implementation Aspects.} Implementation aspects focus on
+low level design optimisations that can be applied to designs in
+\MAXC{} to improve timing or resource usage. For instance, operator
+optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map
+operators in the program to dedicated hardware resources. Word-length
+aspects specify the numerical representation of variables and
+expressions in the design.
 
 \vspace*{0.5ex}
 \noindent{\bf Exploration Aspects.} Exploration aspects deal with
@@ -58,19 +72,23 @@ metaheuristic-based aspects to find optimal solutions in a very large
 design space.
 
 \vspace*{0.5ex}
-\noindent{\bf Development Aspects.} Development aspects capture transformations that have an impact on the
-development process such as debugging (Section~\ref{sect:asp_debug}), simulating kernels or improving
-compilation speed. Separating these concerns makes the original
-application code easier to maintain and enables the automatic
+\noindent{\bf Development Aspects.} Development aspects capture
+transformations that have an impact on the development process such as
+debugging (Section~\ref{sect:asp_debug}), simulating kernels or
+improving compilation speed. Separating these concerns makes the
+original application code easier to maintain and enables the automatic
 application of these transformations to a wide range of designs, thus
-improving developer productivity. The goal for the \MAXC{} kernel simulation model is that it should be possible to compile and run dataflow designs using the standard GCC
-toolchain in order to verify the functional correctness of the
-design. Hence, simulation aspects can be applied to the original dataflow design to
-enable pure software simulation. Compilation aspects, on the other hand, can be applied during the development process to create versions of the dataflow design that compile faster. They apply
-changes such as reducing the operating frequency, removing debug
-blocks or applying design-level optimisations that can resolve timing
-constraints. Naturally reducing the compilation time increases
-developer productivity.
+improving developer productivity. The goal for the \MAXC{} kernel
+simulation model is that it should be possible to compile and run
+dataflow designs using the standard GCC toolchain in order to verify
+the functional correctness of the design. Hence, simulation aspects
+can be applied to the original dataflow design to enable pure software
+simulation. Compilation aspects, on the other hand, can be applied
+during the development process to create versions of the dataflow
+design that compile faster. They apply changes such as reducing the
+operating frequency, removing debug blocks or applying design-level
+optimisations that can resolve timing constraints. Naturally reducing
+the compilation time increases developer productivity.
 
 
 \begin{table}[tp]
@@ -121,14 +139,21 @@ mapped to the dataflow implementation described in \texttt{fast\_f()}. This
 way, our design-flow can automatically switch from a pure software
 application to a software/hardware design.
 
-Hence, a hardware/software partitioning strategy can be performed in five steps: (i)~detecting hotspots in the program, (ii)~detecting code patterns from hotspots that are suited for dataflow computation and acceleration,
-(iii)~performing the outlining transformation so that each candidate
-for acceleration is enclosed in a function $f$, (iv)~deriving a
-dataflow version $fast\_f$ from state-based $f$, (v)~placing a FAST pragma on top of each function call to $f$ and associate it to the corresponding $fast\_f$ function. Each of these steps can be described as separate LARA aspect and combined to form a hardware/software partitioning strategy.
+Hence, a hardware/software partitioning strategy can be performed in
+five steps: (i)~detecting hotspots in the program, (ii)~detecting code
+patterns from hotspots that are suited for dataflow computation and
+acceleration, (iii)~performing the outlining transformation so that
+each candidate for acceleration is enclosed in a function $f$,
+(iv)~deriving a dataflow version $fast\_f$ from state-based $f$,
+(v)~placing a FAST pragma on top of each function call to $f$ and
+associate it to the corresponding $fast\_f$ function. Each of these
+steps can be described as separate LARA aspect and combined to form a
+hardware/software partitioning strategy.
 
 \subsection{Monitorisation Aspect}
 \label{sect:asp_mon}
-To find potential hotspots in the application, for instance to perform hardware/software partitioning, we can use the aspect in Fig.~\ref{fig:hotspot}:
+To find potential hotspots in the application, for instance to perform
+hardware/software partitioning, we can use the aspect in Fig.~\ref{fig:hotspot}:
 
 \lstset{style=lara}
 \begin{figure}[!h]
@@ -152,7 +177,9 @@ apply $begin.insert before
 end
 end
 \end{lstlisting}
-\caption{Aspect that instruments the application to monitor loop activity. The information generated can be used to identify hotspots.}
+\caption{Aspect that instruments the application to monitor loop
+  activity. The information generated can be used to identify
+  hotspots.}
 \label{fig:hotspot}
 \end{figure}
 

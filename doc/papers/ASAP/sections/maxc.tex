@@ -34,19 +34,19 @@ required by the proposed flow:
   automatically mapped to stream multiplexers.
 \end{itemize}
 
-\MAXC{} is designed to express the simplest form of a dataflow design
+\MAXC{} is used to express the simplest form of a dataflow design
 while optimisations and other transformations are encapsulated in
 aspects which are developed separately and applied through aspect
 weaving. This approach results in a more flexible approach for
 generating and exploring the space of efficient dataflow designs.
 
-Since \MAXC{} is compiled to a MaxCompiler design it uses the same
-execution model: a design is composed of one or more computational
-kernels (which implement the functionality we are interested in) which
-are connected to form a design. Communication between kernels is
-asynchronous, so kernels can operate independently of each other, and
-a kernel will compute only when all it's active inputs have values
-available.
+Since designs in \MAXC{} are compiled to MaxCompiler designs, they
+use the same execution model: a design is composed of one or more
+computational kernels (which implement the functionality we are
+interested in) which are connected to form a design. Communication
+between kernels is asynchronous, so kernels can operate independently
+of each other, and a kernel will compute only when all it's active
+inputs have values available.
 
 \begin{table}[!h]
   \centering
