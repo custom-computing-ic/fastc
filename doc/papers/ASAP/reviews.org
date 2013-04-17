@@ -1,0 +1,100 @@
+* Change MaxC Name
+** DONE Replace MaxC with macro
+** TODO Replace MaxC in diagram
+** TODO Replace MaxC in snippets
+>> Waiting to decide on name first
+
+Jacob Review
+-----------
+* DONE Remove most references to "MaxJ" and use "MaxCompiler" instead.
+
+* TODO Emphasise the distinction between meta-programming with a software
+ library (as MaxCompiler) and Aspect + Native Code code (C +
+Pragmas). Both allow design parametrisation. The former makes writing
+designs somewhat less intuitive/ harder to understand.  It is
+interesting that the approach taken with MaxC + LARA addresses some of
+these issues by allowing one to separate computation description from
+the parametrisation. Maybe we could emphasise this distinction in the
+related-works section.
+
+* TODO What implementation technology to do you use for MaxC? If you used
+  something like LLVM it would lend more weight to the C99 syntax
+  compliance.
+
+* TODO Are the numbers in Figure 9 for a single function unit, kernel, or
+  pipe? The numbers are quite low which lead me to believe they might
+  be just looking at the size of function units with those
+  parameters. If this is the case, I think numbers for the whole
+  compute-part of the design would be more useful?
+
+>> Clearly state that numbers are per functional unit (one addition or
+one mult.) Changing this would make the results application dependent.
+
+* TODO Why do you have a #pragma on the invocation site of a function call
+  which may be implemented in a DFE? Wouldn't it make more sense to
+  have the pargma on the function call definition which also defines
+  the alternative software version (or vice-versa)?
+
+ >> For now we use the syntax since we want to be able to specify
+  certain parameters (e.g. which configuration and when to run) which
+  may be depend on the point in the application where we make the call.
+
+* DONE It looks like the paper follows the same spin as Maxeler: we are
+    targeting compilation for data-flow engines which currently happen
+    to be implemented on FPGAs. I think this is a great way to frame
+    the generality of the work, and would suggest you might want to do
+    the following to stick to this theme:
+** DONE In Section II, the ' Performance Requirement' currently
+   says we're targeting performance over software. As we are looking
+    at the data-flow approach vs. Von Neumann architectures maybe we
+    could say performance over sequentially executed operations or
+    something similar. This would also make it clear we consider other
+    acceleration technologies like GPUs.
+** DONE Page 2, col 1, last paragraph: "... to FPGA designs, ... ", change
+   to "... to dataflow designs implemented with FPGAs... " ?
+** DONE Section III, MaxC feature list - "stream multiplexers" are introduced
+    without context. Perhaps in the introduction we could make a quick
+    note that dataflow computing operates on streams of data.
+
+* DONE I believe we should make it clearer MaxC uses a strict subset of the
+  C99 _syntax_.
+
+* DONE Page 3, first paragraph "inputs clearly defined in kernel header" -
+  Perhaps clearer if you say "inputs clearly defined by the arguments
+  in the function signature" ?
+
+* DONE Section IV - I wouldn't say AspectJ is THE standard for AOP. It's
+  just a fairly comprehensive implementation of the concept for Java
+  only. There must be a better citation you could use. Maybe this:
+  http://dl.acm.org/citation.cfm?doid=1062455.1062640 ?
+
+* DONE Section IV, Development Aspects, "... logical correctness ..." -
+  "functional correctness" ?
+
+* WONTFIX The presented debug aspect isn't very "exciting". Perhaps something
+  more relevant would be an aspect which asserts the range of values a
+  variable actually takes during execution in simulation. This can be
+  useful for determining if assumptions made for
+  datatype-optimisations are appropriate. A change like this at this
+  late stage is probably too involved for the paper, but maybe more
+  useful in your project report.
+
+* Review 3
+** WONTFIX the connection and motivation on how the parts fit together is somewhat missing.
+>> I think this is clear from the design flow section
+** TODO what is a "1D convolution computation to value European options"?
+
+* Review 1
+** TODO Reference OpenACC: It would be interesting if it could be extended to FPGAs.
+** TODO look at some of the next generation languages like Cray's Chapel
+<chapel.cray.com> or IBM's X10 <x10-lang.org> and whether they would work well
+with MaxC for FPGAs.
+** TODO mention compilation time
+
+* Review 4
+** TODO Some minor grammatical issues (missing commas, commas incorrectly placed,
+** DONE Use of the word "this" as the noun of a sentencpe,
+etc). E.g. "This makes dataflow designs..." This what?
+** WONTFIX How would the MaxC language work in other application domains? Are
+there constructs tightly-coupled or is it an open language?
+>> I would like to cover this in a separate paper maybe?
