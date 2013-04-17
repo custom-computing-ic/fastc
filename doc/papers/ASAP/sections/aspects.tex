@@ -76,14 +76,11 @@ design space.
 transformations that have an impact on the development process such as
 debugging (Section~\ref{sect:asp_debug}), and, potentially, simulating
 kernels or improving compilation speed. Separating these concerns
-makes the original application code easier to maintain and enables the
-automatic application of these transformations to a wide range of
-designs, thus improving developer productivity. The goal for the
-\MAXC{} kernel simulation model is that it should be possible to
-compile and run dataflow designs using the standard GCC toolchain in
-order to verify the functional correctness of the design. Hence,
-simulation aspects could be applied to the original dataflow design to
-enable pure software simulation. Compilation aspects, on the other
+makes the original code easier to maintain and enables the automatic
+application of these transformations to a wide range of designs,
+improving developer productivity. Simulation aspects could be applied
+to dataflow designs to generate equivalent state-based C code thus
+enabling pure software simulation. Compilation aspects, on the other
 hand, could be applied during the development process to create
 versions of the dataflow design that compile faster by reducing the
 operating frequency, removing debug blocks or applying design-level
@@ -245,6 +242,7 @@ offloaded to hardware.
 To support run-time reconfiguration, we specify the configuration
 associated with the function call in the \MAXC{} pragma. For instance:
 
+\vspace{3mm}
 \noindent\texttt{\footnotesize{\marktext{\#pragma FAST hw:fast\_f0 cfg:c0}\\
 x = f(0); \\
 \marktext{\#pragma FAST hw:fast\_f1 cfg:c1}\\
@@ -303,19 +301,24 @@ end
 \label{fig:aspect-reconf}
 \end{figure}
 
-Table \ref{fig:aspect-hash} shows an example of a hash table representing
-a hardware partition. The key (e.g. main:f:1) identifies a function call in the application, and is
-formed by concatenating the name of the caller function (main), the name of the invoked function (e.g. f) and a
-unique number (1).  Line~5 in the aspect shown in Fig.~\ref{fig:aspect-reconf} selects all function calls,
-and for each call found in the input partition (line~7), we set the
-appropriate pragma on top of the call statement (lines 10--12). We can now realize and experiment
-different reconfiguration designs by invoking this aspect with different hardware partitions.
+Table \ref{fig:aspect-hash} shows an example of a hash table
+representing a hardware partition. The key (e.g. main:f:1) identifies
+a function call in the application, and is formed by concatenating the
+name of the caller function (main), the name of the invoked function
+(e.g. f) and a unique number (1).  Line~5 in the aspect shown in
+Fig.~\ref{fig:aspect-reconf} selects all function calls, and for each
+call found in the input partition (line~7), we set the appropriate
+pragma on top of the call statement (lines 10--12). We can now realize
+and experiment different reconfiguration designs by invoking this
+aspect with different hardware partitions.
 
 
 %{\footnotesize
 %\fontfamily{pcr}\selectfont
 \begin{table}[!h]
-\caption{An example of a hardware partition, represented as a hash table, used with the reconfiguration aspect (Fig.~\ref{fig:aspect-reconf})}
+\caption{An example of a hardware partition, represented as a hash
+  table, used with the reconfiguration aspect
+  (Fig.~\ref{fig:aspect-reconf})}
 \label{fig:aspect-hash}
 \centering
 \begin{tabular}{c|c|c}
@@ -334,7 +337,9 @@ main:g:3 & fast\_g & c1 \\
 
 \subsection{Operator Optimisation Aspect}
 \label{sect:asp_ops}
-To provide architectural details to \MAXC{} designs, such as mapping operators to DSP blocks, we can use the following \MAXC{} pragma on top of a statement (including code blocks):
+To provide architectural details to \MAXC{} designs, such as mapping
+operators to DSP blocks, we can use the following \MAXC{} pragma on
+top of a statement (including code blocks):
 \vspace{2mm}
 
 \noindent\texttt{\footnotesize\marktext{\#pragma FAST balanceDSP:balanced} \\
