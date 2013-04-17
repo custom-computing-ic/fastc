@@ -111,8 +111,8 @@ implementation. For instance, the following C code:
 \vspace{3mm}
 
 \noindent\texttt{\footnotesize\marktext{void fast\_f() \{\emph{/* dataflow implementation */}\}} \\
-void f() \{\emph{/* software implementation */}\} \\
-\marktext{\#pragma fast hw:fast\_f} \\
+void \ \ \ \ \ f() \{\emph{/* software implementation */}\} \\
+\marktext{\#pragma FAST hw:fast\_f} \\
 f(); \\
 }
 
@@ -124,7 +124,7 @@ application to a software/hardware design.
 Hence, a hardware/software partitioning strategy can be performed in five steps: (i)~detecting hotspots in the program, (ii)~detecting code patterns from hotspots that are suited for dataflow computation and acceleration,
 (iii)~performing the outlining transformation so that each candidate
 for acceleration is enclosed in a function $f$, (iv)~deriving a
-dataflow version $fast\_f$ from state-based $f$, (v)~placing a fast pragma on top of each function call to $f$ and associate it to the corresponding $fast\_f$ function. Each of these steps can be described as separate LARA aspect and combined to form a hardware/software partitioning strategy.
+dataflow version $fast\_f$ from state-based $f$, (v)~placing a FAST pragma on top of each function call to $f$ and associate it to the corresponding $fast\_f$ function. Each of these steps can be described as separate LARA aspect and combined to form a hardware/software partitioning strategy.
 
 \subsection{Monitorisation Aspect}
 \label{sect:asp_mon}
@@ -210,11 +210,11 @@ To support run-time reconfiguration, we specify the configuration associated wit
 
 \vspace{3mm}
 
-\noindent\texttt{\footnotesize{\marktext{\#pragma fast hw:fast\_f0 cfg:c0}\\
+\noindent\texttt{\footnotesize{\marktext{\#pragma FAST hw:fast\_f0 cfg:c0}\\
 x = f(0); \\
-\marktext{\#pragma fast hw:fast\_f1 cfg:c1}\\
+\marktext{\#pragma FAST hw:fast\_f1 cfg:c1}\\
 y = f(x); \\
-\marktext{\#pragma fast hw:fast\_g cfg:c1}\\
+\marktext{\#pragma FAST hw:fast\_g cfg:c1}\\
 z = g(x); \\
 }}
 
@@ -242,7 +242,7 @@ apply
       var cfg = partition[$call.key].cfg;
       var hw = partition[$call.key].hw;
       $call.insert before %{
-         #pragma fast hw:[[hw]] cfg:[[cfg]]
+         #pragma FAST hw:[[hw]] cfg:[[cfg]]
       }%;
    }
 end
@@ -286,7 +286,7 @@ main:g:3 & fast\_g & c1 \\
 To provide architectural details to \MAXC{} designs, such as mapping operators to DSP blocks, we can use the following \MAXC{} pragma on top of a statement (including code blocks):
 \vspace{2mm}
 
-\noindent\texttt{\footnotesize\marktext{\#pragma fast balanceDSP:balanced} \\
+\noindent\texttt{\footnotesize\marktext{\#pragma FAST balanceDSP:balanced} \\
 \{x = x *y; x++; \}}
 
 \vspace{2mm} The balancing parameter corresponds to the degree of
@@ -318,7 +318,7 @@ apply
             match &= ($statement.num_construct(k)
                       >= gprofile[k]);}}
       if (match) {
-         var pragma = '#pragma fast balanceDSP:'
+         var pragma = '#pragma FAST balanceDSP:'
                       + gprofile.DspFactor;
          $statement.insert before "[[pragma]]";
          break;}}

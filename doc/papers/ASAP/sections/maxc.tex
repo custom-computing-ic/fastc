@@ -94,27 +94,28 @@ designs with values known at compilation time.
 
 \begin{figure}[!h]
   \begin{lstlisting}
-    void Convolution1D_FPGA(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER) {
+    void Price_FPGA(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER) {
       in(p);
 
       float* i4 = count(1000, 1);
       float* i1 = countChain(n1, 1, i4);
 
-      #pragma fast DSPBalance:full
+      #pragma FAST DSPBalance:full
       int result = p[0]  * c_0_0_0 + p[1]  * c_p_0_0 + p[-1] * c_n_0_0;
 
       int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
       out(up ? result : p);
     }
 
-    void Convolution1D_CPU(...) {...}
+    void Price_CPU(...) {...}
 
     int main() {
-      #pragma fast hw:Convolution1D_FPGA
-      Convolution1D_CPU(...);
+      #pragma FAST hw:Price_FPGA
+      Price_CPU(...);
     }
   \end{lstlisting}
-  \caption{Example \MAXC{} design for a 1D convolution kernel.}
+  \caption{\MAXC{} dataflow kernel for European Options
+    pricing.}
   \label{fig:maxc-1dconv}
 \end{figure}
 
