@@ -21,12 +21,16 @@ code. The specialised syntax makes the languages harder to integrate
 with existing source-to-source translation or aspect weaving
 frameworks. Hybrid approaches such as MaxCompiler
 \cite{MaxelerTechnologies:2012} separate the CPU run-time component
-from the accelerated one, providing an imperative C based run-time
-environment and a Java dataflow API for building the accelerator
-designs. The separation complicates the development process, since
-the two components have to be managed separately and hinders
-information sharing between the two components (such as common design
-parameters) and, consequently, the design space exploration process.
+from the accelerated one, providing a C run-time environment and a
+Java API for building dataflow designs via meta-programming. The
+separation complicates the development process, hindering sharing of
+design parameters and, consequently, the design space exploration
+process. The use of meta-programming simplifies design
+parametrisation, but can make resulting programs harder to
+understand. By contrast, the proposed approach allows the CPU and
+dataflow components to be specified using a single language and
+separates design parametrisation from computation, resulting in a more
+intuitive implementation.
 
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.2}
