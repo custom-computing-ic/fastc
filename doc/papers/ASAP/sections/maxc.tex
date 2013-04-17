@@ -1,12 +1,13 @@
 \section{The \MAXC{} Language}
 \label{sec:maxc}
 
-\MAXC{} is a novel language for specifying dataflow designs that are
-used as a starting point for the design proposed in Section
-\ref{sec:design-flow}. In particular, we use the C language as an
-intermediate language to capture the dataflow computation, and instead
-of heavily relying on API libraries to specify the design (as in
-MaxCompiler \cite{MaxelerTechnologies:2012} or Streams-C
+\MAXC{} (Facile Aspect-driven Source Transformation) is a novel
+language for specifying dataflow designs that are used as a starting
+point for the design proposed in Section \ref{sec:design-flow}. In
+particular, we use the C language as an intermediate language to
+capture the dataflow computation, and instead of heavily relying on
+API libraries to specify the design (as in MaxCompiler
+\cite{MaxelerTechnologies:2012} or Streams-C
 \cite{Gokhale:Stone:Arnold:Kalinowski:2000}) we use aspects to
 implement the transformations required for the actual implementation.
 
@@ -99,7 +100,7 @@ designs with values known at compilation time.
       float* i4 = count(1000, 1);
       float* i1 = countChain(n1, 1, i4);
 
-      #pragma maxc DSPBalance:full
+      #pragma fast DSPBalance:full
       int result = p[0]  * c_0_0_0 + p[1]  * c_p_0_0 + p[-1] * c_n_0_0;
 
       int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
@@ -109,7 +110,7 @@ designs with values known at compilation time.
     void Convolution1D_CPU(...) {...}
 
     int main() {
-      #pragma maxc hw:Convolution1D_FPGA
+      #pragma fast hw:Convolution1D_FPGA
       Convolution1D_CPU(...);
     }
   \end{lstlisting}

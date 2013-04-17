@@ -110,21 +110,21 @@ implementation. For instance, the following C code:
 
 \vspace{3mm}
 
-\noindent\texttt{\footnotesize\marktext{void maxc\_f() \{\emph{/* dataflow implementation */}\}} \\
+\noindent\texttt{\footnotesize\marktext{void fast\_f() \{\emph{/* dataflow implementation */}\}} \\
 void f() \{\emph{/* software implementation */}\} \\
-\marktext{\#pragma maxc hw:maxc\_f} \\
+\marktext{\#pragma fast hw:fast\_f} \\
 f(); \\
 }
 
 \noindent indicates that the software implementation of \texttt{f()} can be
-mapped to the dataflow implementation described in \texttt{maxc\_f()}. This
+mapped to the dataflow implementation described in \texttt{fast\_f()}. This
 way, our design-flow can automatically switch from a pure software
 application to a software/hardware design.
 
 Hence, a hardware/software partitioning strategy can be performed in five steps: (i)~detecting hotspots in the program, (ii)~detecting code patterns from hotspots that are suited for dataflow computation and acceleration,
 (iii)~performing the outlining transformation so that each candidate
 for acceleration is enclosed in a function $f$, (iv)~deriving a
-dataflow version $max\_f$ from state-based $f$, (v)~placing a maxc pragma on top of each function call to $f$ and associate it to the corresponding $maxc\_f$ function. Each of these steps can be described as separate LARA aspect and combined to form a hardware/software partitioning strategy.
+dataflow version $fast\_f$ from state-based $f$, (v)~placing a fast pragma on top of each function call to $f$ and associate it to the corresponding $fast\_f$ function. Each of these steps can be described as separate LARA aspect and combined to form a hardware/software partitioning strategy.
 
 \subsection{Monitorisation Aspect}
 \label{sect:asp_mon}
@@ -210,15 +210,15 @@ To support run-time reconfiguration, we specify the configuration associated wit
 
 \vspace{3mm}
 
-\noindent\texttt{\footnotesize{\marktext{\#pragma maxc hw:maxc\_f0 cfg:c0}\\
+\noindent\texttt{\footnotesize{\marktext{\#pragma fast hw:fast\_f0 cfg:c0}\\
 x = f(0); \\
-\marktext{\#pragma maxc hw:maxc\_f1 cfg:c1}\\
+\marktext{\#pragma fast hw:fast\_f1 cfg:c1}\\
 y = f(x); \\
-\marktext{\#pragma maxc hw:maxc\_g cfg:c1}\\
+\marktext{\#pragma fast hw:fast\_g cfg:c1}\\
 z = g(x); \\
 }}
 
-\noindent With the above code annotations, our design-flow can generate multiple configurations, each containing a set of \MAXC{} implementations that can be executed in parallel. If the configuration name is not specified using the \MAXC{} pragma, then we assume a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximise the utilisation of FPGA resources. Within this context, we use a hardware partition, which contains a set of configurations that are used to support reconfiguration during the life cycle of an application. In the above example, configuration c0 contains a single implementation of f (\emph{maxc\_f0}), and thus can potentially use more resources and be faster than the \emph{maxc\_f1} version which must share the same configuration (\emph{c1}) with \emph{maxc\_g}.
+\noindent With the above code annotations, our design-flow can generate multiple configurations, each containing a set of \MAXC{} implementations that can be executed in parallel. If the configuration name is not specified using the \MAXC{} pragma, then we assume a default configuration. Having a single configuration can lead to situations where at any point in time and due to data dependencies, part of the functions are idle. With run-time reconfiguration, we can exploit unused resources to support active functions. In particular, during the execution of an application, we select various configurations at different points in time to maximise the utilisation of FPGA resources. Within this context, we use a hardware partition, which contains a set of configurations that are used to support reconfiguration during the life cycle of an application. In the above example, configuration c0 contains a single implementation of f (\emph{fast\_f0}), and thus can potentially use more resources and be faster than the \emph{fast\_f1} version which must share the same configuration (\emph{c1}) with \emph{fast\_g}.
 
 The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
 approach for extracting valid and efficient hardware partitions. To realize
@@ -242,7 +242,7 @@ apply
       var cfg = partition[$call.key].cfg;
       var hw = partition[$call.key].hw;
       $call.insert before %{
-         #pragma maxc hw:[[hw]] cfg:[[cfg]]
+         #pragma fast hw:[[hw]] cfg:[[cfg]]
       }%;
    }
 end
@@ -273,9 +273,9 @@ different reconfiguration designs by invoking this aspect with different hardwar
 \hline
 \bf{\$call.key} & \bf{hw} & \bf{cfg}  \\
 \hline
-main:f:1 & maxc\_f0 & c0 \\
-main:f:2 & maxc\_f1 & c1 \\
-main:g:3 & maxc\_g & c1 \\
+main:f:1 & fast\_f0 & c0 \\
+main:f:2 & fast\_f1 & c1 \\
+main:g:3 & fast\_g & c1 \\
 \hline
 \end{tabular}
 \end{table}
@@ -286,7 +286,7 @@ main:g:3 & maxc\_g & c1 \\
 To provide architectural details to \MAXC{} designs, such as mapping operators to DSP blocks, we can use the following \MAXC{} pragma on top of a statement (including code blocks):
 \vspace{2mm}
 
-\noindent\texttt{\footnotesize\marktext{\#pragma maxc balanceDSP:balanced} \\
+\noindent\texttt{\footnotesize\marktext{\#pragma fast balanceDSP:balanced} \\
 \{x = x *y; x++; \}}
 
 \vspace{2mm} The balancing parameter corresponds to the degree of
@@ -318,7 +318,7 @@ apply
             match &= ($statement.num_construct(k)
                       >= gprofile[k]);}}
       if (match) {
-         var pragma = '#pragma maxc balanceDSP:'
+         var pragma = '#pragma fast balanceDSP:'
                       + gprofile.DspFactor;
          $statement.insert before "[[pragma]]";
          break;}}
@@ -360,8 +360,8 @@ increasing a particular design attribute, such as exponent, mantissa or the para
   var i = 0;
   do {
     var designName = genName(config);
-    call genMaxC(designName, config);
-    buildMaxC(designName);
+    call genFAST(designName, config);
+    buildFAST(designName);
     config[attribute] += step; i++;
   } while (@hw[designName].lut < lut_threshold
            && i < LIMIT);
