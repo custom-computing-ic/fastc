@@ -15,9 +15,11 @@ implement the transformations required for the actual implementation.
 required by the proposed flow:
 
 \begin{itemize}
-\item Imperative specification of dataflow designs. The C99 syntax
-  makes it familiar and easy to adopt for developers, facilitating
-  translation of existing application code to dataflow designs.
+\item Imperative specification of dataflow designs. C99 syntax is
+  enforced by the \MAXC{} compiler which is based on the ROSE
+  Framework (with EDG as a frontend) and makes the language familiar
+  and easy to adopt for developers, facilitating translation of
+  existing application code to dataflow designs.
 \item Good interaction with existing source level translation and
   weaving tools. Simple syntax allows the language to interact well
   with existing compilers or source to source translation frameworks,
@@ -37,16 +39,13 @@ required by the proposed flow:
 \MAXC{} is used to express the simplest form of a dataflow design
 while optimisations and other transformations are encapsulated in
 aspects which are developed separately and applied through aspect
-weaving. This approach results in a more flexible approach for
-generating and exploring the space of efficient dataflow designs.
+weaving. This results in a flexible approach for generating and
+exploring the space of efficient dataflow designs.
 
-Since designs in \MAXC{} are compiled to MaxCompiler designs, they
-use the same execution model: a design is composed of one or more
-computational kernels (which implement the functionality we are
-interested in) which are connected to form a design. Communication
-between kernels is asynchronous, so kernels can operate independently
-of each other, and a kernel will compute only when all it's active
-inputs have values available.
+Designs in \MAXC{} are compiled to MaxCompiler designs composed of
+inter-connected functional kernels. Communication between kernels is
+asynchronous, so they can operate independently, and compute only when
+all active inputs have available data.
 
 \begin{table}[!h]
   \centering
