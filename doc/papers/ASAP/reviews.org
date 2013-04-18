@@ -1,10 +1,7 @@
 * DONE Change MaxC Name
-** DONE Replace MaxC with macro
-** DONE Replac MaxC in diagram
-** DONE Replace MaxC in snippets
-   >> Waiting to decide on name first
 
-* DONE Change FAST to FAST designs
+* DONE Fix some references
+
 * DONE Remove most references to "MaxJ" and use "MaxCompiler" instead.
 
 * DONE Emphasise the distinction between meta-programming with a software
@@ -26,7 +23,6 @@
   be just looking at the size of function units with those
   parameters. If this is the case, I think numbers for the whole
   compute-part of the design would be more useful?
-
   >> Clearly state that numbers are per functional unit (one addition
   or one mult.) Changing this would make the results application
   dependent.
@@ -35,7 +31,6 @@
   which may be implemented in a DFE? Wouldn't it make more sense to
   have the pargma on the function call definition which also defines
   the alternative software version (or vice-versa)?
-
   >> For now we use this syntax since we want to be able to specify
   certain parameters (e.g. which configuration and when to run) which
   may be depend on the point in the application where we make the
@@ -81,22 +76,20 @@
   datatype-optimisations are appropriate. A change like this at this
   late stage is probably too involved for the paper, but maybe more
   useful in your project report.
-
-  >> Nice suggestion, but no time ATM.
+  >> Great suggestion, but no time ATM.
 
 * DONE Review 3
 ** WONTFIX the connection and motivation on how the parts fit together is somewhat missing.
    >> I think this is clear from the design flow section
 ** DONE what is a "1D convolution computation to value European options"?
 
-* TODO Review 1
+* DONE Review 1
 ** WONTFIX Reference OpenACC: It would be interesting if it could be extended to FPGAs.
    Look at some of the next generation languages like Cray's Chapel <chapel.cray.com> or
    IBM's X10 <x10-lang.org> and whether they would work well with MaxC for FPGAs.
    >> Interesting suggestions but I would like to leave them for another paper?
-** TODO mention compilation time
-   >> Waiting for Gabriel's thoughts on this
-
+** WONTFIX mention compilation time
+   >> Compilation aspect is more "future work"
 * DONE Review 4
 ** DONE Some minor grammatical issues (missing commas, commas incorrectly placed,
 ** DONE Use of the word "this" as the noun of a sentencpe,
