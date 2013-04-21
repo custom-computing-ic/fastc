@@ -9,7 +9,7 @@ program execution points (such as method calls) at run-time to allow
 new code to be executed before, after or in place of these execution
 points through a process called \emph{weaving}. The main motivation
 behind AspectJ in particular, and AOP in general, is to solve the
-modularization problem when dealing with multiple cross-cutting
+modularisation problem when dealing with multiple cross-cutting
 functional concerns.
 
 The LARA aspect-oriented
@@ -31,7 +31,7 @@ easier to understand, more maintainable and portable since it is no
 longer obscured by various structural or algorithmic transformations,
 as well as platform specific optimisations. In addition, strategies
 coded in LARA can be re-applied automatically in different
-applications, thus improving design productivity.
+applications, thus improving developer productivity.
 
 We report four types of aspects (Table~\ref{tbl:aspects}) used with
 designs in \MAXC{}:
@@ -67,7 +67,7 @@ on any level of the design flow (C code, C and \MAXC{}, or \MAXC{}
 functions). They enable systematic exploration of trade-offs and
 optimisation opportunities. Examples of exploration aspects include
 iterative aspects (Section~\ref{sect:asp_it}) which generate a
-sequence of solutions until a termination criteria is satisfied, and
+sequence of solutions until a termination criterion is satisfied, and
 metaheuristic-based aspects to find optimal solutions in a very large
 design space.
 
@@ -271,7 +271,7 @@ share the same configuration (\texttt{c1}) with \texttt{fast\_g}.
 
 The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
 approach for extracting valid and efficient hardware partitions. To realize
-runtime reconfiguration without modifying the original code we use the
+run-time reconfiguration without modifying the original code we use the
 aspect shown in Fig.~\ref{fig:aspect-reconf}.  The input to the
 aspect is a hardware partition (lines 2--4). The partition is implemented as a
 hash table that maps a function call (key) to a hardware

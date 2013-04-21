@@ -14,18 +14,18 @@ We approximate the differential equation using stencil computation to
 perform a fifth-order Taylor expansion in space and first-order Taylor
 expansion in time.
 
-We use \MAXC{} to implement the dataflow kernels and aspects to generate
-multiple configurations for the design by creating two kernels that
-are used to control the memory command read and write streams
-(CmdRead, CmdWrite) and the computation kernel (RTM).  To illustrate
-the potential benefits of our approach we analyse the results of using
-the debugging aspect of Section \ref{sect:asp_debug}. Table
-\ref{table:loc} compares the number of lines of code required for the
-original \MAXC{} + Aspect implementation with the equivalent MaxCompiler
-implementation showing a reduction in code size of up to 42\% for the
-run-time reconfigurable design and a reduction in the number of API
-calls (including debug calls) of up to 67\% which translate to
-increased productivity.
+We use \MAXC{} to implement the dataflow kernels and aspects to
+generate multiple configurations for the design by creating two
+kernels that are used to control the memory command read and write
+streams (CmdRead, CmdWrite) and the computation kernel (RTM).  To
+illustrate the potential benefits of our approach we analyse the
+results of using the debugging aspect of Section
+\ref{sect:asp_debug}. Table \ref{table:loc} compares the number of
+lines of code required for the \MAXC{} with aspect design with the
+equivalent MaxCompiler implementation showing a reduction in code size
+of up to 42\% for the run-time reconfigurable design and a reduction
+in the number of API calls (including debug calls) of up to 67\% which
+translate to increased productivity.
 
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.3}
