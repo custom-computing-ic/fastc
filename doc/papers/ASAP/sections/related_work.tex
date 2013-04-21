@@ -13,12 +13,12 @@ functional programming style complicates the translation of existing
 imperative applications and none have existing implementations for
 FPGAs, so a performance comparison is not possible.
 Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
-ImpulseC\cite{ImpulseC} use imperative ANSI C syntax and an execution
-model based on Communicating Sequential Processes and introduce
-non-standard syntax and constructs for specifying designs such as
-special comment blocks which are used to annotate the C application
-code. The specialised syntax makes the languages harder to integrate
-with existing source-to-source translation or aspect weaving
+ImpulseC\cite{ImpulseC} adopt imperative ANSI C syntax and an
+execution model based on Communicating Sequential Processes and
+introduce non-standard syntax and constructs for specifying designs
+such as special comment blocks which are used to annotate the C
+application code. The specialised syntax makes the languages harder to
+integrate with existing source-to-source translation or aspect weaving
 frameworks. Hybrid approaches such as MaxCompiler\cite{5719584}
 separate the CPU run-time component from the accelerated one,
 providing a C run-time environment and a Java API for building
@@ -26,10 +26,10 @@ dataflow designs via meta-programming. The separation complicates the
 development process, hindering sharing of design parameters and,
 consequently, the design space exploration process. The use of
 meta-programming simplifies design parametrisation, but can make
-resulting programs harder to understand. By contrast, the proposed
+resulting programs harder to understand. In contrast, the proposed
 approach allows the CPU and dataflow components to be specified using
 a single language and separates design parametrisation from
-computation, resulting in a more intuitive implementation.
+computation, resulting in a more intuitive description.
 
 \begin{table}[!h]
   \renewcommand{\arraystretch}{1.2}
@@ -51,14 +51,14 @@ computation, resulting in a more intuitive implementation.
 \end{table}
 
 The use of LARA aspects in guiding the compilation process of C
-application is also described in
+application is described in
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} but the backend compilation targets a von
 Neumann architecture (GPP + custom accelerator units) unlike the
 dataflow architecture proposed in this paper. The approach described
 in \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} relies more on high-level source transformation
-whereas our approach is based on a more systematic design level
+whereas our approach is based on a systematic design space
 exploration process, which enables the analysis of more low-level
 optimisations. Finally,
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
@@ -70,8 +70,8 @@ The use of aspect-oriented programming for specifying strategies for
 run-time adaptation of FPGA designs discussed in \cite{6322875}
 differs from the static process considered in this paper in which the
 run-time reconfiguration aspects generate and schedule all partitions
-of the application at compile time, to achieve optimal performance as
+of the application at compile time, to achieve optimised performance as
 described in \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}. One advantage of
-our approach is that an optimal allocation is generated from the
+our approach is that an optimised allocation is generated from the
 start. However we do not have the flexibility of adapting the design
 to varying input conditions.
