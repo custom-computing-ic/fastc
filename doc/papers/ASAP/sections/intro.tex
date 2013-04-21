@@ -8,24 +8,24 @@ von Neumann architectures \cite{Neumann:1993}, dataflow designs
 require less area for caching and control which increases performance
 and decreases power consumption. Due to its regularity, a dataflow
 design can be statically scheduled into a deep hazard-free pipeline
-through which data is streamed, achieving ideal throughput rates of
+through which data are streamed, achieving ideal throughput rates of
 one result per clock cycle. The stream based execution model is well
 suited for implementing high throughput applications that operate on
 large amounts of uniform data streams. However, dataflow languages are
 not commonly used and imperative languages such as Java, C and C++ are
-most popular \cite{Tiobe:2012}. The following challenges should be
-overcome to facilitate the adoption of dataflow designs:
+popular \cite{Tiobe:2012}. The following challenges should be overcome
+to facilitate the adoption of dataflow designs:
 \begin{enumerate}
 \item Specifying dataflow designs, in an intuitive, well understood
   language that is concise and facilitates the translation of existing
-  designs and expressive enough to support the requirements of
-  high-performance applications.
+  designs, and is sufficiently expressive to support the requirements
+  of high-performance applications.
 \item Specifying optimisation strategies, decoupled from the
   application code in a manner that makes the specification easy to
-  reuse and customise and is comprehensive enough to allow capturing
-  of optimisations at various levels: \emph{algorithmic
-    transformations} of the original application to expose parallelism
-  or improve communication between CPU and accelerator,
+  reuse and to customise, and is comprehensive enough to allow
+  capturing of optimisations at various levels: \emph{algorithmic
+    transformations} of the original application that expose
+  parallelism or improve communication between CPU and accelerator,
   \emph{design-level transformations} that enable exploration of
   platform specific optimisations and \emph{productivity related
     transformations} that improve developer productivity.
@@ -46,7 +46,7 @@ following contributions:
   \cite{5719584} designs which are then compiled and executed on a
   Maxeler MaxWorkstation containing a MAX3 DFE with a Virtex 6 FPGA chip
   and 24GB of DRAM.
-\item We introduce novel aspects for specifying optimisation
+\item We present novel aspects for specifying optimisation
   strategies at the system level, the implementation level, the
   exploration level and development level. We implement these aspects
   using
