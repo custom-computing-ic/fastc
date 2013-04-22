@@ -7,12 +7,9 @@ imaging which is used to detect geological structures, based on the
 Earth's response to injected acoustic waves. The technique models the
 propagation of injected waves using the isotropic acoustic wave
 equation \cite{araya2011assessing}:
-\vspace{0.3cm}
 \begin{align}
 \frac{d^2p(r,t)}{dt^2} + {dvv(r)}^2\bigtriangledown^2p(r,t) = f(r,t)
 \end{align}
-
-\vspace{0.3cm}
 
 We approximate the differential equation using stencil computation to
 perform a fifth-order Taylor expansion in space and first-order Taylor
@@ -21,8 +18,9 @@ expansion in time.
 We use \MAXC{} to implement the dataflow kernels and aspects to
 generate multiple configurations for the design by creating two
 kernels that are used to control the memory command read and write
-streams (CmdRead, CmdWrite) and the computation kernel (RTM).  To
-illustrate the potential benefits of our approach we analyse the
+streams (CmdRead, CmdWrite) and the computation kernel (RTM).
+
+To illustrate the potential benefits of our approach we analyse the
 results of using the debugging aspect of Section
 \ref{sect:asp_debug}. Table \ref{table:loc} compares the number of
 lines of code required for the \MAXC{} with aspect design with the
@@ -32,8 +30,7 @@ in the number of API calls (including debug calls) of up to 67\% which
 translate to increased productivity.
 
 \begin{table}[!h]
-  \vspace{0.2cm}
-  \renewcommand{\arraystretch}{1.4}
+  \renewcommand{\arraystretch}{1.2}
   \centering
   \caption{Code measures for the RTM kernels comparing \MAXC{} and
     MaxCompiler.}
@@ -48,7 +45,6 @@ translate to increased productivity.
     RTM Static                   & 12           & 246                            &     43         & 403     &       175        \\
     RTM RTR                      & 12           & 377                            &     91         & 669     &       275       \\
   \end{tabular}
-  \vspace{0.2cm}
 \end{table}
 
 \subsection{Results}
@@ -67,18 +63,25 @@ application more portable and facilitates discovery of interesting
 trade-off opportunities using design space exploration.
 
 \begin{figure}[!h]
-\vspace{0.25cm}
-\includegraphics[scale=0.75,trim=10 0 0 0]{figs/pre}
+\includegraphics[scale=0.7, trim=0 0 0 0]{figs/pre}
 \caption{Exploration of accuracy vs resource usage trade-offs using the aspect
 shown in Fig.~\ref{fig:aspect-exploration} with variable mantissa.}
 \label{fig:precision}
-\vspace{0.25cm}
 \end{figure}
 
 The DSP balancing aspect shown in Fig.~\ref{fig:aspect-DSP} allows to
 explore the resource trade-offs of implementing arithmetic operations
 in either DSPs or LUTs and FFs (Fig.~\ref{fig:arith}) and helps to
 avoid over mapping on DSPs for arithmetic intensive applications.
+
+\begin{figure}[!h]
+\vspace{0.25cm}
+\includegraphics[scale=0.7,trim=0 0 0 0]{figs/arith}
+\caption{Exploration of DSP and LUT/FF balancing for functional units
+  implementing a single arithmetic operation using the aspect shown
+  in Fig.~\ref{fig:aspect-DSP}.}
+\label{fig:arith}
+\end{figure}
 
 
 Design space exploration using the aspect in
@@ -93,32 +96,6 @@ speedup over software only versions which is comparable with the best
 published FPGA results for static designs
 \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, \cite{araya2011assessing}.
 
-
-
-
-Fig.~\ref{fig:scalability} also shows a model of the performance
-benefits of using a run-time reconfigurable implementation generated
-using the proposed aspect-oriented approach. Two configurations were
-created for the RTM \MAXC{} kernel. Since, in our model, during the
-first half of the execution time, the backward propagation and imaging
-functions are idle, the first configuration requires only half the
-resources. Hence, the number of parallel pipelines can be doubled,
-halving the execution time of the first configuration. The speedup
-obtained is comparable to \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, but
-the partitioning and optimisation exploration process is automated via
-aspects, which increases developer productivity. The automated process
-improves portability of the design, allowing optimisations based on
-design space exploration to be carried out on various platforms (hence
-subject to varying resource constraints) without manual intervention.
-
-\begin{figure}[!h]
-\vspace{0.25cm}
-\includegraphics[scale=0.75,trim=10 0 0 0]{figs/arith}
-\caption{Exploration of DSP and LUT/FF balancing for functional units
-  implementing a single arithmetic operation using the aspect shown
-  in Fig.~\ref{fig:aspect-DSP}.}
-\label{fig:arith}
-\end{figure}
 
 \pgfplotsset{every axis x label/.style={
   at={(0.5,0)},
@@ -135,7 +112,7 @@ subject to varying resource constraints) without manual intervention.
   \centering
   \vspace{0.35cm}
   \hspace{-8mm}
-  \begin{tikzpicture}[scale=1.1]
+  \begin{tikzpicture}[scale=1]
     \selectcolormodel{gray}
     \begin{axis}[
         xmin=1,
@@ -208,5 +185,21 @@ subject to varying resource constraints) without manual intervention.
   \caption{Scalability of the RTM dataflow design explored using the aspect
 shown in Fig.~\ref{fig:aspect-exploration}.}
   \label{fig:scalability}
-  \vspace{0.35cm}
 \end{figure}
+
+
+
+Fig.~\ref{fig:scalability} also shows a model of the performance
+benefits of using a run-time reconfigurable implementation generated
+using the proposed aspect-oriented approach. Two configurations were
+created for the RTM \MAXC{} kernel. Since, in our model, during the
+first half of the execution time, the backward propagation and imaging
+functions are idle, the first configuration requires only half the
+resources. Hence, the number of parallel pipelines can be doubled,
+halving the execution time of the first configuration. The speedup
+obtained is comparable to \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, but
+the partitioning and optimisation exploration process is automated via
+aspects, which increases developer productivity. The automated process
+improves portability of the design, allowing optimisations based on
+design space exploration to be carried out on various platforms (hence
+subject to varying resource constraints) without manual intervention.
