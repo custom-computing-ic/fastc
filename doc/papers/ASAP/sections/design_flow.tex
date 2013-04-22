@@ -42,11 +42,10 @@ and follows the steps:
 \item a C application containing an embedded high-level dataflow
   design is developed from the original source application
   (implemented using \MAXC{}, described in Section \ref{sec:maxc});
-\item the dataflow design is transformed (\emph{woven}) by the aspects
-  in the repository to generate new designs (e.g with support for
-  run-time reconfiguration, with various word-length configurations
-  and various compilation times -- these are covered in detail in
-  Section \ref{sec:aspects});
+\item the dataflow design is transformed by the aspects in the
+  repository to generate new designs (e.g with various word-length
+  configurations and various compilation times -- these are covered in
+  detail in Section \ref{sec:aspects});
 \item the generated configurations are compiled using a backend
   compilation toolchain (currently MaxCompiler) to dataflow designs
   implemented on FPGAs;

@@ -57,7 +57,7 @@ when decreasing the mantissa from 18 to 16 and 24 to 22 which is the
 effect of the backend tools mapping arithmetic to a combination of
 both DSPs and LUT/FF elements. The mantissa boundaries at which this
 optimisation occurs are platform specific, depending on the
-architecture of the DSPs. Hence automating this optimisation via
+architecture of the DSPs. Hence, automating this optimisation via
 aspects and decoupling it from the original source code makes the
 application more portable and facilitates discovery of interesting
 trade-off opportunities using design space exploration.
@@ -86,7 +86,7 @@ avoid over mapping on DSPs for arithmetic intensive applications.
 
 Design space exploration using the aspect in
 Fig.~\ref{fig:aspect-exploration} with increasing parallelism level
-can be used to investigate design scalability. For example for the
+can be used to investigate design scalability. For example, for the
 described RTM implementation, Fig.~\ref{fig:scalability} shows that
 performance scales linearly with the number of parallel pipelines and
 that significant speedups can be obtained by the \MAXC{} dataflow

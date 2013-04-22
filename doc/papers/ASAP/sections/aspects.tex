@@ -132,10 +132,10 @@ to a software/hardware design.
 \lstset{style=MaxC}
 \begin{figure}[!h]
 \begin{lstlisting}
-(*@ \marktext{void fast\_f()} @*)
-{/* dataflow implementation */}
-void f()
-{/* software implementation */}
+(*@\marktext{void fast\_f()}@*) {/* dataflow implementation */}
+
+void      f() {/* software implementation */}
+
 (*@ \marktext{\#pragma FAST hw:fast\_f} @*)
 f();
 \end{lstlisting}
@@ -167,7 +167,22 @@ combined to form a hardware/software partitioning strategy.
 \subsection{Monitorisation Aspect}
 \label{sect:asp_mon}
 To find potential hotspots in the application, for instance to perform
-hardware/software partitioning, we can use the aspect in Fig.~\ref{fig:hotspot}:
+hardware/software partitioning, we can use the aspect in
+Fig.~\ref{fig:hotspot}.  With this aspect, the weaver can
+automatically instrument any C application to self-monitor its
+innermost loops at run-time, as they are natural candidates for
+dataflow-based acceleration. In particular, this monitorization aspect
+can compute the following information for every innermost loop: (a)
+the average number of times it has been executed, (b) the average
+number of iterations, (c) the loop average time, and (d) the loop
+iteration average time. For this purpose, we use a monitoring API
+composed of 4 functions to mark the beginning and end of the loop
+(\texttt{monitor\_instanceI} and \texttt{monitor\_instanceE}
+respectively), and to mark the beginning and end of an iteration
+(\texttt{monitor\_iterI} and \texttt{monitor\_iterE}
+respectively). These monitoring functions keep an account of the
+frequency of execution and the time to complete the whole loop and a
+single iteration.
 
 \lstset{style=lara}
 \begin{figure}[!h]
@@ -197,47 +212,34 @@ end
 \label{fig:hotspot}
 \end{figure}
 
-\noindent With the aspect in Fig.~\ref{fig:hotspot}, the weaver can
-automatically instrument any C application to self-monitor its
-innermost loops at run-time, as they are natural candidates for
-dataflow-based acceleration. In particular, this monitorization aspect
-can compute the following information for every innermost loop: (a)
-the average number of times it has been executed, (b) the average
-number of iterations, (c) the loop average time, and (d) the loop
-iteration average time. For this purpose, we use a monitoring API
-composed of 4 functions to mark the beginning and end of the loop
-(\texttt{monitor\_instanceI} and \texttt{monitor\_instanceE}
-respectively), and to mark the beginning and end of an iteration
-(\texttt{monitor\_iterI} and \texttt{monitor\_iterE}
-respectively). These monitoring functions keep an account of the
-frequency of execution and the time to complete the whole loop and a
-single iteration.  The aspect code is as follows: line~2 selects all
+  The aspect code is as follows: line~2 selects all
 loops in the application that are innermost (loops with no other loops
 enclosed); lines~3--8 place an instance monitor call before and after
 each selected loop; lines 10--13 select all entry points inside the
 loop and insert a monitoring call to mark the beginning of each
 iteration; lines~14--17 place an instance monitor call to mark the end
 of each iteration. The following table shows an example of applying
-the aspect from Fig.~\ref{fig:hotspot} on a C code containing a loop:
+the aspect from Fig.~\ref{fig:hotspot} on a C-style function containing a loop:
 \vspace{2mm}
 
 {\footnotesize
 \fontfamily{pcr}\selectfont
 \begin{tabular}{l|l}
 \hline
-\bf{original code} & \bf{woven code}  \\
+\bf{original code}           & \bf{woven code}                                   \\
 \hline
 \hline
-void f() \{ & void f() \{ \\
-%\hspace{3ex}$\ldots$         & \hspace{3ex}$\ldots$ \\
+void f() \{                  & void f() \{                                       \\
+%\hspace{3ex}$\ldots$        & \hspace{3ex}$\ldots$                              \\
                              & \hspace{3ex}\marktext{monitor\_instanceI("f:1");} \\
-\hspace{3ex}while (i < N) \{ & \hspace{3ex}while (i < N) \{ \\
-                             & \hspace{6ex}\marktext{monitor\_iterI("f:1");} \\
-\hspace{6ex}i++;             & \hspace{6ex}i++; \\
-                             & \hspace{6ex}\marktext{monitor\_iterE("f:1");} \\
-\hspace{3ex}\}               & \hspace{3ex}\} \\
+\hspace{3ex}while (i < N) \{ & \hspace{3ex}while (i < N) \{                      \\
+                             & \hspace{6ex}\marktext{monitor\_iterI("f:1");}     \\
+\hspace{6ex}i++;             & \hspace{6ex}i++;                                  \\
+                             & \hspace{6ex}\marktext{monitor\_iterE("f:1");}     \\
+\hspace{3ex}\}               & \hspace{3ex}\}                                    \\
                              & \hspace{3ex}\marktext{monitor\_instanceE("f:1");} \\
-%\hspace{3ex}$\ldots$         & \hspace{3ex}$\ldots$ \\
+\}                           & \}                                                \\
+%\hspace{3ex}$\ldots$        & \hspace{3ex}$\ldots$                              \\
 \hline
 \end{tabular}
 }
@@ -382,7 +384,7 @@ balancing DSP blocks in every statement of an application. Instead of
 adding the above pragma manually, we provide a set of rules
 (lines~3--4) that define where to place the \texttt{balanceDSP}
 pragma. In this example, we established the rule that full DSP block
-utilisation is performed to any statement that has 5 or more
+utilisation is applied to any statement that has 5 or more
 multipliers and adders, balanced if 3 or more multipliers, and no DSP
 utilisation otherwise.
 
@@ -467,7 +469,7 @@ statements can be encapsulated in aspects. It is particularly
 important to separate debug aspects from the original application code
 since debug blocks can influence the compilation time and timing
 constraints as well as the behaviour of the design. As an example,
-the aspect in Fig. ~\ref{fig:aspect-debug} instruments the code to log every time a variable changes its value.
+the aspect in Fig. ~\ref{fig:aspect-debug} instruments the code to log every change in the value of a variable.
 
 \lstset{style=lara}
 \begin{figure}[!h]
@@ -484,6 +486,6 @@ end
 condition $vref.is_out end
 end
 \end{lstlisting}
-  \caption{Aspect for automatically instrumenting the code to watch any change in the value of a  variable in the program.}
+  \caption{Aspect for automatically instrumenting the code to watch any change in the value of a program variable.}
   \label{fig:aspect-debug}
 \end{figure}
