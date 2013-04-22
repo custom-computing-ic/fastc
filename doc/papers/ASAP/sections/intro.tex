@@ -3,23 +3,25 @@
 Existing work shows that dataflow machines emulated on FPGAs achieve
 performance gains of up to several orders of magnitude compared to
 traditional control based architectures \cite{Flynn:Pell:Mencer:2012},
-\cite{Mencer:2012}. By eliminating the fetch-decode-execute cycle of
+\cite{Mencer:2012}.  By eliminating the fetch-decode-execute cycle of
 von Neumann architectures \cite{Neumann:1993}, dataflow designs
 require less area for caching and control which increases performance
 and decreases power consumption. Due to its regularity, a dataflow
 design can be statically scheduled into a deep hazard-free pipeline
 through which data are streamed, achieving ideal throughput rates of
-one result per clock cycle. The stream based execution model is well
-suited for implementing high throughput applications that operate on
-large amounts of uniform data streams. However, dataflow languages are
-not commonly used and imperative languages such as Java, C and C++ are
-popular \cite{Tiobe:2012}. The following challenges should be overcome
-to facilitate the adoption of dataflow designs:
+one result per clock cycle.
+
+The stream based execution model is well suited for implementing high
+throughput applications that operate on large amounts of uniform data
+streams. However, dataflow languages are not commonly used and
+imperative languages such as Java, C and C++ are popular
+\cite{Tiobe:2012}. The following challenges should be overcome to
+facilitate the adoption of dataflow designs:
 \begin{enumerate}
 \item Specifying dataflow designs, in an intuitive, well understood
   language that is concise, facilitates the translation of existing
   designs, and is sufficiently expressive to support the requirements
-  of high-performance applications.
+  of modern high-performance applications.
 \item Specifying optimisation strategies, decoupled from the
   application code in a manner that makes the specification easy to
   reuse and to customise, and is comprehensive enough to allow
@@ -44,8 +46,8 @@ following contributions:
   that can be used to create high-performance designs. We implement a
   compiler that translates designs in \MAXC{} to MaxCompiler
   \cite{5719584} designs which are then compiled and executed on a
-  Maxeler MaxWorkstation containing a MAX3 DFE with a Virtex 6 FPGA chip
-  and 24GB of DRAM.
+  Maxeler MaxWorkstation containing a MAX3 DFE with a Virtex 6 FPGA
+  chip and 24GB of DRAM.
 \item We present novel aspects for specifying optimisation
   strategies at the system level, the implementation level, the
   exploration level and development level. We implement these aspects
@@ -54,7 +56,7 @@ following contributions:
   aspect oriented language for embedded reconfigurable systems.
 \item We propose an automated method for design space exploration of
   \MAXC{} dataflow designs, driven by the aspect definitions.
-\item We evaluate our approach by implementing a high-performance
-  design for an application based on the Reverse Time Migration
-  technique for seismic imaging.
+\item We evaluate our approach by implementing a run-time
+  reconfigurable, high-performance design for an application based on
+  the Reverse Time Migration technique for seismic imaging.
 \end{enumerate}

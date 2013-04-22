@@ -12,6 +12,7 @@ facilitating safety verification for critical software
 functional programming style complicates the translation of existing
 imperative applications and none have existing implementations for
 FPGAs, so a performance comparison is not possible.
+
 Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
 ImpulseC\cite{ImpulseC} adopt imperative ANSI C syntax and an
 execution model based on Communicating Sequential Processes and
@@ -19,20 +20,22 @@ introduce non-standard syntax and constructs for specifying designs
 such as special comment blocks which are used to annotate the C
 application code. The specialised syntax makes the languages harder to
 integrate with existing source-to-source translation or aspect weaving
-frameworks. Hybrid approaches such as MaxCompiler\cite{5719584}
-separate the CPU run-time component from the accelerated one,
-providing a C run-time environment and a Java API for building
-dataflow designs via meta-programming. The separation complicates the
-development process, hindering sharing of design parameters and,
-consequently, the design space exploration process. The use of
-meta-programming simplifies design parametrisation, but can make
-resulting programs harder to understand. In contrast, the proposed
-approach allows the CPU and dataflow components to be specified using
-a single language and separates design parametrisation from
-computation, resulting in a more intuitive description.
+frameworks.
+
+Hybrid approaches such as MaxCompiler\cite{5719584} separate the CPU
+run-time component from the accelerated one, providing a C run-time
+environment and a Java API for building dataflow designs via
+meta-programming. The separation complicates the development process,
+hindering sharing of design parameters and, consequently, the design
+space exploration process. The use of meta-programming simplifies
+design parametrisation, but can make resulting programs harder to
+understand. In contrast, the proposed approach allows the CPU and
+dataflow components to be specified using a single language and
+separates design parametrisation from computation, resulting in a more
+intuitive description.
 
 \begin{table}[!h]
-  \renewcommand{\arraystretch}{1.2}
+  \renewcommand{\arraystretch}{1.4}
   \centering
   \caption{Feature comparison of \MAXC{} and other dataflow languages.}
   \label{table:feature-comparison}
@@ -51,15 +54,15 @@ computation, resulting in a more intuitive description.
 \end{table}
 
 The use of LARA aspects in guiding the compilation process of C
-application is described in
+applications is described in
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} but the backend compilation targets a von
 Neumann architecture (GPP + custom accelerator units) unlike the
 dataflow architecture proposed in this paper. The approach described
 in \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} relies more on high-level source transformation
-whereas our approach is based on a systematic design space
-exploration process, which enables the analysis of more low-level
+whereas our approach is based on a systematic design space exploration
+process, which enables the analysis of more low-level
 optimisations. Finally,
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} do not consider development aspects which can be

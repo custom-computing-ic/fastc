@@ -48,7 +48,7 @@ all active inputs have available data.
 
 \begin{table}[!h]
   \centering
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.5}
 \caption{Summary of the main features of the \MAXC{} language.}
 \label{table:maxc-features}
 \begin{tabular}{l|l|l}
@@ -69,7 +69,6 @@ all active inputs have available data.
 \hline
 HW mapping                  & C pragmas                   & C99 (line 17)                                \\
 \end{tabular}
-\vspace{-0.4cm}
 \end{table}
 
 Table~\ref{table:maxc-features} summarises the features of \MAXC{} and
@@ -118,11 +117,11 @@ designs with values known at compilation time.
 \end{figure}
 
 
-The \MAXC{} API provides higher-level constructs such as I/O
-functions (\texttt{in()}, \texttt{out()}), counters
-(Fig.~\ref{fig:maxc-1dconv}, Lines 4--5) and functions to multiplex
-streams (\texttt{mux()}). C function calls are mapped to dataflow
-kernels via pragmas (Line 17) which provides the flexibility of
-selecting a particular dataflow configuration based on run-time
-conditions (a more detailed example is discussed in Section
-\ref{sect:asp_reconfig}).
+The \MAXC{} API provides higher-level constructs such as I/O functions
+(\texttt{in()}, \texttt{out()}), counters (Fig.~\ref{fig:maxc-1dconv},
+Lines 4--5) and functions to multiplex streams (\texttt{mux()}). C
+function calls are mapped to dataflow kernels via pragmas (Line 17)
+which provides the flexibility of selecting a particular dataflow
+configuration based on run-time conditions (support for run-time
+reconfiguration is included but will be described in a future
+publication due to lack of space).
