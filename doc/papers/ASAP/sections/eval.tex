@@ -92,21 +92,6 @@ speedup over software only versions which is comparable with the best
 published FPGA results for static designs
 \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, \cite{araya2011assessing}.
 
-Fig.~\ref{fig:scalability} also shows a model of the performance
-benefits of using a run-time reconfigurable implementation generated
-using the proposed aspect-oriented approach. Two configurations were
-created for the RTM \MAXC{} kernel. Since, in our model, during the
-first half of the execution time, the backward propagation and imaging
-functions are idle, the first configuration requires only half the
-resources. Hence, the number of parallel pipelines can be doubled,
-halving the execution time of the first configuration. The speedup
-obtained is comparable to \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, but
-the partitioning and optimisation exploration process is automated via
-aspects, which increases developer productivity. The automated process
-improves portability of the design, allowing optimisations based on
-design space exploration to be carried out on various platforms (hence
-subject to varying resource constraints) without manual intervention.
-
 \pgfplotsset{every axis x label/.style={
   at={(0.5,0)},
   below,
@@ -195,3 +180,18 @@ subject to varying resource constraints) without manual intervention.
 shown in Fig.~\ref{fig:aspect-exploration}.}
   \label{fig:scalability}
 \end{figure}
+
+Fig.~\ref{fig:scalability} also shows a model of the performance
+benefits of using a run-time reconfigurable implementation generated
+using the proposed aspect-oriented approach. Two configurations were
+created for the RTM \MAXC{} kernel. Since, in our model, during the
+first half of the execution time, the backward propagation and imaging
+functions are idle, the first configuration requires only half the
+resources. Hence, the number of parallel pipelines can be doubled,
+halving the execution time of the first configuration. The speedup
+obtained is comparable to \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, but
+the partitioning and optimisation exploration process is automated via
+aspects, which increases developer productivity. The automated process
+improves portability of the design, allowing optimisations based on
+design space exploration to be carried out on various platforms (hence
+subject to varying resource constraints) without manual intervention.
