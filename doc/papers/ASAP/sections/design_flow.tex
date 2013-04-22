@@ -23,18 +23,17 @@ addressing key areas in developing hardware acceleration solutions:
 
 To meet these requirements we propose the following approach. Firstly,
 we introduce \MAXC{} (described in Section \ref{sec:maxc}), a novel
-language for specifying dataflow designs that provides support for
-run-time reconfiguration. We specify the accelerated portion of the
-original applications using \MAXC{} dataflow kernels. By maintaining
-compatibility with C99 syntax we improve developer productivity by
-providing a familiar language and introduce the possibility of
-combining hardware and software specifications. Secondly, by using an
-aspect driven compilation flow we decouple optimisation from design
-development, improving design portability, and we automate the
-generation of code and design space exploration improving
-productivity. Finally, systematic design space exploration is used to
-identify maximum performance configurations, subject to platform
-specific constraints.
+language for specifying dataflow designs. We specify the accelerated
+portion of the original applications using \MAXC{} dataflow
+kernels. By maintaining compatibility with C99 syntax we improve
+developer productivity by providing a familiar language and introduce
+the possibility of combining hardware and software
+specifications. Secondly, by using an aspect driven compilation flow
+we decouple optimisation from design development, improving design
+portability, and we automate the generation of code and design space
+exploration improving productivity. Finally, systematic design space
+exploration is used to identify maximum performance configurations,
+subject to platform specific constraints.
 
 The proposed design flow is illustrated in Fig.~\ref{fig:design-flow}
 and follows the steps:
@@ -71,5 +70,6 @@ Fig.~\ref{fig:design-flow}) and \MAXC{} optimisation options.
 
 Additionally, our approach targets a dataflow architecture as opposed
 to the von Neumann architecture (GPP + Custom accelerator) proposed in
-the related work. We explicitly consider and implement run-time
-reconfiguration to achieve performance improvements.
+the related work. We consider additional optimisations to achieve
+performance improvements as a result of a systematic design space
+exploration process.
