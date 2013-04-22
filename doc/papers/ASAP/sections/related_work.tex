@@ -3,15 +3,17 @@
 A number of dataflow languages have been developed targeting FPGAs but
 also multi-core platforms. Table \ref{table:feature-comparison}
 summarises some of the important features of these languages compared
-to \MAXC{}. Lucid \cite{ashcroft1977lucid}, SISAL
-\cite{gurd1987implicit}, \cite{mcgraw1983sisal} and Lustre
-\cite{halbwachs1991synchronous}, are examples of functional dataflow
-languages. The latter is based on a synchronous programming model,
-facilitating safety verification for critical software
-\cite{halbwachs1992programming} rather than performance. The
-functional programming style complicates the translation of existing
-imperative applications and none have existing implementations for
-FPGAs, so a performance comparison is not possible.
+to \MAXC{}.
+
+Lucid \cite{ashcroft1977lucid}, SISAL \cite{gurd1987implicit},
+\cite{mcgraw1983sisal} and Lustre \cite{halbwachs1991synchronous}, are
+examples of functional dataflow languages. The latter is based on a
+synchronous programming model, facilitating safety verification for
+critical software \cite{halbwachs1992programming} rather than
+performance. The functional programming style complicates the
+translation of existing imperative applications and none have existing
+implementations for FPGAs, so a performance comparison is not
+possible.
 
 Streams-C\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
 ImpulseC\cite{ImpulseC} adopt imperative ANSI C syntax and an
@@ -35,7 +37,8 @@ separates design parametrisation from computation, resulting in a more
 intuitive description.
 
 \begin{table}[!h]
-  \renewcommand{\arraystretch}{1.4}
+  \vspace{0.25cm}
+  \renewcommand{\arraystretch}{1.5}
   \centering
   \caption{Feature comparison of \MAXC{} and other dataflow languages.}
   \label{table:feature-comparison}
@@ -51,6 +54,7 @@ intuitive description.
     ImpulseC    & C           & Imp./CSP      & Both       & Combined     \\
     \MAXC{}     & C           & Imp.          & FPGA       & Combined     \\
   \end{tabular}
+  \vspace{0.5cm}
 \end{table}
 
 The use of LARA aspects in guiding the compilation process of C
