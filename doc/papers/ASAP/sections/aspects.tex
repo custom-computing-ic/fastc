@@ -40,15 +40,16 @@ designs in \MAXC{}:
 \noindent{\bf System Aspects.} System aspects capture transformation
 or optimisation strategies that affect the whole application such as
 those concerning hardware/software partitioning, monitorisation and
-run-time reconfiguration capabilities. The goal of hardware/software
+run-time reconfiguration capabilities. The goal of hardware/ software
 partitioning is to improve the overall execution time by identifying
 parts of the code to be offloaded to hardware
 (Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the
 application code to extract run-time behaviour, and uncover
-opportunities for optimisation (Section~\ref{sect:asp_mon}). Run-time
-reconfiguration removes idle functions from the accelerator at
-specific points in time, to use more resources for functions that are
-active.
+opportunities for optimisation (Section~\ref{sect:asp_mon}).
+Run-time reconfiguration can be used to remove idle functions
+from the accelerator at specific points in time, so that
+additional resources can be dedicated to functions that are
+active \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
 
 \vspace*{1.2ex}
 \noindent{\bf Implementation Aspects.} Implementation aspects focus on

@@ -67,7 +67,7 @@ designs with values known at compilation time.
 \renewcommand{\arraystretch}{1.6}
 \caption{Summary of the main features of the \MAXC{} language.}
 \label{table:maxc-features}
-\begin{tabular}{l|l|l}
+\begin{tabular}{p{1.7cm}|l|l}
 \hline
 \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
 \hline\hline
@@ -83,7 +83,7 @@ designs with values known at compilation time.
 \hline
   Parameterization             & Constants, variables                   & C99                                          \\
 \hline
-HW mapping                  & C pragmas                   & C99 (line 17)                                \\
+Hardware \  Mapping                  & C pragmas                   & C99 (line 17)                                \\
 \end{tabular}
 \end{table}
 
@@ -125,5 +125,5 @@ Lines 4--5) and functions to multiplex streams (\texttt{mux()}). C
 function calls are mapped to dataflow kernels via pragmas (Line 17)
 which provides the flexibility of selecting a particular dataflow
 configuration based on run-time conditions. Support for run-time
-reconﬁguration is included but will be described in a future
+reconfiguration is included but will be described in a future
 publication due to lack of space.

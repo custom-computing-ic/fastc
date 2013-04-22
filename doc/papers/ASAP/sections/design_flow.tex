@@ -7,8 +7,8 @@ addressing key areas in developing hardware acceleration solutions:
 \begin{enumerate}
 \item \emph{Performance:} specify high-performance dataflow designs,
   that achieve significant speedup over sequentially executed
-  implementations; exploit the run-time reconfiguration capability of
-  FPGA devices to improve performance and efficiency;
+  implementations; exploit the reconfigurable capability of FPGA
+  devices to improve performance and efficiency;
 \item \emph{Portability:} improve portability of dataflow designs, to
   allow reuse of optimisation strategies on various platforms;
 \item \emph{Integration:} simplify translation of existing
@@ -69,7 +69,8 @@ using a combination of implementation aspects (shown in
 Fig.~\ref{fig:design-flow}) and \MAXC{} optimisation options.
 
 Additionally, our approach targets a dataflow architecture as opposed
-to the von Neumann architecture (GPP + Custom accelerator) proposed in
-the related work. We consider additional optimisations to achieve
+to the von Neumann architecture proposed in related work, which
+typically includes a General-Purpose Processor (GPP) and a custom
+accelerator. We consider additional optimisations to achieve
 performance improvements as a result of a systematic design space
 exploration process.
