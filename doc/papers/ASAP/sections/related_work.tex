@@ -31,31 +31,34 @@ meta-programming. The separation complicates the development process,
 hindering sharing of design parameters and, consequently, the design
 space exploration process. The use of meta-programming simplifies
 design parametrisation, but can make resulting programs harder to
-understand. In contrast, the proposed approach allows the CPU and
-dataflow components to be specified using a single language and
-separates design parametrisation from computation, resulting in a more
-intuitive description.
+understand. In contrast, the proposed approach allows the computation
+description, which includes CPU and dataﬂow components, to be speciﬁed
+using a single language and to be decoupled from design
+parametrisation and other optimisation strategies which are captured
+as LARA aspects. This separation of concerns results in more intuitive
+and maintainable descriptions.
 
-\begin{table}[!h]
-  \vspace{0.25cm}
-  \renewcommand{\arraystretch}{1.5}
+\begin{table*}[!ht]
+  \renewcommand{\arraystretch}{1.8}
   \centering
-  \caption{Feature comparison of \MAXC{} and other dataflow languages.}
+  \caption{Feature comparison of the \MAXC{}/LARA approach and existing dataflow implementations.}
   \label{table:feature-comparison}
-  \begin{tabular}{ c |  c |  c |  c |  c }
+  \begin{tabular}{ p{1.7cm} |  p{1.8cm} |  p{1.8cm} |  c | c | l | l}
     \hline
-    \           & \bf{Syntax} & \bf{Paradigm} & \bf{Impl.} & \bf{Support} \\
+    \bf{Language}          & \bf{Syntax}          & \bf{Paradigm}               & \bf{Support}              & \bf{Implementation}   & \bf{Design Parametrisation}            & \bf{Optimisation Strategies}          \\
     \hline \hline
-    Lucid       & Lucid       & Func.         & Multiproc. & Software     \\
-    SISAL       & SISAL       & Func.         & Multiproc. & Software     \\
-    Lustre      & Lustre      & Sync.         & Multiproc. & Software     \\
-    MaxCompiler & Java        & Imp.          & FPGA       & Hardware     \\
-    Streams-C   & C           & Imp./CSP      & FPGA       & Combined     \\
-    ImpulseC    & C           & Imp./CSP      & Both       & Combined     \\
-    \MAXC{}     & C           & Imp.          & FPGA       & Combined     \\
+    \bf{Lucid}                    & Lucid                & Functional                  & \multirow{3}{*}{Software}                  & \multirow{3}{*}{Multiprocessor}        & \multirow{3}{*}{\begin{minipage}{0.7in}Manual Source Transformation\end{minipage}} & \multirow{5}{*}{Manual Code Revision} \\
+    \bf{SISAL}                    & SISAL                & Functional                  &                &    &                                        &                                       \\
+    \bf{Lustre}                   & Lustre               & Synchronous                 &               &        &                                        &                                       \\
+    \cline{1-6}
+    \multirow{2}{*}{\bf{MaxCompiler}}              &  \multirow{2}{*}{\begin{minipage}{0.5in}C99(SW) Java(HW)\end{minipage}} &  \multirow{2}{*}{\begin{minipage}{1in}Imperative(SW) Dataflow(HW)\end{minipage}}      & \multirow{5}{*}{Combined}                  & \multirow{5}{*}{CPU + FPGA}                  & \multirow{2}{*}{Meta-programming}                      &                                       \\
+    \cline{1-3}\cline{6}
+    \multirow{2}{*}{\begin{minipage}{0.6in}\bf{Streams-C} \bf{ImpulseC}\end{minipage}}                & \multirow{2}{*}{C99}                  &      \multirow{2}{*}{\begin{minipage}{1in}Imperative(SW) CSP(HW)\end{minipage}}              &                   &                & \multirow{2}{*}{Compiler Directives}   &                                       \\
+     \cline{1-3}\cline{6-7}
+    \multirow{2}{*}{\bf{\MAXC{}}/\bf{LARA}} & \multirow{2}{*}{\begin{minipage}{1in}C99(SW) LARA(Aspects)\end{minipage}} & \multirow{2}{*}{\begin{minipage}{1in}Imperative(SW) Dataflow(HW) AOP(Aspects)\end{minipage}} &  & & \multicolumn{2}{c}{\multirow{2}{*}{\begin{minipage}{2.3in}Compiler Directives + \\ Automated Aspect-Directed Source Transformation\end{minipage}}}
+                                                                                                                                \\
   \end{tabular}
-  \vspace{0.5cm}
-\end{table}
+\end{table*}
 
 The use of LARA aspects in guiding the compilation process of C
 applications is described in
