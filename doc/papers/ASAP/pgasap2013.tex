@@ -205,10 +205,10 @@ ellipse,fill=red!20, node distance=3cm, minimum height=2em]
 \begin{document}
 
 \captionsetup{width=2cm}
-
+\lstset{escapeinside={(*@}{@*)}}
 \lstdefinestyle{lara}{ language=C++, breaklines=true, % frame=tb,
   xleftmargin=2em, numbers=left, captionpos=b,
-  morekeywords={aspectdef, var, apply, select, condition, begin, end, input} }
+  morekeywords={aspectdef, var, apply, select, condition, begin, end, input}}
 
 \lstdefinestyle{MaxC}{language=C++, breaklines=true, %frame=tb,
   xleftmargin=2em, numbers=left,
@@ -322,7 +322,7 @@ Programme, and by Xilinx.
 % The "triggered" command can be changed if desired:
 %\IEEEtriggercmd{\enlargethispage{-5in}}
 
-\def\IEEEbibitemsep{5pt plus .5pt}
+\def\IEEEbibitemsep{7pt plus .5pt}
 \bibliographystyle{IEEEtran}
 \bibliography{../../refdb/bibliography.bib}
 

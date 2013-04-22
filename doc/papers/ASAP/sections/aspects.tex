@@ -36,7 +36,7 @@ applications, thus improving developer productivity.
 We report four types of aspects (Table~\ref{tbl:aspects}) used with
 designs in \MAXC{}:
 
-\vspace*{0.5ex}
+\vspace*{1.2ex}
 \noindent{\bf System Aspects.} System aspects capture transformation
 or optimisation strategies that affect the whole application such as
 those concerning hardware/software partitioning, monitorisation and
@@ -50,7 +50,7 @@ reconfiguration removes idle functions from the accelerator at
 specific points in time, to use more resources for functions that are
 active.
 
-\vspace*{0.5ex}
+\vspace*{1.2ex}
 \noindent{\bf Implementation Aspects.} Implementation aspects focus on
 low level design optimisations that can be applied to designs in
 \MAXC{} to improve timing or resource usage. For instance, operator
@@ -59,7 +59,7 @@ operators in the program to dedicated hardware resources. Word-length
 aspects specify the numerical representation of variables and
 expressions in the design.
 
-\vspace*{0.5ex}
+\vspace*{1.2ex}
 \noindent{\bf Exploration Aspects.} Exploration aspects deal with
 strategies that generate multiple designs to find an optimal
 implementation based on user requirements. Exploration aspects can act
@@ -71,7 +71,7 @@ sequence of solutions until a termination criterion is satisfied, and
 metaheuristic-based aspects to find optimal solutions in a very large
 design space.
 
-\vspace*{0.5ex}
+\vspace*{1.2ex}
 \noindent{\bf Development Aspects.} Development aspects capture
 transformations that have an impact on the development process such as
 debugging (Section~\ref{sect:asp_debug}), and, potentially, simulating
@@ -90,7 +90,7 @@ the compilation time would increase developer productivity.
 
 \begin{table}[tp]
 \caption{Types of Aspects used in \MAXC{}}
-\renewcommand{\arraystretch}{1.4}
+\renewcommand{\arraystretch}{1.5}
 \label{tbl:aspects}
 \centering
 \begin{tabular}{l|l|l}
@@ -118,24 +118,33 @@ the compilation time would increase developer productivity.
 
 \subsection{Hardware/software partitioning}
 \label{sect:asp_hsp}
-\MAXC{} functions describing dataflow computations can be embedded within
-the C application but cannot be invoked directly by software C
+\MAXC{} functions describing dataflow computations can be embedded
+within the C application but cannot be invoked directly by software C
 functions.  Instead, a \MAXC{} pragma must be used on top of software
 function definitions or C calls to indicate an alternate hardware
-implementation. For instance, the following C code:
+implementation. For instance, the code shown in
+Fig. \ref{fig:aspect-switch} indicates that the software
+implementation of \texttt{f()} can be mapped to the dataflow
+implementation described in \texttt{fast\_f()}. This way, our
+design-flow can automatically switch from a pure software application
+to a software/hardware design.
 
-\vspace{3mm}
+\lstset{style=MaxC}
+\begin{figure}[!h]
+\begin{lstlisting}
+(*@ \marktext{void fast\_f()} @*)
+{/* dataflow implementation */}
+void f()
+{/* software implementation */}
+(*@ \marktext{\#pragma FAST hw:fast\_f} @*)
+f();
+\end{lstlisting}
+\caption{Mapping of C function calls to dataflow kernels using \MAXC{} pragmas.}
+\label{fig:aspect-switch}
+\end{figure}
 
-\noindent\texttt{\footnotesize\marktext{void fast\_f() \{\emph{/* dataflow implementation */}\}} \\
-void \ \ \ \ \ f() \{\emph{/* software implementation */}\} \\
-\marktext{\#pragma FAST hw:fast\_f} \\
-f(); \\
-}
 
-\noindent indicates that the software implementation of \texttt{f()} can be
-mapped to the dataflow implementation described in \texttt{fast\_f()}. This
-way, our design-flow can automatically switch from a pure software
-application to a software/hardware design.
+\noindent
 
 Hence, a hardware/software partitioning strategy can be performed in
 five steps:
@@ -349,22 +358,33 @@ main:g:3 & fast\_g & c1 \\
 \subsection{Operator Optimisation Aspect}
 \label{sect:asp_ops}
 To provide architectural details to \MAXC{} designs, such as mapping
-operators to DSP blocks, we can use the following \MAXC{} pragma on
-top of a statement (including code blocks):
-\vspace{2mm}
+operators to DSP blocks, we can use the \MAXC{} pragma shown in
+Fig. \ref{fig:aspect-balance} at the top of a statement (including code
+blocks). The balancing parameter corresponds to the degree of
+utilisation of DSP blocks in a statement.
 
-\noindent\texttt{\footnotesize\marktext{\#pragma FAST balanceDSP:balanced} \\
-\{x = x *y; x++; \}}
+\lstset{style=MaxC}
+\begin{figure}[!h]
+\begin{lstlisting}
+(*@ \marktext{\#pragma FAST balanceDSP:balanced} @*)
+{
+  x = x * y;
+  x++;
+}
+\end{lstlisting}
+\caption{The \MAXC{} balancing pragma provides fine grained control
+  over the mapping of computation to either DSPs or LUT/FF pairs.}
+\label{fig:aspect-balance}
+\end{figure}
 
-\vspace{2mm} The balancing parameter corresponds to the degree of
-utilisation of DSP blocks in a statement.  The aspect shown in
-Fig.~\ref{fig:aspect-DSP} is the strategy for balancing DSP blocks in
-every statement of an application. Instead of adding the above pragma
-manually, we provide a set of rules (lines~3--4) that define where to
-place the \texttt{balanceDSP} pragma. In this example, we established the rule
-that full DSP block utilisation is performed to any statement that has
-5 or more multipliers and adders, balanced if 3 or more multipliers,
-and no DSP utilisation otherwise.
+The aspect shown in Fig.~\ref{fig:aspect-DSP} is the strategy for
+balancing DSP blocks in every statement of an application. Instead of
+adding the above pragma manually, we provide a set of rules
+(lines~3--4) that define where to place the \texttt{balanceDSP}
+pragma. In this example, we established the rule that full DSP block
+utilisation is performed to any statement that has 5 or more
+multipliers and adders, balanced if 3 or more multipliers, and no DSP
+utilisation otherwise.
 
 \lstset{style=lara}
 \begin{figure}[!h]
