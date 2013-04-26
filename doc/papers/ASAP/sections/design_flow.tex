@@ -7,7 +7,7 @@ addressing key areas in developing hardware acceleration solutions:
 \begin{enumerate}
 \item \emph{Performance:} specify high-performance dataflow designs,
   that achieve significant speedup over sequentially executed
-  implementations; exploit the reconfigurable capability of FPGA
+  implementations; exploit the reconfiguration capability of FPGA
   devices to improve performance and efficiency;
 \item \emph{Portability:} improve portability of dataflow designs, to
   allow reuse of optimisation strategies on various platforms;
@@ -39,12 +39,12 @@ The proposed design flow is illustrated in Fig.~\ref{fig:design-flow}
 and follows the steps:
 \begin{enumerate}
 \item a C application containing an embedded high-level dataflow
-  design is developed from the original source application
-  (implemented using \MAXC{}, described in Section \ref{sec:maxc});
+  design is developed from the original source application. The design
+  is implemented using \MAXC{} as described in Section~\ref{sec:maxc};
 \item the dataflow design is transformed by the aspects in the
-  repository to generate new designs (e.g with various word-length
-  configurations and various compilation times -- these are covered in
-  detail in Section \ref{sec:aspects});
+  repository to generate new designs (e.g. with multiple word-length
+  configurations). The classes of aspects used with our approach are
+  introduced in Section~\ref{sec:aspects};
 \item the generated configurations are compiled using a backend
   compilation toolchain (currently MaxCompiler) to dataflow designs
   implemented on FPGAs;

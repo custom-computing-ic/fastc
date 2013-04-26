@@ -14,11 +14,11 @@ implement the transformations required for the actual implementation.
 required by the proposed flow:
 
 \begin{itemize}
-\item \emph{Imperative specification of dataflow designs}. C99 syntax is
-  enforced by the \MAXC{} compiler which is based on the ROSE
-  Framework (with EDG as a front-end) and makes the language familiar
-  and easy to adopt for developers, facilitating translation of
-  existing application code to dataflow designs.
+\item \emph{Imperative specification of dataflow designs}. C99 syntax
+  is enforced by the \MAXC{} compiler which is based on the ROSE
+  Framework~\cite{Quinlan:2000}. The familiar syntax makes the
+  language easy to adopt thus facilitating translation of existing
+  implementations to dataflow designs.
 \item \emph{Good integration with existing source level translation and
   weaving tools}. Simple syntax allows the language to interact well
   with existing compilers or source to source translation frameworks,
@@ -29,7 +29,7 @@ required by the proposed flow:
   Fig.~\ref{fig:maxc-1dconv} can be compiled with the GCC toolchain,
   but when using the \MAXC{} compiler, the pragma indicates the link
   between the software and hardware, which results in an accelerated
-  hardware software/solution.
+  hardware/software solution.
 \item \emph{Support for data path and control path generation}. \MAXC{}
   allows specifying both data and control operations that are
   automatically mapped to stream multiplexers.
@@ -57,10 +57,10 @@ value. Negative indices are allowed for accessing previous stream
 values and supported offset expressions are linear expressions
 comprised of constants or variables (either loop induction variables,
 or normal variables but for which a compile time range of values is
-specified -- this is required to generate efficient
+specified, as a requirement for generating efficient
 hardware). Constructs such as loops are supported as long as their
-bounds are known at compile time and are used to parametrize dataflow
-designs with values known at compilation time.
+bounds are known at compilation time and are used to parametrise
+dataflow designs.
 
 \begin{table}[!h]
   \centering
@@ -121,7 +121,7 @@ Hardware \  Mapping                  & C pragmas                   & C99 (line 1
 
 The \MAXC{} API provides higher-level constructs such as I/O functions
 (\texttt{in()}, \texttt{out()}), counters (Fig.~\ref{fig:maxc-1dconv},
-Lines 4--5) and functions to multiplex streams (\texttt{mux()}). C
+Lines~4--5) and functions to multiplex streams (\texttt{mux()}). C
 function calls are mapped to dataflow kernels via pragmas (Line 17)
 which provides the flexibility of selecting a particular dataflow
 configuration based on run-time conditions. Support for run-time
