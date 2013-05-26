@@ -1,0 +1,123 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage{amssymb,amsmath}
+\usepackage{url}
+\usepackage[final]{listings}
+\usepackage{verbatim}
+\usepackage{fixme}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{pgfplots}
+\usepackage{array}
+\usepackage{mdwmath}
+\usepackage{mdwtab}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{geometry}
+\pagestyle{fancy}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.2mm}}
+
+\newcommand{\mailto}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+\newcommand{\XXX}[1]{{\bf \color{red} XXX: #1}}
+\newcommand{\TODO}[0]{{\bf \color{red} TODO\ }}
+\newcommand{\FAST}[0]{FAST}
+\newcommand\reduline{\bgroup\markoverwith
+  {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
+\newcommand{\FIC}[1]{\reduline{#1}}
+\newcommand{\blt}{\raise .2ex\hbox{\tiny$\bullet$ }}
+
+\newcommand\acknowledgements[1]{
+  \typeout{Acknowledgements}
+  \thispagestyle{plain}
+  \begin{center}{\huge{Acknowledgements} \par}\end{center}
+      {\normalsize #1}
+      \vfil\vfil\null
+}
+
+\newcommand\myabstract[1]{
+  \typeout{Abstract}
+  \thispagestyle{plain}
+  \begin{center}{\huge{Abstract} \par}\end{center}
+      {\normalsize #1}
+      \vfil\vfil\null
+}
+
+\titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
+%\titlespacing*{\chapter}{0pt}{0pt}{10pt}
+
+%\usepackage{caption}
+%\DeclareCaptionFont{white}{\color{white}}
+%\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+%\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\newcounter{nodemarkers}
+\newcommand\marktext[1]{%
+  \tikz[overlay,remember picture]
+  \node (marker-\arabic{nodemarkers}-a) at (0,1.5ex) {};%
+  #1%
+  \tikz[overlay,remember picture]
+  \node (marker-\arabic{nodemarkers}-b) at (0,0){};%
+  \tikz[overlay,remember picture,inner sep=2pt]
+  \node[draw,dotted,rectangle,fit=(marker-\arabic{nodemarkers}-a.center) (marker-\arabic{nodemarkers}-b.center)] {};%
+  \stepcounter{nodemarkers}%
+}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows, fit}
+
+\lstset{escapeinside={(*@}{@*)}}
+\lstdefinestyle{lara}{ language=C++, breaklines=true, % frame=tb,
+  xleftmargin=2em, numbers=left, captionpos=b,
+  morekeywords={aspectdef, var, apply, select, condition, begin, end, input}}
+
+\lstdefinestyle{MaxC}{language=C++, breaklines=true, %frame=tb,
+  xleftmargin=2em, numbers=left,
+  captionpos=b,basicstyle=\ttfamily\footnotesize,
+  morekeywords={s_int32, int32, float8_24, sin_float8_24,
+    sout_float8_24, float8_24, s_int, s_float8_24, s_bool},
+  deletekeywords={static}}
+
+
+
+\begin{document}
+
+\input{sections/titlepage.tex}
+
+\renewcommand{\thepage}{\roman{page}}
+
+
+% Abstract
+
+%\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
+\myabstract{{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+  ...
+}
+\clearpage
+
+\acknowledgements{This is the ...}
+
+\clearpage
+
+\tableofcontents
+
+
+\input{sections/intro.tex}
+
+\input{sections/background.tex}
+\input{sections/design_flow.tex}
+\input{sections/fast.tex}
+\input{sections/aspects.tex}
+\input{sections/implementation.tex}
+\input{sections/eval.tex}
+\input{sections/conclusion.tex}
+
+\cite{710029}
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,../../refdb/bibliography.bib}
+
+\end{document}

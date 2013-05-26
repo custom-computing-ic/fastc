@@ -1,0 +1,492 @@
+\chapter{Aspects}
+\label{sec:aspects}
+
+Aspects are standalone modules that capture functional cross-cutting
+concerns that are decoupled from the primary function of a
+program. AspectJ\cite{Kiczales:2005:AP:1062455.1062640}, a widely
+used extension for Aspect-Oriented Programming (AOP) in Java, captures
+program execution points (such as method calls) at run-time to allow
+new code to be executed before, after or in place of these execution
+points through a process called \emph{weaving}. The main motivation
+behind AspectJ in particular, and AOP in general, is to solve the
+modularisation problem when dealing with multiple cross-cutting
+functional concerns.
+
+The LARA aspect-oriented
+design-flow \cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012},
+on the other hand, performs the weaving process at compile-time to
+satisfy non-functional concerns, such as to improve performance on a
+particular hardware platform. For this purpose, the LARA weaving
+process manipulates and transforms the application sources. These new
+generated sources (woven code) incorporate functional elements of the
+original sources, and non-functional concerns captured by LARA
+aspects.
+
+In this paper, we combine the LARA aspect design-flow with \FAST{}
+dataflow designs. In particular, \FAST{} uses standard C99 syntax to
+capture dataflow computations while aspects specify decoupled
+optimisation and transformation strategies that operate on \FAST{}
+descriptions. This approach makes the functionality of the application
+easier to understand, more maintainable and portable since it is no
+longer obscured by various structural or algorithmic transformations,
+as well as platform specific optimisations. In addition, strategies
+coded in LARA can be re-applied automatically in different
+applications, thus improving developer productivity.
+
+We report four types of aspects (Table~\ref{tbl:aspects}) used with
+designs in \FAST{}:
+
+\vspace*{1.2ex}
+\noindent{\bf System Aspects.} System aspects capture transformation
+or optimisation strategies that affect the whole application such as
+those concerning hardware/software partitioning, monitorisation and
+run-time reconfiguration capabilities. The goal of hardware/ software
+partitioning is to improve the overall execution time by identifying
+parts of the code to be offloaded to hardware
+(Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the
+application code to extract run-time behaviour, and uncover
+opportunities for optimisation (Section~\ref{sect:asp_mon}).
+Run-time reconfiguration can be used to remove idle functions
+from the accelerator at specific points in time, so that
+additional resources can be dedicated to functions that are
+active \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
+
+\vspace*{1.2ex}
+\noindent{\bf Implementation Aspects.} Implementation aspects focus on
+low level design optimisations that can be applied to designs in
+\FAST{} to improve timing or resource usage. For instance, operator
+optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map
+operators in the program to dedicated hardware resources. Word-length
+aspects specify the numerical representation of variables and
+expressions in the design.
+
+\vspace*{1.2ex}
+\noindent{\bf Exploration Aspects.} Exploration aspects deal with
+strategies that generate multiple designs to find an optimal
+implementation based on user requirements. Exploration aspects can act
+on any level of the design flow (C code, C and \FAST{}, or \FAST{}
+functions). They enable systematic exploration of trade-offs and
+optimisation opportunities. Examples of exploration aspects include
+iterative aspects (Section~\ref{sect:asp_it}) which generate a
+sequence of solutions until a termination criterion is satisfied, and
+metaheuristic-based aspects to find optimal solutions in a very large
+design space.
+
+\vspace*{1.2ex}
+\noindent{\bf Development Aspects.} Development aspects capture
+transformations that have an impact on the development process such as
+debugging (Section~\ref{sect:asp_debug}), and, potentially, simulating
+kernels or improving compilation speed. Separating these concerns
+makes the original code easier to maintain and enables the automatic
+application of these transformations to a wide range of designs,
+improving developer productivity. Simulation aspects could be applied
+to dataflow designs to generate equivalent state-based C code thus
+enabling pure software simulation. Compilation aspects, on the other
+hand, could be applied during the development process to create
+versions of the dataflow design that compile faster by reducing the
+operating frequency, removing debug blocks or applying design-level
+optimisations that can resolve timing constraints. Naturally, reducing
+the compilation time would increase developer productivity.
+
+
+\begin{table}[tp]
+\caption{Types of Aspects used in \FAST{}}
+\renewcommand{\arraystretch}{1.5}
+\label{tbl:aspects}
+\centering
+\begin{tabular}{l|l|l}
+\hline
+\bf{Aspect Type} & \bf{Aspect Name} & \bf{Description} \\
+\hline
+\hline
+\multirow{3}{*}{system} & \blt hw/sw partitioning & capture mapping between  \\
+                        & \blt monitorisation & application modules and \\
+                        & \blt reconfiguration & GPP/FPGA accelerators\\
+\hline
+\multirow{2}{*}{implementation} &\blt operator optimisation &  capture low-level hardware \\
+& \blt word-length spec & optimisations  \\
+\hline
+\multirow{3}{*}{exploration} & \multirow{2}{*}{\blt iterative} & generate multiple implemen- \\
+ & \multirow{2}{*}{\blt metaheuristic} & tations based on design  \\
+ & & space exploration strategies \\
+\hline
+\multirow{3}{*}{development} & \blt simulation & \multirow{2}{*}{improve developer}  \\
+& \blt debugging & \multirow{2}{*}{productivity} \\
+& \blt compilation &  \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Hardware/software partitioning}
+\label{sect:asp_hsp}
+\FAST{} functions describing dataflow computations can be embedded
+within the C application but cannot be invoked directly by software C
+functions.  Instead, a \FAST{} pragma must be used on top of software
+function definitions or C calls to indicate an alternate hardware
+implementation. For instance, the code shown in
+Fig. \ref{fig:aspect-switch} indicates that the software
+implementation of \texttt{f()} can be mapped to the dataflow
+implementation described in \texttt{fast\_f()}. This way, our
+design-flow can automatically switch from a pure software application
+to a software/hardware design.
+
+\lstset{style=MaxC}
+\begin{figure}[!h]
+\begin{lstlisting}
+(*@\marktext{void fast\_f()}@*) {/* dataflow implementation */}
+
+void      f() {/* software implementation */}
+
+(*@ \marktext{\#pragma FAST hw:fast\_f} @*)
+f();
+\end{lstlisting}
+\caption{Mapping of C function calls to dataflow kernels using \FAST{} pragmas.}
+\label{fig:aspect-switch}
+\end{figure}
+
+
+\noindent
+
+Hence, a hardware/software partitioning strategy can be performed in
+five steps:
+\begin{enumerate}
+  \item detecting hotspots in the program;
+  \item detecting code patterns from hotspots that are suited for
+    dataflow computation and acceleration;
+  \item performing the outlining transformation so that each
+    candidate for acceleration is enclosed in a function \texttt{f};
+  \item deriving a dataflow version \texttt{fast\_f} from state-based
+    \texttt{f};
+  \item placing a FAST pragma on top of each function call to
+    \texttt{f} and associate it to the corresponding \texttt{fast\_f}
+    function.
+\end{enumerate}
+
+Each of these steps can be described as a separate LARA aspect and
+combined to form a hardware/software partitioning strategy.
+
+\subsection{Monitorisation Aspect}
+\label{sect:asp_mon}
+To find potential hotspots in the application, for instance to perform
+hardware/software partitioning, we can use the aspect in
+Fig.~\ref{fig:hotspot}.  With this aspect, the weaver can
+automatically instrument any C application to self-monitor its
+innermost loops at run-time, as they are natural candidates for
+dataflow-based acceleration. In particular, this monitorization aspect
+can compute the following information for every innermost loop: (a)
+the average number of times it has been executed, (b) the average
+number of iterations, (c) the loop average time, and (d) the loop
+iteration average time. For this purpose, we use a monitoring API
+composed of 4 functions to mark the beginning and end of the loop
+(\texttt{monitor\_instanceI} and \texttt{monitor\_instanceE}
+respectively), and to mark the beginning and end of an iteration
+(\texttt{monitor\_iterI} and \texttt{monitor\_iterE}
+respectively). These monitoring functions keep an account of the
+frequency of execution and the time to complete the whole loop and a
+single iteration.
+
+\lstset{style=lara}
+\begin{figure}[!h]
+\begin{lstlisting}
+aspectdef LoopMonitor
+select function.loop{is_innermost} end
+apply
+    $loop.insert before
+       %{monitor_instanceI("[[$loop.key]]");}%;
+    $loop.insert after
+       %{monitor_instanceE("[[$loop.key]]");}%;
+end
+
+select function.loop{is_innermost}.entry end
+apply $begin.insert after
+       %{monitor_iterI("[[$loop.key]]");}%;
+end
+select function.loop{is_innermost}.exit end
+apply $begin.insert before
+       %{monitor_iterE("[[$loop.key]]");}%;
+end
+end
+\end{lstlisting}
+\caption{Aspect that instruments the application to monitor loop
+  activity. The information generated can be used to identify
+  hotspots.}
+\label{fig:hotspot}
+\end{figure}
+
+  The aspect code is as follows: line~2 selects all
+loops in the application that are innermost (loops with no other loops
+enclosed); lines~3--8 place an instance monitor call before and after
+each selected loop; lines 10--13 select all entry points inside the
+loop and insert a monitoring call to mark the beginning of each
+iteration; lines~14--17 place an instance monitor call to mark the end
+of each iteration. The following table shows an example of applying
+the aspect from Fig.~\ref{fig:hotspot} on a C-style function containing a loop:
+\vspace{2mm}
+
+{\footnotesize
+\fontfamily{pcr}\selectfont
+\begin{tabular}{l|l}
+\hline
+\bf{original code}           & \bf{woven code}                                   \\
+\hline
+\hline
+void f() \{                  & void f() \{                                       \\
+%\hspace{3ex}$\ldots$        & \hspace{3ex}$\ldots$                              \\
+                             & \hspace{3ex}\marktext{monitor\_instanceI("f:1");} \\
+\hspace{3ex}while (i < N) \{ & \hspace{3ex}while (i < N) \{                      \\
+                             & \hspace{6ex}\marktext{monitor\_iterI("f:1");}     \\
+\hspace{6ex}i++;             & \hspace{6ex}i++;                                  \\
+                             & \hspace{6ex}\marktext{monitor\_iterE("f:1");}     \\
+\hspace{3ex}\}               & \hspace{3ex}\}                                    \\
+                             & \hspace{3ex}\marktext{monitor\_instanceE("f:1");} \\
+\}                           & \}                                                \\
+%\hspace{3ex}$\ldots$        & \hspace{3ex}$\ldots$                              \\
+\hline
+\end{tabular}
+}
+\vspace{2ex}
+
+\noindent Each monitoring call in the woven code receives as a
+parameter the loop key, which uniquely identifies the loop within the
+application. The loop key is generated by concatenating the function
+name with the hierarchical position of the loop within the abstract
+syntax tree. For instance, \emph{f:2:1} corresponds to the 1st loop
+inside the 2nd outermost loop of function \texttt{f}. The hotspots can
+be identified by an aspect (not shown) that takes the profiling
+information generated by the monitorization API calls, and that uses
+an heuristic to compute the most profitable computations to be
+offloaded to hardware.
+
+\begin{comment}
+\subsection{Reconfiguration Aspect}
+\label{sect:asp_reconfig}
+To support run-time reconfiguration, we specify the configuration
+associated with the function call in the \FAST{} pragma. For instance:
+
+\vspace{3mm}
+\noindent\texttt{\footnotesize{\marktext{\#pragma FAST hw:fast\_f0 cfg:c0}\\
+x = f(0); \\
+\marktext{\#pragma FAST hw:fast\_f1 cfg:c1}\\
+y = f(x); \\
+\marktext{\#pragma FAST hw:fast\_g cfg:c1}\\
+z = g(x); \\
+}}
+
+\noindent With the above code annotations, our design-flow can
+generate multiple configurations, each containing a set of \FAST{}
+implementations that can be executed in parallel. If the configuration
+name is not specified using the \FAST{} pragma, then we assume a
+default configuration. Having a single configuration can lead to
+situations where at any point in time and due to data dependencies,
+part of the functions are idle. With run-time reconfiguration, we can
+exploit unused resources to support active functions. In particular,
+during the execution of an application, we select various
+configurations at different points in time to maximise the utilisation
+of FPGA resources. Within this context, we use a hardware partition,
+which contains a set of configurations that are used to support
+reconfiguration during the life cycle of an application. In the above
+example, configuration \texttt{c0} contains a single implementation of
+\texttt{f} (\texttt{fast\_f0}), and thus can potentially use more
+resources and be faster than the \texttt{fast\_f1} version which must
+share the same configuration (\texttt{c1}) with \texttt{fast\_g}.
+
+The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
+approach for extracting valid and efficient hardware partitions. To realize
+run-time reconfiguration without modifying the original code we use the
+aspect shown in Fig.~\ref{fig:aspect-reconf}.  The input to the
+aspect is a hardware partition (lines 2--4). The partition is implemented as a
+hash table that maps a function call (key) to a hardware
+implementation, represented as a tuple containing the hardware
+implementation name (hw) and the associated configuration (cfg).
+
+\lstset{style=lara}
+\begin{figure}[!h]
+\begin{lstlisting}
+aspectdef AspReconfig
+input
+   partition
+end
+select function.call end
+apply
+   if ($call.key in partition) {
+      var cfg = partition[$call.key].cfg;
+      var hw = partition[$call.key].hw;
+      $call.insert before %{
+         #pragma FAST hw:[[hw]] cfg:[[cfg]]
+      }%;
+   }
+end
+end
+\end{lstlisting}
+\caption{Reconfiguration aspect.}
+\label{fig:aspect-reconf}
+\end{figure}
+
+Table \ref{fig:aspect-hash} shows an example of a hash table
+representing a hardware partition. The key (e.g. main:f:1) identifies
+a function call in the application, and is formed by concatenating the
+name of the caller function (main), the name of the invoked function
+(e.g. f) and a unique number (1).  Line~5 in the aspect shown in
+Fig.~\ref{fig:aspect-reconf} selects all function calls, and for each
+call found in the input partition (line~7), we set the appropriate
+pragma on top of the call statement (lines 10--12). We can now realize
+and experiment different reconfiguration designs by invoking this
+aspect with different hardware partitions.
+
+
+%{\footnotesize
+%\fontfamily{pcr}\selectfont
+\begin{table}[!h]
+\caption{An example of a hardware partition, represented as a hash
+  table, used with the reconfiguration aspect
+  (Fig.~\ref{fig:aspect-reconf})}
+\label{fig:aspect-hash}
+\centering
+\begin{tabular}{c|c|c}
+\hline
+\multicolumn{3}{c}{\bf{partition}} \\
+\hline
+\bf{\$call.key} & \bf{hw} & \bf{cfg}  \\
+\hline
+main:f:1 & fast\_f0 & c0 \\
+main:f:2 & fast\_f1 & c1 \\
+main:g:3 & fast\_g & c1 \\
+\hline
+\end{tabular}
+\end{table}
+%}
+
+\end{comment}
+
+\subsection{Operator Optimisation Aspect}
+\label{sect:asp_ops}
+To provide architectural details to \FAST{} designs, such as mapping
+operators to DSP blocks, we can use the \FAST{} pragma shown in
+Fig. \ref{fig:aspect-balance} at the top of a statement (including code
+blocks). The balancing parameter corresponds to the degree of
+utilisation of DSP blocks in a statement.
+
+\lstset{style=MaxC}
+\begin{figure}[!h]
+\begin{lstlisting}
+(*@ \marktext{\#pragma FAST balanceDSP:balanced} @*)
+{
+  x = x * y;
+  x++;
+}
+\end{lstlisting}
+\caption{The \FAST{} balancing pragma provides fine grained control
+  over the mapping of computation to either DSPs or LUT/FF pairs.}
+\label{fig:aspect-balance}
+\end{figure}
+
+The aspect shown in Fig.~\ref{fig:aspect-DSP} is the strategy for
+balancing DSP blocks in every statement of an application. Instead of
+adding the above pragma manually, we provide a set of rules
+(lines~3--4) that define where to place the \texttt{balanceDSP}
+pragma. In this example, we established the rule that full DSP block
+utilisation is applied to any statement that has 5 or more
+multipliers and adders, balanced if 3 or more multipliers, and no DSP
+utilisation otherwise.
+
+\lstset{style=lara}
+\begin{figure}[!h]
+  \centering
+  \begin{lstlisting}
+aspectdef DspBalancing
+var op_granularity =
+ [{DspBalance:'full',MultiplyOp: 5,AddOp: 5 },
+  {DspBalance:'balanced',MultiplyOp:3}];
+
+select function.statement end
+apply
+   for (var i in op_granularity) {
+      var gprofile = op_granularity[i];
+      var match = true;
+      for (var k in gprofile) {
+         if (k != 'DspBalance') {
+            match &= ($statement.num_construct(k)
+                      >= gprofile[k]);}}
+      if (match) {
+         var pragma = '#pragma FAST balanceDSP:'
+                      + gprofile.DspFactor;
+         $statement.insert before "[[pragma]]";
+         break;}}
+   end
+end
+  \end{lstlisting}
+  \caption{Aspect for exploring mapping of computation to DSP blocks.}
+  \label{fig:aspect-DSP}
+\end{figure}
+
+\subsection{Iterative Aspect}
+\label{sect:asp_it}
+Using LARA we can implement and combine these aspects to enable
+systematic design space exploration of all the optimisation options
+exposed by the \FAST{} backend resulting in the generation of a large
+number of designs. The feedback-directed compilation process of LARA
+can be used to capture and extract feedback from the backend reports
+pertaining to resource usage or timing information and automatically
+adjust the compilation process.
+
+An example of a LARA aspect for design space exploration is
+shown in Fig.~\ref{fig:aspect-exploration}. It highlights the feedback capabilities of the design
+flow: the aspect will generate and build the \FAST{} designs until the
+resource usage passes a specified LUT threshold, and at each step
+increasing a particular design attribute, such as exponent, mantissa or the parallelism of the design (by replicating the computational pipeline).
+
+\lstset{style=lara}
+\begin{figure}[!h]
+\begin{lstlisting}
+  aspectdef DesignExploration
+  input
+     attribute,
+     start, step,
+     lut_threshold,
+     config
+  end
+  config[attribute] = start;
+  var i = 0;
+  do {
+    var designName = genName(config);
+    call genFAST(designName, config);
+    buildFAST(designName);
+    config[attribute] += step; i++;
+  } while (@hw[designName].lut < lut_threshold
+           && i < LIMIT);
+  end
+\end{lstlisting}
+\caption{Exploration aspect that generates multiple \FAST{} designs by varying a design attribute (e.g. number of kernels or mantissa) until a LUT threshold is reached.}
+\label{fig:aspect-exploration}
+\end{figure}
+
+
+\subsection{Debugging Aspect}
+\label{sect:asp_debug}
+Because the current execution model does not provide run-time debugging
+of hardware designs, the easiest solution to debug designs is to log
+the values of various streams during execution. The insertion of debug
+statements can be encapsulated in aspects. It is particularly
+important to separate debug aspects from the original application code
+since debug blocks can influence the compilation time and timing
+constraints as well as the behaviour of the design. As an example,
+the aspect in Fig. ~\ref{fig:aspect-debug} instruments the code to log every change in the value of a variable.
+
+\lstset{style=lara}
+\begin{figure}[!h]
+  \centering
+\begin{lstlisting}
+aspectdef WatchVar
+select function.vref end
+apply
+   $vref.parent_stmt.insert before
+    %{ log("[[$vref.name]]", [[$vref.name]]); }%
+   $vref.parent_stmt.insert after
+    %{ log("[[$vref.name]]", [[$vref.name]]); }%
+end
+condition $vref.is_out end
+end
+\end{lstlisting}
+  \caption{Aspect for automatically instrumenting the code to watch any change in the value of a program variable.}
+  \label{fig:aspect-debug}
+\end{figure}
