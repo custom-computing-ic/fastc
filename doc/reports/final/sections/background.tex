@@ -391,47 +391,48 @@ parametrisation and other optimisation strategies which are captured
 as LARA aspects. This separation of concerns results in more intuitive
 and maintainable descriptions.
 
-
-\begin{table*}[!ht]
-  \renewcommand{\arraystretch}{1.8}
+\begin{sidewaystable}[!ht]
+  \renewcommand{\arraystretch}{2.1}
   \centering
-  \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
   \label{table:feature-comparison}
-  \begin{tabular}{ p{1.7cm} |  p{1.8cm} |  p{1.8cm} |  c | c | l | l}
+  \begin{tabularx}{\textwidth}{ m{2.5cm} | p{2.5cm} | p{3cm} | p{1.9cm}| p{2.8cm} | p{3.2cm} | p{2.5cm}}
     \hline
-    \bf{Language}          & \bf{Syntax}          & \bf{Paradigm}               & \bf{Support}              & \bf{Implementation}   & \bf{Design Parametrisation}            & \bf{Optimisation Strategies}          \\
+    \bf{Language}                 & \bf{Syntax}              & \bf{Paradigm}                            & \bf{Support}              & \bf{Implementation}             & \bf{Design Parametrisation}                     & \bf{Optimisation Strategies}            \\
     \hline \hline
-    \bf{Lucid}                    & Lucid                & Functional                  & \multirow{3}{*}{Software}                  & \multirow{3}{*}{Multiprocessor}        & \multirow{3}{*}{\begin{minipage}{0.7in}Manual Source Transformation\end{minipage}} & \multirow{5}{*}{Manual Code Revision} \\
-    \bf{SISAL}                    & SISAL                & Functional                  &                &    &       n                                 &                                       \\
-    \bf{Lustre}                   & Lustre               & Synchronous                 &               &        &                                        &                                       \\
+    \bf{Lucid}                    & Lucid                    & Functional                               & \multirow{3}{*}{Software} & \multirow{3}{*}{Multiprocessor} & \multirow{3}{3cm}{Manual Source Transformation} & \multirow{5}{3cm}{Manual Code Revision} \\
+    \cline{1-3}
+    \bf{SISAL}                    & SISAL                    & Functional                               &                           &                                 &                                                 &                                         \\
+    \cline{1-3}
+    \bf{Lustre}                   & Lustre                   & Synchronous                              &                           &                                 &                                                 &                                         \\
     \cline{1-6}
-    \multirow{2}{*}{\bf{MaxCompiler}}              &  \multirow{2}{*}{\begin{minipage}{0.5in}C99(SW) Java(HW)\end{minipage}} &  \multirow{2}{*}{\begin{minipage}{1in}Imperative(SW) Dataflow(HW)\end{minipage}}      & \multirow{5}{*}{Combined}                  & \multirow{5}{*}{CPU + FPGA}                  & \multirow{2}{*}{Meta-programming}                      &                                       \\
+    \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) Dataflow(HW)              & \multirow{6}{*}{Combined} & \multirow{6}{*}{CPU + FPGA}     & Meta-programming                                &                                         \\
     \cline{1-3}\cline{6}
-    \multirow{2}{*}{\begin{minipage}{0.6in}\bf{Streams-C} \bf{ImpulseC}\end{minipage}}                & \multirow{2}{*}{C99}                  &      \multirow{2}{*}{\begin{minipage}{1in}Imperative(SW) CSP(HW)\end{minipage}}              &                   &                & \multirow{2}{*}{Compiler Directives}   &                                       \\
+    \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) CSP(HW)                   &                           &                                 & Compiler \newline Directives                    &                                         \\
      \cline{1-3}\cline{6-7}
-    \multirow{2}{*}{\bf{\FAST{}}/\bf{LARA}} & \multirow{2}{*}{\begin{minipage}{1in}C99(SW/HW) LARA(Aspects)\end{minipage}} & \multirow{2}{*}{\begin{minipage}{1in}Imperative(SW) Dataflow(HW) AOP(Aspects)\end{minipage}} &  & & \multicolumn{2}{c}{\multirow{2}{*}{\begin{minipage}{2.3in}Compiler Directives + \\ Automated Aspect-Directed Source Transformation\end{minipage}}}
-                                                                                                                                \\
-  \end{tabular}
-\end{table*}
+    \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) Dataflow(HW) AOP(Aspects) &                           &                                 & \multicolumn{2}{p{5.5cm}}{Compiler Directives + \newline Automated Aspect-Directed Source Transformation} \\
+  \end{tabularx}
+  \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
+\end{sidewaystable}
+
 
 \subsection{Aspect-driven Compilation of FPGA Designs}
 
 One attempt at capturing optimisation strategies for FPGA designs
-using aspect descriptions is LARA
-\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012,
-  Cardoso:Carvalho:Teixeira:Diniz:Goncalves:Petrov:2012}, an Aspect
-Oriented language for embedded systems. Aspect descriptions are
-written in the LARA language and automatically applied to the original
-application source to generate optimised versions through various
-transformations that enable and optimise hardware/software
-partitioning \cite{Lam:Coutinho:Luk:2008}. Aspect descriptions can be
-used to specify compilation strategies that result in overall speedups
-of 2 to 6.8 times over software versions
-\cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012}, generally
-with high aspect bloat \footnote{ $\text{aspect bloat} =
-  \frac{\text{size of transformed code}}{\text{size of original
-      code}}$, so a higher aspect bloat is better}
-\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}.
+ using aspect descriptions is LARA
+ \cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012,
+   Cardoso:Carvalho:Teixeira:Diniz:Goncalves:Petrov:2012}, an Aspect
+ Oriented language for embedded systems. Aspect descriptions are
+ written in the LARA language and automatically applied to the
+ original application source to generate optimised versions through
+ various transformations that enable and optimise hardware/software
+ partitioning \cite{Lam:Coutinho:Luk:2008}. Aspect descriptions can be
+ used to specify compilation strategies that result in overall
+ speedups of 2 to 6.8 times over software versions
+ \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012}, generally
+ with high aspect bloat \footnote{ $\text{aspect bloat} =
+   \frac{\text{size of transformed code}}{\text{size of original
+       code}}$, so a higher aspect bloat is better}
+ \cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}.
 
 The use of LARA aspects in guiding the compilation process of C
 applications is described in
