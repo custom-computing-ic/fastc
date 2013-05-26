@@ -1,36 +1,100 @@
 \chapter{Design Flow}
 \label{sec:design-flow}
 
-\subsection{Requirements}
+In this chapter we introduce a novel design flow for creating
+high-performance dataflow designs starting from C/C++ applications. We
+explain the motivation and requirements for the proposed approach and
+provide an overview of the three main components: the \FAST{}
+language, the Aspect repository and weaver and the compilation
+backend. We show how these three components can be integrated to
+produce an automated design technique. We analyse the steps required
+to produce an optimised design using the proposed approach and compare
+this with alternative approaches using other start-of-the-art
+technologies. Finally, we present an extension to our original
+design-flow to support run-time reconfiguration.
 
-We propose a novel design flow for aspect-driven compilation of
-dataflow designs to meet the following requirements and design goals,
-addressing key areas in developing hardware acceleration solutions:
-\begin{enumerate}
-\item \emph{Performance:} specify high-performance dataflow designs,
-  that achieve significant speedup over sequentially executed
-  implementations; exploit the reconfiguration capability of FPGA
-  devices to improve performance and efficiency;
-\item \emph{Portability:} improve portability of dataflow designs, to
-  allow reuse of optimisation strategies on various platforms;
-\item \emph{Integration:} simplify translation of existing
-  applications to high-performance dataflow designs to facilitate the
-  integration of the proposed design flow with existing (predominantly
-  imperative) application code;
-\item \emph{Productivity:} improve developer productivity by providing
-  high-level means of specifying dataflow designs and controlling
-  compilation strategies that reduce compilation time and generating
-  boilerplate code automatically.
-\end{enumerate}
 
-\subsection{Approach}
-To meet these requirements we propose the following approach. Firstly,
-we introduce \FAST{} (described in Section \ref{sec:maxc}), a novel
-language for specifying dataflow designs. We specify the accelerated
-portion of the original applications using \FAST{} dataflow
-kernels. By maintaining compatibility with C99 syntax we improve
-developer productivity by providing a familiar language and introduce
-the possibility of combining hardware and software
+\section{Overview}
+
+Figure \ref{fig:design-flow-overview} provides a brief overview of the
+proposed design flow. First a high level application is produced as
+the input to our flow. This is then partitioned into a software part
+and a hardware part to run on the dataflow accelerator. A dataflow
+kernel is generated from the original description. Aspect descriptions
+are used to control the optimisation process.
+
+Thus the inputs to the design flow are:
+\begin{itemize}
+  \item High-level source specification
+  \item Aspect descriptions for controlling the compilation process
+\end{itemize}
+
+\begin{figure}[!h]
+  \includegraphics[scale=0.5, trim=60 50 0 0]{figs/design-flow}
+  \caption{Proposed approach for aspect-driven compilation of dataflow
+    designs.}
+  \label{fig:design-flow-overview}
+\end{figure}
+
+The design flow produces as its output a number of implementations based on
+requirements specified through aspects.
+
+The following algorithm describes the operation of the proposed design flow:
+
+\begin{lstlisting}
+for (in as do als)
+\end{lstlisting}
+
+\section{Design Goals}
+
+Our design flow aims to improve both \emph{efficiency} (in terms of
+performance and energy consumption) and \emph{productivity}. The
+former is crucial to High Performance Computing, the latter helps
+reduce development cost and time and is a well-known issue with
+existing FPGA based acceleration solutions \XXX{cit. req.}. To achieve this we focus
+on maintaining or improving the \emph{performance} and \emph{energy
+  efficiency} of existing applications while using a more systematic
+approach for design optimisation that results in more \emph{portable}
+application code, improves \emph{integration} with existing
+applications and \emph{automate} time consuming and error-prone tasks
+that need to be performed manually using traditional tools.
+
+\subsection{Performance}
+To maintain performance of existing applications
+\emph{Performance:} specify high-performance dataflow designs,
+that achieve significant speedup over sequentially executed
+implementations; exploit the reconfiguration capability of FPGA
+devices to improve performance and efficiency;
+
+\subsection{Energy Efficiency}
+
+\subsection{Portability}
+\emph{Portability:} improve portability of dataflow designs, to
+allow reuse of optimisation strategies on various platforms;
+
+\subsection{Integration}
+\emph{Integration:} simplify translation of existing
+applications to high-performance dataflow designs to facilitate the
+integration of the proposed design flow with existing (predominantly
+imperative) application code;
+
+\subsection{Automation}
+\emph{Productivity:} improve developer productivity by providing
+high-level means of specifying dataflow designs and controlling
+compilation strategies that reduce compilation time and generating
+boilerplate code automatically.
+
+
+\section{Steps}
+
+To meet these requirements we propose the following approach.
+
+Firstly, we introduce \FAST{} (described in Section \ref{sec:maxc}), a
+novel language for specifying dataflow designs. We specify the
+accelerated portion of the original applications using \FAST{}
+dataflow kernels. By maintaining compatibility with C99 syntax we
+improve developer productivity by providing a familiar language and
+introduce the possibility of combining hardware and software
 specifications. Secondly, by using an aspect driven compilation flow
 we decouple optimisation from design development, improving design
 portability, and we automate the generation of code and design space
@@ -77,3 +141,11 @@ typically includes a General-Purpose Processor (GPP) and a custom
 accelerator. We consider additional optimisations to achieve
 performance improvements as a result of a systematic design space
 exploration process.
+
+\section{Comparison with Existing Approaches}
+
+\section{Extensions}
+
+\subsection{Design Modelling}
+
+\subsection{Run-time Reconfiguration Support}
