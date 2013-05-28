@@ -22,7 +22,7 @@ required by the proposed flow:
   language easy to adopt thus facilitating translation of existing
   implementations to dataflow designs.
 \item \emph{Good integration with existing source level translation and
-  weaving tools}. Simple syntax allows the language to interact well
+    weaving tools}. Simple syntax allows the language to interact well
   with existing compilers or source to source translation frameworks,
   allowing source level optimisations to be applied through different
   tools.
@@ -50,22 +50,6 @@ all active inputs have available data.
 
 \section{Features}
 
-\subsection{Streams}
-
-\subsection{Kernels}
-
-\subsection{Inputs and Outputs}
-
-\subsection{Control}
-
-\subsubsection*{Conditionals}
-
-\subsubsection*{Loops}
-
-\subsection{Computation}
-
-
-
 Table~\ref{table:maxc-features} summarises the features of \FAST{} and
 Fig.~\ref{fig:maxc-1dconv} shows an example dataflow kernel used to
 value European options. Kernels are defined as regular C functions
@@ -84,59 +68,60 @@ dataflow designs.
 
 \begin{table}[!h]
   \centering
-\renewcommand{\arraystretch}{1.6}
-\caption{Summary of the main features of the \FAST{} language.}
-\label{table:maxc-features}
-\begin{tabular}{p{1.7cm}|l|l}
-\hline
-\bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
-\hline\hline
-  \multirow{2}{*}{Input/Output}         & Declared in function header          & C99 (line 1)                                 \\\cline{2-3}       & \texttt{in()},\texttt{out()}  & \FAST{} API (lines 2,11) \\
-\hline
-  \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 11)                                \\\cline{2-3}      & Stream mux (\texttt{mux()})       & \FAST{} API  \\
-\hline
-\multirow{2}{*}{Computation} & +, *, /, -                         & C99 (line 8)                           \\\cline{2-3} & log, exp, sqrt, sin etc.  & \#include $<$math.h$>$  \\
-\hline
-  \multirow{2}{*}{Streams}     & Declared as pointers               & C99 (line 1)                                 \\\cline{2-3}       & Accessed with array index & C99 (line 8) \\
-\hline
-  Optimisation                 & C pragmas                   & C99 (line 7)                                 \\
-\hline
-  Parameterization             & Constants, variables                   & C99                                          \\
-\hline
-Hardware \  Mapping                  & C pragmas                   & C99 (line 17)                                \\
-\end{tabular}
+  \renewcommand{\arraystretch}{1.5}
+  \caption{Summary of the main features of the \FAST{} language.}
+  \label{table:maxc-features}
+  \begin{tabularx}{\textwidth}{X|X|X}
+    \hline
+    \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
+    \hline\hline
+    \multirow{2}{*}{Input/Output}         & Declared in function header          & C99 (line 1)                                 \\\cline{2-3}       & \texttt{in()},\texttt{out()}  & \FAST{} API (lines 2,11) \\
+    \hline
+    \multirow{2}{*}{Control}     & Ternary op., \texttt{if} statement & C99 (line 11)                                \\\cline{2-3}      & Stream mux (\texttt{mux()})       & \FAST{} API  \\
+    \hline
+    \multirow{2}{*}{Computation} & +, *, /, -                         & C99 (line 8)                           \\\cline{2-3} & log, exp, sqrt, sin etc.  & \#include $<$math.h$>$  \\
+    \hline
+    \multirow{2}{*}{Streams}     & Declared as pointers               & C99 (line 1)                                 \\\cline{2-3}       & Accessed with array index & C99 (line 8) \\
+    \hline
+    Optimisation                 & C pragmas                   & C99 (line 7)                                 \\
+    \hline
+    Parameterization             & Constants, variables                   & C99                                          \\
+    \hline
+    Hardware \  Mapping                  & C pragmas                   & C99 (line 17)                                \\
+  \end{tabularx}
 \end{table}
-
 
 
 \lstset{style=MaxC}
 
-\begin{figure}[!h]
-  \begin{lstlisting}
-    void Price_FPGA(float* p, float c_0_0_0, float c_p_0_0, float c_n_0_0, int n1, int ORDER) {
-      in(p);
+\begin{lstlisting}[caption={\FAST{} dataflow kernel for European Options pricing}]
+  void Price_FPGA(
+  float* p,
+  float c_0_0_0, float c_p_0_0, float c_n_0_0,
+  int n1, int ORDER)
+  {
+    in(p);
 
-      float* i4 = count(1000, 1);
-      float* i1 = countChain(n1, 1, i4);
+    float* i4 = count(1000, 1);
+    float* i1 = countChain(n1, 1, i4);
 
-      #pragma FAST DSPBalance:full
-      int result = p[0]  * c_0_0_0 + p[1]  * c_p_0_0 + p[-1] * c_n_0_0;
+    #pragma FAST DSPBalance:full
+    int result =
+    p[0]  * c_0_0_0 +
+    p[1]  * c_p_0_0 +
+    p[-1] * c_n_0_0;
 
-      int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
-      out(up ? result : p);
-    }
+    int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
+    out(up ? result : p);
+  }
 
-    void Price_CPU(...) {...}
+  void Price_CPU(...) {...}
 
-    int main() {
-      #pragma FAST hw:Price_FPGA
-      Price_CPU(...);
-    }
-  \end{lstlisting}
-  \caption{\FAST{} dataflow kernel for European Options
-    pricing.}
-  \label{fig:maxc-1dconv}
-\end{figure}
+  int main() {
+    #pragma FAST hw:Price_FPGA
+    Price_CPU(...);
+  }
+\end{lstlisting}
 
 
 The \FAST{} API provides higher-level constructs such as I/O functions
@@ -148,8 +133,130 @@ configuration based on run-time conditions. Support for run-time
 reconfiguration is included but will be described in a future
 publication due to lack of space.
 
+\subsection{Kernels}
+
+Kernels represent a unit of computation that is mapped to the FPGA.
+They are C functions that can be used directly (as below) or linked
+via pragmas in C application code.
+
+\begin{lstlisting}[caption={Simple \FAST{} dataflow kernel.}]
+  // standard C main function
+  int main() {
+    int *x = ..., *y = ...;
+    PassThrough(x, y);
+    ...
+  }
+
+  #pragma maxc dataflow(y)
+  void PassThrough(int *x, int *y) {
+    *y =  x;
+  }
+\end{lstlisting}
+
+\subsection{Streams}
+The example above shows a very simple kernels with two streams:
+
+\begin{itemize}
+\item output (write) stream "y" - allows access to previous and current values;
+\item input (read) stream "x" - allows access to previous, current and future values;
+\end{itemize}
+
+The kernel Sum shown below computes the sum of input stream
+x. CURRENT\_CYCLE is a special value defined by MaxC that holds the
+value of the current kernel cycle.
+
+\begin{lstlisting}[caption={\FAST{} kernel computing the sum of an input stream.}]
+  #pragma maxc dataflow(y)
+  void Sum(int *x, int *y) {
+    if ( CURRENT_CYCLE == 0 )
+    *y = x[0];
+    else
+    *y = y[-1] + x[0];
+  }
+\end{lstlisting}
+
+All streams declared within a kernel are write streams.
+
+The indices for stream offsets can be compile time values as in the
+example above. When using run-time values, it can be more efficient
+(in terms of FPGA resource utilization) to specify bounds for the
+offset expressions. For example in the kernel shown below, the input
+stream "offests" contains offsets at which to select elements from
+input stream "x". We may, for example, know that our application is
+only expect to use offsets smaller than 256, so we can provide this
+optimization hint to the compiler.
+
+\begin{lstlisting}[caption={\FAST{} kernel using offsets.}]
+  void Bounds(int *x, int *offsets, int *y) {
+    int bounded_offset = make_offset(*offsets, 0, 256);
+    *y = x[*offsets] * 2;
+  }
+\end{lstlisting}
+
+\subsection{Inputs and Outputs}
+
+In the examples above we declare inputs and outputs in the kernel
+headers. Assigning to a declared output stream automatically outputs
+the value. Assignments to input streams are illegal and an error is
+indicated by the compiler.
+
+\subsection{Control}
+
+\subsubsection*{Conditionals}
+
+Regular control statements can be used. When conditionals are based on
+stream values, the control statement maps to hardware multiplexers
+(e.g. in the Sum kernel above, if ( CURRENT\_CYCLE == 0 )).
+
+\subsubsection*{Loops}
+
+It is only possible to use loops statements (while, for) if their
+bounds and induction variables are known at compile time. In the
+ParallelSum kernel below the loop is used to replicate the computation
+Par times.
+
+\begin{lstlisting}[caption={Using loops for \FAST{} design parametrisation}]
+  void ParallelSum(int *x[Par], int *Sum[Par]) {
+    for (int i=0; i <Par; i++)
+    sum[i][0] = sum[i-1][0] + x[i][0];
+  }
+\end{lstlisting}
+\subsection{Computation}
+
+\begin{itemize}
+
+\item C arithmetic operators can be used as usual on stream values (not streams themselves).
+\item Arithmetic on streams (equiv. to pointer arithmetic) is illegal.
+\item C math.h function calls are automatically mapped to efficient hardware blocks.
+
+\end{itemize}
+
+The example below computes the difference between the arithmetic and geometric average of two consecutive elements in a streams (boundary cases ignored).
+
+
+\begin{lstlisting}
+  void AvgDiff(int *x, int *y) {
+    int arithmetic_avg = (x[0] + x[-1]) / 2;
+    int geometric_avg  = (sqrt(x[0] * x[-1]);
+    *y = geom - avg;
+  }
+\end{lstlisting}
+
+\subsection{State}
+State can be saved and subsequently accessed between kernel iterations
+by use of global values as shown in the kernel CycleSum that adds the
+current cycle count to the value of the input stream, and also updates
+the cycle value before the next iteration
+\begin{lstlisting}
+  int cycle = 0;
+  void CycleSum(int *x, int *y) {
+    *y = *x + cycle;
+    cycle++;
+  }
+\end{lstlisting}
 \section{Extensions}
 
+\subsection{Inferring Stream Type}
 \subsection{LMem Support}
 \subsection{Multiple Kernel Support}
 \subsection{Run-time Reconfiguration Support}

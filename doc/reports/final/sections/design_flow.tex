@@ -120,14 +120,15 @@ and follows the steps:
   process until user specified requirements are met.
 \end{enumerate}
 
-\begin{figure}[!h]
-  \includegraphics[scale=0.5, trim=60 50 0 0]{figs/design-flow}
-  \caption{Proposed approach for aspect-driven compilation of dataflow
-    designs.}
-  \label{fig:design-flow}
-\end{figure}
 
-% \input{figs/design-flow2.tex}
+\begin{figure}[!ht]
+  \centering
+  \def\svgwidth{\textwidth}
+  \input{figs/asap13-design-flow.pdf_tex}
+  \caption{Proposed approach for aspect-driven compilation of dataflow
+   designs.}
+  \label{fig:reconfig-design-flow}
+\end{figure}
 
 Compared to existing work described in
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
@@ -183,15 +184,26 @@ design flow.
 \end{enumerate}
 
 Additionally the run-time environment has to be extended to support
-this approach. An overview is show in Figure \ref{fig:reconfig-runtime}.
+this approach. An overview of the assumed runtime architecture for the
+proposed approach is shown in Figure \ref{fig:reconfig-runtime}.
 
 \begin{figure}[!ht]
   \centering
   \def\svgwidth{\textwidth}
   \input{figs/fpt13-runtime.pdf_tex}
-  \caption{Revised design flow to support run-time reconfiguration}
+  \caption{Run-time architecture required to support run-time reconfiguration}
   \label{fig:reconfig-runtime}
 \end{figure}
 
+\begin{enumerate}
+\item The CPU drives the FPGA. It initiates the computation and
+  monitors the FPGA for factors such as temperature and power.
+\item The CPU can request the FPGA to abort execution of the current
+  design. Current results are saved (i.e. streamed back to CPU)
+  before reconfiguration is triggered.
+\item The CPU can select a new design to be uploaded and
+\item Empirical results are recorded in the Design Database, to
+  improve future estimates of performance, power and thermal values.
+\end{enumerate}
 
 \section{Summary}
