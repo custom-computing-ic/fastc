@@ -1,4 +1,4 @@
-\documentclass[a4paper, 10pt]{report}
+\documentclass[a4paper, 11pt]{report}
 \usepackage{amssymb,amsmath}
 \usepackage{url}
 \usepackage[final]{listings}
@@ -20,12 +20,23 @@
 \usepackage{pbox}
 \usepackage{pdflscape}
 \usepackage{tabularx}
+\usepackage{pstricks}
+\usepackage{parskip}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false,
+    pdfborder={0 0 0},
+}
+
+%\listfiles
+
+\graphicspath{{figs/}}
 \pagestyle{fancy}
 
+% --- Commands ---
 \newcommand{\HRule}{\rule{\linewidth}{0.2mm}}
-
 \newcommand{\mailto}[1]{\href{mailto:#1}{\texttt{#1}}}
-
 \newcommand{\XXX}[1]{{\bf \color{red} XXX: #1}}
 \newcommand{\TODO}[0]{{\bf \color{red} TODO\ }}
 \newcommand{\FAST}[0]{FAST}
@@ -33,7 +44,6 @@
   {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
 \newcommand{\FIC}[1]{\reduline{#1}}
 \newcommand{\blt}{\raise .2ex\hbox{\tiny$\bullet$ }}
-
 \newcommand\acknowledgements[1]{
   \typeout{Acknowledgements}
   \thispagestyle{plain}
@@ -41,7 +51,6 @@
       {\normalsize #1}
       \vfil\vfil\null
 }
-
 \newcommand\myabstract[1]{
   \typeout{Abstract}
   \thispagestyle{plain}
@@ -70,8 +79,9 @@
   \stepcounter{nodemarkers}%
 }
 
-\usepackage{tikz}
-\usetikzlibrary{shapes,arrows, fit}
+
+\usetikzlibrary{shapes,arrows,fit}
+\usetikzlibrary{positioning}
 
 \lstset{escapeinside={(*@}{@*)}}
 \lstdefinestyle{lara}{ language=C++, breaklines=true, % frame=tb,
@@ -102,14 +112,21 @@
 }
 \clearpage
 
-\acknowledgements{This is the ...}
+\acknowledgements{}
 
 \clearpage
 
 \tableofcontents
 
 
+%\begin{figure}
+%\centering
+%\def\svgwidth{15em}
+%\input{figs/drawing.pdf_tex}
+%\end{figure}
+
 \input{sections/intro.tex}
+
 
 \input{sections/background.tex}
 \input{sections/design_flow.tex}
@@ -118,8 +135,6 @@
 \input{sections/implementation.tex}
 \input{sections/eval.tex}
 \input{sections/conclusion.tex}
-
-\cite{710029}
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,../../refdb/bibliography.bib}
