@@ -121,11 +121,10 @@ average computation, starting from an original design in C shown in
 Listing \ref{MovingAvg-C}. This performs a three point moving average
 computation on an input array x, using 2 point averages at boundaries.
 
-\lstset{language=C++, caption={Original three point moving average
-computation in C.}, label={MovingAvg-C}}
-
-\begin{lstlisting}
-
+\begin{lstlisting}[
+language=C++,
+caption={Original three point moving average computation in C.},
+label={MovingAvg-C}]
 for (int i = 0; i < n; i++ ) {
    sum = x[i], divisor = 1;
    if ( i > 0 )
@@ -170,12 +169,10 @@ shows some of the important features of the MaxCompiler API:
 All these features will have to be supported by our MaxC language as
 described in Section \ref{maxc}.
 
-\lstset{language=Java, label={MovingAvg-Kernel}, caption={Kernel
-design for the three point moving average computation showing features
-such as stream offsets, arithmetic and control which will have to be
-supported by our MaxC language}}
-
-\begin{lstlisting}
+\begin{lstlisting}[
+language=Java, label={MovingAvg-Kernel},
+caption={Kernel design for the three point moving average computation showing features such as stream offsets, arithmetic and control which will have to be supported by our MaxC language}
+]
 public class MAKernel extends Kernel{
   public MAKernel(KernelParameters parameters) {
     super(parameters);
@@ -203,10 +200,12 @@ PCIe). Listing \ref{MovingAvg-Manager} shows a simple design for the
 moving average application that instantiates a single moving average
 kernel and connects its inputs and outputs to the host interface.
 
-\lstset{label={MovingAvg-Manager}, caption={Manager design for the
-three point moving average computation}}
-
-\begin{lstlisting}
+\begin{lstlisting}[
+language=Java,
+label={MovingAvg-Manager},
+ caption={Manager design for the
+three point moving average computation}
+]
 public class MAManager extends CustomManager {
   public MAManager(MAXBoardModel board_model, boolean is_simulation, String name) {
     super(board_model, is_simulation, name);
@@ -228,11 +227,12 @@ Finally we must write a host application which is required to queue
 the input streams and run the accelerator. This is achieved by calls
 to the MaxCompilerRT (runtime) API that interfaces with MaxelerOS.
 
-\lstset{label={MovingAverage-Host}, caption={Host example for queueing
+\begin{lstlisting}[
+label={MovingAverage-Host},
+caption={Host example for queueing
 the input and output streams and running the three point moving
-average design.}}
-
-\begin{lstlisting}
+average design.}
+]
 max_run(
   device,
   max_input("x", x, x_size),
@@ -296,11 +296,13 @@ on which the aspect acts, the `apply` statement specifies actions to
 be applied to the results of a query while `condition` is used to
 filter relevant queries.
 
-\lstset{style=lara, label={lara}, caption={Example LARA description
+\begin{lstlisting}[
+style=lara,
+label={lara},
+caption={Example LARA description
 for fully unrolling innermost loops with an iteration count smaller
-than or equal to 16.}}
-
-\begin{lstlisting}
+than or equal to 16.}
+]
 aspectdef loopunroll
   select function.loop{type="for"} end
   apply optimize("loopunroll", "fully"); end

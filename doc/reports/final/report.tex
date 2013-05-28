@@ -29,10 +29,11 @@
     pdfborder={0 0 0},
 }
 
-%\listfiles
+\listfiles
 
 \graphicspath{{figs/}}
 \pagestyle{fancy}
+\setlength{\headheight}{15pt}
 
 % --- Commands ---
 \newcommand{\HRule}{\rule{\linewidth}{0.2mm}}
@@ -104,20 +105,21 @@
 \renewcommand{\thepage}{\roman{page}}
 
 
-% Abstract
-
-%\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
-\myabstract{{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+\myabstract{
+{\vspace{1em}}
   ...
 }
 \clearpage
 
-\acknowledgements{}
+\acknowledgements{
+}
 
 \clearpage
 
 \tableofcontents
-
+\listoffigures
+\listoftables
+\lstlistoflistings
 
 %\begin{figure}
 %\centering
@@ -126,8 +128,6 @@
 %\end{figure}
 
 \input{sections/intro.tex}
-
-
 \input{sections/background.tex}
 \input{sections/design_flow.tex}
 \input{sections/fast.tex}
