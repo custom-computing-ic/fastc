@@ -10,6 +10,8 @@ to specify the design (as in MaxCompiler \cite{5719584} or Streams-C
 \cite{Gokhale:Stone:Arnold:Kalinowski:2000}), we use aspects to
 implement the transformations required for the actual implementation.
 
+\section{Design Goals}
+
 \FAST{} provides the following features that are
 required by the proposed flow:
 
@@ -45,6 +47,24 @@ Designs in \FAST{} are compiled to MaxCompiler designs composed of
 inter-connected functional kernels. Communication between kernels is
 asynchronous, so they can operate independently, and compute only when
 all active inputs have available data.
+
+\section{Features}
+
+\subsection{Streams}
+
+\subsection{Kernels}
+
+\subsection{Inputs and Outputs}
+
+\subsection{Control}
+
+\subsubsection*{Conditionals}
+
+\subsubsection*{Loops}
+
+\subsection{Computation}
+
+
 
 Table~\ref{table:maxc-features} summarises the features of \FAST{} and
 Fig.~\ref{fig:maxc-1dconv} shows an example dataflow kernel used to
@@ -127,3 +147,11 @@ which provides the flexibility of selecting a particular dataflow
 configuration based on run-time conditions. Support for run-time
 reconfiguration is included but will be described in a future
 publication due to lack of space.
+
+\section{Extensions}
+
+\subsection{LMem Support}
+\subsection{Multiple Kernel Support}
+\subsection{Run-time Reconfiguration Support}
+
+\section{Summary}
