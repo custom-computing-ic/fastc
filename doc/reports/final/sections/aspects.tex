@@ -1,10 +1,12 @@
-\chapter{Aspects}
+\chapter{Aspect Descriptions}
 \label{sec:aspects}
+
+\section{Overview}
 
 Aspects are standalone modules that capture functional cross-cutting
 concerns that are decoupled from the primary function of a
-program. AspectJ\cite{Kiczales:2005:AP:1062455.1062640}, a widely
-used extension for Aspect-Oriented Programming (AOP) in Java, captures
+program. AspectJ\cite{Kiczales:2005:AP:1062455.1062640}, a widely used
+extension for Aspect-Oriented Programming (AOP) in Java, captures
 program execution points (such as method calls) at run-time to allow
 new code to be executed before, after or in place of these execution
 points through a process called \emph{weaving}. The main motivation
@@ -12,10 +14,10 @@ behind AspectJ in particular, and AOP in general, is to solve the
 modularisation problem when dealing with multiple cross-cutting
 functional concerns.
 
-The LARA aspect-oriented
-design-flow \cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012},
-on the other hand, performs the weaving process at compile-time to
-satisfy non-functional concerns, such as to improve performance on a
+The LARA aspect-oriented design-flow
+\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}, on the
+other hand, performs the weaving process at compile-time to satisfy
+non-functional concerns, such as to improve performance on a
 particular hardware platform. For this purpose, the LARA weaving
 process manipulates and transforms the application sources. These new
 generated sources (woven code) incorporate functional elements of the
@@ -33,61 +35,15 @@ as well as platform specific optimisations. In addition, strategies
 coded in LARA can be re-applied automatically in different
 applications, thus improving developer productivity.
 
-We report four types of aspects (Table~\ref{tbl:aspects}) used with
+We report four types of aspect descriptions (Table~\ref{tbl:aspects}) used with
 designs in \FAST{}:
 
-\vspace*{1.2ex}
-\noindent{\bf System Aspects.} System aspects capture transformation
-or optimisation strategies that affect the whole application such as
-those concerning hardware/software partitioning, monitorisation and
-run-time reconfiguration capabilities. The goal of hardware/ software
-partitioning is to improve the overall execution time by identifying
-parts of the code to be offloaded to hardware
-(Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the
-application code to extract run-time behaviour, and uncover
-opportunities for optimisation (Section~\ref{sect:asp_mon}).
-Run-time reconfiguration can be used to remove idle functions
-from the accelerator at specific points in time, so that
-additional resources can be dedicated to functions that are
-active \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
-
-\vspace*{1.2ex}
-\noindent{\bf Implementation Aspects.} Implementation aspects focus on
-low level design optimisations that can be applied to designs in
-\FAST{} to improve timing or resource usage. For instance, operator
-optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map
-operators in the program to dedicated hardware resources. Word-length
-aspects specify the numerical representation of variables and
-expressions in the design.
-
-\vspace*{1.2ex}
-\noindent{\bf Exploration Aspects.} Exploration aspects deal with
-strategies that generate multiple designs to find an optimal
-implementation based on user requirements. Exploration aspects can act
-on any level of the design flow (C code, C and \FAST{}, or \FAST{}
-functions). They enable systematic exploration of trade-offs and
-optimisation opportunities. Examples of exploration aspects include
-iterative aspects (Section~\ref{sect:asp_it}) which generate a
-sequence of solutions until a termination criterion is satisfied, and
-metaheuristic-based aspects to find optimal solutions in a very large
-design space.
-
-\vspace*{1.2ex}
-\noindent{\bf Development Aspects.} Development aspects capture
-transformations that have an impact on the development process such as
-debugging (Section~\ref{sect:asp_debug}), and, potentially, simulating
-kernels or improving compilation speed. Separating these concerns
-makes the original code easier to maintain and enables the automatic
-application of these transformations to a wide range of designs,
-improving developer productivity. Simulation aspects could be applied
-to dataflow designs to generate equivalent state-based C code thus
-enabling pure software simulation. Compilation aspects, on the other
-hand, could be applied during the development process to create
-versions of the dataflow design that compile faster by reducing the
-operating frequency, removing debug blocks or applying design-level
-optimisations that can resolve timing constraints. Naturally, reducing
-the compilation time would increase developer productivity.
-
+\begin{itemize}
+  \item System Aspect Descriptions
+  \item Implementation Aspect Descriptions
+  \item Exploration Aspect Descriptions
+  \item Development Aspect Description
+\end{itemize}
 
 \begin{table}[tp]
 \caption{Types of Aspects used in \FAST{}}
@@ -116,6 +72,23 @@ the compilation time would increase developer productivity.
 \hline
 \end{tabular}
 \end{table}
+
+
+\section{System Aspect Descriptions}
+{\bf System aspect descriptions} capture transformation
+or optimisation strategies that affect the whole application such as
+those concerning hardware/software partitioning, monitorisation and
+run-time reconfiguration capabilities. The goal of hardware/ software
+partitioning is to improve the overall execution time by identifying
+parts of the code to be offloaded to hardware
+(Section~\ref{sect:asp_hsp}). Monitorisation aspects instrument the
+application code to extract run-time behaviour, and uncover
+opportunities for optimisation (Section~\ref{sect:asp_mon}).
+Run-time reconfiguration can be used to remove idle functions
+from the accelerator at specific points in time, so that
+additional resources can be dedicated to functions that are
+active \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
+
 
 \subsection{Hardware/software partitioning}
 \label{sect:asp_hsp}
@@ -165,7 +138,9 @@ five steps:
 Each of these steps can be described as a separate LARA aspect and
 combined to form a hardware/software partitioning strategy.
 
-\subsection{Monitorisation Aspect}
+
+
+\subsection{Monitorisation}
 \label{sect:asp_mon}
 To find potential hotspots in the application, for instance to perform
 hardware/software partitioning, we can use the aspect in
@@ -257,8 +232,8 @@ information generated by the monitorization API calls, and that uses
 an heuristic to compute the most profitable computations to be
 offloaded to hardware.
 
-\begin{comment}
-\subsection{Reconfiguration Aspect}
+
+\subsection{Run-time Reconfiguration}
 \label{sect:asp_reconfig}
 To support run-time reconfiguration, we specify the configuration
 associated with the function call in the \FAST{} pragma. For instance:
@@ -354,11 +329,21 @@ main:g:3 & fast\_g & c1 \\
 \hline
 \end{tabular}
 \end{table}
-%}
 
-\end{comment}
+\section{Implementation Aspect Descriptions}
 
-\subsection{Operator Optimisation Aspect}
+Implementation aspects focus on
+low level design optimisations that can be applied to designs in
+\FAST{} to improve timing or resource usage. For instance, operator
+optimisation aspects (Section~\ref{sect:asp_ops}) can be used to map
+operators in the program to dedicated hardware resources. Word-length
+aspects specify the numerical representation of variables and
+expressions in the design.
+
+
+
+
+\subsection{Operator Optimisation}
 \label{sect:asp_ops}
 To provide architectural details to \FAST{} designs, such as mapping
 operators to DSP blocks, we can use the \FAST{} pragma shown in
@@ -419,7 +404,22 @@ end
   \label{fig:aspect-DSP}
 \end{figure}
 
-\subsection{Iterative Aspect}
+
+
+
+\section{Exploration Aspect Descriptions}
+
+Exploration aspects deal with strategies that generate multiple designs to find an optimal
+implementation based on user requirements. Exploration aspects can act
+on any level of the design flow (C code, C and \FAST{}, or \FAST{}
+functions). They enable systematic exploration of trade-offs and
+optimisation opportunities. Examples of exploration aspects include
+iterative aspects (Section~\ref{sect:asp_it}) which generate a
+sequence of solutions until a termination criterion is satisfied, and
+metaheuristic-based aspects to find optimal solutions in a very large
+design space.
+
+\subsection{Iterative Design Space Exploration}
 \label{sect:asp_it}
 Using LARA we can implement and combine these aspects to enable
 systematic design space exploration of all the optimisation options
@@ -461,6 +461,34 @@ increasing a particular design attribute, such as exponent, mantissa or the para
 \end{figure}
 
 
+\section{Development Aspect Descriptions}
+
+Development aspects capture transformations that have an impact on the
+development process such as debugging (Section~\ref{sect:asp_debug}),
+and, potentially, simulating kernels or improving compilation
+speed. Separating these concerns makes the original code easier to
+maintain and enables the automatic application of these
+transformations to a wide range of designs, improving developer
+productivity. Simulation aspects could be applied to dataflow designs
+to generate equivalent state-based C code thus enabling pure software
+simulation. Compilation aspects, on the other hand, could be applied
+during the development process to create versions of the dataflow
+design that compile faster by reducing the operating frequency,
+removing debug blocks or applying design-level optimisations that can
+resolve timing constraints. Naturally, reducing the compilation time
+would increase developer productivity.
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Debugging Aspect}
 \label{sect:asp_debug}
 Because the current execution model does not provide run-time debugging
@@ -490,3 +518,6 @@ end
   \caption{Aspect for automatically instrumenting the code to watch any change in the value of a program variable.}
   \label{fig:aspect-debug}
 \end{figure}
+
+
+\section{Summary}

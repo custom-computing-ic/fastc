@@ -25,8 +25,8 @@ are used to control the optimisation process.
 
 Thus the inputs to the design flow are:
 \begin{itemize}
-  \item High-level source specification
-  \item Aspect descriptions for controlling the compilation process
+\item High-level source specification
+\item Aspect descriptions for controlling the compilation process
 \end{itemize}
 
 \begin{figure}[!h]
@@ -42,7 +42,7 @@ requirements specified through aspects.
 The following algorithm describes the operation of the proposed design flow:
 
 \begin{lstlisting}
-for (in as do als)
+  for (in as do als)
 \end{lstlisting}
 
 \section{Design Goals}
@@ -127,6 +127,8 @@ and follows the steps:
   \label{fig:design-flow}
 \end{figure}
 
+% \input{figs/design-flow2.tex}
+
 Compared to existing work described in
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
 \cite{cardoso2011new} our approach emphasises and provides more
@@ -149,3 +151,47 @@ exploration process.
 \subsection{Design Modelling}
 
 \subsection{Run-time Reconfiguration Support}
+
+Extensions to the original flow are required to support the automation
+of run-time reconfiguration support. Figure
+\ref{fig:reconfig-design-flow} presents an overview of the revised
+design flow.
+
+\begin{figure}[!ht]
+  \centering
+  \def\svgwidth{\textwidth}
+  \input{figs/fpt13-design-flow.pdf_tex}
+  \caption{Revised design flow to support run-time reconfiguration}
+  \label{fig:reconfig-design-flow}
+\end{figure}
+
+\begin{enumerate}
+\item From an initial C + FAST design we create a number of
+  configurations by applying implementation and system aspects as
+  described in ASAP.
+\item For each configuration we derive a model of the resource usage,
+  performance and power usage using modelling aspects (described in
+  section 3)
+\item Based on predicted models (from step 2) and possibly on existing
+  empirical information from the Design DB we partition the
+  application and schedule the partitions to achieve user requirements
+  and optimization goals.
+\item Finally a number of executables and designs are created,
+  corresponding to the generated configurations from step 3. Based on
+  compilation and execution (of automated performance tests) we refine
+  our predictions for design resource usage, performance and power.
+\end{enumerate}
+
+Additionally the run-time environment has to be extended to support
+this approach. An overview is show in Figure \ref{fig:reconfig-runtime}.
+
+\begin{figure}[!ht]
+  \centering
+  \def\svgwidth{\textwidth}
+  \input{figs/fpt13-runtime.pdf_tex}
+  \caption{Revised design flow to support run-time reconfiguration}
+  \label{fig:reconfig-runtime}
+\end{figure}
+
+
+\section{Summary}
