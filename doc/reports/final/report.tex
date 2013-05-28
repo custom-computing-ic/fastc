@@ -85,18 +85,29 @@
 \usetikzlibrary{positioning}
 
 \lstset{escapeinside={(*@}{@*)}}
-\lstdefinestyle{lara}{ language=C++, breaklines=true, % frame=tb,
-  xleftmargin=2em, numbers=left, captionpos=b,
+
+\lstdefinestyle{lara}{ language=C++,
   morekeywords={aspectdef, var, apply, select, condition, begin, end, input}}
 
-\lstdefinestyle{MaxC}{language=C++, breaklines=true, %frame=tb,
-  xleftmargin=2em, numbers=left,
-  captionpos=b,basicstyle=\ttfamily\footnotesize,
+\lstdefinestyle{MaxC}{language=C++,
   morekeywords={s_int32, int32, float8_24, sin_float8_24,
     sout_float8_24, float8_24, s_int, s_float8_24, s_bool},
   deletekeywords={static}}
 
+\lstdefinestyle{MaxJ}{
+  morekeywords={HWVar, io, hwFloat, stream}
+}
 
+\lstset{
+  basicstyle=\footnotesize\sffamily,
+  keywordstyle=\color{black}\bfseries,
+  numbers=left,
+  captionpos=b,
+  breaklines=true,
+  frame=l,
+  xleftmargin=2em,
+  escapeinside={(*@}{@*)}
+}
 
 \begin{document}
 
