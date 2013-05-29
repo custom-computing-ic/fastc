@@ -23,12 +23,15 @@
 \usepackage{pstricks}
 \usepackage{parskip}
 
+
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=false,
     pdfborder={0 0 0},
 }
 
+
+\usepackage{cleveref}
 \listfiles
 
 \graphicspath{{figs/}}
@@ -149,5 +152,12 @@
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,../../refdb/bibliography.bib}
+
+\clearpage
+\appendix
+
+\input{sections/RTM-original.tex}
+\input{sections/MEM-original.tex}
+%\input{sections{RTM-FAST.tex}
 
 \end{document}
