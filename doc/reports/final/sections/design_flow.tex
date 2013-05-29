@@ -4,16 +4,17 @@
 In this chapter we introduce a novel design flow for creating
 high-performance dataflow designs starting from C/C++ applications. We
 explain the motivation and requirements for the proposed approach and
-provide an overview of the three main components: the \FAST{}
-language, the Aspect repository and weaver and the compilation
-backend. We show how these three components can be integrated to
-produce an automated design technique. We analyse the steps required
-to produce an optimised design using the proposed approach and compare
-this with alternative approaches using other start-of-the-art
-technologies. Finally, we present an extension to our original
-design-flow to support run-time reconfiguration.
+provide an overview of the three main components: \emph{i)} the
+\FAST{} language, \emph{ii)} the Aspect repository and weaver and
+\emph{iii)} the compilation backend. We show how these three
+components can be integrated to produce an automated design
+technique. We analyse the steps required to produce an optimised
+design using the proposed approach and compare this with alternative
+approaches using other start-of-the-art technologies. Finally, we
+present an extension to our original design-flow to support run-time
+reconfiguration.
 
-
+\begin{comment}
 \section{Overview}
 
 Figure \ref{fig:design-flow-overview} provides a brief overview of the
@@ -44,6 +45,7 @@ The following algorithm describes the operation of the proposed design flow:
 \begin{lstlisting}
   for (in as do als)
 \end{lstlisting}
+\end{comment}
 
 \section{Design Goals}
 
@@ -59,48 +61,145 @@ application code, improves \emph{integration} with existing
 applications and \emph{automate} time consuming and error-prone tasks
 that need to be performed manually using traditional tools.
 
-\subsection{Performance}
-To maintain performance of existing applications
-\emph{Performance:} specify high-performance dataflow designs,
-that achieve significant speedup over sequentially executed
-implementations; exploit the reconfiguration capability of FPGA
-devices to improve performance and efficiency;
+\subsection{Performance and Energy Efficiency}
+When targeting HPC applications it is crucial that our design flow
+results in high-performance, highly efficient designs. To achieve this
+we start by looking at some existing high-performance designs
+(e.g. Reverse Time Migration -- see \Cref{sec:RTM}) and identify some
+of the key requirements of these designs. Based on these observations
+we require our approach to:
 
-\subsection{Energy Efficiency}
+\begin{itemize}
+
+\item \textbf{Computation is the most significant part} of
+  high-performance applications. For stencil computations this is
+  usually a fairly large stencil operation over a large number of
+  adjacent data-points (multiple points in each dimension). For
+  example, the RTM kernel uses two stencil operations of 31 floating
+  point additions, 18 floating point multiplications and 1
+  subtraction (\Cref{app:rtm-kernel}, Lines \ref{app:rtmk-op1} and
+  \ref{app:rtmk-op2}).  Additionally, these are replicated a
+  \texttt{Par} times (with Par as large as 12) which leads to a total
+  of $((31 + 18 + 1) * 2 * 12) = 1200 $ floating point operations to
+  be executed on each kernel cycle (in reality floating point
+  operations are pipelined across 13 kernel cycles, but this is,
+  generally, transparent to the user). Hence, our approach must
+  provide a clear and concise manner to express computation
+  (preferably standard operators).
+
+\item Another crucial aspect in achieving high-performance is
+  \textbf{replicating the design} across to chip to maximise speedup subject to
+  maximum available bandwidth. This makes use of FPGA cache (around
+  4MB of fast-local memory) to reuse data across time steps. This
+  pipeline replication is achieved through design parametrisation and
+  loops whose bounds are known at compile-time. The parameters that
+  indicate the pipelining factor are shared across the compute and
+  memory kernels but also across the CPU code.
+
+\item High-performance designs \textbf{maximise usage of on-board
+    DRAM}. Especially for stencil type computations where a number of
+  time step iterations are performed over the original data, it is
+  crucial to have the data available in the large, high bandwidth
+  on-board DRAM rather than on the CPU side. Bandwidth of the on-board
+  DRAM is 40GB/s compared to 2GB/s over PCI-Express to CPU. However,
+  supporting DRAM introduces the additional complexity of managing
+  multiple kernels (since memory read and write commands are,
+  preferably, generated from kernels separated from the original
+  dataflow kernel -- see \Cref{app:mem-read-kernel})
+  and. Additionally, special API calls for generating the read/write
+  commands have to be supported (\Cref{app:mem-read-kernel}, Line
+  \ref{app:memrk-dram}).
+
+\item \textbf{Expose optimisation opportunities for backend
+  tools}. For example, our MaxCompiler backend supports some degree of
+  trade-offs when mapping computation to DSPs. Additionally various
+  trade-offs can be achieved by disabling pipeline depth etc.  These
+  optimisations present interesting opportunities for trade-offs that
+  enable developers to increase the number of parallel pipelines on
+  the chip by balancing resource usage, or possibly reducing clock
+  frequency.
+
+\item Additionally, it has been recently showed that run-time
+  reconfiguration can be used to improve the performance and
+  energy-efficiency of FPGA designs. \XXX{Cit. req., more details} Our
+  approach should therefore enable specification of designs with
+  run-time reconfiguration both in the static flavour presented in
+  \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} where partitions are
+  generated and scheduled optimally at compile-time but also in a
+  dynamic, self-adaptive fashion \cite{6322875} in which the
+  application can dynamically based on application inputs.
+
+\end{itemize}
+
+\XXX{Formulae for reducing clock frequency vs pipelining}
+
+\XXX{Formulae for measuring energy efficiency/consumption with run-time reconfiguration}
+
 
 \subsection{Portability}
-\emph{Portability:} improve portability of dataflow designs, to
-allow reuse of optimisation strategies on various platforms;
+
+In the context of our design flow \emph{portability} refers to two
+different aspects:
+\begin{itemize}
+\item \emph{portability of transformations and optimisations} -- it
+  should be possible to reuse optimisation strategies in the context
+  of different applications with as less user input as possible; in
+  the context of RTM this is no longer possible: the transformation
+  steps from the original naive implementation have been lost, and are
+  now part of the existing code base. Of course these could be
+  recovered, from version control for example, but a version control
+  patch could obviously not be applied to other applications to
+  generate highly pipelined designs. In other words if the developer
+  was faced with the task of accelerating a similar computational
+  kernel (which is likely since stencil computations follow a clear
+  pattern) he would have to re-do all steps, resulting in a large
+  decrease of productivity.
+
+\item \emph{portability of designs over various FPGA devices} --
+  generally resource available to FPGA chips vary greatly based on the
+  chip manufacturer. Even in the simple case of chips produced by the
+  same manufacturer, the reduction of a specific resource could
+  prevent a design from working on a different FPGA chip. Hence
+  designs cannot be considered portable, since a finely tuned design
+  could not build on a different chip. By automating the design
+  exploration process and identifying trade-offs automatically the
+  optimisation process can be repeated for various devices without
+  user input.
+\end{itemize}
+
+\XXX{Formulae for cost of automatic optimisation including design
+  space exploration and compute cost vs cost of manual developer
+  intervention}
 
 \subsection{Integration}
-\emph{Integration:} simplify translation of existing
-applications to high-performance dataflow designs to facilitate the
-integration of the proposed design flow with existing (predominantly
-imperative) application code;
+
+It is important to facilitate the integration of application code
+resulting from our approach with existing application code. For this
+it should be possible to switch seamlessly between existing software
+only code and. To achieve this we introduce a set of pragmas
+(described in detail in \Cref{}) that allow users to switch between a
+standard software compiler and the FAST compiler (\texttt{fastc}) to
+automatically enable or disable hardware acceleration.
+
+By using C99 syntax, FAST is able to share configuration parameters
+with the CPU code (e.g. via constants or macro definitions),
+simplifying management and integration of the CPU and dataflow kernel.
+
+\XXX{More details...}
 
 \subsection{Automation}
-\emph{Productivity:} improve developer productivity by providing
-high-level means of specifying dataflow designs and controlling
-compilation strategies that reduce compilation time and generating
-boilerplate code automatically.
 
+Automating the design space exploration process results in
+productivity improvements. However we provide input points in our
+design flow which can be used gradually to tweak and guide the
+compilation process.
+
+\XXX{More details...}
 
 \section{Steps}
 
 To meet these requirements we propose the following approach.
 
-Firstly, we introduce \FAST{} (described in Section \ref{sec:maxc}), a
-novel language for specifying dataflow designs. We specify the
-accelerated portion of the original applications using \FAST{}
-dataflow kernels. By maintaining compatibility with C99 syntax we
-improve developer productivity by providing a familiar language and
-introduce the possibility of combining hardware and software
-specifications. Secondly, by using an aspect driven compilation flow
-we decouple optimisation from design development, improving design
-portability, and we automate the generation of code and design space
-exploration improving productivity. Finally, systematic design space
-exploration is used to identify maximum performance configurations,
-subject to platform specific constraints.
 
 The proposed design flow is illustrated in Fig.~\ref{fig:design-flow}
 and follows the steps:
@@ -145,11 +244,82 @@ accelerator. We consider additional optimisations to achieve
 performance improvements as a result of a systematic design space
 exploration process.
 
+\section{Components}
+
+Firstly, we introduce \FAST{} (described in Section \ref{sec:maxc}), a
+novel language for specifying dataflow designs. We specify the
+accelerated portion of the original applications using \FAST{}
+dataflow kernels. By maintaining compatibility with C99 syntax we
+improve developer productivity by providing a familiar language and
+introduce the possibility of combining hardware and software
+specifications. Secondly, by using an aspect driven compilation flow
+we decouple optimisation from design development, improving design
+portability, and we automate the generation of code and design space
+exploration improving productivity. Finally, systematic design space
+exploration is used to identify maximum performance configurations,
+subject to platform specific constraints.
+
+\subsection{FAST Dataflow Designs}
+
+Dataflow designs are to be described in FAST, a novel dataflow
+language. FAST uses simple C99 style syntax to capture the computation
+data path and control-path and acts as a layer on top of the
+MaxJ/MaxCompiler designs in our approach.
+
+\subsection{LARA Aspect Descriptions and Harmonic Aspect Weaver}
+
+We use LARA and the Harmonic aspect weaver to implement the aspect
+descriptions that drive the compilation process.
+
+\subsection{MaxCompiler Backend}
+
+The target of our compilation is a fully functional MaxCompiler design.
+This involves automatic generation of:
+\begin{itemize}
+\item compute kernels
+\item memory access kernels
+\item managers
+\item run-time API calls to be inserted in the original application code
+\end{itemize}
+
+
 \section{Comparison with Existing Approaches}
+
+\XXX{Compare with MaxCompiler}
+
+\XXX{Compare with Vivado or other similar tools}
 
 \section{Extensions}
 
+We present our extensions to the original design flow required to
+support run-time reconfiguration.
+
 \subsection{Design Modelling}
+
+A design model for resource usage, pipeline depth and timing
+information can created using limited user input. This is to be used
+in the run-time reconfiguration to determine optimal partition
+scheduling.
+
+\begin{figure}[!ht]
+  \centering
+  \def\svgwidth{\textwidth}
+  \input{figs/rep-modelling.pdf_tex}
+  \caption{High-level aspects controlling generation of design
+    resource, performance and timing modelling.}
+  \label{fig:reconfig-design-flow}
+\end{figure}
+
+Based on this model we can estimate design performance, latency,
+energy efficiency and compilation time, and provide useful feedback
+earlier in the development process than is possible with existing
+tools.
+
+Of course our model relies on user inputs for resource usage map
+relies on estimates for resource usage and will not be expected to
+provide very accurate results, especially in the presence of
+optimisation of backend tools and various trade-offs that can be made
+when mapping arithmetic to FF/LUT pairs vs DSPs.
 
 \subsection{Run-time Reconfiguration Support}
 
