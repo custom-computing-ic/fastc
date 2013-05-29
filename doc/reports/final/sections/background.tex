@@ -6,9 +6,9 @@ hardware acceleration solution and the MaxCompiler toolchain and API
 which represent the target of the MaxC compilation process. We also
 look at the LARA language which will be used as part of the design
 flow to specify and apply optimization strategies both to the original
-source code and to the resulting dataflow design. We also summarize
-related work in the area of high level synthesis tools.
-
+source code and to the resulting dataflow design. We also present some
+of the related work in the areas of high level synthesis tools,
+dataflow languages and aspect-driven compilation for FPGA designs.
 
 \section{Dataflow Computing}
 
@@ -449,3 +449,16 @@ execution. However, we lack the flexibility of adapting the design to
 varying input conditions.
 
 \section{Summary}
+
+We have provided a brief introduction into the area of dataflow
+computing and explained why dataflow acceleration can improve
+performance and energy efficiency over traditional software only
+solutions. We have introduced the Maxeler platform which will be used
+as the backend of the compilation process presented in Chapter
+\ref{sec:design-flow} and presented some of the more important
+features of the MaxCompiler approach as well as the limitations
+associated with it and why we believe that the proposed flow can
+improve developer productivity and possibly reveal new opportunities
+for design transformation and optimisations. Finally, we introduced
+some of the existing dataflow languages and existing work in
+aspect-driven compilation for FPGA designs.
