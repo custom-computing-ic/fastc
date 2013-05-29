@@ -65,7 +65,8 @@ application more portable and facilitates discovery of interesting
 trade-off opportunities using design space exploration.
 
 \begin{figure}[!h]
-\includegraphics[scale=0.7, trim=0 0 0 0]{figs/pre}
+\centering
+\includegraphics{figs/pre}
 \caption{Exploration of accuracy vs resource usage trade-offs using the aspect
 shown in Fig.~\ref{fig:aspect-exploration} with variable mantissa.}
 \label{fig:precision}
@@ -77,13 +78,14 @@ in either DSPs or LUTs and FFs (Fig.~\ref{fig:arith}) and helps to
 avoid over mapping on DSPs for arithmetic intensive applications.
 
 \begin{figure}[!h]
-\vspace{0.25cm}
-\includegraphics[scale=0.7,trim=0 0 0 0]{figs/arith}
+\centering
+\includegraphics{figs/arith}
 \caption{Exploration of DSP and LUT/FF balancing for functional units
   implementing a single arithmetic operation using the aspect shown
   in Fig.~\ref{fig:aspect-DSP}.}
 \label{fig:arith}
 \end{figure}
+
 
 
 Design space exploration using the aspect in
@@ -112,9 +114,7 @@ published FPGA results for static designs
 
 \begin{figure}[!h]
   \centering
-  \vspace{0.35cm}
-  \hspace{-8mm}
-  \begin{tikzpicture}[scale=1]
+  \begin{tikzpicture}[scale=1.5]
     \selectcolormodel{gray}
     \begin{axis}[
         xmin=1,
@@ -205,6 +205,46 @@ aspects, which increases developer productivity. The automated process
 improves portability of the design, allowing optimisations based on
 design space exploration to be carried out on various platforms (hence
 subject to varying resource constraints) without manual intervention.
+
+
+\begin{sidewaystable}
+  \begin{tabularx}{\textwidth}{p{3.5cm}|X|X|X|X|X|X|X|X|X|X|X|X|X|}
+    Aspects & DSP Balance & Par & Mem Freq & Width & FPGA  Time (Ms) & Total Time (s) & Total Power (Watt) & Dyn. Power (Watt) & LUT (\%) & FF(\%) & BRAM (\%) & DSP (\%) & Build Time \\
+    \hline \hline
+    \multirow{5}{2cm}{OptimizeDSPUsage, ExploreParallelism}     & Bal.    & 1   & 303      & 8\_24 & 492             & 3.347          & 117                & 30                & 19.89    & 14.13  & 23.31     & 1.69     & 1h 49      \\
+            & None        &     &          &       & 492             & 3.453          & 117                & 30                & 22.62    & 15.56  & 23.31     & 0        & 2 h 9      \\
+            & Full        &     &          &       & 492             & 3.103          & 117                & 30                & 17.68    & 12.79  & 23.31     & 5.8      & 2 h 2      \\
+            \hline
+            & Bal.    & 2   &          &       & 247             & 2.917          &	121                & 34                & 25.44    & 25.44  & 24.53     & 3.37     & 2h30       \\
+            & None        &     &          &       & 247             & 3.006          &	121                & 34                & 30.95    & 20.53  & 24.53     & 0        & 3h5        \\
+            & Full        &     &          &       & 246             & 3.153          &	121                & 34                & 21.18    & 15     & 24.44     & 11.61    & 2h8        \\
+            \hline
+            & Bal.    & 3   &          &       & 225             & 3.506          & 121                & 34                & 31.56    & 21.32  & 24.06     & 5.06     & 2h30       \\
+            & None        &     &          &       & 224             & 3.124          & 121                & 34                & 39.16    & 25.61  & 24.06     & 0        & 3h20       \\
+            & Full        &     &          &       & 226             & 3.123          & 125                & 38                & 25.06    & 17.3   & 23.97     & 17.41    & 2h18       \\
+            \hline
+            & Bal.    & 6   &          &       & 226             & 3.125          & 125                & 38                & 52.61    & 30.52  & 20.12     & 17.41    & 3h17       \\
+            & None        &     &          &       & 223             & 3.156          & 125                & 38                & 65.11    & 40.58  & 28.95     & 0        & 4h50       \\
+            & Full        &     &          &       & 224             & 3.016          &	122                & 35                & 35.63    & 24.11  & 27.73     & 34.82    & 3h42       \\
+            \hline
+    \multirow{5}{2cm}{OptimizeWordWidth, OptimizeFrequency, ExploreParallelism}        & Full        & 6   & 303      & 8\_22 & 224             & 2.98           & 122                & 35                & 45.02    & 31.17  & 27.73     & 15.18    & 3h13       \\
+            &             &     &          & 8\_20 & 224             & 3.006          &	122                & 35                & 43.54    & 29.96  & 27.16     & 15.18    & 3h30       \\
+            &             &     &          & 8\_18 & 224             & 3.076          & 122                & 35                & 40.81    & 28.68  & 26.88     & 15.18    & 3h13       \\
+            &             &     &          & 8\_16 & 224             & 3.033          & 122                & 35                & 39.62    & 26.44  & 26.6      & 10.12    & 2h50       \\
+            &             &     &          & 8\_24 & 82              & 1.723          & 122                & 35                & 34.13    & 24.09  & 27.73     & 34.82    & 4h17       \\
+            \hline
+            &             & 2   & 400      & 8\_24 & 247             & 3.133          &	122                & 35                & 21.32    & 14.98  & 24.44     & 11.61    & 2h30       \\
+            &             & 3   &          & 8\_24 & 164             & 2.964          & 122                & 35                & 25.43    & 17.28  & 23.97     & 17.41    & 2h35       \\
+
+  \end{tabularx}
+\end{sidewaystable}
+
+
+
+
+
+
+
 
 
 \section{Bitonic Sort}
