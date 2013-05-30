@@ -1,6 +1,61 @@
 \chapter{Evaluation}
 \label{sec:evaluation}
 
+\section{Methodology}
+
+To evaluate our approach we develop and implement a number of applications
+to test both the flexibility and generality of our approach but also to 
+ensure that we can support high-performance applications. There are in general
+no standard benchmarks for FPGAs as there are for CPU/GPU \XXX{cit. req.} systems.
+
+\subsection{Benchmark}
+
+Our benchmark consists of the following applications:
+\begin{itemize}
+\item Sorting networks -- recursive structure, parametrisable types
+  required
+  \begin{itemize}
+  \item Mergesort
+  \item Bitonic sort
+  \item Insertion sort
+  \end{itemize}
+\item Black Scholes Option Pricing
+\item Barrier Option Pricing -- high-performance, design parallelism
+\item Reverse Time Migration -- high-performance, design parallelism
+\end{itemize}
+
+\subsection{Equipment}
+
+All dataflow designs are run on Maxeler MaxWorkstation
+\cite{MaxWorkstation} which comprises:
+\begin{itemize}
+\item Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz, cache size 8192 KB
+\item 16 GB DRAM
+\item Vectis dataflow engine with 24 GB DRAM, 
+\item DFEs connect to CPU via PCI Express gen2 x8
+\end{itemize}
+
+Hardware builds usually take a long time. Additionally they are
+required to meet timing and resource usage constraints. The process of
+placing and routing a dataflow design can take anywhere from 20
+minutes to several days. Since this is a stochastic process, usually
+mutliple builds are started in parallel and when one terminates the
+whole build process is terminated and that design is used. Hence the
+build process requires substantial amount of DRAM and CPU cores,
+particulary during the design space exploration step. Hence the builds
+were ran on the Custom Computing cluster machines:
+
+\begin{itemize}
+\item \texttt{cccad3} -- 2 8 core, hyperthreaded (16 threads) Intel
+  Xeon E5-2650 CPUs at 2.00GHz, 20MB cache, 189 GB DRAM
+\item \texttt{cccad2} -- 2 6 core, hyperthreaded (12 threads) Intel
+  Xeon X5650 CPUs at 2.67GHz, 12 MB cache, 94 GB DRAM
+\item \texttt{cccad1} -- 2 6 core, hyperthreaded (12 threads) Intel Xeon
+  X5650 CPUs at 2.67GHz, 12 MB cache, 118 GB DRAM
+\end{itemize}
+
+\subsection{Measuring Results}
+
 \section{RTM Implementation}
 \label{sec:RTM}
 We evaluate the proposed approach by implementing a high-performance
@@ -11,7 +66,7 @@ propagation of injected waves using the isotropic acoustic wave
 equation \cite{araya2011assessing}:
 \begin{align}
 \frac{d^2p(r,t)}{dt^2} + {dvv(r)}^2\bigtriangledown^2p(r,t) = f(r,t)
-\end{align}
+o\end{align}
 
 We approximate the differential equation using stencil computation to
 perform a fifth-order Taylor expansion in space and first-order Taylor
