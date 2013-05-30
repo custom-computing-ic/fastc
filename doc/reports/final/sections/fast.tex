@@ -257,11 +257,51 @@ the cycle value before the next iteration
 
 \subsection{Pragmas}
 
+Pragmas are used to indicate:
+\begin{itemize}
+\item the link between hardware and software
+\item optimisation options exposed by the backend tools 
+\end{itemize}
+
+This enables users to switch seamlessly between compilers and,
+eventually backend compilers, contributing towards the Integration
+requirement of our design flow.
+
+However, unlike in other approaches \XXX{cit. req.} pragmas are not
+meant to be inserted manually -- although this is possible -- but
+rather they are to be controlled by the corresponding aspect
+descriptions (for hardware / software partitioning, optimisation
+etc.). The use of pragmas enables aspect descriptions to operate
+correctly (or rather to not operate incorrectly) accross various
+platforms (since, by definition, compiler directives are simply
+ignored if they are not understood by the compiler) and contributes
+towards our Portability requirement \XXX{cit. req.}.
+
 \section{Extensions}
 
 \subsection{Inferring Stream Type}
+
+
+
 \subsection{LMem Support}
+
+
 \subsection{Multiple Kernel Support}
+
+
 \subsection{Run-time Reconfiguration Support}
+
+To support run-time reconfiguration \fastc{} must know that
+alternative partititions are to be generated for a function.
+Additionally, boilerplate code for trigerring the run-time
+reconfiguration needs to be added. This contains:
+\begin{itemize}
+\item code required to save current FPGA state -- this is required to
+  prevent loss of data as a result of resetting the device as part of
+  the run-time reconfiguration process
+\item code on the CPU side to upload the new configuration
+\item code on the CPU side to queue new input streams and start the
+  computation
+\end{itemize}
 
 \section{Summary}
