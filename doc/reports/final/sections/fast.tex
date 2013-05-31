@@ -48,6 +48,55 @@ inter-connected functional kernels. Communication between kernels is
 asynchronous, so they can operate independently, and compute only when
 all active inputs have available data.
 
+
+\section{Prototype}
+
+We originally developed a simple prototype of the FAST language
+sufficient to support our application benchmark (\Cref{}). We then
+extended this prototype with more advanced features (as described in
+\Cref{sec:fast-extensions}) which were required to meet our design
+goals.
+
+In this section we show a very simple implementation of a dataflow
+kernel used as part of our Black Scholes benchmark. In
+\Cref{sec:fast-ref } we analyse the same example in light of our
+extensions described in \Cref{sec:fast-extensions} and argue that
+these simplify the language.
+
+\lstset{style=MaxC}
+
+\begin{lstlisting}[
+  label={lst:fast-bscholesp},
+  caption={\FAST{} dataflow kernel for European Options pricing}
+]
+  void Price_FPGA(
+  float* p,
+  float c_0_0_0, float c_p_0_0, float c_n_0_0,
+  int n1, int ORDER)
+  {
+    in(p);
+
+    float* i4 = count(1000, 1);
+    float* i1 = countChain(n1, 1, i4);
+
+    #pragma FAST DSPBalance:full
+    int result =
+    p[0]  * c_0_0_0 +
+    p[1]  * c_p_0_0 +
+    p[-1] * c_n_0_0;
+
+    int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
+    out(up ? result : p);
+  }
+
+  void Price_CPU(...) {...}
+
+  int main() {
+    #pragma FAST hw:Price_FPGA
+    Price_CPU(...);
+  }
+\end{lstlisting}
+
 \section{Features}
 
 Table~\ref{table:maxc-features} summarises the features of \FAST{} and
@@ -91,39 +140,6 @@ dataflow designs.
   \end{tabularx}
 \end{table}
 
-
-\lstset{style=MaxC}
-
-\begin{lstlisting}[caption={\FAST{} dataflow kernel for European Options pricing}]
-  void Price_FPGA(
-  float* p,
-  float c_0_0_0, float c_p_0_0, float c_n_0_0,
-  int n1, int ORDER)
-  {
-    in(p);
-
-    float* i4 = count(1000, 1);
-    float* i1 = countChain(n1, 1, i4);
-
-    #pragma FAST DSPBalance:full
-    int result =
-    p[0]  * c_0_0_0 +
-    p[1]  * c_p_0_0 +
-    p[-1] * c_n_0_0;
-
-    int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
-    out(up ? result : p);
-  }
-
-  void Price_CPU(...) {...}
-
-  int main() {
-    #pragma FAST hw:Price_FPGA
-    Price_CPU(...);
-  }
-\end{lstlisting}
-
-
 The \FAST{} API provides higher-level constructs such as I/O functions
 (\texttt{in()}, \texttt{out()}), counters (Fig.~\ref{fig:maxc-1dconv},
 Lines~4--5) and functions to multiplex streams (\texttt{mux()}). C
@@ -132,6 +148,7 @@ which provides the flexibility of selecting a particular dataflow
 configuration based on run-time conditions. Support for run-time
 reconfiguration is included but will be described in a future
 publication due to lack of space.
+
 
 \subsection{Kernels}
 
@@ -259,14 +276,78 @@ the cycle value before the next iteration
 
 \section{Extensions}
 
+\label{sec:fast-extensions}
+
 \subsection{Inferring Stream Type}
 
-Inferring casts - advantage code is less convoluted, disadvantage
-maybe less ``safe'' against accidental type changes?
+Instead of specifying inputs and outputs manually, the \fastc{}
+compiler can be extended to automatically infer the type of streams
+(read or write). This is based on the rules:
+\begin{itemize}
+  \item If a stream is assigned to at least once then it is a write stream
+  \item If a stream is assigned to more than once, then this is an error
+  \item If a stream is declared in the kernel header and not written
+    to, then it is a read stream
+  \item If a stream is declared within the body of the dataflow
+    kernel, it is a read/write stream (\XXX{Sure?})
+\end{itemize}
+
+Additionally casting between variable types can be inferred in some
+instances by using type coercion. \XXX{More details here}
 
 
 \subsection{LMem Support}
 \subsection{Multiple Kernel Support}
 \subsection{Run-time Reconfiguration Support}
+
+\section{Revised FAST Example}
+\label{sec:fast-ref}
+
+\Cref{lst:fast-bscholesr} shows the revised Black Scholes
+implementation with the revised FAST language. No API calls are
+required for the counters or state saving. Inputs and outputs are
+clearly declared in the kernel header and the compiler can
+automatically infer whether a parameter stream is input or output.
+
+Additionally, we can use FPGA DRAM (bandwidth of 40GB/s) as the source
+for data, not just PCI-Express (2GB/s) which is a major improvement in
+terms of I/O bandwidth. This is achieved through our DRAM extensions
+and the support for multiple kernel that allows us to fully specify a
+three kernel design that implements the required pricing computation.
+
+\lstset{style=MaxC}
+
+\begin{lstlisting}[
+  label={lst:fast-bscholesr},
+  caption={\FAST{} dataflow kernel for European Options pricing}
+]
+  float i4 = 0;
+  float i1 = 0;
+  void Price_FPGA(
+    float* p, float *r,
+    float c_0_0_0, float c_p_0_0, float c_n_0_0,
+    int n1, int ORDER)
+  {
+
+    i4 = i4 >= n1    ? 0 : i4 + 1;
+    i1 = i1 >= 1000  ? 0 : i1 + 1;
+
+    #pragma FAST DSPBalance:full
+    int result =
+      p[0]  * c_0_0_0 +
+      p[1]  * c_p_0_0 +
+      p[-1] * c_n_0_0;
+
+    int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
+    r = up ? result : p;
+  }
+
+  void Price_CPU(...) {...}
+
+  int main() {
+    #pragma FAST hw:Price_FPGA
+    Price_CPU(...);
+  }
+\end{lstlisting}
 
 \section{Summary}
