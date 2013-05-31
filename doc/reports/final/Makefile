@@ -1,5 +1,5 @@
-COMPILE=xelatex
-TRASH=*.aux *.toc *.out *.log *.bbl *.blg
+COMPILE=pdflatex
+TRASH=*.aux *.toc *.out *.log *.bbl *.blg *.lof *.lol *.lot
 BIBTEX=bibtex
 
 TARGET=report
