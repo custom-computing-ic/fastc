@@ -6,9 +6,10 @@ hardware acceleration solution and the MaxCompiler toolchain and API
 which represent the target of the MaxC compilation process. We also
 look at the LARA language which will be used as part of the design
 flow to specify and apply optimization strategies both to the original
-source code and to the resulting dataflow design. We also present some
-of the related work in the areas of high level synthesis tools,
-dataflow languages and aspect-driven compilation for FPGA designs.
+source code and to the resulting dataflow design. We present related
+work in the areas of high level synthesis tools, dataflow languages
+and aspect-driven compilation for FPGA designs and explain how our
+approach differs from existing work in these fields.
 
 \section{Dataflow Computing}
 
@@ -46,12 +47,155 @@ running at a few gigahertz while being more energy efficient
 
 
 \begin{figure}[h] \centering
-\includegraphics[scale=0.4, trim=0 200 0 150]{figs/cpu-vs-dfe.png}
-\caption{Comparison between general purpose CPU architecture and a
-streaming Data Flow Engine. In the case of the latter instructions are
-not stored in memory but encoded in the dataflow graph. }
-\label{fig:cpudfe}
+  \includegraphics[scale=0.4, trim=0 200 0 150]{figs/cpu-vs-dfe.png}
+  \caption{Comparison between general purpose CPU architecture and a
+    streaming Data Flow Engine. In the case of the latter instructions are
+    not stored in memory but encoded in the dataflow graph. }
+  \label{fig:cpudfe}
 \end{figure}
+
+\section{Stencil Computation}
+
+Stencil computation is a class of computational problems consisting of
+iterative kernels that update array elements based on the values of
+their neighbours. The pattern of operation is called a stencil.
+
+Stencil computation has important applications in solving Partial
+Differential Equations and computer simulations (such as heat
+diffusion).
+
+They can operate on multiple dimensions. But increasing the dimension
+heavily impacts memory reference locality, so higher order stencils
+are hard to compute on CPU and have been the focus of many
+optimisations.
+
+\subsection{Numerical Differentiation}
+
+For an example of a 1D stencil consider the problem of numerical
+differentiation, where the first derivative of a function can be
+approximated by:
+
+\begin{equation}
+  f'(x) = \frac{-f(x + 2h) + 8f(x+h) - 8f(x-h) + f(x - 2h)}{12h}
+\end{equation}
+
+Hence the following stencil algorithm could be used to compute the
+numerical approximation of the derivative of $f$ for a large number of
+points in the function's domain:
+
+\begin{algorithm}
+  \caption{Stencil approximation of first order derivative}
+  \begin{algorithmic}
+    \If {$i\geq maxval$}
+    \State $i\gets 0$
+    \Else
+    \If {$i+k\leq maxval$}
+    \State $i\gets i+k$
+    \EndIf
+    \EndIf
+  \end{algorithmic}
+\end{algorithm}
+
+\subsection{Black Scholes Equation}
+
+Stencil computation can also be used for solving Partial Differential
+Equations using finite difference methods. This has many applications
+in scientific computing for finance and physics for example, where
+PDEs are used to model the dynamic behaviour of a system. For example,
+the solution to the widely-used Black Scholes equation can be
+approximated using a 2D stencil computation.
+
+\begin{equation}
+  \frac{\partial V}{\partial t} + \frac{1}{2}\sigma^2S^2\frac{\partial^2 V}{\partial S^2} + rS\frac{\partial V}{\partial S} -rV = 0
+\end{equation}
+
+where:
+\begin{itemize}
+\item S - stock price,
+\item V(t, S) - price of derivative as a function of stock price and time
+\item r - risk-free interest rate
+\item $\sigma$ - volatility of the stock's returns
+\end{itemize}
+
+A finite difference approximation using the explicit method leads to a
+recursive formula \cite{blackscholes} for $v(i, j)$, the approximated
+value of $V$ at the $i$th point in the time dimension and the $j$th
+point in the stock price dimension:
+
+\begin{equation}
+v(i, j) =
+\alpha * v(i, j - 1) +
+\beta  * v(i, j) +
+\gamma * v(i, j + 1)
+\end{equation}
+
+This leads to a 2D stencil algorithm that performs a forward
+propagation on the time parameter by iteratively computing the values
+of $v(i + 1, j)$ for all $j$, given the values of $v(i, j)$ for all
+$j$ as show in Algorithm \ref{alg:bscholes-stencil}.
+
+
+\begin{algorithm}
+  \caption{Stencil kernel for Black Scholes PDE}
+  \label{alg:bscholes-stencil}
+  \begin{algorithmic}
+    \If {$i\geq maxval$}
+    \State $i\gets 0$
+    \Else
+    \If {$i+k\leq maxval$}
+    \State $i\gets i+k$
+    \EndIf
+    \EndIf
+  \end{algorithmic}
+\end{algorithm}
+
+\subsection{Reverse Time Migration}
+
+Stencil computation is also used for advanced simulation and imaging
+algorithms. For example the Reverse Time Migration technique is used
+to detect geological structures beneath the Earth's surface
+\cite{araya2011assessing} and is widely used in the Oil and Gas
+sector. The algorithm uses a forward propagation step which models the
+propagation of injected acoustic waves with the isotropic acoustic
+wave equation~\cite{RTM_HETE}:
+\begin{align}
+  \frac{d^2p(r,t)}{dt^2} + {c(r)}^2\bigtriangledown^2p(r,t) = f(r,t)
+\end{align}
+where:
+\begin{itemize}
+\item c(r)    - sound speed model
+\item p(r, t) - seismic wave value at point r, time t
+\item f(r, t) - input wave value at point r, time t
+\end{itemize}
+
+An approximation using finite difference is given in
+\cite{xinyu2013selfaware} and leads to the 3D stencil kernel
+\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} shown in Algorithm
+\ref{algo:sten}.
+\begin{algorithm}[!ht]\footnotesize
+  \caption{Stencil Kernel for Reverse Time Migration.}
+  \label{algo:sten}
+  \begin{algorithmic}
+    \For{$t$ = 0 $\leftarrow$ nt-1}
+    \For{$x$ = 0 $\leftarrow$ nx-1}
+    \For{$y$ = 0 $\leftarrow$ ny-1}
+    \For{$z$ = 0 $\leftarrow$ nz-1}
+    \State p(t,x,y,z) = c *(
+    \State c0 * p(t,x,y,z) +
+    \State c11* (p(t,x-1,y,z) + p(t,x+1,y,z)) + ... + c15*(p(t,x-5,y,z) + p(t,x+5,y,z)) +
+    \State c21* (p(t,x,y-1,z) + p(t,x,y+1,z)) + ... + c25*(p(t,x,y-5,z) + p(t,x,y+5,z)) +
+    \State c31* (p(t,x,y,z-1) + p(t,x,y,z+1)) + ... + c35*(p(t,x,y,z-5) + p(t,x,y,z+5)) +
+    \State d0 *  p(t,x,y,z) + d1 * p(t-1,x,y,z-1) + f(t,x,y,z);
+    \EndFor
+    \EndFor
+    \EndFor
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+
+\section{Field Programmable Gate Arrays}
+\subsection{Run-time Reconfiguration}
 
 \section{Maxeler Acceleration Platform}
 
@@ -86,12 +230,12 @@ The system is connected to the dataflow engine via PCIe as shown in
 Figure \ref{fig:max3}.
 
 \begin{figure}[h]
-\centering
-\includegraphics[scale=0.4, trim=0 200 0 200]{figs/max3.png} \caption{
-The Maxeler acceleration solution: the DFE is connected to
-the host machine via PCIe. The board comprises 48GB of DRAM and a
-Virtex 6 FPGA chip. }
-\label{fig:max3}
+  \centering
+  \includegraphics[scale=0.4, trim=0 200 0 200]{figs/max3.png} \caption{
+    The Maxeler acceleration solution: the DFE is connected to
+    the host machine via PCIe. The board comprises 48GB of DRAM and a
+    Virtex 6 FPGA chip. }
+  \label{fig:max3}
 \end{figure}
 
 
@@ -105,17 +249,17 @@ Listing \ref{MovingAvg-C}. This performs a three point moving average
 computation on an input array x, using 2 point averages at boundaries.
 
 \begin{lstlisting}[
-language=C++,
-caption={Original three point moving average computation in C.},
-label={MovingAvg-C}]
-for (int i = 0; i < n; i++ ) {
-   sum = x[i], divisor = 1;
-   if ( i > 0 )
-     sum += x[i - 1], divisor++;
-   if (i < n - 1)
-     sum += x[i + 1], divisor++;
-   y[i] = sum / divisor;
-}
+  language=C++,
+  caption={Original three point moving average computation in C.},
+  label={MovingAvg-C}]
+  for (int i = 0; i < n; i++ ) {
+    sum = x[i], divisor = 1;
+    if ( i > 0 )
+    sum += x[i - 1], divisor++;
+    if (i < n - 1)
+    sum += x[i + 1], divisor++;
+    y[i] = sum / divisor;
+  }
 \end{lstlisting}
 
 \subsection{MaxJ}
@@ -151,23 +295,23 @@ of the important features of the MaxJ language:
 \end{itemize}
 
 \begin{lstlisting}[
-language=Java, style=MaxJ, label={lst:moving-avg-kernel},
-caption={Kernel design for the three point moving average computation showing features such as stream offsets, arithmetic and control which will have to be supported by our MaxC language}
-]
-public class MovingAverageKernel extends Kernel{
-  public MovingAverageKernel(...) {
-    super(...);
-    HWVar x = io.input("x", hwFloat(8, 24)); (*@\label{lst:mak-in}@*)
-    HWVar cnt = control.count.simpleCounter(32, N); (*@\label{lst:mak-counter}@*)
+  language=Java, style=MaxJ, label={lst:moving-avg-kernel},
+  caption={Kernel design for the three point moving average computation showing features such as stream offsets, arithmetic and control which will have to be supported by our MaxC language}
+  ]
+  public class MovingAverageKernel extends Kernel{
+    public MovingAverageKernel(...) {
+      super(...);
+      HWVar x = io.input("x", hwFloat(8, 24)); (*@\label{lst:mak-in}@*)
+      HWVar cnt = control.count.simpleCounter(32, N); (*@\label{lst:mak-counter}@*)
 
-    HWVar prev = cnt > 0       ? stream.offset(x, -1) : 0; (*@\label{lst:mak-off}@*)
-    HWVar next = cnt < (N - 1) ? stream.offset(x, +1) : 0; (*@\label{lst:mak-off2}@*)
-    HWVar divisor = cnt > 0 & cnt < (N - 1) ? 3.0 : 2.0;
+      HWVar prev = cnt > 0       ? stream.offset(x, -1) : 0; (*@\label{lst:mak-off}@*)
+      HWVar next = cnt < (N - 1) ? stream.offset(x, +1) : 0; (*@\label{lst:mak-off2}@*)
+      HWVar divisor = cnt > 0 & cnt < (N - 1) ? 3.0 : 2.0;
 
-    HWVar y = (prev + x + next) / divisor;
-    io.output("y" , y, hwFloat(8, 24) ); (*@\label{lst:mak-out}@*)
+      HWVar y = (prev + x + next) / divisor;
+      io.output("y" , y, hwFloat(8, 24) ); (*@\label{lst:mak-out}@*)
+    }
   }
-}
 \end{lstlisting}
 
 \subsection{MaxCompiler}
@@ -199,19 +343,19 @@ moving average kernel and connect its inputs and outputs to the host
 interface.
 
 \begin{lstlisting}[
-language=Java,
-label={lst:moving-avg-manager},
- caption={Manager design for the
-three point moving average computation}
-]
-public class MAManager extends CustomManager {
-  public MovingAverageManager(...) {
-    super(...);
-    KernelBlock k = addKernel(new MovingAverageKernel(...));
-    k.getInput("x") <== addStreamFromHost("x");
-    addStreamToHost("y") <== k.getOutput("y");
+  language=Java,
+  label={lst:moving-avg-manager},
+  caption={Manager design for the
+    three point moving average computation}
+  ]
+  public class MAManager extends CustomManager {
+    public MovingAverageManager(...) {
+      super(...);
+      KernelBlock k = addKernel(new MovingAverageKernel(...));
+      k.getInput("x") <== addStreamFromHost("x");
+      addStreamToHost("y") <== k.getOutput("y");
+    }
   }
-}
 \end{lstlisting}
 
 \subsection{Run-time}
@@ -220,12 +364,12 @@ the input streams and run the accelerator. This is achieved by calls
 to the MaxCompilerRT (runtime) API that interfaces with MaxelerOS.
 
 \begin{lstlisting}[
-label={MovingAverage-Host},
-caption={Host example for queueing
-the input and output streams and running the three point moving
-average design.}
-]
-max_run(
+  label={MovingAverage-Host},
+  caption={Host example for queueing
+    the input and output streams and running the three point moving
+    average design.}
+  ]
+  max_run(
   device,
   max_input("x", x, x_size),
   max_output("y", y, y_size),
@@ -283,17 +427,17 @@ be applied to the results of a query while `condition` is used to
 filter relevant queries.
 
 \begin{lstlisting}[
-style=lara,
-label={lara},
-caption={Example LARA description
-for fully unrolling innermost loops with an iteration count smaller
-than or equal to 16.}
-]
-aspectdef loopunroll
+  style=lara,
+  label={lara},
+  caption={Example LARA description
+    for fully unrolling innermost loops with an iteration count smaller
+    than or equal to 16.}
+  ]
+  aspectdef loopunroll
   select function.loop{type="for"} end
   apply optimize("loopunroll", "fully"); end
   condition $loop.is_innermost && $loop.num_iter<=16; end
-end
+  end
 \end{lstlisting}
 
 \cite{Cardoso:Carvalho:Teixeira:Diniz:Goncalves:Petrov:2012} also
@@ -398,7 +542,7 @@ and maintainable descriptions.
     \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) Dataflow(HW)              & \multirow{6}{*}{Combined} & \multirow{6}{*}{CPU + FPGA}     & Meta-programming                                &                                         \\
     \cline{1-3}\cline{6}
     \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) CSP(HW)                   &                           &                                 & Compiler \newline Directives                    &                                         \\
-     \cline{1-3}\cline{6-7}
+    \cline{1-3}\cline{6-7}
     \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) Dataflow(HW) AOP(Aspects) &                           &                                 & \multicolumn{2}{p{5.5cm}}{Compiler Directives + \newline Automated Aspect-Directed Source Transformation} \\
   \end{tabularx}
   \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
@@ -408,21 +552,21 @@ and maintainable descriptions.
 \subsection{Aspect-driven Compilation of FPGA Designs}
 
 One attempt at capturing optimisation strategies for FPGA designs
- using aspect descriptions is LARA
- \cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012,
-   Cardoso:Carvalho:Teixeira:Diniz:Goncalves:Petrov:2012}, an Aspect
- Oriented language for embedded systems. Aspect descriptions are
- written in the LARA language and automatically applied to the
- original application source to generate optimised versions through
- various transformations that enable and optimise hardware/software
- partitioning \cite{Lam:Coutinho:Luk:2008}. Aspect descriptions can be
- used to specify compilation strategies that result in overall
- speedups of 2 to 6.8 times over software versions
- \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012}, generally
- with high aspect bloat \footnote{ $\text{aspect bloat} =
-   \frac{\text{size of transformed code}}{\text{size of original
-       code}}$, so a higher aspect bloat is better}
- \cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}.
+using aspect descriptions is LARA
+\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012,
+  Cardoso:Carvalho:Teixeira:Diniz:Goncalves:Petrov:2012}, an Aspect
+Oriented language for embedded systems. Aspect descriptions are
+written in the LARA language and automatically applied to the
+original application source to generate optimised versions through
+various transformations that enable and optimise hardware/software
+partitioning \cite{Lam:Coutinho:Luk:2008}. Aspect descriptions can be
+used to specify compilation strategies that result in overall
+speedups of 2 to 6.8 times over software versions
+\cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012}, generally
+with high aspect bloat \footnote{ $\text{aspect bloat} =
+  \frac{\text{size of transformed code}}{\text{size of original
+      code}}$, so a higher aspect bloat is better}
+\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}.
 
 The use of LARA aspects in guiding the compilation process of C
 applications is described in
