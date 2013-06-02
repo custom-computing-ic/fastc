@@ -4,13 +4,24 @@
 \section{Methodology}
 
 To evaluate our approach we develop and implement a number of applications
-to test both the flexibility and generality of our approach but also to 
+to test both the flexibility and generality of our approach but also to
 ensure that we can support high-performance applications. There are in general
 no standard benchmarks for FPGAs as there are for CPU/GPU \XXX{cit. req.} systems.
 
 \subsection{Benchmark}
 
-Our benchmark consists of the following applications:
+Our benchmark for stencil computation consists of the following
+applications:
+\begin{itemize}
+\item Numerical Differentiation
+\item Black Scholes Option Pricing
+\item Barrier Option Pricing -- high-performance, design parallelism
+\item Reverse Time Migration -- high-performance, design parallelism
+\end{itemize}
+
+To investigate the generality of our method we also devise designs for
+problems that do no fit into the stencil computation class:
+
 \begin{itemize}
 \item Sorting networks -- recursive structure, parametrisable types
   required
@@ -19,11 +30,9 @@ Our benchmark consists of the following applications:
   \item Bitonic sort
   \item Insertion sort
   \end{itemize}
-\item Black Scholes Option Pricing
-\item Barrier Option Pricing -- high-performance, design parallelism
-\item Reverse Time Migration -- high-performance, design parallelism
+\item Matrix Multiplication
+\item Graph Reachability
 \end{itemize}
-
 \subsection{Equipment}
 
 All dataflow designs are run on Maxeler MaxWorkstation
@@ -31,7 +40,7 @@ All dataflow designs are run on Maxeler MaxWorkstation
 \begin{itemize}
 \item Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz, cache size 8192 KB
 \item 16 GB DRAM
-\item Vectis dataflow engine with 24 GB DRAM, 
+\item Vectis dataflow engine with 24 GB DRAM,
 \item DFEs connect to CPU via PCI Express gen2 x8
 \end{itemize}
 
