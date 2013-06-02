@@ -1,0 +1,69 @@
+\documentclass{beamer}
+
+\mode<presentation>
+    {
+%      \usetheme{Pittsburgh}
+      \usetheme{Singapore}
+%      \usecolortheme{whale}
+      \usecolortheme{default}
+%      \setbeamercovered{transparent}
+      % or whatever (possibly just delete it)
+    }
+
+
+    \usepackage[english]{babel}
+    \usepackage[latin1]{inputenc}
+    \usepackage{times}
+    \usepackage[T1]{fontenc}
+    \usepackage{tikz}
+    \usetikzlibrary{shapes,arrows}
+
+    \usepackage{caption}
+    \captionsetup{labelformat=empty,labelsep=none}
+
+
+    \pgfdeclareimage[height=0.25cm]{tick-green}{images/tick-green.png}
+    \pgfdeclareimage[height=0.25cm]{tick-gray}{images/tick-gray.png}
+    \pgfdeclareimage[height=0.3cm]{good}{images/good.png}
+    \pgfdeclareimage[height=0.3cm]{bad}{images/bad.png}
+    \pgfdeclareimage[height=0.3cm]{problem}{images/problem.png}
+    \pgfdeclareimage[height=0.3cm]{idea}{images/idea.png}
+    \pgfdeclareimage[height=0.3cm]{qm}{images/qm.png}
+
+
+    %\setbeamertemplate{navigation symbols}{}%remove navigation symb
+    \setbeamertemplate{footline}{}
+    \setbeamertemplate{headline}{}
+    %\setbeamertemplate{caption}{\figurename}
+
+    \newcommand{\tickgray}{\pgfuseimage{tick-gray}}
+    \newcommand{\tickgreen}{\pgfuseimage{tick-green}}
+    \newcommand{\imggood}{\pgfuseimage{good}}
+    \newcommand{\imgbad}{\pgfuseimage{bad}}
+    \newcommand{\imgproblem}{\pgfuseimage{problem}}
+    \newcommand{\imgidea}{\pgfuseimage{idea}}
+    \newcommand{\imgqm}{\pgfuseimage{qm}}
+
+    \title{\Large Aspect Oriented Design for Streaming Dataflow Engines}
+    \author{\large MEng Individual Project \hfill \\[0.5cm] {\small Paul Grigoras}} % ZOMG
+    \date{}
+
+    \begin{document}
+
+    \begin{frame}
+      \titlepage
+    \end{frame}
+
+    \begin{frame}
+      \tableofcontents
+    \end{frame}
+
+    \input{sections/intro.tex}
+    \input{sections/background.tex}
+    \input{sections/design-flow.tex}
+    \input{sections/fast.tex}
+    \input{sections/aspects.tex}
+    \input{sections/conclusions.tex}
+
+
+   \end{document}
