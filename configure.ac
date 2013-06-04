@@ -38,7 +38,7 @@ fi
 ##########################################################################
 
 # adding boost libs to the files to link
-LIBS="-lboost_regex $LIBS"
+LIBS="-lboost_regex -lboost_filesystem -lboost_system $LIBS"
 
 # introduce the optional configure parameter for a non-standard install prefix of ROSE
 AC_ARG_WITH([boost],
