@@ -2,5 +2,46 @@
 \label{sec:implementation}
 
 \section{Tools}
+
+An initial analysis on existing compiler frameworks was carried
+out. Table \ref{table:compiler-comparison}.
+
+\begin{table}[ht!]
+\begin{tabularx}{\textwidth}{X|X|X|X|X}
+  Framework & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+\end{tabularx}
+\caption{Feature comparison of compiler frameworks considered for implementation of \texttt{fastc}}
+\label{table:compiler-comparison}
+\end{table}
+
+Based on these features we selected the ROSE compiler framework for the following reasons:
+\begin{itemize}
+\item Reliable full featured front-end support
+\end{itemize}
+
+
 \section{Architecture}
+
+The compiler runs several passes on the input files:
+
+\begin{enumerate}
+\item Extract dataflow kernels
+\item Infer input and output types for dataflow kernels
+\item Generate MaxJ Design for extracted dataflow kernels
+\item Process pragmas inside regular C code to extract a manager design
+\item Process pragams inside regular C code to generate runtime code for uploading the bitstream and running the design
+\end{enumerate}
+
+To infer kernel inputs and outputs:
+\begin{itemize}
+\item extract kernel parameters
+\item pointer parameters are streams
+\item do a written analysis and record variables that are written to in the written set
+\item the intersection of written and params set is the set of output streams
+\item all other streams are input streams
+\item only one assignment is allowed to output streams
+\item transform assignments to output streams (replace them with output node in the resulting dataflow design)
+\end{itemize}
 \section{Testing}
+
+\section{Summary}
