@@ -210,9 +210,10 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
             dfg.addInputNode(inputNode);
             //      cout << "Added input node: " << *inputNode << endl;
         } else if (regex_match(s.c_str(), sm, *PRAGMA_OUT)) {
-            OutputNode *outputNode = new OutputNode(sm[1]);
-            outputs.push_front(*outputNode);
-            dfg.addOutputNode(outputNode);
+          /// XXX: handle output nodes
+          //OutputNode *outputNode = new OutputNode(sm[1], );
+          //            outputs.push_front(*outputNode);
+          // dfg.addOutputNode(outputNode);
             //      cout << "Added output node: " << *outputNode << endl;
         } else if (regex_match(s.c_str(), sm, *PRAGMA_SCALAR_IN)) {
             InputNode *inputNode = new InputNode(sm[1]);

@@ -21,19 +21,42 @@ void ASTtoMaxJVisitor::preOrderVisit(SgNode *n) {
     D(cerr << "Visiting node: " << n->unparseToString());
     D(cerr << ",ignore: " << n->getAttribute("ignore") << endl);
 
+    D(cerr << "get_name: " << SageInterface::get_name(n) << endl);
+
     if ( n->getAttribute("ignore") != NULL )
         return;
 
-    if (isSgVariableDeclaration(n))
+    if (isSgVariableDeclaration(n)) {
         visitVarDecl(isSgVariableDeclaration(n));
-    else if (isSgFunctionCallExp(n))
+        ignoreChildren(n);
+    }    else if (isSgFunctionCallExp(n))
         visitFcall(isSgFunctionCallExp(n));
     else if (isSgForStatement(n))
         visitFor(isSgForStatement(n));
-    else if (isSgExprStatement(n))
+    else if (isSgExprStatement(n)) {
         visitExprStmt(isSgExprStatement(n));
-    else if (isSgPragma(n))
+        ignoreChildren(n);
+    }    else if (isSgPragma(n))
         source += *visitPragma(isSgPragma(n));
+    else if (isSgExpression(n)) {
+      SgExpression* expr = isSgExpression(n);
+      string *e = toExpr(expr);
+      if (e != NULL) {
+        source += *e;
+        ignoreChildren(n);
+      }
+    }
+
+
+}
+
+void ASTtoMaxJVisitor::ignoreChildren(SgNode *n) {
+  vector<SgNode *> children = n->get_traversalSuccessorContainer();
+  ignore(n);
+  foreach_(SgNode *n, children) {
+    if (n != NULL)
+      ignoreChildren(n);
+  }
 }
 
 string* ASTtoMaxJVisitor::visitPragma(SgPragma *n) {
@@ -262,8 +285,12 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             op = "<=";
         else if (isSgDivideOp(ex))
             op = "/";
+
         if (isSgEqualityOp(ex))
             return new string((*left) + ".eq(" + (*right) + ")");
+        else if (isSgNotEqualOp(ex))
+          return new string((*left) + ".neq(" + (*right) + ")");
+
 
         if (isSgPntrArrRefExp(ex)) {
             SgPntrArrRefExp *e = isSgPntrArrRefExp(ex);
@@ -274,8 +301,8 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
             D(cerr << "PTR REF: Type of lhs: ");
             D(cerr << e->get_lhs_operand()->get_type()->unparseToString() << endl);
             string lhs_type = e->get_lhs_operand()->get_type()->unparseToString();
-            if (lhs_type.compare("s_float8_24") == 0 ||
-                lhs_type.compare("s_int32") == 0) {
+            if (lhs_type.compare("float *") == 0 ||
+                lhs_type.compare("int *") == 0) {
                 // LHS is stream type so pointer access maps to stream.offset()
 
                 // XXX optimisation should be done in a separate pass
@@ -534,6 +561,7 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
 }
 
 void ASTtoMaxJVisitor::visitExprStmt(SgExprStatement *exprStmt) {
+  D(cerr << "Visiing expression statment" << endl);
     string* s = toExpr(exprStmt->get_expression());
     if ( s != NULL )
         source += *s + ";\n";

@@ -1,31 +1,51 @@
 #ifndef KERNEL_HXX_
 #define KERNEL_HXX_
 
+#include "precompiled.hxx"
 #include <string>
 #include <list>
 #include <assert.h>
+#include "DataFlowGraph/OutputNode.hxx"
+
 
 using namespace std;
 
 class Kernel {
-    string name, source, declarations, output;
-    list<string> inputs, outputs, scalars;
+  string name, source, declarations, output;
+  list<string> inputs, scalars;
+  list<OutputNode*> outputs;
+  SgFunctionDeclaration* decl;
 
-    string declaration();
-    string imports();
-    string import(list<string>  imports);
+  list<string> streamOutputParams;
+  list<string> streamInputParams;
+  list<string> scalarInputs;
+
+  string convertType(string type);
+
+
+  string declaration();
+  string imports();
+  string import(list<string>  imports);
 
 public:
-    Kernel(string name);
-    string getName();
-    string getFunctionName();
-    string getSource();
-    void addSource(string source);
-    void addInput(string inputName, string type);
-    void addInput(string inputName, string type, string width);
-    void addOutput(string outputName, string type);
-    void addOutput(string outputName, string type, string width);
-    void addScalarInput(string inputName, string type);
+  Kernel(string name, SgFunctionDeclaration* decl);
+  string getName();
+  string getFunctionName();
+  string getSource();
+  list<OutputNode*> getOutputs() {
+    return outputs;
+  }
+  void addSource(string source);
+  void addInput(string inputName, string type);
+  void addInput(string inputName, string type, string width);
+  void addOutput(string outputName, string type, string width);
+  void addScalarInput(string inputName, string type);
+  void removeOutputAssignments();
+
+  void extractIO();
+
+  void generateIO();
+
 };
 
 #endif /* KERNEL_HXX_ */

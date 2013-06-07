@@ -62,8 +62,9 @@ void PragmaVisitor::visit(SgPragma* pragma) {
 
     if ( kernel == NULL ) {
         cout << "Error : must specify kernel (func:<kerneL>) in pragma: ";
-        cout << pragma->get_pragma() << endl;
-        exit(1);
+        //cout << pragma->get_pragma() << endl;
+        // exit(1);
+        return;
     }
 
     if (name == NULL) {
@@ -86,15 +87,19 @@ void PragmaVisitor::visit(SgPragma* pragma) {
     if (cls == NULL) {
         if (dir->compare("in") == 0)
             k->addInput(*name, *type);
-        else if (dir->compare("out") == 0)
-            k->addOutput(*name, *type);
+        else if (dir->compare("out") == 0) {
+          // XXX handled by inference, remove
+          // k->addOutput(*name, *type);
+        }
     } else if (cls->compare("scalar") == 0)
         k->addScalarInput(*name, *type);
     else if (cls->compare("array") == 0) {
         if (dir->compare("in") == 0)
             k->addInput(*name, *type, *width);
-        else
-            k->addOutput(*name, *type, *width);
+        else {
+          // XXX handled by inference, remove
+          //  k->addOutput(*name, *type, *width);
+        }
     }
 }
 

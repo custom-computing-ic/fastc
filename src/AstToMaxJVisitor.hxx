@@ -19,50 +19,57 @@ using namespace boost;
 
 class ASTtoMaxJVisitor : public AstPrePostProcessing {
 
-    int paramCount;
+  int paramCount;
 
-    list<InputNode> inputs;
+  list<InputNode> inputs;
 
-    list<OutputNode> outputs;
+  list<OutputNode> outputs;
 
-    DataFlowGraph dfg;
-    string source;
-    map<string, string> counterMap;
-    string declarations;
-    Kernel* currentKernel;
+  DataFlowGraph dfg;
+  string source;
+  map<string, string> counterMap;
+  string declarations;
+  Kernel* currentKernel;
 
-    string* function_call_initializer(string&, SgFunctionCallExp*);
-    string* toExprRec(SgExpression*);
-    string* visitFcall(SgFunctionCallExp*);
-    void visitVarDecl(SgVariableDeclaration*);
-    void visit(SgPragma*);
-    void visitFor(SgForStatement *);
-    void visitExprStmt(SgExprStatement *);
+  string* function_call_initializer(string&, SgFunctionCallExp*);
+  string* toExprRec(SgExpression*);
+  string* visitFcall(SgFunctionCallExp*);
+  void visitVarDecl(SgVariableDeclaration*);
+  void visit(SgPragma*);
+  void visitFor(SgForStatement *);
+  void visitExprStmt(SgExprStatement *);
 
-    string* visitPragma(SgPragma *n);
+  string* visitPragma(SgPragma *n);
 
-    string* toExpr(SgExpression *);
 
-    string imports();
-    string kernelName();
-    string declaration();
-    string import(list<string>);
 
-    string constVar(string);
-    string constVar(string, string);
-    bool isConstant(string);
-    string* get_type(SgInitializedName *);
-    void ignore(SgNode *);
+  string imports();
+  string kernelName();
+  string declaration();
+  string import(list<string>);
+
+  string constVar(string);
+  string constVar(string, string);
+  bool isConstant(string);
+  string* get_type(SgInitializedName *);
+
+  void ignore(SgNode *);
+  void ignoreChildren(SgNode *n);
+
 
 public:
-    ASTtoMaxJVisitor();
-    //    virtual void visit (SgNode*);
-    void preOrderVisit(SgNode *);
-    void postOrderVisit(SgNode *);
+  ASTtoMaxJVisitor();
+  //    virtual void visit (SgNode*);
+  void preOrderVisit(SgNode *);
+  void postOrderVisit(SgNode *);
 
-    string getSource() {
-        return declarations + "\n" + source + "\n}\n}";
-    }
+  string* toExpr(SgExpression *);
+
+  string getSource() {
+    if (declarations == "")
+      return source;
+    return declarations + "\n" + source;
+  }
 
 };
 #endif

@@ -9,6 +9,18 @@ void Design::generateCode(ostream& out) {
         out << k->getSource();
         out << "\n\n";
     }
+	int i = 0; i++;
+}
+
+void Design::writeEngineFiles(string path) {
+  foreach_ (Kernel* k, kernels) {
+    string name = path + "/" + k->getName() + ".java";
+    ofstream fout(name.c_str());
+    fout << k->getSource();
+  }
+}
+
+void Design::writeCPUFiles() {
 }
 
 void Design::writeCodeFiles() {

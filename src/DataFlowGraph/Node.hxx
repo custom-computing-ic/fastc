@@ -15,9 +15,9 @@ protected:
   string name;
   list<Node *> neighbours;
 
-public: 
+public:
   Node(string name);
-  string getName() {return name;};
+  string getName() const {return name;};
   bool operator<(Node& node) const;
   Node& operator=(const Node& node);
   //  friend ostream& operator<< (ostream &out, const Node& node);
@@ -30,7 +30,7 @@ public:
   string getId();
   virtual string toMaxJ()=0;
   string getType() {return "hwFloat(8, 24)";};
-  
+
 };
 
 class StreamOffsetNode : public Node {
@@ -109,4 +109,4 @@ public:
   string toMaxJ() {return "CounterNode\n";}
 };
 
-#endif 
+#endif

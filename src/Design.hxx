@@ -9,13 +9,15 @@ using namespace std;
 
 class Design {
 
-    list<Kernel*> kernels;
+  list<Kernel*> kernels;
 
 public:
-    void generateCode(ostream& out);
-    void writeCodeFiles();
-    void addKernel(Kernel* k);
-    Kernel* getKernel(string functionName);
+  void generateCode(ostream& out);
+  void writeCodeFiles();
+  void addKernel(Kernel* k);
+  void writeEngineFiles(string path);
+  void writeCPUFiles();
+  Kernel* getKernel(string functionName);
 };
 
 #endif /* DESIGN_HXX_ */
