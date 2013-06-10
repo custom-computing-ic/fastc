@@ -4,12 +4,18 @@
 \section{Tools}
 
 An initial analysis on existing compiler frameworks was carried
-out. Table \ref{table:compiler-comparison}.
+out. Table \ref{table:compiler-comparison} summarises the main
+advantages and disadvantages of existing compiler frameworks that we
+analysed for the purpose of implementing a prototype of the \FAST{}
+language
 
 \begin{table}[ht!]
 \begin{tabularx}{\textwidth}{X|X|X|X|X}
   Framework & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
-\end{tabularx}
+  LLVM\cite{LLVM} & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+  Cetus\cite{Cetus} & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+  ROSE\cite{}& AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+\end{tabularx}\cite{ROSE, Quinlan:2000}
 \caption{Feature comparison of compiler frameworks considered for implementation of \texttt{fastc}}
 \label{table:compiler-comparison}
 \end{table}

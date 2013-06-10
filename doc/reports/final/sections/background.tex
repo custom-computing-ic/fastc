@@ -620,7 +620,7 @@ also multi-core platforms. Table \ref{table:feature-comparison}
 summarises some of the important features of these languages compared
 to \FAST{}.
 
-Lucid~\cite{ashcroft1977lucid},
+Lucid~\cite{ashcroft1977lucid} (implemented in \cite{pLucid}),
 SISAL~\cite{gurd1987implicit,mcgraw1983sisal}, and
 Lustre~\cite{halbwachs1991synchronous}, are examples of functional
 dataflow languages. The latter is based on a synchronous programming
@@ -628,7 +628,9 @@ model, facilitating safety verification for critical
 software~\cite{halbwachs1992programming} rather than performance. The
 functional programming style complicates the translation of existing
 imperative applications and none have existing implementations for
-FPGAs, so a performance comparison is not possible.
+FPGAs, so a performance comparison is not possible. Control flow
+extensions to dataflow language have also been investigated in
+\cite{143862} and \cite{183202}. \XXX{More inf.}
 
 Streams-C~\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
 ImpulseC~\cite{ImpulseC} adopt imperative ANSI C syntax and an
