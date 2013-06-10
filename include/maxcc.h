@@ -2,10 +2,12 @@
 #define MAXCC_H
 
 
+
 // simple types
 typedef float float8_24;
 typedef int int32;
 typedef int uint32;
+typedef int bool;
 
 // stream types
 typedef float* s_float8_24;

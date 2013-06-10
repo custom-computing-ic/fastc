@@ -9,8 +9,15 @@
 
 #include "AstToDfgVisitor.hxx"
 #include "AstToMaxJVisitor.hxx"
-#include "KernelVisitor.hxx"
 #include "PragmaVisitor.hxx"
+#include "Compiler.hxx"
+
+#include "passes/ManagerExtraction.hxx"
+#include "passes/RemoveFast.hxx"
+#include "passes/KernelExtraction.hxx"
+#include "passes/CodeGeneration.hxx"
+#include "passes/HostCodeGeneration.hxx"
+#include "passes/TaskExtraction.hxx"
 
 #include <boost/filesystem.hpp>
 
@@ -23,11 +30,6 @@ void setupBuild() {
 }
 
 int step = 1;
-
-void logPass(string msg) {
-  printf("[%*d] %s Pass\n", 2, step, msg.c_str());
-  step++;
-}
 
 void log(string msg) {
   printf("%s\n", msg.c_str());
@@ -45,38 +47,42 @@ int main(int argc, char** argv) {
     //    cleanuBuild();
     setupBuild();
 
-    Design* design = new Design();
+    Compiler* c = new Compiler(project);
 
-    logPass("Kernel Extraction");
-    KernelVisitor kernelVisitor(design);
-    kernelVisitor.traverse(project, preorder);
+    c->addPass(new KernelExtraction());
+    c->addPass(new CodeGeneration());
+    c->addPass(new RemoveFast());
+    c->addPass(new TaskExtraction());
 
-    // visit kernel pragmas
-    logPass("Manager Extraction");
-    PragmaVisitor pragmaVisitor(design);
-    pragmaVisitor.traverse(project,  preorder);
+    //    c->addPass(new Prag)
+    //    PragmaVisitor pragmaVisitor(design);
+    //    pragmaVisitor.traverse(project,  preorder);
 
-    logPass("Memory Write Kernel Generation");
+    //logPass("Manager Extraction");
+    //    ManagerExtraction mep(design);
+    //    mep.traverse(project, preorder);
 
-    logPass("Memory Read Kernel Generation");
+    //logPass("Memory Write Kernel Generation");
 
-    logPass("Kernel Replication");
+    //logPass("Memory Read Kernel Generation");
 
-    logPass("Design Optimisation");
+    //logPass("Kernel Replication");
 
-    logPass("Design Code Generation");
-    design->writeEngineFiles("build/engine");
+    //logPass("Design Optimisation");
 
-    logPass("Host Interface Code Generation");
+    //logPass("Design Code Generation");
+
+
+    //logPass("Host Interface Code Generation");
+    c->addPass(new HostCodeGeneration());
 
     //design->generateCode(cout);
 
     //design->writeCodeFiles();
     log("Dataflow Implenetation Generated Succesfully in build/");
+    c->runPasses();
 
     generateDOT(*project);
-
-
 
     return 0;
 }

@@ -1,6 +1,5 @@
-#include "precompiled.hxx"
 #include "KernelVisitor.hxx"
-#include "AstToMaxJVisitor.hxx"
+#include "../AstToMaxJVisitor.hxx"
 
 #include <string>
 

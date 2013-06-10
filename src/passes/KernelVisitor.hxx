@@ -1,11 +1,11 @@
 #ifndef KERNELVISITOR_HXX_
 #define KERNELVISITOR_HXX_
 
-#include "precompiled.hxx"
+#include "../precompiled.hxx"
 #include <list>
 
-#include "Kernel.hxx"
-#include "Design.hxx"
+#include "../Kernel.hxx"
+#include "../Design.hxx"
 
 using namespace boost;
 

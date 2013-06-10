@@ -59,16 +59,8 @@ string Kernel::getFunctionName() {
 }
 
 string Kernel::getSource() {
-
   extractIO();
-
-  cout << "---- Adding declarations " << endl;
-  cout << "---- Adding inputs "       << endl;
-
-  cout << "---- Adding outputs"       << endl;
   generateIO();
-
-  cout << "---- Adding dataflow code" << endl;
   ASTtoMaxJVisitor visitor;
   visitor.traverse(decl->get_definition());
   addSource(visitor.getSource());
@@ -109,12 +101,17 @@ void Kernel::generateIO() {
   }
 }
 
+// XXX: this should account for type width
 string Kernel::convertType(string type) {
   D(cerr << "Converting type " << type << endl);
   if (type == "float *" || type == "float")
     return "hwFloat(8, 24)";
   else if (type == "int *" || type == "int")
     return "hwInt(32)";
+  else if (type == "bool")
+    return "hwUInt(1)";
+  else if (type == "unsigned int" || type == "unsigned int*")
+    return "hwUInt(32)";
   return "hwFloat(8, 24)";
 }
 
@@ -124,11 +121,12 @@ void Kernel::extractIO() {
   // extract kernel inputs and outputs
   SgInitializedNamePtrList args = decl->get_args();
   SgInitializedNamePtrList::iterator it = args.begin();
-  cout << "Function " << decl->get_name().getString();
-  cout << args.size() << endl;
 
-  //     FindModifiesSet findModifiesSet(decl);
-  //      findModifiesSet.traverse(decl->get_definition);
+  std::set< SgInitializedName * > readVars, writeVars;
+  if (decl->get_definition() != NULL)
+    SageInterface::collectReadWriteVariables (decl->get_definition()->get_body(), readVars, writeVars);
+  cout << "Modset size: "  << writeVars.size() << endl;
+
   set<string> modSet;  //findModifiesSet.getModifiesSet();
   modSet.insert("output");
 
@@ -142,13 +140,11 @@ void Kernel::extractIO() {
     if (isSgPointerType(param_type)) {
       if (modSet.find(inputName) != modSet.end()) {
         addOutput(inputName, inputType, "1");
-        cout << "Addin output type " << inputType << endl;
       } else {
         addInput(inputName, inputType);
       }
     } else {
       // scalar inputs
-      cout << "Scalar name: " << inputName << " type: " << inputType << endl;
       addScalarInput(inputName, inputType);
     }
   }
