@@ -1,10 +1,7 @@
-//#include "../../../include/maxcc.h"
-//#include "CmdRead.c"
-//#include "CmdWrite.c"
+#include "../../../include/maxcc.h"
+#include "CmdRead.c"
+#include "CmdWrite.c"
 #include <math.h>
-
-extern count_chain(int n1, int i, int i4);
-extern count(int i1, int i2);
 
 // TODO: Add pragma for accuracy
 // TODO: Add pragma for parallelism
@@ -18,24 +15,20 @@ void kernel_Convolution1d(
                           unsigned int n1,
                           unsigned int ORDER) {
   // TODO: replace counters with ++ and if/else
-  //  int i4 = count(1000, 1);
-  int i4 = sqrt(9);
-  //  int i4 = 1;
-  //   int i1 = count_chain(n1, 1, i4);
-  /*  int i1 = 1;
+  int i4 = count(1000, 1);
+  int i1 = count_chain(n1, 1, i4);
 
-    int* up;
-    *up = (i1 >= ORDER) && (i1 < n1 - ORDER);
-
+  int* up;
+  *up = (i1 >= ORDER) && (i1 < n1 - ORDER);
 
 #pragma class:kernelopt name:pushDSP factor:1
-    float* result;
-    *result =
-        p[0]  * c_0_0_0 +
-        p[1]  * c_p_0_0 +
-        p[-1] * c_n_0_0;
+  float* result;
+  *result =
+    p[0]  * c_0_0_0 +
+    p[1]  * c_p_0_0 +
+    p[-1] * c_n_0_0;
 
-        output[0] = up ? result[0] : p[0];*/
+  output[0] = up ? result[0] : p[0];
 }
 
 void Price_CPU(){

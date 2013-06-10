@@ -121,12 +121,12 @@ void Kernel::extractIO() {
   // extract kernel inputs and outputs
   SgInitializedNamePtrList args = decl->get_args();
   SgInitializedNamePtrList::iterator it = args.begin();
-
+  /*
   std::set< SgInitializedName * > readVars, writeVars;
   if (decl->get_definition() != NULL)
     SageInterface::collectReadWriteVariables (decl->get_definition()->get_body(), readVars, writeVars);
   cout << "Modset size: "  << writeVars.size() << endl;
-
+  */
   set<string> modSet;  //findModifiesSet.getModifiesSet();
   modSet.insert("output");
 

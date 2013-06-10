@@ -76,7 +76,7 @@ int cast_fix_i(int in, int exponent, int mantissa);
 
 int sqrt_i(float min, float max, float8_24 input, int width);
 
-float8_24 exp(float8_24 power);
+double exp(double power);
 
 
 #endif

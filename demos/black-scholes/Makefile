@@ -29,10 +29,6 @@ MAX_LFLAGS=-Wl,--hash-style=both\
 	-lmaxcompilerrt -lmaxeleros -lm -lpthread -fopenmp
 
 
-#MAX_JFLAGS=-cp ${MAXCOMPILERDIR}/lib/MaxCompiler.jar -1.6 -d .
-# MAX_CFLAGS=-O3 -I${MAXCOMPILERDIR}/include -I${MAXELEROSDIR}/include -DDESIGN_NAME=${PRJ} -I/usr/local/include\ -Di686
-#MAX_LFLAGS=-Wl,--hash-style=both -L${MAXCOMPILERDIR}/lib -L${MAXCOMPILERDIR}/lib/maxeleros-sim/lib -L/usr/local/lib
-
 MAXCFILES=engine/Cmdread.java engine/Cmdwrite.java engine/Convolution1d.java
 
 maxc:
@@ -67,26 +63,6 @@ run-sim: $(EXE_SIM)
 	maxcompilersim -n $(USER)cc -c3424 stop
 
 # ---- Simulation ----
-
-#SimBuilder/scratch/SimBuilder.max: ${DESIGNFILES} src/MyApp_pkg/SimBuilder.java
-#	${JAVAC} ${MAX_JFLAGS} $^
-#	MAXAPPJCP=. ${JAVA} ${PRJ}_pkg.SimBuilder
-
-#SimBuilder.o: SimBuilder/scratch/SimBuilder.max
-#	${FILEC} SimBuilder/results/SimBuilder.max SimBuilder.o ${PRJ}
-
-#${PRJ}_sim.o: src/MyApp_pkg/main.cpp
-#	${CC} $< ${MAX_CFLAGS} -D__SIM__ -c -o $@
-
-#${PRJ}_sim: SimBuilder.o ${PRJ}_sim.o $(HOSTCODE)
-#	${CC} -o ${PRJ}_sim ${PRJ}_sim.o SimBuilder.o $(HOSTCODE) ${MAX_LFLAGS}
-
-#sim: ${PRJ}_sim
-
-#run-sim: sim
-#	maxcompilersim -n $(USER)cc -c3424 restart
-#	LD_LIBRARY_PATH="$(MAXCOMPILERDIR)/lib/maxeleros-sim/lib/:$(LD_LIBRARY_PATH)" LD_PRELOAD=$(MAXCOMPILERDIR)/lib/maxeleros-sim/lib/libmaxeleros.so ./MyApp_sim "$(USER)cc0:$(USER)cc"
-#	maxcompilersim -n $(USER)cc -c3424 stop
 
 debug:
 	maxdebug -g test -d "$(USER)cc0:$(USER)cc" -n SimBuilder/results/SimBuilder.max
@@ -126,6 +102,9 @@ clean:
 	rm -f ${PRJ}_sim ${PRJ} hw MyApp_hw.o
 	rm -fr ${PRJ}_pkg SimBuilder HWBuilder
 	rm -f SimBuilder.o HWBuilder.o ${PRJ}.o ${PRJ}_sim.o
+	rm -fr build/
+	find . -name *.dot -exec rm {} \;
+	find . -name rose_* -exec rm {} \;
 
 deploy: maxc
 	./deploy.sh
