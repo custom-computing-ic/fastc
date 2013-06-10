@@ -54,158 +54,47 @@ running at a few gigahertz while being more energy efficient
   \label{fig:cpudfe}
 \end{figure}
 
-\section{Stencil Computation}
-
-Stencil computation is a class of computational problems consisting of
-iterative kernels that update array elements based on the values of
-their neighbours. The pattern of operation is called a stencil.
-
-Stencil computation has important applications in solving Partial
-Differential Equations and computer simulations (such as heat
-diffusion).
-
-They can operate on multiple dimensions. But increasing the dimension
-heavily impacts memory reference locality, so higher order stencils
-are hard to compute on CPU and have been the focus of many
-optimisations.
-
-\subsection{Numerical Differentiation}
-
-For an example of a 1D stencil consider the problem of numerical
-differentiation, where the first derivative of a function can be
-approximated by:
-
-\begin{equation}
-  f'(x) = \frac{-f(x + 2h) + 8f(x+h) - 8f(x-h) + f(x - 2h)}{12h}
-\end{equation}
-
-Hence the following stencil algorithm could be used to compute the
-numerical approximation of the derivative of $f$ for a large number of
-points in the function's domain:
-
-\begin{algorithm}
-  \caption{Stencil approximation of first order derivative}
-  \begin{algorithmic}
-    \If {$i\geq maxval$}
-    \State $i\gets 0$
-    \Else
-    \If {$i+k\leq maxval$}
-    \State $i\gets i+k$
-    \EndIf
-    \EndIf
-  \end{algorithmic}
-\end{algorithm}
-
-\subsection{Black Scholes Equation}
-
-Stencil computation can also be used for solving Partial Differential
-Equations using finite difference methods. This has many applications
-in scientific computing for finance and physics for example, where
-PDEs are used to model the dynamic behaviour of a system. For example,
-the solution to the widely-used Black Scholes equation can be
-approximated using a 2D stencil computation.
-
-\begin{equation}
-  \frac{\partial V}{\partial t} + \frac{1}{2}\sigma^2S^2\frac{\partial^2 V}{\partial S^2} + rS\frac{\partial V}{\partial S} -rV = 0
-\end{equation}
-
-where:
-\begin{itemize}
-\item S - stock price,
-\item V(t, S) - price of derivative as a function of stock price and time
-\item r - risk-free interest rate
-\item $\sigma$ - volatility of the stock's returns
-\end{itemize}
-
-A finite difference approximation using the explicit method leads to a
-recursive formula \cite{blackscholes} for $v(i, j)$, the approximated
-value of $V$ at the $i$th point in the time dimension and the $j$th
-point in the stock price dimension:
-
-\begin{equation}
-v(i, j) =
-\alpha * v(i, j - 1) +
-\beta  * v(i, j) +
-\gamma * v(i, j + 1)
-\end{equation}
-
-This leads to a 2D stencil algorithm that performs a forward
-propagation on the time parameter by iteratively computing the values
-of $v(i + 1, j)$ for all $j$, given the values of $v(i, j)$ for all
-$j$ as show in Algorithm \ref{alg:bscholes-stencil}.
-
-
-\begin{algorithm}
-  \caption{Stencil kernel for Black Scholes PDE}
-  \label{alg:bscholes-stencil}
-  \begin{algorithmic}
-    \If {$i\geq maxval$}
-    \State $i\gets 0$
-    \Else
-    \If {$i+k\leq maxval$}
-    \State $i\gets i+k$
-    \EndIf
-    \EndIf
-  \end{algorithmic}
-\end{algorithm}
-
-\subsection{Reverse Time Migration}
-
-Stencil computation is also used for advanced simulation and imaging
-algorithms. For example the Reverse Time Migration technique is used
-to detect geological structures beneath the Earth's
-surface~\cite{baysal1983reverse} and is widely used in the Oil and Gas
-sector. The algorithm uses a forward propagation step which models the
-propagation of injected acoustic waves with the isotropic acoustic
-wave equation~\cite{araya2011assessing}:
-\begin{align}
-  \frac{d^2p(r,t)}{dt^2} + {c(r)}^2\bigtriangledown^2p(r,t) = f(r,t)
-\end{align}
-where:
-\begin{itemize}
-\item c(r)    - sound speed model
-\item p(r, t) - seismic wave value at point r, time t
-\item f(r, t) - input wave value at point r, time t
-\end{itemize}
-
-An approximation using finite difference is given in
-\cite{xinyu2013selfaware} and leads to the 3D stencil kernel
-\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} shown in Algorithm
-\ref{algo:sten}.
-\begin{algorithm}[!ht]\footnotesize
-  \caption{Stencil Kernel for Reverse Time Migration.}
-  \label{algo:sten}
-  \begin{algorithmic}
-    \For{$t$ = 0 $\leftarrow$ nt-1}
-    \For{$x$ = 0 $\leftarrow$ nx-1}
-    \For{$y$ = 0 $\leftarrow$ ny-1}
-    \For{$z$ = 0 $\leftarrow$ nz-1}
-    \State p(t,x,y,z) = c *(
-    \State c0 * p(t,x,y,z) +
-    \State c11* (p(t,x-1,y,z) + p(t,x+1,y,z)) + ... + c15*(p(t,x-5,y,z) + p(t,x+5,y,z)) +
-    \State c21* (p(t,x,y-1,z) + p(t,x,y+1,z)) + ... + c25*(p(t,x,y-5,z) + p(t,x,y+5,z)) +
-    \State c31* (p(t,x,y,z-1) + p(t,x,y,z+1)) + ... + c35*(p(t,x,y,z-5) + p(t,x,y,z+5)) +
-    \State d0 *  p(t,x,y,z) + d1 * p(t-1,x,y,z-1) + f(t,x,y,z);
-    \EndFor
-    \EndFor
-    \EndFor
-    \EndFor
-  \end{algorithmic}
-\end{algorithm}
-
 
 \section{FPGA Acceleration}
-\subsection{Functional Requirements}
-\subsection{Non-functional Requirements}
-\subsection{Run-time Reconfiguration}
 
-\section{Maxeler Acceleration Platform}
+Dataflow computing is a general computing paradigm that could be
+applied to various architectures such as multi-core, GPUs, Cell
+processor arrays or ASICs. In this project we chose to focus on FPGAs
+for the following reasons:
+\begin{itemize}
+\item FPGAs provide greater \textbf{flexibility} and lower time-to-market than
+  ASICs;
+\item FPGAs present exciting \textbf{low-level optimisation opportunities} such
+  as word-length optimisations or exploiting run-time reconfiguration
+  potential to improve performance at run-time;
+\item FPGAs are considerably \textbf{more power efficient} than multi-core CPUs
+  and GPUs;
+\item FPGAs offer a \textbf{predictable performance model}, due to static
+  scheduling and lack of thread barriers or other traditional
+  synchronisation mechanisms;
+\end{itemize}
 
-Maxeler Technologies provides a software and hardware acceleration
-solution based on the dataflow computing model. The dataflow design is
-created using MaxCompiler \cite{Maxeler} and implemented on a specialized
-hardware platform, built around high-end Field Programmable Gate Array
-(FPGA) chips.
+One major limitation of FPGAs compared to CPUs and GPUs is the long
+development time. This is caused by:
+\begin{itemize}
+\item \textbf{large compilation time} -- compilation time of a single FPGA
+  design can vary from 20 minutes to several days even on multi-core
+  clusters with large amount of memory can range from);
+\item \textbf{lack of high-level tools} -- although high-level tools such
+  as MaxCompiler (\Cref{sec:maxeler-platform} exist that can automate
+  the build process and simplify considerably the design of dataflow
+  pipelines, these are not high level enough to permit expressing
+  algorithms in an intuitive, well-understood approach; additionally
+  they do not abstract the underlying hardware architecture, the
+  programmer having to constantly deal with adjusting the latency of
+  various design components, perform optimisations that allow the
+  design to build at higher frequencies etc.;
+\item \textbf{large design space} -- this leads to the need to explore a
+  large design space which is a time consuming process, especially
+  given long compilation times;
+\end{itemize}
+
+\subsection{Architecture}
 
 FPGAs are logic chips that can be reconfigured in seconds to implement
 custom applications. Hence they offer a much shorter time to market
@@ -222,6 +111,77 @@ each of the following resource types:
 \item digital signal processors (DSP) - small special purpose arithmetic units;
 \item block RAM (BRAM) - larger, on-chip storage elements.
 \end{itemize}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.4]{figs/fpga-block-structure.png}
+\caption{Structure of an FPGA block: Configurable Logic Blocks (CLB),
+  Interconnect, Input/Output Blocks (IOB) and Embedded Memory (BRAM). Source:
+  \url{http://www.origin.xilinx.com/fpga/}.}
+\label{fig:fpga-block-structure}
+\end{figure}
+
+%\subsection{Number Representation}
+%\subsection{Functional vs Non-functional Requirements}
+\subsection{Run-time Reconfiguration}
+
+
+Run-time reconfiguration refers to the capability of uploading a new
+design onto the FPGA at run-time. This capability can be used to
+maximise usage of the FPGA accelerator:
+\begin{enumerate}
+\item to improve performance of FPGA designs, by removing idle functions
+\item to enable the execution of functions that would normally not fit
+  on the accelerator (time-sharing)
+\end{enumerate}
+
+An example of the first type of application is shown in
+\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} run-time reconfiguration is
+used to maximise performance by removing idle design components. This
+works well in multi-step algorithms such as the Reverse Time Migration
+application which has 2 major steps: a forward and a backward
+propagation of a simulated wave through the earth surface. Thus the
+functions that would only be used in the second stage need not be
+uploaded on the accelerator from the very beginning. This enables the
+an increase in resources used for the first part which can be used to
+increase parallelism and thus reduce computation time. An issue
+
+For the second type of application we consider the example of a an
+FPGA sorting architecture presented in \cite{koch2011fpgasort}. The
+sorting architecture comprises two stages that
+
+Two types of run-time reconfiguration exist:
+\begin{itemize}
+\item \textbf{total reconfiguration}, where the entire FPGA is
+  reconfigured with a new design; this exhibits a high reconfiguration
+  time often in the are of seconds and requires that data be saved
+  from on-board DRAM to host memory during the reconfiguration
+  process, which adds significant overhead;
+\item \textbf{partial reconfiguration}, where a region of the FPGA is
+  reconfigured
+\end{itemize}
+
+The Maxeler Platform used in this projects was not specifically
+designed for run-time reconfiguration. As such it relies on a large
+FPGA chip that takes somewhere in the are of 0.7 - 1 second to
+reconfigure. To this we add the slow data transfer over PCI-Express
+from the accelerator card to the host DRAM which makes finding
+applications where run-time reconfiguration is justified not trivial.
+
+The Maxeler Platform does not currently support partial run-time
+reconfiguration, so the possibility of using partial run-time
+reconfiguration to improve design performance is left as future
+work. However our approach is designed to operate similarly in the
+case where partial reconfiguration capabilities are available.
+
+\subsection{Maxeler Platform}
+\label{sec:maxeler-platform}
+Maxeler Technologies provides a software and hardware acceleration
+solution based on the dataflow computing model. The dataflow design is
+created using MaxCompiler \cite{Maxeler} and implemented on a specialized
+hardware platform, built around high-end Field Programmable Gate Array
+(FPGA) chips.
+
 
 The specific data flow engine used for this project is a MAX3424A card
 based on a Virtex 6 FPGA chip \cite{Virtex6}. The MAX3 provides 24GB of
@@ -264,7 +224,7 @@ computation on an input array x, using 2 point averages at boundaries.
   }
 \end{lstlisting}
 
-\subsection{MaxJ}
+\subsubsection{MaxJ}
 
 MaxJ is a high-level language for specifying dataflow
 architectures. It is largely based on Java and adopts a
@@ -316,7 +276,7 @@ of the important features of the MaxJ language:
   }
 \end{lstlisting}
 
-\subsection{MaxCompiler}
+\subsubsection{MaxCompiler}
 
 \label{sec:back--maxcompiler}
 
@@ -360,7 +320,7 @@ interface.
   }
 \end{lstlisting}
 
-\subsection{Run-time}
+\subsubsection{Run-time}
 Finally we must write a host application which is required to queue
 the input streams and run the accelerator. This is achieved by calls
 to the MaxCompilerRT (runtime) API that interfaces with MaxelerOS.
@@ -379,7 +339,7 @@ to the MaxCompilerRT (runtime) API that interfaces with MaxelerOS.
   max_end());
 \end{lstlisting}
 
-\subsection{Analysis}
+\subsubsection{Analysis}
 Although the MaxCompiler toolchain greatly simplifies the process of
 accelerating applications and particularly the designing of dataflow
 kernels, the acceleration process is still very involved and requires
@@ -394,6 +354,173 @@ chip size or timing constraints.
 By specifying the design in \FAST{} and optimization strategies in LARA
 we aim to create the basis of a design space exploration flow that can
 automate this process.
+
+\section{Stencil Computation}
+
+Stencil computation is a class of computational problems consisting of
+iterative kernels that update array elements based on the values of
+their neighbours. The pattern of operation is called a stencil.
+
+Stencil computation has important applications in solving Partial
+Differential Equations and computer simulations (such as heat
+diffusion).
+
+They can operate on multiple dimensions. But increasing the dimension
+heavily impacts memory reference locality, so higher order stencils
+are hard to compute on CPU and have been the focus of many
+optimisations.
+
+We present some background on a number of applications that can be
+reduced to 1, 2 or 3D stencil computation that are used as part of our
+benchmark suite (\Cref{sec:benchmark}). We illustrate the importance
+of the applications and traditional approaches to accelerating them.
+
+\subsection{Numerical Differentiation}
+
+For an example of a 1D stencil we consider the problem of numerical
+differentiation \cite{numericaldiff}, which provides a method for
+estimating the derivative of a function based on its values at
+discrete points. By replacing the derivative with finite difference
+expressions the following 5 point linear stencil can be derived to
+approximate the value of $f'(x)$:
+
+\begin{equation}
+  f'(x) = \frac{-f(x + 2h) + 8f(x+h) - 8f(x-h) + f(x - 2h)}{12h}
+\end{equation}
+
+Such an approximation is useful for computing the derivative of a
+function based on a discrete set of observed values (e.g. to compute
+speed/acceleration of an object based on a discrete sample of
+displacements/speeds). It provides better accuracy at the cost of
+double computational cost when compared to Newton's difference
+quotient $f'(x) = \frac{f(x + h) - f(x)}{h}$ or the slope of secant
+method $f'(x)=\frac{f(x+h) - f(x - h)}{2h}$.
+
+Hence the following stencil algorithm could be used to compute the
+numerical approximation of the derivative of $f$ for a large number of
+points in the function's domain:
+
+\begin{algorithm}
+  \caption{Stencil approximation of first order derivative}
+  \begin{algorithmic}
+    \Function{NumericalDifferentiation}{$f, Order$}
+    \State $h \gets \epsilon$
+    \For{$x \in {Order, nPoints - Order}$}
+    \State $f'(x) \gets  \frac{-f(x + 2h) + 8f(x+h) - 8f(x-h) + f(x - 2h)}{12h}$
+    \EndFor
+    \State \Return $f'$
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\subsection{Black Scholes Equation}
+
+Stencil computation can also be used for solving Partial Differential
+Equations using finite difference methods. This has many applications
+in scientific computing for finance and physics for example, where
+PDEs are used to model the dynamic behaviour of a system. For example,
+the solution to the widely-used Black Scholes equation can be
+approximated using a 2D stencil computation.
+
+\begin{equation}
+  \frac{\partial V}{\partial t} + \frac{1}{2}\sigma^2S^2\frac{\partial^2 V}{\partial S^2} + rS\frac{\partial V}{\partial S} -rV = 0
+\end{equation}
+
+where:
+\begin{itemize}
+\item S - stock price,
+\item V(t, S) - price of derivative as a function of stock price and time
+\item r - risk-free interest rate
+\item $\sigma$ - volatility of the stock's returns
+\end{itemize}
+
+A finite difference approximation using the explicit method leads to a
+recursive formula \cite{blackscholes} for $v(i, j)$, the approximated
+value of $V$ at the $i$th point in the time dimension and the $j$th
+point in the stock price dimension:
+
+\begin{equation}
+  v(i, j) =
+  \alpha * v(i, j - 1) +
+  \beta  * v(i, j) +
+  \gamma * v(i, j + 1)
+\end{equation}
+
+This leads to a 2D stencil algorithm that performs a forward
+propagation on the time parameter by iteratively computing the values
+of $v(i + 1, j)$ for all $j$, given the values of $v(i, j)$ for all
+$j$ as show in Algorithm \ref{alg:bscholes-stencil}.
+
+\begin{algorithm}
+  \caption{Stencil kernel for finite difference approx. of Black Scholes PDE}
+  \label{alg:bscholes-stencil}
+  \begin{algorithmic}
+    \Function{BlackScholes}{payoff, timesteps}
+    \For{i $\in$ {0, timesteps}}
+    \For{j $\in$ {1, size(payoff) - 1} }
+    \State payoff\_next[j] $\gets$ $\alpha *$ payoff[j$ -1$] $+ \beta *$ payoff[j] $ + \gamma * $ payoff[j$ + 1$]
+    \EndFor
+    \State payoff $\gets$ payoff\_next
+    \EndFor
+    \State \Return payoff
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Although the shape of the stencil remains one dimensional, by contrast to
+the numerical differentiation example, the computation is also
+propagated forward in time, adding another (time) dimension. Thus this
+can be viewed as a 2D computation.
+
+%\subsection{Edge Detection}
+
+Edge detection algorithms can be used to detect points at which sudden
+changes in image brightness occur. These images
+
+\subsection{Reverse Time Migration}
+
+Stencil computation is also used for advanced simulation and imaging
+algorithms. For example the Reverse Time Migration technique is used
+to detect geological structures beneath the Earth's
+surface~\cite{baysal1983reverse} and is widely used in the Oil and Gas
+sector. The algorithm uses a forward propagation step which models the
+propagation of injected acoustic waves with the isotropic acoustic
+wave equation~\cite{araya2011assessing}:
+\begin{align}
+  \frac{d^2p(r,t)}{dt^2} + {c(r)}^2\bigtriangledown^2p(r,t) = f(r,t)
+\end{align}
+where:
+\begin{itemize}
+\item c(r)    - sound speed model
+\item p(r, t) - seismic wave value at point r, time t
+\item f(r, t) - input wave value at point r, time t
+\end{itemize}
+
+An approximation using finite difference is given in
+\cite{xinyu2013selfaware} and leads to the 3D stencil kernel
+\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} shown in Algorithm
+\ref{algo:sten}.
+\begin{algorithm}[!ht]\footnotesize
+  \caption{Stencil Kernel for Reverse Time Migration.}
+  \label{algo:sten}
+  \begin{algorithmic}
+    \For{$t$ = 0 $\leftarrow$ nt-1}
+    \For{$x$ = 0 $\leftarrow$ nx-1}
+    \For{$y$ = 0 $\leftarrow$ ny-1}
+    \For{$z$ = 0 $\leftarrow$ nz-1}
+    \State p(t,x,y,z) = c *(
+    \State c0 * p(t,x,y,z) +
+    \State c11* (p(t,x-1,y,z) + p(t,x+1,y,z)) + ... + c15*(p(t,x-5,y,z) + p(t,x+5,y,z)) +
+    \State c21* (p(t,x,y-1,z) + p(t,x,y+1,z)) + ... + c25*(p(t,x,y-5,z) + p(t,x,y+5,z)) +
+    \State c31* (p(t,x,y,z-1) + p(t,x,y,z+1)) + ... + c35*(p(t,x,y,z-5) + p(t,x,y,z+5)) +
+    \State d0 *  p(t,x,y,z) + d1 * p(t-1,x,y,z-1) + f(t,x,y,z);
+    \EndFor
+    \EndFor
+    \EndFor
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
 
 \section{Aspect Oriented Programming}
 
