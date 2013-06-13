@@ -4,15 +4,22 @@
 In this chapter we introduce a novel design flow for creating
 high-performance dataflow designs starting from C/C++ applications. We
 explain the motivation and requirements for the proposed approach and
-provide an overview of the three main components: \emph{i)} the
-\FAST{} language, \emph{ii)} the Aspect repository and weaver and
-\emph{iii)} the compilation backend. We show how these three
-components can be integrated to produce an automated design
-technique. We analyse the steps required to produce an optimised
-design using the proposed approach and compare this with alternative
-approaches using other start-of-the-art technologies. Finally, we
-present an extension to our original design-flow to support run-time
-reconfiguration.
+provide an overview of the three main components:
+\begin{itemize}
+\item the \emph{\FAST{} language}, used to express dataflow kernels
+\item the \emph{aspect description repository} and weaver, which group
+  and apply the optimisation and transformation strategies encapsulate
+  through aspects
+\item the \emph{compilation backend}, used to generate FPGA bitstreams
+  from dataflow designs and link the the host code run-time
+  application
+\end{itemize}
+We show how these three components can be integrated to produce an
+automated design technique. We analyse the steps required to produce
+an optimised design using the proposed approach and compare this with
+alternative approaches using other start-of-the-art
+technologies. Finally, we present an extension to our original
+design-flow to support run-time reconfiguration.
 
 \begin{comment}
 \section{Overview}
@@ -53,21 +60,21 @@ Our design flow aims to improve both \emph{efficiency} (in terms of
 performance and energy consumption) and \emph{productivity}. The
 former is crucial to High Performance Computing, the latter helps
 reduce development cost and time and is a well-known issue with
-existing FPGA based acceleration solutions \XXX{cit. req.}. To achieve this we focus
-on maintaining or improving the \emph{performance} and \emph{energy
-  efficiency} of existing applications while using a more systematic
-approach for design optimisation that results in more \emph{portable}
-application code, improves \emph{integration} with existing
-applications and \emph{automate} time consuming and error-prone tasks
-that need to be performed manually using traditional tools.
+existing FPGA based acceleration solutions \cite{jones2010gpu}. To
+achieve this we focus on maintaining or improving the
+\emph{performance} and \emph{energy efficiency} of existing
+applications while using a more systematic approach for design
+optimisation that results in more \emph{portable} application code,
+improves \emph{integration} with existing applications and
+\emph{automate} time consuming and error-prone tasks that need to be
+performed manually using traditional tools.
 
 \subsection{Performance and Energy Efficiency}
 When targeting HPC applications it is crucial that our design flow
-results in high-performance, highly efficient designs. To achieve this
-we start by looking at some existing high-performance designs
-(e.g. Reverse Time Migration -- see \Cref{sec:RTM}) and identify some
-of the key requirements of these designs. Based on these observations
-we require our approach to:
+results in high-performance, highly efficient designs. By analysing
+existing implementations for advanced high-performance applications
+such as Reverse Time Migration, we identify key requirements of these
+designs:
 
 \begin{itemize}
 
@@ -88,13 +95,14 @@ we require our approach to:
   (preferably standard operators).
 
 \item Another crucial aspect in achieving high-performance is
-  \textbf{replicating the design} across to chip to maximise speedup subject to
-  maximum available bandwidth. This makes use of FPGA cache (around
-  4MB of fast-local memory) to reuse data across time steps. This
-  pipeline replication is achieved through design parametrisation and
-  loops whose bounds are known at compile-time. The parameters that
-  indicate the pipelining factor are shared across the compute and
-  memory kernels but also across the CPU code.
+  \textbf{replicating the design} across the chip to maximise speedup
+  subject to maximum available bandwidth. This makes use of FPGA cache
+  (around 4MB of fast-local memory) to reuse data across time
+  steps. This pipeline replication is achieved through design
+  parametrisation and loops whose bounds are known at
+  compile-time. The parameters that indicate the pipelining factor are
+  shared across the compute and memory kernels but also across the CPU
+  code.
 
 \item High-performance designs \textbf{maximise usage of on-board
     DRAM}. Especially for stencil type computations where a number of
@@ -119,21 +127,25 @@ we require our approach to:
   the chip by balancing resource usage, or possibly reducing clock
   frequency.
 
-\item Additionally, it has been recently showed that run-time
-  reconfiguration can be used to improve the performance and
-  energy-efficiency of FPGA designs. \XXX{Cit. req., more details} Our
-  approach should therefore enable specification of designs with
-  run-time reconfiguration both in the static flavour presented in
+\item Additionally, recent work shows the interesting possibility of
+  improving design performance and energy efficiency for RTM by using
+  run-time reconfiguration to remove idle functions has been recently
+  showed that run-time reconfiguration can be used to improve the
+  performance and energy-efficiency of FPGA designs. It is therefore
+  important to facilitate the specification of strategies and designs
+  that support run-time reconfiguration to maximise performance, both
+  in the static flavour presented in
   \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} where partitions are
   generated and scheduled optimally at compile-time but also in a
   dynamic, self-adaptive fashion \cite{6322875} in which the
-  application can dynamically based on application inputs.
+  application can dynamically adapt itself by run-time reconfiguration
+  based on input values.
 
 \end{itemize}
 
-\XXX{Formulae for reducing clock frequency vs pipelining}
+%\XXX{Formulae for reducing clock frequency vs pipelining}
 
-\XXX{Formulae for measuring energy efficiency/consumption with run-time reconfiguration}
+%\XXX{Formulae for measuring energy efficiency/consumption with run-time reconfiguration}
 
 \subsection{Productivity}
 
@@ -168,25 +180,47 @@ different aspects:
   user input.
 \end{itemize}
 
-\XXX{Formulae for cost of automatic optimisation including design
-  space exploration and compute cost vs cost of manual developer
-  intervention}
+However, the issue of portability should not be restricted just to the
+FPGA design but also viewed in the context of the entire system
+architecture. For example, as explained in
+\Cref{sec:run-time-reconfiguration}, performance of run-time
+reconfiguration designs also depends on characteristics such as data
+transfer time and latency or whether partial reconfiguration is
+possible.
+
+
+%\XXX{Formulae for cost of automatic optimisation including design
+%  space exploration and compute cost vs cost of manual developer
+%  intervention}
 
 \subsubsection{Integration}
 
 It is important to facilitate the integration of application code
 resulting from our approach with existing application code. For this
 it should be possible to switch seamlessly between existing software
-only code and. To achieve this we introduce a set of pragmas
-(described in detail in \Cref{}) that allow users to switch between a
-standard software compiler and the FAST compiler (\texttt{fastc}) to
-automatically enable or disable hardware acceleration.
+only code and dataflow based solutions. This can be achieved for
+example by using pragmas or providing compiler extensions that when
+enabled, indicate that a solution should be mapped to a dataflow
+accelerator and indicate how to link hardware and software.
 
-By using C99 syntax, FAST is able to share configuration parameters
-with the CPU code (e.g. via constants or macro definitions),
-simplifying management and integration of the CPU and dataflow kernel.
+Integration is also required between the dataflow design running on
+the accelerator and run-time API running on the host system. For
+example, in the case of parallel replication of dataflow kernels, the
+number of parallel processing pipelines needs to be known by both
+components. This concern applies to other design parameters such as
+word length, or run-time inputs. This suggests that there is a need to
+synchronise these parameters to ensure correct operation. For example
+the \texttt{Par} variable in the RTM kernel (\Cref{app:rtm-kernel},
+Line \ref{app:rtmk-par}) contains the number of parallel pipelines
+that are to be implemented in the design. Increasing the parallelism
+reduces the number of cycles for which the kernel needs to executed.
+Parameters sharing can be implemented via parameter files, but is
+simplest when both components are written in the same language.
 
-\XXX{More details...}
+For example using C99 syntax, FAST would be able to share configuration
+parameters with the CPU code (e.g. via constants or macro
+definitions), simplifying management and integration of the CPU and
+dataflow kernel.
 
 \subsubsection{Automation}
 
@@ -195,13 +229,45 @@ productivity improvements. However we provide input points in our
 design flow which can be used gradually to tweak and guide the
 compilation process.
 
-\XXX{More details...}
+\section{Components}
+
+To meet these requirements we propose the following approach:
+\begin{itemize}
+\item Firstly, we introduce \FAST{} (described in Section
+  \ref{sec:maxc}), a novel language for specifying dataflow
+  designs. We specify the accelerated portion of the original
+  applications using \FAST{} dataflow kernels. By maintaining
+  compatibility with C99 syntax we improve developer productivity by
+  providing a familiar language and introduce the possibility of
+  combining hardware and software specifications.  FAST uses simple
+  C99 style syntax to capture the computation data path and
+  control-path and acts as a layer on top of the MaxJ/MaxCompiler
+  designs in our approach.
+
+\item Secondly, by using an aspect driven compilation flow we decouple
+  optimisation from design development, improving design portabpility,
+  and we automate the generation of code and design space exploration
+  improving productivity. We use LARA and the Harmonic aspect weaver
+  to implement the aspect descriptions that drive the compilation
+  process.
+
+
+\item Thirdly, systematic design space exploration is used to identify
+  maximum performance configurations, subject to platform specific
+  constraints.
+
+\item Finally, fully functional MaxCompiler designs are generated from
+  the configurations using the \fastc{} compiler. This step involves
+  automatic generation of:
+\begin{itemize}
+\item compute kernels
+\item memory access kernels
+\item managers
+\item run-time API calls to be inserted in the original application code
+\end{itemize}
+\end{itemize}
 
 \section{Steps}
-
-To meet these requirements we propose the following approach.
-
-
 The proposed design flow is illustrated in Fig.~\ref{fig:design-flow}
 and follows the steps:
 \begin{enumerate}
@@ -245,50 +311,11 @@ accelerator. We consider additional optimisations to achieve
 performance improvements as a result of a systematic design space
 exploration process.
 
-\section{Components}
-
-Firstly, we introduce \FAST{} (described in Section \ref{sec:maxc}), a
-novel language for specifying dataflow designs. We specify the
-accelerated portion of the original applications using \FAST{}
-dataflow kernels. By maintaining compatibility with C99 syntax we
-improve developer productivity by providing a familiar language and
-introduce the possibility of combining hardware and software
-specifications. Secondly, by using an aspect driven compilation flow
-we decouple optimisation from design development, improving design
-portability, and we automate the generation of code and design space
-exploration improving productivity. Finally, systematic design space
-exploration is used to identify maximum performance configurations,
-subject to platform specific constraints.
-
-\subsection{FAST Dataflow Designs}
-
-Dataflow designs are to be described in FAST, a novel dataflow
-language. FAST uses simple C99 style syntax to capture the computation
-data path and control-path and acts as a layer on top of the
-MaxJ/MaxCompiler designs in our approach.
-
-\subsection{LARA Aspect Descriptions and Harmonic Aspect Weaver}
-
-We use LARA and the Harmonic aspect weaver to implement the aspect
-descriptions that drive the compilation process.
-
-\subsection{MaxCompiler Backend}
-
-The target of our compilation is a fully functional MaxCompiler design.
-This involves automatic generation of:
-\begin{itemize}
-\item compute kernels
-\item memory access kernels
-\item managers
-\item run-time API calls to be inserted in the original application code
-\end{itemize}
-
-
 \section{Comparison with Existing Approaches}
 
-\XXX{Compare with MaxCompiler}
+%\XXX{Compare with MaxCompiler}
 
-\XXX{Compare with Vivado or other similar tools}
+%\XXX{Compare with Vivado or other similar tools}
 
 \section{Extensions}
 

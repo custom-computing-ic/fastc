@@ -284,7 +284,7 @@ This enables users to switch seamlessly between compilers and,
 eventually backend compilers, contributing towards the Integration
 requirement of our design flow.
 
-However, unlike in other approaches \XXX{cit. req.} pragmas are not
+However, unlike in other approaches pragmas are not
 meant to be inserted manually -- although this is possible -- but
 rather they are to be controlled by the corresponding aspect
 descriptions (for hardware / software partitioning, optimisation
@@ -292,7 +292,7 @@ etc.). The use of pragmas enables aspect descriptions to operate
 correctly (or rather to not operate incorrectly) accross various
 platforms (since, by definition, compiler directives are simply
 ignored if they are not understood by the compiler) and contributes
-towards our Portability requirement \XXX{cit. req.}.
+towards our Portability requirement.
 
 Pragams in \FAST{} follow the syntax:
 
@@ -313,11 +313,11 @@ compiler can be extended to automatically infer the type of streams
   \item If a stream is declared in the kernel header and not written
     to, then it is a read stream
   \item If a stream is declared within the body of the dataflow
-    kernel, it is a read/write stream (\XXX{Sure?})
+    kernel, it is a read/write stream
 \end{itemize}
 
 Additionally casting between variable types can be inferred in some
-instances by using type coercion. \XXX{More details here}
+instances by using type coercion.
 
 
 \subsection{Multiple Kernel Support}

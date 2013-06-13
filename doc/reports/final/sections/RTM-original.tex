@@ -16,7 +16,7 @@ definitions and imports are omitted.
   escapeinside={(*@}{@*)}
 ]
 public class RTM extends Kernel {
-  int Par=1, Mul=1, Sub=0;
+  int Par=1, Mul=1, Sub=0; (*@\label{app:rtmk-par}@*)
 
   public KArrayType<HWVar> burst_in=
     new KArrayType<HWVar>(hwFloat(8, 24),  Par);

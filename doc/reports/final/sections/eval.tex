@@ -6,32 +6,18 @@
 To evaluate our approach we develop and implement a number of applications
 to test both the flexibility and generality of our approach but also to
 ensure that we can support high-performance applications. There are in general
-no standard benchmarks for FPGAs as there are for CPU/GPU \XXX{cit. req.} systems.
+no standard benchmarks for FPGAs as there are for CPU/GPU systems.
 
 \subsection{Benchmark}
 \label{sec:bechmark}
-Our benchmark for stencil computation consists of the following
-applications:
+Our benchmark for consists of the following applications:
 \begin{itemize}
 \item Numerical Differentiation
 \item Black Scholes Option Pricing
-\item Barrier Option Pricing -- high-performance, design parallelism
 \item Reverse Time Migration -- high-performance, design parallelism
-\end{itemize}
-
-To investigate the generality of our method we also devise designs for
-problems that do no fit into the stencil computation class:
-
-\begin{itemize}
-\item Sorting networks -- recursive structure, parametrisable types
-  required
-  \begin{itemize}
-  \item Mergesort
-  \item Bitonic sort
-  \item Insertion sort
-  \end{itemize}
-\item Matrix Multiplication
-\item Graph Reachability
+\item bitonic sorting network -- a recursive design, that heavily
+relies on compile-time loops, auxiliary function calls and input
+groups to generate a readable description.
 \end{itemize}
 
 \subsection{Equipment}
@@ -64,7 +50,9 @@ were ran on the Custom Computing cluster machines:
   X5650 CPUs at 2.67GHz, 12 MB cache, 118 GB DRAM
 \end{itemize}
 
-\subsection{Measuring Results}
+All CPU applications are compiled using GCC 4.4 with all optimisations
+enabled (-O3 flag) and FPGA Designs are compiled with MaxCompiler
+2012.1.
 
 \section{Numerical Differentiation}
 
@@ -135,7 +123,7 @@ trade-off opportunities using design space exploration.
 
 \begin{figure}[!h]
 \centering
-\includegraphics{figs/pre}
+\includegraphics[scale=1.2]{figs/pre}
 \caption{Exploration of accuracy vs resource usage trade-offs using the aspect
 shown in Fig.~\ref{fig:aspect-exploration} with variable mantissa.}
 \label{fig:precision}
@@ -148,14 +136,12 @@ avoid over mapping on DSPs for arithmetic intensive applications.
 
 \begin{figure}[!h]
 \centering
-\includegraphics{figs/arith}
+\includegraphics[scale=1.2]{figs/arith}
 \caption{Exploration of DSP and LUT/FF balancing for functional units
   implementing a single arithmetic operation using the aspect shown
   in Fig.~\ref{fig:aspect-DSP}.}
 \label{fig:arith}
 \end{figure}
-
-
 
 Design space exploration using the aspect in
 Fig.~\ref{fig:aspect-exploration} with increasing parallelism level
@@ -183,7 +169,7 @@ published FPGA results for static designs
 
 \begin{figure}[!h]
   \centering
-  \begin{tikzpicture}[scale=1.5]
+  \begin{tikzpicture}[scale=1.8]
     \selectcolormodel{gray}
     \begin{axis}[
         xmin=1,
@@ -307,14 +293,6 @@ subject to varying resource constraints) without manual intervention.
 
   \end{tabularx}
 \end{sidewaystable}
-
-
-
-
-
-
-\section{Sorting}
-
 
 
 \section{Bitonic Sort}
