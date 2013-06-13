@@ -121,10 +121,7 @@ each of the following resource types:
 \label{fig:fpga-block-structure}
 \end{figure}
 
-%\subsection{Number Representation}
-%\subsection{Functional vs Non-functional Requirements}
 \subsection{Run-time Reconfiguration}
-
 
 Run-time reconfiguration refers to the capability of uploading a new
 design onto the FPGA at run-time. This capability can be used to
@@ -144,11 +141,22 @@ propagation of a simulated wave through the earth surface. Thus the
 functions that would only be used in the second stage need not be
 uploaded on the accelerator from the very beginning. This enables the
 an increase in resources used for the first part which can be used to
-increase parallelism and thus reduce computation time. An issue
+increase parallelism and thus reduce computation time.
+
 
 For the second type of application we consider the example of a an
-FPGA sorting architecture presented in \cite{koch2011fpgasort}. The
-sorting architecture comprises two stages that
+FPGA sorting architecture presented in \cite{koch2011fpgasort}. A
+parallel sorting tree is used for small problem sizes that fit the
+FPGA on-chip memory (a few hundred inputs). While this network
+achieves a very high throughput, it does not scale with the number of
+inputs, and for larger input sizes it exceeds the available FPGA
+resources. Hence, a solution is to combine this network with a
+FIFO-based merge sorter\cite{marcelino2009unbalanced} which allows the
+merging of sorted buckets of numbers. This leads to a two step sorting
+algorithm, using run-time reconfiguration, in which during the first
+stage a small number of inputs are merged in parallel and in the
+second stage, resulting buckets of inputs are merged to obtain the
+final sorted sequence.
 
 Two types of run-time reconfiguration exist:
 \begin{itemize}
@@ -157,22 +165,27 @@ Two types of run-time reconfiguration exist:
   time often in the are of seconds and requires that data be saved
   from on-board DRAM to host memory during the reconfiguration
   process, which adds significant overhead;
-\item \textbf{partial reconfiguration}, where a region of the FPGA is
-  reconfigured
+\item \textbf{partial reconfiguration}, where a smaller region of the
+  FPGA is reconfigured, reducing reconfiguration overhead, eliminating
+  the need for buffering data and minimising computation stall
 \end{itemize}
 
 The Maxeler Platform used in this projects was not specifically
 designed for run-time reconfiguration. As such it relies on a large
-FPGA chip that takes somewhere in the are of 0.7 - 1 second to
-reconfigure. To this we add the slow data transfer over PCI-Express
-from the accelerator card to the host DRAM which makes finding
-applications where run-time reconfiguration is justified not trivial.
+FPGA chip for which the reconfiguration overhead is approximately 0.7
+- 1 second, depending on the size of the design. In addition, the slow
+data transfer rate and large transfer latency over PCI-Express from
+the accelerator card to the memory of the host system introduces
+complicates the process of improving performance via run-time
+reconfiguration.
 
 The Maxeler Platform does not currently support partial run-time
 reconfiguration, so the possibility of using partial run-time
 reconfiguration to improve design performance is left as future
-work. However our approach is designed to operate similarly in the
-case where partial reconfiguration capabilities are available.
+work. However, given that partial reconfiguration overhead is smaller
+than that of total reconfiguration, our approach will operated
+similarly or even better in the case where partial reconfiguration
+capabilities are available.
 
 \subsection{Maxeler Platform}
 \label{sec:maxeler-platform}
@@ -524,29 +537,65 @@ An approximation using finite difference is given in
 
 \section{Aspect Oriented Programming}
 
+Aspect-Oriented Programming \cite{Kiczales:2005:AP:1062455.1062640} is
+a programming paradigm which is used to capture aspects that cut
+through levels of abstractions. A commonly used example is that of
+program logging \cite{jacobson2004aspect}, which represents a concern
+that is expressed at, for example, every method entry and exit
+point. The functions that perform logging are spread throughout the
+code and, for example, ensuring consistency when changing the logging
+format can be difficult. Encapsulating crosscutting concerns in
+aspects can improve cohesion, making the code easier to understand and
+change which leads to improved maintainability and increased developer
+productivity. The model which governs the application of aspects to
+code is named \emph{join-point model} and describes where in the
+application (the \emph{pointcut}) should the functionality implemented
+in the aspect (the \emph{advice}) be applied.
+
+This idea can also be applied to the compilation of dataflow designs,
+by regarding the optimisations and transformations that are applied to
+the original design as cross-cutting concerns. These optimisations can
+often hide the original purpose of the application, making it harder
+to maintain and by encapsulating them in aspects we not only improve
+the maintainability of the application but also simplify the process
+of optimisation and take important steps towards fully automating the
+optimisation and transformation process.
+
+However, most commonly usedd implementations of Aspect-Oriented
+Programming, such as AspectJ \cite{Gradecki:Lesiecki:2003,
+  Kiczales:2001} and AspectC++\cite{Spinczyk:Gal:Schroder:2002} share
+a limitation which makes them impossible to use for capturing design
+optimisations and transformations, without substantial extensions:
+aspects cannot be applied to multiple statement blocks, loops or
+conditionals.
+
+Hence, for the purpose of this project we use LARA, an Aspect-Oriented
+Programming language that was introduced in the scope of the
+REFLECT\cite{Cardoso:Bertels:Kuzmanov:Nane:Sima:2011} project, also to
+support the process of optimising FPGA designs.
+
 \subsection{LARA}
 
-Lara is an aspect oriented programming language for specifying
+Lara is an Aspect-Oriented Programming language for specifying
 compiler strategies for FPGA-based systems
-\cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012}. The key
-feature of the LARA aspect-oriented approach is that it separates the
-application code from the strategies required to compile and optimize
-it for a particular platform. It enables the capturing of strategies
-for:
+\cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012}. LARA
+facilitates decoupling of optimisations from apllication code and
+enables the capturing of strategies for:
 
 \begin{itemize}
-\item instrumentation, monitoring and hardware-software partitioning --
-  these will be used in the initial stages of our proposed design flow
-  to identify optimization candidates for mapping onto the accelerator
+\item \emph{instrumentation}, \emph{monitoring} and
+  \emph{hardware/software partitioning}, used in the initial stages of
+  our design flow to identify optimisation candidates for mapping onto
+  the dataflow engine
 
-\item code specialization and code optimization -- these will be
-  used both for the original source code application which is the
-  target of the compilation and for the dataflow design
+\item code \emph{specialisation} and \emph{optimisation}, used both
+  for the original host application and dataflow designs which are the
+  input of our design flow
 \end{itemize}
 
-Furthermore LARA descriptions can be parametrized which facilitates
-integration with our proposed DSE step described in Chapter
-\ref{sec:design_flow}.
+Furthermore LARA descriptions can be parametrised to simplify
+integration with our proposed design space exploration step described
+in Chapter \ref{sec:design-flow}.
 
 Listing \ref{lara} shows an example description used for fully
 unrolling all innermost loops with an iteration count smaller than or
@@ -571,12 +620,12 @@ filter relevant queries.
 
 \cite{Cardoso:Carvalho:Teixeira:Diniz:Goncalves:Petrov:2012} also
 introduces a design flow based on LARA for mapping applications into
-heterogeneous multicore platforms. This involves specifying
-optimizations and mapping strategies in the LARA programming language,
+heterogeneous multi-core platforms. This involves specifying
+optimisations and mapping strategies in the LARA programming language,
 separate from the application source code.
 
 The strategies are compiled and applied to the original source code in
-a sequential order to obtain the final design which is synthesized
+a sequential order to obtain the final design which is synthesised
 using Catapult-C \cite{CatapultC}. Examples of strategies which are
 expressed using LARA include loop unrolling, coalescing, loop fission
 and mapping compute intensive functions to hardware (hardware/software
@@ -587,7 +636,7 @@ pragma based approach used in frameworks like
 OpenMP \cite{Ferrer:Judit:Bellens:Duran:Gonzalez:Marorell:Badia:Ayquade:Labarta:2011}
 include the possibility of defining dynamic join points through which
 strategies can be applied to the intermediate results of the weaving
-(source translation) process. Additionally optimization strategies are
+(source translation) process. Additionally, optimisation strategies are
 grouped into cohesive aspects, rather than being spread through the
 code which makes them easier to understand, maintain and modify, for
 example to target a different platform.
@@ -597,7 +646,7 @@ example to target a different platform.
 
 \subsection{High Level Synthesis}
 
-Substantial work has been carried out in synthesizing high level
+Substantial work has been carried out in synthesising high level
 languages to hardware designs and many tools exist for this purpose
 \cite{CtoVerilog, Vivado, ImpulseC}. However these approaches
 do not target a streaming dataflow architecture but either soft
@@ -629,8 +678,10 @@ software~\cite{halbwachs1992programming} rather than performance. The
 functional programming style complicates the translation of existing
 imperative applications and none have existing implementations for
 FPGAs, so a performance comparison is not possible. Control flow
-extensions to dataflow language have also been investigated in
-\cite{143862} and \cite{183202}. \XXX{More inf.}
+extensions to dataflow languages have also been investigated in
+\cite{143862} and \cite{183202}. This shows that in most real life
+applications, it is necessary to specify a control path as well as a
+data path.
 
 Streams-C~\cite{Gokhale:Stone:Arnold:Kalinowski:2000} and
 ImpulseC~\cite{ImpulseC} adopt imperative ANSI C syntax and an
@@ -730,12 +781,29 @@ varying input conditions.
 We have provided a brief introduction into the area of dataflow
 computing and explained why dataflow acceleration can improve
 performance and energy efficiency over traditional software only
-solutions. We have introduced the Maxeler platform which will be used
-as the backend of the compilation process presented in Chapter
-\ref{sec:design-flow} and presented some of the more important
-features of the MaxCompiler approach as well as the limitations
-associated with it and why we believe that the proposed flow can
-improve developer productivity and possibly reveal new opportunities
-for design transformation and optimisations. Finally, we introduced
-some of the existing dataflow languages and existing work in
-aspect-driven compilation for FPGA designs.
+solutions. We have shown the main benefits and drawbacks of FPGA
+acceleration and explained why we have chosen to target custom
+streaming architectures with our design flow. We have introduced the
+Maxeler platform which will be used as the backend of the compilation
+process presented in Chapter \ref{sec:design-flow} and presented some
+of the more important features of the MaxCompiler approach including
+some limitations that we attempt to address with the proposed flow in
+order improve developer productivity and possibly reveal new
+opportunities for design transformation and optimisations. As an
+example of parallel computation where FPGAs can be used to obtain
+substantial speedups we have presented stencil computation. Finally,
+we briefly introduced related work in the areas of dataflow languages
+and aspect-driven compilation for FPGA designs and shown that our
+approach differs from existing work by:
+
+\begin{itemize}
+\item introducing a novel approach for generating and optimising
+  dataflow designs based on an aspect-oriented compilation flow
+\item focusing on separating optimisations from functional application
+  code with the view of improving both maintainability and performance
+\item focusing on a streaming, high-throughput architecture based on
+  FPGA Dataflow Engines
+\item introducing explicit support for specifying run-time
+  reconfiguration strategies to improve performance and energy
+  efficiency
+\end{itemize}
