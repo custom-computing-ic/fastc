@@ -12,9 +12,9 @@ const int dim_y = 32;
 #define realType 8, 24
 
 
-#pragma fast var:nx type:offset max:max_nx/Par min:min_nx/Par
-#pragma fast var:nxy type:offset max:dim_y*nx min:dim_y*nx
-#pragma fast var:burst_p type:float(8, 24)
+#pragma fast var:nx type:offset max:max_nx/Par min:min_nx/Par func:kernel_RTM
+#pragma fast var:nxy type:offset max:dim_y*nx min:dim_y*nx func:kernel_RTM
+#pragma fast var:burst_p type:float(8, 24) func:kernel_RTM
 void kernel_RTM(
                 unsigned int n1, unsigned int n2, unsigned int n3,
 		unsigned int ORDER, unsigned int SPONGE,
