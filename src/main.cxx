@@ -21,6 +21,7 @@
 #include "passes/PragmaExtraction.hxx"
 #include "passes/ExtractDesignConstants.hxx"
 #include "passes/InlineKernels.hxx"
+#include "passes/InputOutputExtraction.hxx"
 
 #include <boost/filesystem.hpp>
 
@@ -49,9 +50,10 @@ int main(int argc, char** argv) {
     Compiler* c = new Compiler(project);
 
     c->addPass(new KernelExtraction());
-    c->addPass(new InlineKernels());
     c->addPass(new ExtractDesignConstants());
     c->addPass(new PragmaExtraction());
+    //    c->addPass(new InputOutputExtraction());
+    c->addPass(new InlineKernels());
     c->addPass(new CodeGeneration());
     //    c->addPass(new RemoveFast());
     c->addPass(new TaskExtraction());

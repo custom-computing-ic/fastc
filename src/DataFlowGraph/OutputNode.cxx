@@ -3,7 +3,7 @@
 #include "../utils.hxx"
 
 string OutputNode::toMaxJ() {
-  return "io.output(\"" + getName() + "\", " + getInput() + ", " + getType() + ");\n";
+  return "io.output(\"" + outputName + "\", " + getInput() + ", " + getType() + ");\n";
 }
 
 string OutputNode::getInput() const {

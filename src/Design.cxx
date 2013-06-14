@@ -9,7 +9,7 @@ void Design::generateCode(ostream& out) {
         out << k->getSource();
         out << "\n\n";
     }
-	int i = 0; i++;
+    int i = 0; i++;
 }
 
 void Design::writeEngineFiles(string path) {

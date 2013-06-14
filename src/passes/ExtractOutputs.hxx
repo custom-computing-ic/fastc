@@ -15,7 +15,6 @@ public:
   }
 
   virtual void visit(SgNode *node) {
-
     SgExprStatement* stmt;
     if ((stmt = isSgExprStatement(node)) != NULL ) {
       SgExpression* expr = stmt->get_expression();

@@ -13,15 +13,17 @@ class OutputNode : public Node {
   string width;
   string ioType, computeType;
   Kernel* kernel;
+  string outputName;
 
 public:
 
-  OutputNode(Kernel* kernel, string name, string ioType, string computeType, string width) : Node(name){
+  OutputNode(Kernel* kernel, string name, string outputName, string ioType, string computeType, string width) : Node(name){
     this->width = width;
     this->ioType = ioType;
     node = NULL;
     this->kernel = kernel;
     this->computeType = computeType;
+    this->outputName = outputName;
   }
 
   string getWidth() {

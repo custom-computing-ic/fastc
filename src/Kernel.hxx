@@ -23,6 +23,8 @@ class Kernel {
   list<string> scalarInputs;
   list<string> offsets;
 
+  vector<string> originalParams;
+
   string convertType(string type);
   string convertWidth(SgType *type);
   string convertHwType(string type);
@@ -50,14 +52,15 @@ public:
   }
 
   void addSource(string source);
-  void addInput(string inputName, string ioType, string computeType, string width);
-  void addOutput(string outputName, string ioType, string computeType, string width);
-  void addScalarInput(string inputName, string ioType, string computeType);
+  void addInput(string varName, string inputName, string ioType, string computeType, string width);
+  void addOutput(string varName, string outputName, string ioType, string computeType, string width);
+  void addScalarInput(string varName, string inputName, string ioType, string computeType);
   void addDesignConstant(string name, string value);
   void removeOutputAssignments();
 
   void extractIO();
   bool isStreamArrayType(string identifer);
+  void saveIO();
 
   void generateIO();
   void addOffsetExpression(string var, string max, string min);

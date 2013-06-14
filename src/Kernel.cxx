@@ -86,10 +86,10 @@ void Kernel::addSource(string source) {
   this->source += source;
 }
 
-void Kernel::addInput(string inputName, string ioType, string computeType, string width) {
+void Kernel::addInput(string varName, string inputName, string ioType, string computeType, string width) {
   inputs.push_back(inputName);
   if (width == "1") {
-    declarations += "HWVar " + inputName + " =  io.input(\"" + inputName
+    declarations += "HWVar " + varName + " =  io.input(\"" + inputName
       + "\", " + ioType + ")";
 
     if (ioType != computeType)
@@ -100,7 +100,7 @@ void Kernel::addInput(string inputName, string ioType, string computeType, strin
     string t = "new KArrayType<HWVar>(" + ioType + "," + width + ")";
     string ct = "new KArrayType<HWVar>(" + computeType + "," + width + ")";
 
-    declarations += "KArray<HWVar> " + inputName +
+    declarations += "KArray<HWVar> " + varName +
       " = io.input(\"" + inputName + "\",  " + t +")";
 
     if (ioType != computeType)
@@ -110,20 +110,20 @@ void Kernel::addInput(string inputName, string ioType, string computeType, strin
   }
 }
 
-void Kernel::addOutput(string outputName, string ioType, string computeType, string width) {
+void Kernel::addOutput(string varName, string outputName, string ioType, string computeType, string width) {
   string type = computeType;
   if (width != "1") {
     type = "new KArrayType<HWVar>(" + computeType + "," + width + ")";
-    declarations += "KArray<HWVar> " + outputName +
+    declarations += "KArray<HWVar> " + varName +
       " = (" + type +").newInstance(this);\n";
   }
-  outputs.push_back(new OutputNode(this, outputName, ioType, computeType, width));
+  outputs.push_back(new OutputNode(this, varName, outputName, ioType, computeType, width));
 }
 
-void Kernel::addScalarInput(string inputName, string ioType, string computeType) {
+void Kernel::addScalarInput(string varName, string inputName, string ioType, string computeType) {
   scalars.push_back(inputName);
   cout << "Adding scalar io " << ioType << " comp : " << computeType << endl;
-  declarations += "HWVar " + inputName + " =  io.scalarInput(\"" + inputName
+  declarations += "HWVar " + varName + " =  io.scalarInput(\"" + inputName
     + "\", " + ioType + ")";
   if (ioType != computeType)
     declarations += ".cast(" + computeType + ")";
@@ -205,11 +205,13 @@ void Kernel::extractIO() {
   SgInitializedNamePtrList::iterator it = args.begin();
 
   set<string> modSet = findModset(decl->get_definition());
-
+  int paramNumber = 0;
   for ( ; it != args.end(); it++) {
+
     SgInitializedName* param = *it;
     SgType* param_type = param->get_type();
-    string inputName = param->get_name().getString();
+    string varName = param->get_name().getString();
+    string inputName = originalParams[paramNumber];
     string inputType = convertType(param_type->unparseToString());
 
     string computeType;
@@ -223,24 +225,44 @@ void Kernel::extractIO() {
       continue;
 
     if (isSgPointerType(param_type) || isSgArrayType(param_type)) {
-      if (modSet.find(inputName) != modSet.end()) {
-        addOutput(inputName, inputType,  computeType, inputWidth);
+      if (modSet.find(varName) != modSet.end()) {
+        addOutput(varName, inputName, inputType,  computeType, inputWidth);
       } else {
-        addInput(inputName,  inputType, computeType, inputWidth);
+        addInput(varName, inputName,  inputType, computeType, inputWidth);
       }
     } else {
       // scalar inputs
-      addScalarInput(inputName, inputType, computeType);
+      addScalarInput(varName, inputName, inputType, computeType);
     }
+    paramNumber++;
   }
 
   removeOutputAssignments();
 }
 
+void Kernel::saveIO() {
+  SgInitializedNamePtrList args = decl->get_args();
+  set<string> modSet = findModset(decl->get_definition());
+  foreach_(SgInitializedName* param, decl->get_args()) {
+    SgType* paramType = param->get_type();
+    string paramName = param->get_name().getString();
+    originalParams.push_back(paramName);
+    if (isSgPointerType(paramType) || isSgArrayType(paramType)) {
+      if (modSet.find(paramName) != modSet.end()) {
+        streamOutputParams.push_back(paramName);
+      } else {
+        streamInputParams.push_back(paramName);
+      }
+    } else {
+      scalarInputs.push_back(paramName);
+    }
+  }
+}
+
 void Kernel::addOffsetExpression(string var, string max, string min) {
   offsets.push_back(var);
   declarations+= "OffsetExpr " + var + " = stream.makeOffsetParam(" +
-    "\"nx\", " + min + ", " + max + ");\n";
+    "\"" + var + "\", " + min + ", " + max + ");\n";
 }
 
 void Kernel::updateTypeInfo(string identifier, string ioType, string computeType) {

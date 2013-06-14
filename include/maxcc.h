@@ -43,7 +43,7 @@ int count_chain(int a, int b, int parent);
 int count_p(int width, int wrapPoint, int inc, int enable);
 
 // offset functions
-int make_offset(int min, int max);
+//int make_offset(int min, int max);
 
 // control/multiplexer functions
 int fselect(float8_24 cond, float8_24 left, float8_24 right);
@@ -76,7 +76,11 @@ int cast_fix_i(int in, int exponent, int mantissa);
 
 int sqrt_i(float min, float max, float8_24 input, int width);
 
+float sqrt(float num);
+
 double exp(double power);
+
+float abs(float abs);
 
 
 #endif
