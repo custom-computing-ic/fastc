@@ -165,12 +165,18 @@ string Kernel::convertHwType(string type) {
 }
 
 string Kernel::convertWidth(SgType *type) {
+  using namespace SageInterface;
   if (isSgArrayType(type)) {
-    vector<SgExpression*> dims = SageInterface::get_C_array_dimensions(isSgArrayType(type));
-    if (dims.size() == 2)
+    vector<SgExpression*> dims = get_C_array_dimensions(isSgArrayType(type));
+    if (dims.size() == 2) {
       // declaration of type: float *in[par]
-      return dims[1]->unparseToString();
-    else
+      string s;
+      if (isSgValueExp(dims[1]))
+        s = boost::lexical_cast<string>(getIntegerConstantValue(isSgValueExp(dims[1])));
+        else
+        s = dims[1]->unparseToString();
+      return s;
+    } else
       return "-1";
   }
   return "1";
