@@ -192,6 +192,11 @@ void Kernel::extractIO() {
     cout << "input name " << inputName << "Original Type:" << param_type->unparseToString();
     cout <<" Type " << inputType ;
     cout <<" width " << inputWidth << endl;
+
+    // ignore offsets
+    if (find(offsets.begin(), offsets.end(), inputName) != offsets.end())
+      continue;
+
     if (isSgPointerType(param_type) || isSgArrayType(param_type)) {
       if (modSet.find(inputName) != modSet.end()) {
         cout << "Adding output " << inputName << endl;
@@ -212,6 +217,7 @@ void Kernel::extractIO() {
 
 
 void Kernel::addOffsetExpression(string var, string max, string min) {
+  offsets.push_back(var);
   declarations+= "OffsetExpr " + var + " = stream.makeOffsetParam(" +
     "\"nx\", " + min + ", " + max + ");\n";
 }

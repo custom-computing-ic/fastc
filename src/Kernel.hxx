@@ -19,6 +19,7 @@ class Kernel {
   list<string> streamOutputParams;
   list<string> streamInputParams;
   list<string> scalarInputs;
+  list<string> offsets;
 
   string convertType(string type);
   string convertWidth(SgType *type);
