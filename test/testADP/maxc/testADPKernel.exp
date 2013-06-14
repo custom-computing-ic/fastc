@@ -1,0 +1,114 @@
+package adp;
+
+import com.maxeler.maxcompiler.v2.kernelcompiler.stdlib.KernelMath;
+import com.maxeler.maxcompiler.v2.kernelcompiler.Kernel;
+import com.maxeler.maxcompiler.v2.kernelcompiler.KernelParameters;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.*;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.composite.*;
+
+class AdpKernel extends Kernel {
+    private static final int N = 10;
+    private DFEFloat realType = dfeFloat(8, 24);
+    private DFEFloat ioType = dfeFloat(11, 53);
+    private HWVar root2pi = constant.var( 2.50662827463100050242);
+
+    private HWVar p0 = constant.var(220.2068679123761).cast(realType);
+    private HWVar p1 = constant.var(221.2135961699311).cast(realType);
+    private HWVar p2 = constant.var(112.0792914978709).cast(realType);
+    private HWVar p3 = constant.var(33.91286607838300).cast(realType);
+    private HWVar p4 = constant.var(6.373962203531650).cast(realType);
+    private HWVar p5 = constant.var(.7003830644436881).cast(realType);
+    private HWVar p6 = constant.var(.3526249659989109E-01).cast(realType);
+
+    private HWVar q0 = constant.var(440.4137358247522).cast(realType);
+    private HWVar q1 = constant.var(793.8265125199484).cast(realType);
+    private HWVar q2 = constant.var(637.3336333788311).cast(realType);
+    private HWVar q3 = constant.var(296.5642487796737).cast(realType);
+    private HWVar q4 = constant.var(86.78073220294608).cast(realType);
+    private HWVar q5 = constant.var(16.06417757920695).cast(realType);
+    private HWVar q6 = constant.var(1.755667163182642).cast(realType);
+    private HWVar q7 = constant.var(.8838834764831844E-1).cast(realType);
+
+    private HWVar cutoff = constant.var(7.071).cast(realType);
+
+    HWVar PDF(HWVar z) {
+        return KernelMath.exp(-z * z / 2) / root2pi;
+    }
+
+
+    HWVar CDF(HWVar z) {
+        HWVar zabs = KernelMath.abs(z);
+
+        HWVar expntl = KernelMath.exp(-.5*zabs*zabs);
+        HWVar pdf = expntl/root2pi;
+
+        HWVar c1 = z > 37.0;
+        HWVar c2 = z < -37.0;
+        HWVar c3 = zabs < cutoff;
+        HWVar pA =  expntl*((((((p6*zabs + p5)*zabs + p4)*zabs + p3)*zabs +
+                               p2)*zabs + p1)*zabs + p0)/(((((((q7*zabs + q6)*zabs +
+                                                               q5)*zabs + q4)*zabs + q3)*zabs + q2)*zabs + q1)*zabs +
+                                                          q0);
+        HWVar pB = pdf/(zabs + 1.0/(zabs + 2.0/(zabs + 3.0/(zabs + 4.0/
+                                                             (zabs + 0.65)))));
+
+        HWVar pX = c3? pA : pB;
+
+        HWVar p = (z < 0.0) ? pX : 1 - pX;
+
+        return c1? 1.0 : (c2 ? 0.0 : p);
+    }
+
+    HWVar V (HWVar t) {
+        HWVar cdf = CDF(t);
+        HWVar c0 = (cdf === 0.0);
+        return c0? 0.0 : (PDF(t) / cdf);
+    }
+
+    HWVar W (HWVar t) {
+        HWVar v = V(t);
+        return v * (v + t);
+    }
+
+    AdpKernel(KernelParameters parameters) {
+        super(parameters);
+
+
+        KArrayType<HWVar> arrayType = new KArrayType<HWVar>(ioType, 10);
+        // Input
+        HWVar y = io.scalarInput("y", ioType).cast(realType);
+        HWVar beta = io.scalarInput("beta", ioType).cast(realType);
+        KArray<HWVar> prior_m = io.input("prior_m", arrayType);
+        KArray<HWar> prior_v = io.input("prior_v", arrayType);
+
+        HWVar s = constant.var(realType, 0.0);
+        HWVar m = constant.var(realType, 0.0);
+
+        for (int i = 0; i < N; i++)
+        {
+         m = m + prior_m[i].cast(realType);
+         s = s + prior_v[i].cast(realType);
+     }
+
+        HWVar S = KernelMath.sqrt(beta * beta + s);
+        HWVar t = (y * m) / S;
+
+        KArray<HWVar> post_m = arrayType.newInstance(this);
+        KArray<HWVar> post_s = arrayType.newInstance(this);
+
+        for (int i = 0; i < N; i++) {
+                                    HWVar pr_m = prior_m[i].cast(realType);
+                                     HWVar pr_v = prior_v[i].cast(realType);
+                                     HWVar ps_m = (pr_m + y * (pr_v / S) * V(t)).cast(ioType);
+                                     HWVar ps_s = (KernelMath.sqrt(KernelMath.abs(pr_v * (1 - (pr_v / (S*S)) * W(t))))).cast(ioType);
+                                     post_m[i] <== ps_bm;
+                                     post_s[i] <== ps_s;
+                                 }
+
+
+        // Output
+        io.output("post_m", post_m, arrayType);
+        io.output("post_s", post_s, arrayType);
+
+    }
+}
