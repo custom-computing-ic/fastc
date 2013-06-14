@@ -177,6 +177,10 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
     string *in = toExpr(*itt);
     *s += str(format("HWVar %s = KernelMath.sqrt(%s);\n")
               % variableName % *in);
+  } else if (fname == "abs") {
+    string *in = toExpr(*itt);
+    *s += str(format("HWVar %s = KernelMath.abs(%s);\n")
+              % variableName % *in);
   }
 
   if ( s->size() == 0 ) {
