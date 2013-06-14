@@ -1,7 +1,16 @@
 #include "../../../include/maxcc.h"
-#include "../include/params_dse.h"
+//#include "../include/params_dse.h"
 
+// design parameters
 const int Par = 1;
+const int Mul = 1;
+const int DspFactor = 1;
+const int min_nx = 24;
+const int max_nx = 48;
+const int dim_y = 32;
+
+#define realType 8, 24
+
 
 #pragma fast var:nx type:offset max:max_nx/Par min:min_nx/Par
 #pragma fast var:nxy type:offset max:dim_y*nx min:dim_y*nx

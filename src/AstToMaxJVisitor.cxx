@@ -95,39 +95,23 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
 
   if (fname == "count") {
     string *wrap = toExpr(*itt);
-
-    SgIntVal *inc = isSgIntVal(*(++itt));
-    string i;
-    if (inc != NULL) {
-      stringstream s;
-      s << inc->get_value();
-      i = s.str();
-    }
-    D(cerr << "Visiting count " << endl);
-    // XXX it seems counter chains with one counter are supported?
-    // TODO need a fresh variable for chain
+    string *inc  = toExpr(*(++itt));
     string name = "chain_" + variableName;
     declarations += "CounterChain " + name
       + " = control.count.makeCounterChain();\n";
     *s += "HWVar " + variableName + " = " + name + ".addCounter("
-      + *wrap + ", " + i + ");\n";
+      + *wrap + ", " + *inc + ");\n";
     counterMap[variableName] = name;
   } else if (fname == "count_chain" ) {
     string *wrap = toExpr(*itt);
-    SgIntVal *inc = isSgIntVal(*(++itt));
-    string i;
-    if (inc != NULL) {
-      stringstream s;
-      s << inc->get_value();
-      i = s.str();
-    }
+    string *inc  = toExpr(*(++itt));
     string p = "";
     SgVarRefExp *parent = isSgVarRefExp(*(++itt));
     if (parent != NULL)
       p = parent->get_symbol()->get_name();
     string chainDeclaration = counterMap[p];
     *s += "HWVar " + variableName + " = " + chainDeclaration
-      + ".addCounter(" + *wrap + ", " + i + ");\n";
+      + ".addCounter(" + *wrap + ", " + *inc + ");\n";
     counterMap[variableName] = chainDeclaration;
   } else if (fname == "count_p") {
     string param = "param" + lexical_cast<string>(paramCount);
@@ -415,17 +399,18 @@ void ASTtoMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
     string* n = toExpr(exp);
 
     if (n != NULL) {
-      if ( get_type(v)->compare("float") == 0 ||
+      // XXX: float constants aren't handled properly
+      if ( //get_type(v)->compare("float") == 0 ||
            get_type(v)->compare("int") == 0) {
         // proper float or int constants
         source += *get_type(v) + " " + variableName;
         source += " = " + (*n)  + ";\n";
-      } else {
-        // stream type consts or varsb
+        } else {
+        // stream type consts or vars
         if (isConstant(*n))
           *n =  constVar(*n);
         source += "HWVar " + variableName + " = " + (*n) + ";\n";
-      }
+       }
     }
 
 
