@@ -29,7 +29,7 @@ public:
   }
   string getId();
   virtual string toMaxJ()=0;
-  string getType() {return "hwFloat(8, 24)";};
+  virtual string getType() {return "hwFloat(8, 24)";};
 
 };
 

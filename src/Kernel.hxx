@@ -21,6 +21,8 @@ class Kernel {
   list<string> scalarInputs;
 
   string convertType(string type);
+  string convertWidth(SgType *type);
+  set<string> findModset(SgNode* sgNode);
 
 
   string declaration();
@@ -36,13 +38,13 @@ public:
     return outputs;
   }
   void addSource(string source);
-  void addInput(string inputName, string type);
   void addInput(string inputName, string type, string width);
   void addOutput(string outputName, string type, string width);
   void addScalarInput(string inputName, string type);
   void removeOutputAssignments();
 
   void extractIO();
+  bool isStreamArrayType(string identifer);
 
   void generateIO();
 

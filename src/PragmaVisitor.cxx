@@ -86,7 +86,7 @@ void PragmaVisitor::visit(SgPragma* pragma) {
 
     if (cls == NULL) {
         if (dir->compare("in") == 0)
-            k->addInput(*name, *type);
+          k->addInput(*name, *type, "1");
         else if (dir->compare("out") == 0) {
           // XXX handled by inference, remove
           // k->addOutput(*name, *type);

@@ -29,7 +29,7 @@ class ASTtoMaxJVisitor : public AstPrePostProcessing {
   string source;
   map<string, string> counterMap;
   string declarations;
-  Kernel* currentKernel;
+  Kernel* kernel;
 
   string* function_call_initializer(string&, SgFunctionCallExp*);
   string* toExprRec(SgExpression*);
@@ -38,10 +38,7 @@ class ASTtoMaxJVisitor : public AstPrePostProcessing {
   void visit(SgPragma*);
   void visitFor(SgForStatement *);
   void visitExprStmt(SgExprStatement *);
-
   string* visitPragma(SgPragma *n);
-
-
 
   string imports();
   string kernelName();
@@ -59,7 +56,8 @@ class ASTtoMaxJVisitor : public AstPrePostProcessing {
 
 public:
   ASTtoMaxJVisitor();
-  //    virtual void visit (SgNode*);
+  ASTtoMaxJVisitor(Kernel* kernel);
+
   void preOrderVisit(SgNode *);
   void postOrderVisit(SgNode *);
 

@@ -26,20 +26,23 @@ public:
         cout << "Visting assign " << assign->unparseToString() << endl;
         SgExpression* lhs = assign->get_lhs_operand();
         cout << assign->get_lhs_operand()->unparseToString() << endl;
-        SgPntrArrRefExp* lhsRef;
-        if ( (lhsRef = isSgPntrArrRefExp(lhs)) != NULL) {
-          string outName = lhsRef->get_lhs_operand()->unparseToString();
+        SgExpression* nameExp;
+        if (SageInterface::isArrayReference(assign->get_lhs_operand(), &nameExp)) {
+          string outName = nameExp->unparseToString();
           cout << "Outputs size: " << kernelOutputs.size() << endl;
-
           foreach_(OutputNode* outNode, kernelOutputs) {
             cout << "Kernel Output " << *outNode << endl;
             if (outNode->getName() == outName) {
-              //            node->setSgNode();
               cout << "Found output should set SgNode" << endl;
               cout << "Assign: " << assign->unparseToString() << endl;
-              outNode->setSgNode(assign->get_rhs_operand());
-              SageInterface::removeStatement((SgStatement *)node);
-              cout << "Removed statement from AST " << endl;
+              if (outNode->getWidth() != "1") {
+                cout << "Setting expression " << nameExp->unparseToString() << endl;
+                outNode->setSgNode(nameExp);
+              } else {
+                outNode->setSgNode(assign->get_rhs_operand());
+                SageInterface::removeStatement((SgStatement *)node);
+                cout << "Removed statement from AST " << endl;
+              }
             }
           }
         }

@@ -44,14 +44,13 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    //    cleanuBuild();
     setupBuild();
 
     Compiler* c = new Compiler(project);
 
     c->addPass(new KernelExtraction());
     c->addPass(new CodeGeneration());
-    c->addPass(new RemoveFast());
+    //    c->addPass(new RemoveFast());
     c->addPass(new TaskExtraction());
 
     //    c->addPass(new Prag)

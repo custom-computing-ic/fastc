@@ -1,62 +1,52 @@
 #include "../../../include/maxcc.h"
 #include "../include/params_dse.h"
 
-#pragma class:scalar dir:in name:n1 type:uint32 func:kernel_RTM
-#pragma class:scalar dir:in name:n2 type:uint32 func:kernel_RTM
-#pragma class:scalar dir:in name:n3 type:uint32 func:kernel_RTM
-#pragma class:scalar dir:in name:ORDER type:uint32 func:kernel_RTM
-#pragma class:scalar dir:in name:SPONGE type:uint32 func:kernel_RTM
-//#pragma class:array  dir:in name:burst_p type:float8_24 width:1 func:kernel_RTM
-//#pragma class:array  dir:in name:burst_pp type:float8_24 width:1 func:kernel_RTM
-//#pragma class:array  dir:in name:burst_dvv type:float8_24 width:1 func:kernel_RTM
-//#pragma class:array  dir:in name:burst_source type:float8_24 width:1 func:kernel_RTM
-//#pragma class:array  dir:out name:output_p type:float8_24 width:1 func:kernel_RTM
-//#pragma class:array  dir:out name:ker_p type:float8_24 width:1 func:kernel_RTM
-//#pragma class:array  dir:out name:output_pp type:float8_24 width:1 func:kernel_RTM
+const int Par = 1;
+
+#pragma fast var:nx type:offset max:max_nx/Par min:min_nx/Par
+#pragma fast var:nxy type:offset max:dim_y*nx min:dim_y*nx
+#pragma fast var:burst_p type:float(8, 24)
 void kernel_RTM(
-                s_uint32 n1, s_uint32 n2, s_uint32 n3,
-		s_uint32 ORDER, s_uint32 SPONGE,
-		s_array_f8_24 burst_p,
-		s_array_f8_24 burst_dvv,
-		s_array_f8_24 burst_pp,
-		s_array_f8_24 burst_source,
-		s_array_f8_24 output_pp,
-		s_array_f8_24 ker_p
-                ) {
+                unsigned int n1, unsigned int n2, unsigned int n3,
+		unsigned int ORDER, unsigned int SPONGE,
+		float* burst_p[Par],
+		float* burst_dvv[Par],
+		float* burst_pp[Par],
+		float* burst_source[Par],
+		float* output_pp[Par],
+		float* ker_p[Par],
+                int nx, int nxy
+                )
+{
 
-    burst_p = make_input_array_f(8, 24, Par);
-    burst_pp  = make_input_array_f(8, 24, Par);
-    burst_dvv = make_input_array_f(8, 24, Par);
-    burst_source = make_input_array_f(8, 24, Par);
+    int i4 = count(1000, 1);
+    int i3 = count_chain(n3, 1, i4);
+    int i2 = count_chain(n2, 1, i3);
+    int i1 = count_chain(n1, Par, i2);
 
-    int32 i4 = count(1000, 1);
-    int32 i3 = count_chain(n3, 1, i4);
-    int32 i2 = count_chain(n2, 1, i3);
-    int32 i1 = count_chain(n1, Par, i2);
+    float c_0   = -0.000000056202665632554272;
+    float c_1_0 =  0.000000010666666661052204;
+    float c_1_1 = -0.000000001523809300962853;
+    float c_1_2 =  0.000000000253968179819708;
+    float c_1_3 = -0.000000000031745984313547;
+    float c_1_4 =  0.000000000002031744130576;
+    float c_2_0 =  0.000000010666666661052204;
+    float c_2_1 = -0.000000001523809300962853;
+    float c_2_2 =  0.000000000253968179819708;
+    float c_2_3 = -0.000000000031745984313547;
+    float c_2_4 =  0.000000000002031744130576;
+    float c_3_0 =  0.000000010666666661052204;
+    float c_3_1 = -0.000000001523809300962853;
+    float c_3_2 =  0.000000000253968179819708;
+    float c_3_3 = -0.000000000031745984313547;
+    float c_3_4 =  0.000000000002031744130576;
 
-    float8_24 c_0 = -0.000000056202665632554272;
-    float8_24 c_1_0 =  0.000000010666666661052204;
-    float8_24 c_1_1 = -0.000000001523809300962853;
-    float8_24 c_1_2 =  0.000000000253968179819708;
-    float8_24 c_1_3 = -0.000000000031745984313547;
-    float8_24 c_1_4 =  0.000000000002031744130576;
-    float8_24 c_2_0 =  0.000000010666666661052204;
-    float8_24 c_2_1 = -0.000000001523809300962853;
-    float8_24 c_2_2 =  0.000000000253968179819708;
-    float8_24 c_2_3 = -0.000000000031745984313547;
-    float8_24 c_2_4 =  0.000000000002031744130576;
-    float8_24 c_3_0 =  0.000000010666666661052204;
-    float8_24 c_3_1 = -0.000000001523809300962853;
-    float8_24 c_3_2 =  0.000000000253968179819708;
-    float8_24 c_3_3 = -0.000000000031745984313547;
-    float8_24 c_3_4 =  0.000000000002031744130576;
-
-    float8_24 up[Par];
+    float up[Par];
     for (int i=0; i <Par; i++)
         up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
 
-    s_float8_24 p[Par];
-    float8_24 pp_i[Par], dvv[Par], source[Par];
+    float* p[Par];
+    float pp_i[Par], dvv[Par], source[Par];
 
     for (int i=0; i <Par; i++) {
       cast2sff(p[i], burst_p[i], realType);
@@ -65,18 +55,16 @@ void kernel_RTM(
       cast2fsf(source[i], burst_source[i], realType);
     }
 
-    s_float8_24 inter[Par][Mul];
+    float* inter[Par][Mul];
 
-    float8_24 cur[Mul][11+Par+1][11][11], result[Par][Mul];
+    float cur[Mul][11+Par+1][11][11], result[Par][Mul];
 
-    s_offset nx  = make_offset(min_nx / Par, max_nx / Par);
-    s_offset nxy = make_offset(dim_y * nx, dim_y * nx);
+    //    s_offset nx  = make_offset(min_nx / Par, max_nx / Par);
+    //    s_offset nxy = make_offset(dim_y * nx, dim_y * nx);
 
     // setup the optimisation factor to transfer operations between DSPs and Luts
 
-    //#pragma class:kernelopt name:pushDSP factor:1
-
-    pushDSPFactor(DspFactor);
+#pragma class:kernelopt name:pushDSP factor:DspFactor
 
     //Cache
     for (int i=0; i < Par; i++) {
@@ -159,16 +147,9 @@ void kernel_RTM(
 
   //------------------------------Data output --------------------------------
 
-  // control counter
-    s_array_f8_24 output_pp_inter = make_array_f(8, 24, Par);
-    s_array_f8_24 output_p        = make_array_f(8, 24, Par);
-
-  for (int i=0; i <Par; i++) {
-    output_p[i][0]  = castf_f(inter[i][Mul-1][0], 8, 24);
-    output_pp_inter[i][0] = castf_f(cur[Mul-1][6+i][5][5], 8 ,24);
-  }
-
-  output_iaf(ker_p, output_p, 8, 24 , Par);
-  output_iaf(output_pp, output_pp_inter, 8, 24, Par);
+    for (int i=0; i <Par; i++) {
+      ker_p[i][0] = inter[i][Mul-1][0];
+      output_pp[i][0] = cur[Mul-1][6+i][5][5];
+    }
 
 }

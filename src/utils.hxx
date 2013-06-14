@@ -11,9 +11,18 @@
 #define D(x)
 #endif
 
-
 #define LOG_CERR() (cerr << __FILE__ ": " << __LINE__ << ":")
 
 std::string* get_pragma_param(std::string pragma, std::string param);
+
+
+/*
+namespace FASTAnalysis {
+  std::set<std::string> findModset(SgNode *sgNode) {
+    std::set<std::string> ret;
+    return ret;
+  }
+}
+*/
 
 #endif

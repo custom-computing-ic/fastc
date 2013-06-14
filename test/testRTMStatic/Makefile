@@ -47,7 +47,7 @@ maxc:
 	rm -rf $(MAXCFILES)
 	../../maxcc maxc/kernels.c
 	mkdir -p engine
-	mv *.java engine
+	mv build/engine/*.java engine
 
 $(BUILDER).class:
 	$(JAVAC) $(MAX_JFLAGS) $(ENGINE_PKG)/*.java

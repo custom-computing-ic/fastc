@@ -58,10 +58,31 @@ string Kernel::getFunctionName() {
   return "kernel_" + name;
 }
 
+
+bool Kernel::isStreamArrayType(string identifier) {
+  cout <<" Checking stream type " << identifier << endl;
+  SgInitializedNamePtrList args = decl->get_args();
+  foreach_(SgInitializedName* param, args) {
+    if (param->get_name().getString() == identifier) {
+      SgArrayType* type = isSgArrayType(param->get_type());
+
+      if (type!= NULL) {
+        cout << "Type is " << type->unparseToString() << endl;
+        vector<SgExpression*> dims = SageInterface::get_C_array_dimensions(type);
+          if (dims.size() == 2)
+            return true;
+          else
+            return false;
+      }
+      }
+    }
+  return false;
+}
+
 string Kernel::getSource() {
   extractIO();
   generateIO();
-  ASTtoMaxJVisitor visitor;
+  ASTtoMaxJVisitor visitor(this);
   visitor.traverse(decl->get_definition());
   addSource(visitor.getSource());
 
@@ -72,21 +93,26 @@ void Kernel::addSource(string source) {
   this->source += source;
 }
 
-void Kernel::addInput(string inputName, string type) {
-  inputs.push_back(inputName);
-  declarations += "HWVar " + inputName + " =  io.input(\"" + inputName
-    + "\", " + type + ");\n";
-}
-
 void Kernel::addInput(string inputName, string type, string width) {
   inputs.push_back(inputName);
-  string t = "new KArrayType<HWVar>(" + type + "," + width + ")";
-  declarations += "KArray<HWVar> " + inputName +
-    " = io.input(\"" + inputName + "\",  " + t +");\n";
+  if (width == "1") {
+    declarations += "HWVar " + inputName + " =  io.input(\"" + inputName
+      + "\", " + type + ");\n";
+  } else {
+    string t = "new KArrayType<HWVar>(" + type + "," + width + ")";
+    declarations += "KArray<HWVar> " + inputName +
+      " = io.input(\"" + inputName + "\",  " + t +");\n";
+  }
 }
 
 void Kernel::addOutput(string outputName, string type, string width) {
-  outputs.push_back(new OutputNode(outputName, type, width));
+  if (width != "1") {
+    type = "new KArrayType<HWVar>(" + type + "," + width + ")";
+    declarations += "KArray<HWVar> " + outputName +
+      " = (" + type +").newInstance(this);\n";
+    cout << "Added array output" << endl;
+  }
+  outputs.push_back(new OutputNode(this, outputName, type, width));
 }
 
 void Kernel::addScalarInput(string inputName, string type) {
@@ -115,33 +141,63 @@ string Kernel::convertType(string type) {
   return "hwFloat(8, 24)";
 }
 
+string Kernel::convertWidth(SgType *type) {
+  if (isSgArrayType(type)) {
+    vector<SgExpression*> dims = SageInterface::get_C_array_dimensions(isSgArrayType(type));
+    if (dims.size() == 2)
+      // declaration of type: float *in[par]
+      return dims[1]->unparseToString();
+    else
+      return "-1";
+  }
+  return "1";
+}
+
+set<string> Kernel::findModset(SgNode* sgNode) {
+  Rose_STL_Container<SgNode* > assigns;
+  assigns = NodeQuery::querySubTree(sgNode, V_SgAssignOp);
+  set<string> modSet;
+  cout << "modSet ";
+  foreach_(SgNode* node, assigns) {
+    SgAssignOp* op = isSgAssignOp(node);
+    string name = op->get_lhs_operand()->unparseToString();
+    SgExpression* nameExp;
+    if (SageInterface::isArrayReference(op->get_lhs_operand(), &nameExp)) {
+      cout << "Found arr reference; Adding base name ";
+      name = nameExp->unparseToString();
+    }
+    modSet.insert(name);
+    cout << name << " ";
+    cout << endl;
+  }
+  cout << endl;
+  return modSet;
+}
+
 void Kernel::extractIO() {
   cout << "Generating Kernel IO Links " << endl;
 
   // extract kernel inputs and outputs
   SgInitializedNamePtrList args = decl->get_args();
   SgInitializedNamePtrList::iterator it = args.begin();
-  /*
-  std::set< SgInitializedName * > readVars, writeVars;
-  if (decl->get_definition() != NULL)
-    SageInterface::collectReadWriteVariables (decl->get_definition()->get_body(), readVars, writeVars);
-  cout << "Modset size: "  << writeVars.size() << endl;
-  */
-  set<string> modSet;  //findModifiesSet.getModifiesSet();
-  modSet.insert("output");
+
+  set<string> modSet = findModset(decl->get_definition());
 
   for ( ; it != args.end(); it++) {
     SgInitializedName* param = *it;
     SgType* param_type = param->get_type();
     string inputName = param->get_name().getString();
     string inputType = convertType(param_type->unparseToString());
-    // XXX: hardcoded input type for now
-    //   inputType = "hwFloat(8, 24)";
-    if (isSgPointerType(param_type)) {
+    string inputWidth = convertWidth(param_type);
+    cout << "input name " << inputName << "Original Type:" << param_type->unparseToString();
+    cout <<" Type " << inputType ;
+    cout <<" width " << inputWidth << endl;
+    if (isSgPointerType(param_type) || isSgArrayType(param_type)) {
       if (modSet.find(inputName) != modSet.end()) {
-        addOutput(inputName, inputType, "1");
+        cout << "Adding output " << inputName << endl;
+        addOutput(inputName, inputType, inputWidth);
       } else {
-        addInput(inputName, inputType);
+        addInput(inputName, inputType, inputWidth);
       }
     } else {
       // scalar inputs

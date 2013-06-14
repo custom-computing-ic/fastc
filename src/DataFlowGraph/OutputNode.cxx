@@ -6,10 +6,16 @@ string OutputNode::toMaxJ() {
   return "io.output(\"" + getName() + "\", " + getInput() + ", " + getType() + ");\n";
 }
 
-string OutputNode::getInput() {
-  ASTtoMaxJVisitor visitor;
-  visitor.traverse(node);
-  return visitor.getSource();
+string OutputNode::getInput() const {
+  if (node != NULL) {
+    cout << "Getting input for node " + getName() << endl;
+    cout << "Expression " << node->unparseToString() << endl;
+    ASTtoMaxJVisitor visitor(kernel);
+    visitor.traverse(node);
+    cout << "Got input " << visitor.getSource() << endl;
+    return visitor.getSource();
+  }
+  else return "ERROR Processing Output Node";
 }
 
 bool OutputNode::operator==(const OutputNode& other) {
@@ -25,5 +31,7 @@ void OutputNode::setSgNode(SgNode* node) {
 }
 
 std::ostream& operator<<(std::ostream &strm, const OutputNode& node) {
-  return strm << "hello";
+  strm << "[" << node.getName() << ", ";
+  strm << node.getInput() << "]";
+  return strm;
 }

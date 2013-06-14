@@ -11,8 +11,9 @@ public:
   ManagerExtraction(Design* design) {
     this->design = design;
   }
-  void visit(SgNode *node) {
 
+
+  void visit(SgNode *node) {
     cout << "Extracting manager design" << endl;
   }
 
