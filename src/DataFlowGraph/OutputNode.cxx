@@ -13,7 +13,12 @@ string OutputNode::getInput() const {
     ASTtoMaxJVisitor visitor(kernel);
     visitor.traverse(node);
     cout << "Got input " << visitor.getSource() << endl;
-    return visitor.getSource();
+
+    string source = visitor.getSource();
+    if ( computeType != ioType )
+      source += ".cast(" + ioType + ")";
+
+    return source;
   }
   else return "ERROR Processing Output Node";
 }

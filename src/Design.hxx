@@ -23,6 +23,9 @@ public:
   void writeEngineFiles(string path);
   void writeCPUFiles();
   Kernel* getKernel(string functionName);
+  list<Kernel*> getKernels() {
+    return kernels;
+  }
 
   SgProject* getProject() {
     return project;

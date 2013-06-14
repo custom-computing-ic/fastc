@@ -11,16 +11,17 @@ class OutputNode : public Node {
 
   SgNode* node;
   string width;
-  string type;
+  string ioType, computeType;
   Kernel* kernel;
 
 public:
 
-  OutputNode(Kernel* kernel, string name, string type, string width) : Node(name){
+  OutputNode(Kernel* kernel, string name, string ioType, string computeType, string width) : Node(name){
     this->width = width;
-    this->type = type;
+    this->ioType = ioType;
     node = NULL;
     this->kernel = kernel;
+    this->computeType = computeType;
   }
 
   string getWidth() {
@@ -34,7 +35,10 @@ public:
   void setSgNode(SgNode*);
 
   string getType() {
-    return type;
+    if (width != "1")
+      return "new KArrayType<HWVar> (" + ioType + ", " + width + ")";
+    else
+    return ioType;
   }
 };
 

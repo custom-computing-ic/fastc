@@ -5,9 +5,7 @@
 
 string Kernel::declaration() {
   return "package engine;\n\n" + imports() + "\n"
-    "public class " + name + " extends Kernel {\n\n"
-    "public " + name + "(KernelParameters parameters) {\n"
-    "super(parameters);";
+    "public class " + name + " extends Kernel {\n\n";
 }
 
 string Kernel::imports() {
@@ -45,7 +43,8 @@ string Kernel::import(list<string> imports) {
 
 Kernel::Kernel(string name, SgFunctionDeclaration* decl) {
   this->name = name;
-  declarations = declaration() + "\n";
+  preamble = declaration() + "\n";
+  declarations = "";
   this->decl = decl;
 }
 
@@ -86,33 +85,49 @@ string Kernel::getSource() {
   visitor.traverse(decl->get_definition());
   addSource(visitor.getSource());
 
-  return declarations + "\n" + source + "\n" + output + "}}";
+  preamble += constants +
+    "public " + name + "(KernelParameters parameters) {\n"
+    "super(parameters);";
+  return preamble + "\n"+ declarations + "\n" + source + "\n" + output + "}}";
 }
 
 void Kernel::addSource(string source) {
   this->source += source;
 }
 
-void Kernel::addInput(string inputName, string type, string width) {
+void Kernel::addInput(string inputName, string ioType, string computeType, string width) {
   inputs.push_back(inputName);
   if (width == "1") {
     declarations += "HWVar " + inputName + " =  io.input(\"" + inputName
-      + "\", " + type + ");\n";
+      + "\", " + ioType + ")";
+
+    if (ioType != computeType)
+      declarations += ".cast(" + computeType + ")";
+
+    declarations+=";\n";
   } else {
-    string t = "new KArrayType<HWVar>(" + type + "," + width + ")";
+    string t = "new KArrayType<HWVar>(" + ioType + "," + width + ")";
+    string ct = "new KArrayType<HWVar>(" + computeType + "," + width + ")";
+
     declarations += "KArray<HWVar> " + inputName +
-      " = io.input(\"" + inputName + "\",  " + t +");\n";
+      " = io.input(\"" + inputName + "\",  " + t +")";
+
+    if (ioType != computeType)
+      declarations += ".cast(" + ct + ")";
+
+    declarations += ";\n";
   }
 }
 
-void Kernel::addOutput(string outputName, string type, string width) {
+void Kernel::addOutput(string outputName, string ioType, string computeType, string width) {
+  string type = computeType;
   if (width != "1") {
-    type = "new KArrayType<HWVar>(" + type + "," + width + ")";
+    type = "new KArrayType<HWVar>(" + computeType + "," + width + ")";
     declarations += "KArray<HWVar> " + outputName +
       " = (" + type +").newInstance(this);\n";
     cout << "Added array output" << endl;
   }
-  outputs.push_back(new OutputNode(this, outputName, type, width));
+  outputs.push_back(new OutputNode(this, outputName, ioType, computeType, width));
 }
 
 void Kernel::addScalarInput(string inputName, string type) {
@@ -139,6 +154,23 @@ string Kernel::convertType(string type) {
   else if (type == "unsigned int" || type == "unsigned int*")
     return "hwUInt(32)";
   return "hwFloat(8, 24)";
+}
+
+string Kernel::convertHwType(string type) {
+  string hwType = type;
+  cout << "Converting hw type for " << type << endl;
+  regex floatType("float \\( (\\d*), (\\d*) \\)");
+  regex doubleType("double \\( (\\d*), (\\d*) \\)");
+  cmatch cm;
+
+  if (regex_match(type.c_str(), cm, floatType) ||
+      regex_match(type.c_str(), cm, doubleType)) {
+    hwType = "hwFloat(" + cm[1].str() + ", " + cm[2].str() + ")";
+  }
+
+  cout << "Converted type: " << hwType << endl;
+  return hwType;
+
 }
 
 string Kernel::convertWidth(SgType *type) {
@@ -174,6 +206,7 @@ set<string> Kernel::findModset(SgNode* sgNode) {
   return modSet;
 }
 
+
 void Kernel::extractIO() {
   cout << "Generating Kernel IO Links " << endl;
 
@@ -188,9 +221,16 @@ void Kernel::extractIO() {
     SgType* param_type = param->get_type();
     string inputName = param->get_name().getString();
     string inputType = convertType(param_type->unparseToString());
+
+    string computeType;
+    if (computeTypeMap.find(inputName) != computeTypeMap.end())
+      computeType = computeTypeMap[inputName];
+    else
+      computeType = inputType;
+
     string inputWidth = convertWidth(param_type);
     cout << "input name " << inputName << "Original Type:" << param_type->unparseToString();
-    cout <<" Type " << inputType ;
+    cout <<" Type " << inputType;
     cout <<" width " << inputWidth << endl;
 
     // ignore offsets
@@ -200,9 +240,9 @@ void Kernel::extractIO() {
     if (isSgPointerType(param_type) || isSgArrayType(param_type)) {
       if (modSet.find(inputName) != modSet.end()) {
         cout << "Adding output " << inputName << endl;
-        addOutput(inputName, inputType, inputWidth);
+        addOutput(inputName, inputType,  computeType, inputWidth);
       } else {
-        addInput(inputName, inputType, inputWidth);
+        addInput(inputName,  inputType, computeType, inputWidth);
       }
     } else {
       // scalar inputs
@@ -211,13 +251,22 @@ void Kernel::extractIO() {
   }
 
   removeOutputAssignments();
-
-  //visit(functionDeclaration->get_definition()); // visit the function body
 }
-
 
 void Kernel::addOffsetExpression(string var, string max, string min) {
   offsets.push_back(var);
   declarations+= "OffsetExpr " + var + " = stream.makeOffsetParam(" +
     "\"nx\", " + min + ", " + max + ");\n";
+}
+
+void Kernel::updateTypeInfo(string identifier, string ioType, string computeType) {
+  ioTypeMap[identifier] = convertHwType(ioType);
+  computeTypeMap[identifier] = convertHwType(computeType);
+}
+
+void Kernel::addDesignConstant(string name, string value) {
+  if ( designConstants.find(name) == designConstants.end()) {
+    designConstants.insert(name);
+    constants += "final int " + name + " = " + value + ";\n";
+  }
 }

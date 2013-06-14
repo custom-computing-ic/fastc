@@ -11,11 +11,13 @@
 using namespace std;
 
 class Kernel {
-  string name, source, declarations, output;
+  string name, source, declarations, output, preamble;
+  string constants;
   list<string> inputs, scalars;
   list<OutputNode*> outputs;
   SgFunctionDeclaration* decl;
 
+  set<string> designConstants;
   list<string> streamOutputParams;
   list<string> streamInputParams;
   list<string> scalarInputs;
@@ -23,8 +25,12 @@ class Kernel {
 
   string convertType(string type);
   string convertWidth(SgType *type);
+  string convertHwType(string type);
+
   set<string> findModset(SgNode* sgNode);
 
+  map<string, string> ioTypeMap;
+  map<string, string> computeTypeMap;
 
   string declaration();
   string imports();
@@ -35,13 +41,19 @@ public:
   string getName();
   string getFunctionName();
   string getSource();
+  SgFunctionDeclaration* getDeclaration(){
+    return decl;
+  }
+
   list<OutputNode*> getOutputs() {
     return outputs;
   }
+
   void addSource(string source);
-  void addInput(string inputName, string type, string width);
-  void addOutput(string outputName, string type, string width);
+  void addInput(string inputName, string ioType, string computeType, string width);
+  void addOutput(string outputName, string ioType, string computeType, string width);
   void addScalarInput(string inputName, string type);
+  void addDesignConstant(string name, string value);
   void removeOutputAssignments();
 
   void extractIO();
@@ -49,6 +61,7 @@ public:
 
   void generateIO();
   void addOffsetExpression(string var, string max, string min);
+  void updateTypeInfo(string identifier, string ioType, string computeType);
 
 };
 

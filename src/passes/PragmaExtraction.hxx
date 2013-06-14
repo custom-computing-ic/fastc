@@ -10,11 +10,15 @@ public:
   PragmaExtraction(){}
 
   void updateKernelDeclaration(Kernel* kernel, string pragma) {
+    string *var = get_pragma_param(pragma, "var");
     if (*get_pragma_param(pragma, "type") == "offset") {
-      string *var = get_pragma_param(pragma, "var");
       string *max = get_pragma_param(pragma, "max");
       string *min = get_pragma_param(pragma, "min");
       kernel->addOffsetExpression(*var, *max, *min);
+    } if (*get_pragma_param(pragma, "ioType") != "") {
+      string *ioType = get_pragma_param(pragma, "ioType");
+      string *computeType = get_pragma_param(pragma, "computeType");
+      kernel->updateTypeInfo(*var, *ioType, *computeType);
     }
   }
 
@@ -27,9 +31,9 @@ public:
         string *k = get_pragma_param(p->get_pragma(), "func");
         Kernel *kernel = design->getKernel(*k);
         if (kernel != NULL)
-            updateKernelDeclaration(kernel, p->get_pragma());
-        }
+          updateKernelDeclaration(kernel, p->get_pragma());
       }
+    }
   }
 
   string logPass() {

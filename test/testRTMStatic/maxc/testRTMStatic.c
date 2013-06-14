@@ -9,12 +9,10 @@ const int min_nx = 24;
 const int max_nx = 48;
 const int dim_y = 32;
 
-#define realType 8, 24
-
-
 #pragma fast var:nx type:offset max:max_nx/Par min:min_nx/Par func:kernel_RTM
 #pragma fast var:nxy type:offset max:dim_y*nx min:dim_y*nx func:kernel_RTM
-#pragma fast var:burst_p type:float(8, 24) func:kernel_RTM
+#pragma fast var:burst_p ioType:float(8, 24) computeType:float(8, 12) func:kernel_RTM
+#pragma fast var:output_pp ioType:float(8, 24) computeType:float(8, 12) func:kernel_RTM
 void kernel_RTM(
                 unsigned int n1, unsigned int n2, unsigned int n3,
 		unsigned int ORDER, unsigned int SPONGE,
@@ -58,10 +56,10 @@ void kernel_RTM(
     float pp_i[Par], dvv[Par], source[Par], cur[Mul][11+Par+1][11][11], result[Par][Mul];
 
     for (int i=0; i <Par; i++) {
-      cast2sff(p[i], burst_p[i], realType);
-      cast2fsf(pp_i[i], burst_pp[i], realType);
-      cast2fsf(dvv[i],  burst_dvv[i], realType);
-      cast2fsf(source[i], burst_source[i], realType);
+      p[i] = burst_p[i];
+      pp_i[i] = burst_pp[i][0];
+      dvv[i] = burst_dvv[i][0];
+      source[i] =  burst_source[i][0];
     }
 
 #pragma class:kernelopt name:pushDSP factor:DspFactor
