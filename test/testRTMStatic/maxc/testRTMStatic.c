@@ -45,8 +45,8 @@ void kernel_RTM(
     for (int i=0; i <Par; i++)
         up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
 
-    float* p[Par];
-    float pp_i[Par], dvv[Par], source[Par];
+    float* p[Par], *inter[Par][Mul];
+    float pp_i[Par], dvv[Par], source[Par], cur[Mul][11+Par+1][11][11], result[Par][Mul];
 
     for (int i=0; i <Par; i++) {
       cast2sff(p[i], burst_p[i], realType);
@@ -54,15 +54,6 @@ void kernel_RTM(
       cast2fsf(dvv[i],  burst_dvv[i], realType);
       cast2fsf(source[i], burst_source[i], realType);
     }
-
-    float* inter[Par][Mul];
-
-    float cur[Mul][11+Par+1][11][11], result[Par][Mul];
-
-    //    s_offset nx  = make_offset(min_nx / Par, max_nx / Par);
-    //    s_offset nxy = make_offset(dim_y * nx, dim_y * nx);
-
-    // setup the optimisation factor to transfer operations between DSPs and Luts
 
 #pragma class:kernelopt name:pushDSP factor:DspFactor
 
@@ -100,7 +91,7 @@ void kernel_RTM(
               +(cur[0][6+i][5][0] + cur[0][6+i][5][10])* c_3_4 ))
              + source[i];
 
-	inter[i][0][0]  = fselect(up[i], pp_i[i],  result[i][0]);
+	inter[i][0][0]  = up[i] == 0 ? pp_i[i] : result[i][0];
     }
     //Multiple Time-Dimension
     for (int j=1; j <Mul; j++) {
@@ -138,8 +129,7 @@ void kernel_RTM(
               +(cur[j][6+i][5][0] + cur[j][6+i][5][10])* c_3_4 ))
                + source[i];
 
-
-         inter[i][j][0] = fselect(up[i], cur[j-1][6+i][5][5], result[i][j]);
+         inter[i][j][0] = up[i] == 0 ? cur[j-1][6+i][5][5] : result[i][j];
        }
      }
 
