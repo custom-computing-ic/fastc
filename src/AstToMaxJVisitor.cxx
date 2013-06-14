@@ -173,6 +173,10 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
     string *mant = toExpr(*(++itt));
     *s += str(format("HWVar %s = %s.cast(hwFix(%s, %s, HWFix.SignMode.TWOSCOMPLEMENT));\n")
               % variableName % *in % *exp % *mant);
+  } else if (fname == "sqrt") {
+    string *in = toExpr(*itt);
+    *s += str(format("HWVar %s = KernelMath.sqrt(%s);\n")
+              % variableName % *in);
   }
 
   if ( s->size() == 0 ) {
