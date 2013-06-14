@@ -47,6 +47,7 @@ public:
   bool isStreamArrayType(string identifer);
 
   void generateIO();
+  void addOffsetExpression(string var, string max, string min);
 
 };
 

@@ -209,3 +209,9 @@ void Kernel::extractIO() {
 
   //visit(functionDeclaration->get_definition()); // visit the function body
 }
+
+
+void Kernel::addOffsetExpression(string var, string max, string min) {
+  declarations+= "OffsetExpr " + var + " = stream.makeOffsetParam(" +
+    "\"nx\", " + min + ", " + max + ");\n";
+}

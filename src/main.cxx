@@ -18,6 +18,7 @@
 #include "passes/CodeGeneration.hxx"
 #include "passes/HostCodeGeneration.hxx"
 #include "passes/TaskExtraction.hxx"
+#include "passes/PragmaExtraction.hxx"
 
 #include <boost/filesystem.hpp>
 
@@ -49,6 +50,7 @@ int main(int argc, char** argv) {
     Compiler* c = new Compiler(project);
 
     c->addPass(new KernelExtraction());
+    c->addPass(new PragmaExtraction());
     c->addPass(new CodeGeneration());
     //    c->addPass(new RemoveFast());
     c->addPass(new TaskExtraction());
