@@ -52,7 +52,7 @@ public:
   void addSource(string source);
   void addInput(string inputName, string ioType, string computeType, string width);
   void addOutput(string outputName, string ioType, string computeType, string width);
-  void addScalarInput(string inputName, string type);
+  void addScalarInput(string inputName, string ioType, string computeType);
   void addDesignConstant(string name, string value);
   void removeOutputAssignments();
 

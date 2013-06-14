@@ -120,10 +120,14 @@ void Kernel::addOutput(string outputName, string ioType, string computeType, str
   outputs.push_back(new OutputNode(this, outputName, ioType, computeType, width));
 }
 
-void Kernel::addScalarInput(string inputName, string type) {
+void Kernel::addScalarInput(string inputName, string ioType, string computeType) {
   scalars.push_back(inputName);
+  cout << "Adding scalar io " << ioType << " comp : " << computeType << endl;
   declarations += "HWVar " + inputName + " =  io.scalarInput(\"" + inputName
-    + "\", " + type + ");\n";
+    + "\", " + ioType + ")";
+  if (ioType != computeType)
+    declarations += ".cast(" + computeType + ")";
+  declarations+= ";\n";
 }
 
 void Kernel::generateIO() {
@@ -220,7 +224,7 @@ void Kernel::extractIO() {
       }
     } else {
       // scalar inputs
-      addScalarInput(inputName, inputType);
+      addScalarInput(inputName, inputType, computeType);
     }
   }
 
@@ -234,6 +238,7 @@ void Kernel::addOffsetExpression(string var, string max, string min) {
 }
 
 void Kernel::updateTypeInfo(string identifier, string ioType, string computeType) {
+  cout << "Updating type info "  << identifier << " io " << ioType << " comp " << computeType << endl;
   ioTypeMap[identifier] = convertHwType(ioType);
   computeTypeMap[identifier] = convertHwType(computeType);
 }
