@@ -12,16 +12,19 @@ public:
   InlineKernels() {}
 
   void runPass(Design* design) {
+    int iterCount = 0;
      foreach_(Kernel* k, design->getKernels()) {
        int bCalls, aCalls;
        bool inlined;
        do {
+         iterCount++;
          bCalls = countFunctionCalls(k->getDeclaration());
          inlined = inlineFunctionCalls(k->getDeclaration(), design->getProject());
          aCalls = countFunctionCalls(k->getDeclaration());
        } while (bCalls > aCalls || inlined);
      }
-     renameVariables(design->getProject());
+     if (iterCount > 1)
+       renameVariables(design->getProject());
   }
 
   int countFunctionCalls(SgFunctionDeclaration* decl) {
