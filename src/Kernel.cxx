@@ -24,11 +24,8 @@ string Kernel::imports() {
 }
 
 void Kernel::removeOutputAssignments() {
-  cout << "removing output assignments " << endl;
-  cout << getOutputs().size() << endl;
   ExtractOutputs extractOutputs(getOutputs());
   extractOutputs.traverse(decl->get_definition(), preorder);
-  cout << "traversed" << endl;
 }
 
 
@@ -59,22 +56,16 @@ string Kernel::getFunctionName() {
 
 
 bool Kernel::isStreamArrayType(string identifier) {
-  cout <<" Checking stream type " << identifier << endl;
   SgInitializedNamePtrList args = decl->get_args();
   foreach_(SgInitializedName* param, args) {
     if (param->get_name().getString() == identifier) {
       SgArrayType* type = isSgArrayType(param->get_type());
-
       if (type!= NULL) {
-        cout << "Type is " << type->unparseToString() << endl;
         vector<SgExpression*> dims = SageInterface::get_C_array_dimensions(type);
-          if (dims.size() == 2)
-            return true;
-          else
-            return false;
-      }
+        return dims.size() == 2;
       }
     }
+  }
   return false;
 }
 
@@ -125,7 +116,6 @@ void Kernel::addOutput(string outputName, string ioType, string computeType, str
     type = "new KArrayType<HWVar>(" + computeType + "," + width + ")";
     declarations += "KArray<HWVar> " + outputName +
       " = (" + type +").newInstance(this);\n";
-    cout << "Added array output" << endl;
   }
   outputs.push_back(new OutputNode(this, outputName, ioType, computeType, width));
 }
@@ -158,7 +148,6 @@ string Kernel::convertType(string type) {
 
 string Kernel::convertHwType(string type) {
   string hwType = type;
-  cout << "Converting hw type for " << type << endl;
   regex floatType("float \\( (\\d*), (\\d*) \\)");
   regex doubleType("double \\( (\\d*), (\\d*) \\)");
   cmatch cm;
@@ -167,8 +156,6 @@ string Kernel::convertHwType(string type) {
       regex_match(type.c_str(), cm, doubleType)) {
     hwType = "hwFloat(" + cm[1].str() + ", " + cm[2].str() + ")";
   }
-
-  cout << "Converted type: " << hwType << endl;
   return hwType;
 
 }
@@ -189,26 +176,19 @@ set<string> Kernel::findModset(SgNode* sgNode) {
   Rose_STL_Container<SgNode* > assigns;
   assigns = NodeQuery::querySubTree(sgNode, V_SgAssignOp);
   set<string> modSet;
-  cout << "modSet ";
   foreach_(SgNode* node, assigns) {
     SgAssignOp* op = isSgAssignOp(node);
     string name = op->get_lhs_operand()->unparseToString();
     SgExpression* nameExp;
-    if (SageInterface::isArrayReference(op->get_lhs_operand(), &nameExp)) {
-      cout << "Found arr reference; Adding base name ";
+    if (SageInterface::isArrayReference(op->get_lhs_operand(), &nameExp))
       name = nameExp->unparseToString();
-    }
     modSet.insert(name);
-    cout << name << " ";
-    cout << endl;
   }
-  cout << endl;
   return modSet;
 }
 
 
 void Kernel::extractIO() {
-  cout << "Generating Kernel IO Links " << endl;
 
   // extract kernel inputs and outputs
   SgInitializedNamePtrList args = decl->get_args();
@@ -227,19 +207,13 @@ void Kernel::extractIO() {
       computeType = computeTypeMap[inputName];
     else
       computeType = inputType;
-
     string inputWidth = convertWidth(param_type);
-    cout << "input name " << inputName << "Original Type:" << param_type->unparseToString();
-    cout <<" Type " << inputType;
-    cout <<" width " << inputWidth << endl;
-
     // ignore offsets
     if (find(offsets.begin(), offsets.end(), inputName) != offsets.end())
       continue;
 
     if (isSgPointerType(param_type) || isSgArrayType(param_type)) {
       if (modSet.find(inputName) != modSet.end()) {
-        cout << "Adding output " << inputName << endl;
         addOutput(inputName, inputType,  computeType, inputWidth);
       } else {
         addInput(inputName,  inputType, computeType, inputWidth);

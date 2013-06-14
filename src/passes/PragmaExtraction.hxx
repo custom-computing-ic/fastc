@@ -37,7 +37,7 @@ public:
   }
 
   string logPass() {
-    return "Pragma Extraction Pass";
+    return "Pragma Extraction";
   }
 };
 

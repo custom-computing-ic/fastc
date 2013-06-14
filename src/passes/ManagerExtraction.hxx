@@ -14,7 +14,6 @@ public:
 
 
   void visit(SgNode *node) {
-    cout << "Extracting manager design" << endl;
   }
 
 };

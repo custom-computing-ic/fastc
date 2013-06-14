@@ -11,6 +11,11 @@ class Compiler
 
   int pass;
 
+
+  void log(string msg) {
+    printf("%s\n", msg.c_str());
+  }
+
   void logPass(string msg) {
     printf("[%*d] %s Pass\n", 2, pass, msg.c_str());
     pass++;
@@ -28,10 +33,12 @@ public:
   }
 
   void runPasses() {
+    log("Starting Dataflow Compilation");
     foreach_ (Pass* p, passes) {
       logPass(p->logPass());
       p->runPass(design);
     }
+    log("Dataflow Implementation Generated Succesfully in build/");
   }
 
 };

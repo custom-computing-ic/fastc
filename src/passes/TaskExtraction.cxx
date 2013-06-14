@@ -27,12 +27,9 @@ void TaskExtraction::runPass(Design* design) {
   foreach_ (SgNode* node, dfePragmas) {
     SgPragmaDeclaration *pragma = isSgPragmaDeclaration(node);
     if (pragma != NULL) {
-      cout << "Next statment after pragma is" << endl;
-      cout << SageInterface::getNextStatement(pragma)->unparseToString() << endl;
-
+      //      cout << SageInterface::getNextStatement(pragma)->unparseToString() << endl;
     }
   }
-  cout << "Found " << dfePragmas.size() << " dfeTasks" << endl;
 }
 
 string TaskExtraction::logPass() {

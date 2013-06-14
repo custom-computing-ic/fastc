@@ -8,16 +8,11 @@ string OutputNode::toMaxJ() {
 
 string OutputNode::getInput() const {
   if (node != NULL) {
-    cout << "Getting input for node " + getName() << endl;
-    cout << "Expression " << node->unparseToString() << endl;
     ASTtoMaxJVisitor visitor(kernel);
     visitor.traverse(node);
-    cout << "Got input " << visitor.getSource() << endl;
-
     string source = visitor.getSource();
     if ( computeType != ioType )
       source += ".cast(" + ioType + ")";
-
     return source;
   }
   else return "ERROR Processing Output Node";

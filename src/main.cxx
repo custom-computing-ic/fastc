@@ -33,9 +33,6 @@ void setupBuild() {
 
 int step = 1;
 
-void log(string msg) {
-  printf("%s\n", msg.c_str());
-}
 
 int main(int argc, char** argv) {
 
@@ -82,7 +79,7 @@ int main(int argc, char** argv) {
     //design->generateCode(cout);
 
     //design->writeCodeFiles();
-    log("Dataflow Implenetation Generated Succesfully in build/");
+
     c->runPasses();
 
     generateDOT(*project);

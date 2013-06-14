@@ -233,7 +233,6 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
       // For stream arrays use <== instead of =
       SgExpression* nameExp;
       if (SageInterface::isArrayReference(ass->get_lhs_operand(), &nameExp)) {
-        cout << "Array Reference " << nameExp->get_type()->unparseToString() << endl;
         // XXX: handle assigning constants
         if (kernel != NULL && kernel->isStreamArrayType(nameExp->unparseToString()))
           op = "<==";
@@ -345,17 +344,11 @@ string* ASTtoMaxJVisitor::toExpr(SgExpression *ex) {
 void ASTtoMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
 
   SgVariableDeclaration *varDecl = isSgVariableDeclaration(decl);
-
   SgInitializedNamePtrList vars = varDecl->get_variables();
-
-  cout << "IN HERE " << endl;
   SgInitializedNamePtrList::iterator it;
   for (it = vars.begin(); it != vars.end(); it++) {
     SgInitializedName *v = *it;
     string variableName = v->get_qualified_name();
-
-    cout << "Variable decl : "  << variableName << endl;
-
     if (isSgArrayType(v->get_type()) ) {
       SgArrayType *t  = isSgArrayType(v->get_type());
 
