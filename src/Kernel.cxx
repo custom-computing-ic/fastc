@@ -122,7 +122,6 @@ void Kernel::addOutput(string varName, string outputName, string ioType, string 
 
 void Kernel::addScalarInput(string varName, string inputName, string ioType, string computeType) {
   scalars.push_back(inputName);
-  cout << "Adding scalar io " << ioType << " comp : " << computeType << endl;
   declarations += "HWVar " + varName + " =  io.scalarInput(\"" + inputName
     + "\", " + ioType + ")";
   if (ioType != computeType)
@@ -266,7 +265,6 @@ void Kernel::addOffsetExpression(string var, string max, string min) {
 }
 
 void Kernel::updateTypeInfo(string identifier, string ioType, string computeType) {
-  cout << "Updating type info "  << identifier << " io " << ioType << " comp " << computeType << endl;
   ioTypeMap[identifier] = convertHwType(ioType);
   computeTypeMap[identifier] = convertHwType(computeType);
 }

@@ -33,11 +33,7 @@ void setupBuild() {
   create_directory(engine);
 }
 
-int step = 1;
-
-
 int main(int argc, char** argv) {
-
     SgProject* project = frontend(argc, argv);
     //  AstTests :: runAllTests(project);
     if (project == NULL) {
@@ -48,45 +44,16 @@ int main(int argc, char** argv) {
     setupBuild();
 
     Compiler* c = new Compiler(project);
-
     c->addPass(new KernelExtraction());
     c->addPass(new ExtractDesignConstants());
     c->addPass(new PragmaExtraction());
     //    c->addPass(new InputOutputExtraction());
     c->addPass(new InlineKernels());
     c->addPass(new CodeGeneration());
-    //    c->addPass(new RemoveFast());
+    c->addPass(new RemoveFast());
     c->addPass(new TaskExtraction());
-
-    //    c->addPass(new Prag)
-    //    PragmaVisitor pragmaVisitor(design);
-    //    pragmaVisitor.traverse(project,  preorder);
-
-    //logPass("Manager Extraction");
-    //    ManagerExtraction mep(design);
-    //    mep.traverse(project, preorder);
-
-    //logPass("Memory Write Kernel Generation");
-
-    //logPass("Memory Read Kernel Generation");
-
-    //logPass("Kernel Replication");
-
-    //logPass("Design Optimisation");
-
-    //logPass("Design Code Generation");
-
-
-    //logPass("Host Interface Code Generation");
     c->addPass(new HostCodeGeneration());
-
-    //design->generateCode(cout);
-
-    //design->writeCodeFiles();
-
     c->runPasses();
-
-    generateDOT(*project);
-
+    //    generateDOT(*project);
     return 0;
 }
