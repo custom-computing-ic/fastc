@@ -1,8 +1,6 @@
 #ifndef MAXCC_H
 #define MAXCC_H
 
-
-
 // simple types
 typedef float float8_24;
 typedef int int32;
@@ -82,5 +80,7 @@ double exp(double power);
 
 float abs(float abs);
 
+//int printf(const char *format);
+void printf(const char *format, ...);
 
 #endif

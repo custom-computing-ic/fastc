@@ -181,6 +181,10 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
     string *in = toExpr(*itt);
     *s += str(format("HWVar %s = KernelMath.abs(%s);\n")
               % variableName % *in);
+  } else if (fname == "printf") {
+    string *s = toExpr(*itt);
+    int size = fsymbol->get_declaration()->get_args().size();
+    cout << "Size args " << size << endl;
   }
 
   if ( s->size() == 0 ) {
@@ -528,6 +532,19 @@ string* ASTtoMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
     *s+= "optimization.pushRoundingMode(RoundingMode.TRUNCATE)";
   } else if (fname == "popRoundingMode") {
     *s+= "optimization.popRoundingMode()";
+  }  else if (fname == "printf") {
+    *s += "debug.printf(";
+    bool first = true;
+    foreach_(SgExpression* sgExpr, fcall->get_args()->get_expressions()) {
+      string *e = toExpr(sgExpr);
+      if (e != NULL) {
+        if (!first)
+          *s += ", ";
+        *s+= *e;
+        first = false;
+      }
+    }
+    *s+= ")";
   }
 
   if (s->size() == 0) {
