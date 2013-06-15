@@ -106,10 +106,10 @@ that can be uploaded onto the chip. FPGAs have a limited number of
 each of the following resource types:
 
 \begin{itemize}
-\item look-up tables (LUTs) - implement the logical functions performed by the circuit;
-\item flip-flops (FFs) - small storage elements;
-\item digital signal processors (DSP) - small special purpose arithmetic units;
-\item block RAM (BRAM) - larger, on-chip storage elements.
+\item \textbf{look-up tables} (LUTs) - implement the logical functions performed by the circuit;
+\item \textbf{flip-flops} (FFs) - small storage elements;
+\item \textbf{digital signal processors} (DSP) - small special purpose arithmetic units;
+\item \textbf{block RAM} (BRAM) - larger, on-chip storage elements.
 \end{itemize}
 
 \begin{figure}[ht!]
@@ -125,23 +125,17 @@ each of the following resource types:
 \label{sec:run-time-reconfiguration}
 Run-time reconfiguration refers to the capability of uploading a new
 design onto the FPGA at run-time. This capability can be used to
-maximise usage of the FPGA accelerator:
+maximise usage of the FPGA accelerator for two purposes:
 \begin{enumerate}
-\item to improve performance of FPGA designs, by removing idle functions
-\item to enable the execution of functions that would normally not fit
-  on the accelerator (time-sharing)
+\item \textbf{enabling} -- to enable the execution of functions that
+  would normally not fit on the accelerator; this can be achieved for
+  example via time-sharing, where a design is partition into smaller
+  tasks that run sequentially on the accelerator\cite{trimberger1998scheduling}
+\item \textbf{optimisation} -- to improve performance of FPGA designs,
+  by removing idle functions; this can be achieved by removing, at
+  run-time, idle portions of a design which allows one to replicate
+  the useful functions in order to increase overall performance
 \end{enumerate}
-
-An example of the first type of application is shown in
-\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} run-time reconfiguration is
-used to maximise performance by removing idle design components. This
-works well in multi-step algorithms such as the Reverse Time Migration
-application which has 2 major steps: a forward and a backward
-propagation of a simulated wave through the earth surface. Thus the
-functions that would only be used in the second stage need not be
-uploaded on the accelerator from the very beginning. This enables the
-an increase in resources used for the first part which can be used to
-increase parallelism and thus reduce computation time.
 
 
 For the second type of application we consider the example of a an
@@ -158,7 +152,18 @@ stage a small number of inputs are merged in parallel and in the
 second stage, resulting buckets of inputs are merged to obtain the
 final sorted sequence.
 
-Two types of run-time reconfiguration exist:
+An example of the first type of application is shown in
+\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} run-time reconfiguration is
+used to maximise performance by removing idle design components. This
+works well in multi-step algorithms such as the Reverse Time Migration
+application which has 2 major steps: a forward and a backward
+propagation of a simulated wave through the earth surface. Thus the
+functions that would only be used in the second stage need not be
+uploaded on the accelerator from the very beginning. This enables the
+an increase in resources used for the first part which can be used to
+increase parallelism and thus reduce computation time.
+
+Based on the reconfiguration technique, we distinguish between
 \begin{itemize}
 \item \textbf{total reconfiguration}, where the entire FPGA is
   reconfigured with a new design; this exhibits a high reconfiguration
@@ -391,7 +396,7 @@ of the applications and traditional approaches to accelerating them.
 \subsection{Numerical Differentiation}
 
 For an example of a 1D stencil we consider the problem of numerical
-differentiation \cite{numericaldiff}, which provides a method for
+differentiation \cite{lyness1967numerical}, which provides a method for
 estimating the derivative of a function based on its values at
 discrete points. By replacing the derivative with finite difference
 expressions the following 5 point linear stencil can be derived to

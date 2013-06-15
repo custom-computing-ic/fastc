@@ -4,10 +4,10 @@
 In this chapter we introduce a novel design flow for creating
 high-performance dataflow designs starting from C/C++ applications. We
 explain the motivation and requirements for the proposed approach and
-provide an overview of the three main components:
+provide an overview of its three main components:
 \begin{itemize}
 \item the \emph{\FAST{} language}, used to express dataflow kernels
-\item the \emph{aspect description repository} and weaver, which group
+\item the \emph{aspect description repository} and \emph{weaver}, which group
   and apply the optimisation and transformation strategies encapsulate
   through aspects
 \item the \emph{compilation backend}, used to generate FPGA bitstreams
@@ -73,8 +73,8 @@ performed manually using traditional tools.
 When targeting HPC applications it is crucial that our design flow
 results in high-performance, highly efficient designs. By analysing
 existing implementations for advanced high-performance applications
-such as Reverse Time Migration, we identify key requirements of these
-designs:
+such as Reverse Time Migration (\Cref{app:rtm-kernel}), we identify key
+requirements of these designs:
 
 \begin{itemize}
 
@@ -85,7 +85,7 @@ designs:
   example, the RTM kernel uses two stencil operations of 31 floating
   point additions, 18 floating point multiplications and 1
   subtraction (\Cref{app:rtm-kernel}, Lines \ref{app:rtmk-op1} and
-  \ref{app:rtmk-op2}).  Additionally, these are replicated a
+  \ref{app:rtmk-op2}).  Additionally, these are replicated
   \texttt{Par} times (with Par as large as 12) which leads to a total
   of $((31 + 18 + 1) * 2 * 12) = 1200 $ floating point operations to
   be executed on each kernel cycle (in reality floating point
@@ -100,7 +100,7 @@ designs:
   (around 4MB of fast-local memory) to reuse data across time
   steps. This pipeline replication is achieved through design
   parametrisation and loops whose bounds are known at
-  compile-time. The parameters that indicate the pipelining factor are
+  compile-time. The parameters that indicate the replication factor are
   shared across the compute and memory kernels but also across the CPU
   code.
 
@@ -180,8 +180,8 @@ different aspects:
   user input.
 \end{itemize}
 
-However, the issue of portability should not be restricted just to the
-FPGA design but also viewed in the context of the entire system
+However, the issue of portability should not be restricted to the FPGA
+design but also viewed in the context of the entire system
 architecture. For example, as explained in
 \Cref{sec:run-time-reconfiguration}, performance of run-time
 reconfiguration designs also depends on characteristics such as data
@@ -234,7 +234,7 @@ compilation process.
 To meet these requirements we propose the following approach:
 \begin{itemize}
 \item Firstly, we introduce \FAST{} (described in Section
-  \ref{sec:maxc}), a novel language for specifying dataflow
+  \ref{sec:fast}), a novel language for specifying dataflow
   designs. We specify the accelerated portion of the original
   applications using \FAST{} dataflow kernels. By maintaining
   compatibility with C99 syntax we improve developer productivity by
@@ -245,16 +245,18 @@ To meet these requirements we propose the following approach:
   designs in our approach.
 
 \item Secondly, by using an aspect driven compilation flow we decouple
-  optimisation from design development, improving design portabpility,
+  optimisation from design development, improving design portability,
   and we automate the generation of code and design space exploration
   improving productivity. We use LARA and the Harmonic aspect weaver
   to implement the aspect descriptions that drive the compilation
-  process.
-
+  process. This introduces the challenge of integrating the aspect
+  weaver, the \FAST{} language and our backend \fastc{} compiler.
 
 \item Thirdly, systematic design space exploration is used to identify
   maximum performance configurations, subject to platform specific
-  constraints.
+  constraints. Aspect descriptions can be used to more conveniently
+  control and guide the exploration process based on user
+  requirements.
 
 \item Finally, fully functional MaxCompiler designs are generated from
   the configurations using the \fastc{} compiler. This step involves
@@ -267,17 +269,16 @@ To meet these requirements we propose the following approach:
 \end{itemize}
 \end{itemize}
 
-\section{Steps}
-The proposed design flow is illustrated in Fig.~\ref{fig:design-flow}
+The proposed design flow is illustrated in \Cref{fig:design-flow}
 and follows the steps:
 \begin{enumerate}
 \item a C application containing an embedded high-level dataflow
   design is developed from the original source application. The design
-  is implemented using \FAST{} as described in Section~\ref{sec:maxc};
+  is implemented using \FAST{} as described in \Cref{sec:fast};
 \item the dataflow design is transformed by the aspects in the
   repository to generate new designs (e.g. with multiple word-length
   configurations). The classes of aspects used with our approach are
-  introduced in Section~\ref{sec:aspects};
+  introduced in \Cref{sec:aspects};
 \item the generated configurations are compiled using a backend
   compilation toolchain (currently MaxCompiler) to dataflow designs
   implemented on FPGAs;
@@ -286,15 +287,16 @@ and follows the steps:
   process until user specified requirements are met.
 \end{enumerate}
 
-
 \begin{figure}[!ht]
   \centering
-  \def\svgwidth{\textwidth}
+  \def\svgwidth{45em}
   \input{figs/asap13-design-flow.pdf_tex}
   \caption{Proposed approach for aspect-driven compilation of dataflow
    designs.}
-  \label{fig:reconfig-design-flow}
+  \label{fig:design-flow}
 \end{figure}
+
+\section{Comparison with Existing Approaches}
 
 Compared to existing work described in
 \cite{Cardoso:Teixeira:Alves:Nobre:Diniz:Cutinho:Luk:2012} and
@@ -302,7 +304,7 @@ Compared to existing work described in
 freedom in the exploration of design level optimisation (such as word
 length optimisations and mapping of arithmetic blocks to DSPs) by
 using a combination of implementation aspects (shown in
-Fig.~\ref{fig:design-flow}) and \FAST{} optimisation options.
+\Cref{fig:design-flow}) and \FAST{} optimisation options.
 
 Additionally, our approach targets a dataflow architecture as opposed
 to the von Neumann architecture proposed in related work, which
@@ -311,11 +313,11 @@ accelerator. We consider additional optimisations to achieve
 performance improvements as a result of a systematic design space
 exploration process.
 
-\section{Comparison with Existing Approaches}
-
 %\XXX{Compare with MaxCompiler}
 
 %\XXX{Compare with Vivado or other similar tools}
+
+%\XXX{Compare with MaxgenFD}
 
 \section{Extensions}
 
@@ -325,7 +327,7 @@ support run-time reconfiguration.
 \subsection{Design Modelling}
 
 A design model for resource usage, pipeline depth and timing
-information can created using limited user input. This is to be used
+information can be created using limited user input. This is to be used
 in the run-time reconfiguration to determine optimal partition
 scheduling.
 
