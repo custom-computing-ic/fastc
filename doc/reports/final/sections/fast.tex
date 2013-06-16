@@ -464,16 +464,30 @@ highlighted the challenges of capturing these constructs with a simple
 imperative language such as C and some possible solutions which we
 investigate in  \Cref{sec:implementation}.
 
-Finally, table \ref{table:feature-comparison} contrasts the \FAST{}
-approach proposed in this project with existing work, highlighting the
-improved capabilities for automated design space exploration.
+\Cref{table:feature-comparison1} contrasts the \FAST{} approach
+proposed in this project with existing approaches in terms of syntax
+and programming paradigm. An imperative, as opposed to functional
+paradigm simplifies the language, making it more accessible to novice
+users and integrates well with existing application source code. The
+dataflow style of the \FAST{} specifications allows for an efficient
+specification of designs that map well onto hardware accelerators such
+as FPGA-based dataflow engines. The language supports integrated
+hardware/software co-design with existing C applications, simplifying
+the design exploration process by improving sharing of parameters and
+by exposing a unified syntax to external design space exploration
+tools (such as the LARA design space exploration flow).
+
+Finally, \Cref{table:feature-comparison2} highlights the support for design
+parametrisation and optimisation exploration strategies via the
+automated aspect-oriented design flow as opposed to manual
+transformations or meta-programming used by existing state-of-the art
+compilers.
 
 
 \begin{table}[!ht]
-  \renewcommand{\arraystretch}{2.1}
+  \renewcommand{\arraystretch}{1.5}
   \centering
-  \label{table:feature-comparison}
-  \begin{tabularx}{\textwidth}{ X | p{2.5cm} | p{3cm} | p{1.9cm} }
+  \begin{tabularx}{\textwidth}{X | p{2.5cm} | p{3cm} | p{1.9cm} }
     \hline
     \bf{Language}                 & \bf{Syntax}              & \bf{Paradigm}               & \bf{Support}              \\
     \hline \hline
@@ -482,35 +496,31 @@ improved capabilities for automated design space exploration.
     \bf{SISAL}                    & SISAL                    & Functional                  &                           \\
     \cline{1-3}
     \bf{Lustre}                   & Lustre                   & Synchronous                 &                           \\
-    \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) Dataflow(HW) & \multirow{3}{*}{Combined} \\
-    \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) CSP(HW)      &                           \\
-    \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) Dataflow(HW) &                           \\
+    \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) / Dataflow(HW) & \multirow{3}{*}{Combined} \\
+    \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) / CSP(HW)      &                           \\
+    \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) / Dataflow(HW) &                           \\
   \end{tabularx}
-  \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
+  \caption{Syntax, paradigm and support comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
+  \label{table:feature-comparison1}
 \end{table}
 
 
-\begin{comment}
-\begin{sidewaystable}[!ht]
-  \renewcommand{\arraystretch}{2.1}
+\begin{table}[!ht]
+  \renewcommand{\arraystretch}{1.5}
   \centering
-  \label{table:feature-comparison}
-  \begin{tabularx}{\textwidth}{ m{2.5cm} | p{2.5cm} | p{3cm} | p{1.9cm}| p{2.8cm} | p{3.2cm} | p{2.5cm}}
+  \begin{tabularx}{\textwidth}{ m{2.5cm} | X | X | p{2.5cm}}
     \hline
-    \bf{Language}                 & \bf{Syntax}              & \bf{Paradigm}                            & \bf{Support}              & \bf{Implementation}             & \bf{Design Parametrisation}                     & \bf{Optimisation Strategies}            \\
+    \bf{Language}                  & \bf{Implementation}             & \bf{Design Parametrisation}                     & \bf{Optimisation Strategies}                                                                                                                                        \\
     \hline \hline
-    \bf{Lucid}                    & Lucid                    & Functional                               & \multirow{3}{*}{Software} & \multirow{3}{*}{Multiprocessor} & \multirow{3}{3cm}{Manual Source Transformation} & \multirow{5}{3cm}{Manual Code Revision} \\
-    \cline{1-3}
-    \bf{SISAL}                    & SISAL                    & Functional                               &                           &                                 &                                                 &                                         \\
-    \cline{1-3}
-    \bf{Lustre}                   & Lustre                   & Synchronous                              &                           &                                 &                                                 &                                         \\
-    \cline{1-6}
-    \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) Dataflow(HW)              & \multirow{6}{*}{Combined} & \multirow{6}{*}{CPU + FPGA}     & Meta-programming                                &                                         \\
-    \cline{1-3}\cline{6}
-    \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) CSP(HW)                   &                           &                                 & Compiler \newline Directives                    &                                         \\
-    \cline{1-3}\cline{6-7}
-    \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) Dataflow(HW) AOP(Aspects) &                           &                                 & \multicolumn{2}{p{5.5cm}}{Compiler Directives + \newline Automated Aspect-Directed Source Transformation} \\
+    \bf{Lucid}                     & \multirow{3}{*}{Multiprocessor} & \multirow{3}{3cm}{Manual Source Transformation} & \multirow{5}{3cm}{Manual Code Revision}                                                                                                                             \\
+   \bf{SISAL}                      &                                 &                                                 &                                                                                                                                                                     \\
+ \bf{Lustre}                      &                             &                              &                                                                            \\
+    \bf{MaxCompiler}             & \multirow{6}{*}{CPU + FPGA} & Meta-programming             &                                                                            \\
+\cline{1-1}\cline{2-3}
+  \bf{Streams-C} \bf{ImpulseC}\ &                             & Compiler \newline Directives &                                                                            \\
+\hline
+  \bf{\FAST{}}/\bf{LARA}         &                             & \multicolumn{2}{p{7cm}}{Compiler Directives + \newline Automated Aspect-Directed Source Transformation} \\
   \end{tabularx}
-  \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
-\end{sidewaystable}
-\end{comment}
+  \caption{Implementation, parametrisation and optimisations comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
+  \label{table:feature-comparison2}
+\end{table}
