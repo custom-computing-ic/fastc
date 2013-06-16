@@ -25,6 +25,8 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 
+\parskip 8pt
+
 
 \usepackage{hyperref}
 \hypersetup{
@@ -37,8 +39,22 @@
 \listfiles
 
 \graphicspath{{figs/}}
-\pagestyle{fancy}
 \setlength{\headheight}{15pt}
+
+\pagestyle{fancy}
+%\renewcommand{\chaptermark}[1]{ \markboth{#1}{} }
+%\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
+
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\nouppercase{\leftmark} }
+\fancyhead[LO]{\nouppercase{\rightmark} }
+
+\fancypagestyle{plain}{ %
+  \fancyhf{} % remove everything
+  \renewcommand{\headrulewidth}{0pt} % remove lines as well
+  \renewcommand{\footrulewidth}{0pt}
+}
 
 % --- Commands ---
 \newcommand{\HRule}{\rule{\linewidth}{0.2mm}}
@@ -66,7 +82,7 @@
       \vfil\vfil\null
 }
 
-\titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
+%\titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 %\titlespacing*{\chapter}{0pt}{0pt}{10pt}
 
 %\usepackage{caption}
@@ -97,12 +113,14 @@
 
 \lstdefinestyle{MaxC}{language=C++,
   morekeywords={s_int32, int32, float8_24, sin_float8_24,
-    sout_float8_24, float8_24, s_int, s_float8_24, s_bool},
+    sout_float8_24, float8_24, s_int, s_float8_24, s_bool, in, out, count, countChain},
   deletekeywords={static}}
 
 \lstdefinestyle{MaxJ}{
   morekeywords={HWVar, io, hwFloat, stream}
 }
+
+\lstset{aboveskip=20pt,belowskip=20pt}
 
 \lstset{
   basicstyle=\footnotesize\sffamily,

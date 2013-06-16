@@ -296,7 +296,7 @@ of the important features of the MaxJ language:
 
 \subsubsection{MaxCompiler}
 
-\label{sec:back--maxcompiler}
+\label{sec:back-maxcompiler}
 
 MaxCompiler~\cite{5719584} is a high level compiler targeting the
 acceleration platform developed by Maxeler Technologies. It provides a
@@ -374,7 +374,7 @@ we aim to create the basis of a design space exploration flow that can
 automate this process.
 
 \section{Stencil Computation}
-
+\label{sec:stencil-comp}
 Stencil computation is a class of computational problems consisting of
 iterative kernels that update array elements based on the values of
 their neighbours. The pattern of operation is called a stencil.
@@ -670,9 +670,7 @@ applied for loops.
 
 \subsection{Dataflow Languages}
 A number of dataflow languages have been developed targeting FPGAs but
-also multi-core platforms. Table \ref{table:feature-comparison}
-summarises some of the important features of these languages compared
-to \FAST{}.
+also multi-core platforms.
 
 Lucid~\cite{ashcroft1977lucid} (implemented in \cite{pLucid}),
 SISAL~\cite{gurd1987implicit,mcgraw1983sisal}, and
@@ -710,30 +708,6 @@ using a single language and to be decoupled from design
 parametrisation and other optimisation strategies which are captured
 as LARA aspects. This separation of concerns results in more intuitive
 and maintainable descriptions.
-
-
-\begin{sidewaystable}[!ht]
-  \renewcommand{\arraystretch}{2.1}
-  \centering
-  \label{table:feature-comparison}
-  \begin{tabularx}{\textwidth}{ m{2.5cm} | p{2.5cm} | p{3cm} | p{1.9cm}| p{2.8cm} | p{3.2cm} | p{2.5cm}}
-    \hline
-    \bf{Language}                 & \bf{Syntax}              & \bf{Paradigm}                            & \bf{Support}              & \bf{Implementation}             & \bf{Design Parametrisation}                     & \bf{Optimisation Strategies}            \\
-    \hline \hline
-    \bf{Lucid}                    & Lucid                    & Functional                               & \multirow{3}{*}{Software} & \multirow{3}{*}{Multiprocessor} & \multirow{3}{3cm}{Manual Source Transformation} & \multirow{5}{3cm}{Manual Code Revision} \\
-    \cline{1-3}
-    \bf{SISAL}                    & SISAL                    & Functional                               &                           &                                 &                                                 &                                         \\
-    \cline{1-3}
-    \bf{Lustre}                   & Lustre                   & Synchronous                              &                           &                                 &                                                 &                                         \\
-    \cline{1-6}
-    \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) Dataflow(HW)              & \multirow{6}{*}{Combined} & \multirow{6}{*}{CPU + FPGA}     & Meta-programming                                &                                         \\
-    \cline{1-3}\cline{6}
-    \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) CSP(HW)                   &                           &                                 & Compiler \newline Directives                    &                                         \\
-    \cline{1-3}\cline{6-7}
-    \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) Dataflow(HW) AOP(Aspects) &                           &                                 & \multicolumn{2}{p{5.5cm}}{Compiler Directives + \newline Automated Aspect-Directed Source Transformation} \\
-  \end{tabularx}
-  \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
-\end{sidewaystable}
 
 
 \subsection{Aspect-driven Compilation of FPGA Designs}

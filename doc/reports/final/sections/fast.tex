@@ -5,10 +5,17 @@
 language for specifying dataflow designs that are used as a starting
 point for the design flow proposed in Section
 \ref{sec:design-flow}. In particular, we use C syntax to capture
-dataflow computations, and, instead of heavily relying on API libraries
-to specify the design (as in MaxCompiler \cite{5719584} or Streams-C
-\cite{Gokhale:Stone:Arnold:Kalinowski:2000}), we use aspects to
-implement the transformations required for the actual implementation.
+dataflow computations, and, instead of heavily relying on API
+libraries to specify the design (as in MaxCompiler \cite{5719584} or
+Streams-C \cite{Gokhale:Stone:Arnold:Kalinowski:2000}), we use aspects
+to implement the transformations required for the actual
+implementation.  In this section we outline the design goals of the
+language, introduce an early prototype and examine its advantages and
+limitations and propose an enhanced version. We highlight the main
+features of \FAST{} and explain how these translate to components of
+dataflow designs. We analyse the major challenges we met in creating
+the \FAST{} language and highlight the strategies we adopted for
+overcoming them.
 
 \section{Design Goals}
 
@@ -28,7 +35,7 @@ required by the proposed flow:
   tools.
 \item \emph{Combined hardware/software design}. Specifications of dataflow
   kernels and CPU run-time software can be mixed. The example shown in
-  Fig.~\ref{fig:maxc-1dconv} can be compiled with the GCC toolchain,
+  Listing \ref{lst:fast-bscholesp} can be compiled with the GCC toolchain,
   but when using the \FAST{} compiler, the pragma indicates the link
   between the software and hardware, which results in an accelerated
   hardware/software solution.
@@ -48,18 +55,21 @@ inter-connected functional kernels. Communication between kernels is
 asynchronous, so they can operate independently, and compute only when
 all active inputs have available data.
 
-
-\section{Prototype}
+\section{Features}
 
 We originally developed a simple prototype of the FAST language
-sufficient to support our application benchmark (\Cref{}). We then
-extended this prototype with more advanced features (as described in
-\Cref{sec:fast-extensions}) which were required to meet our design
-goals.
+sufficient to support our application benchmark
+(\Cref{sec:benchmark}). We then extended this prototype with more
+advanced features (as described in \Cref{sec:fast-extensions}) which
+were required to meet our design goals.
 
-In this section we show a very simple implementation of a dataflow
-kernel used as part of our Black Scholes benchmark. In
-\Cref{sec:fast-ref } we analyse the same example in light of our
+In this section we use a very simple implementation of a dataflow
+kernel which is part of our Black Scholes benchmark to highlight some
+of the main features of the \FAST{} language. This kernel simply
+computes the result of the finite difference approximation solution to
+the Black Scholes Equations, iterating both in space (the fast
+dimension -- stock prices) and in time (the slow dimension). In
+\Cref{sec:fast-ref} we analyse the same example in light of our
 extensions described in \Cref{sec:fast-extensions} and argue that
 these simplify the language.
 
@@ -67,28 +77,33 @@ these simplify the language.
 
 \begin{lstlisting}[
   label={lst:fast-bscholesp},
-  caption={\FAST{} dataflow kernel for European Options pricing}
-]
-  void Price_FPGA(
-  float* p,
-  float c_0_0_0, float c_p_0_0, float c_n_0_0,
-  int n1, int ORDER)
+  caption={\FAST{} dataflow kernel for Black Scholes Options pricing}
+  ]
+  void Price_FPGA(s_float8_24 stockPrices,
+                  float8_24 c1, float8_24 c2, float8_24 c3,
+                  int32 nStocks, int32 stencilOrder, int timesteps)
   {
-    in(p);
+    // read input stream
+    in(stockPrices);
 
-    float* i4 = count(1000, 1);
-    float* i1 = countChain(n1, 1, i4);
+    // counters for timestep and stockstep iteration
+    int32 timestep  = count(timesteps, 1);
+    int32 stockstep = countChain(nStocks, 1, i4);
 
     #pragma FAST DSPBalance:full
-    int result =
-    p[0]  * c_0_0_0 +
-    p[1]  * c_p_0_0 +
-    p[-1] * c_n_0_0;
+    s_float8_24 result =   stockPrices[ 0] * c1
+                         + stockPrices[ 1] * c2
+                         + stockPrices[-1] * c3;
 
-    int up =(i1 >= ORDER) && (i1 < n1 - ORDER);
-    out(up ? result : p);
+    // boundary conditions for the stencil computation
+    int32 up = (stockstep >= stencilOrder)
+               && (stock < stockstep - stencilorder);
+
+    // write output stream
+    out(up ? result : stockPrices);
   }
 
+  // Regular C style CPU implementation
   void Price_CPU(...) {...}
 
   int main() {
@@ -97,30 +112,49 @@ these simplify the language.
   }
 \end{lstlisting}
 
-\section{Features}
+Listing \ref{lst:fast-bscholesp} highlights some of the most important
+features of a \FAST{} dataflow kernel:
+\begin{itemize}
+\item dataflow kernels are declared as regular C functions with inputs
+  defined as arguments in the function signature;
+\item streams are represented through \texttt{s\_<type>} types, which
+  are type definitions for \texttt{<type *>}; these are interpreted
+  as special types by the \fastc{} compiler;
+\item to provide easy access to previous, current and future stream
+  values array notation is used with positive offsets accessing future
+  values and negative offsets accessing previous stream values
+\item supported offset values are linear combinations of compile-time
+  constants or variables (either loop induction variables,
+  or normal variables but for which a compile time range of values is
+  specified, as a requirement for generating efficient hardware)
+\item constructs such as loops are supported as long as their bounds
+  are known at compilation time and are used to parametrise dataflow
+  designs.
+\item C function calls are mapped to dataflow kernels via pragmas
+  (Line 17) which provides the flexibility of selecting a particular
+  dataflow configuration based on run-time conditions
+\end{itemize}
 
-Table~\ref{table:maxc-features} summarises the features of \FAST{} and
-Fig.~\ref{fig:maxc-1dconv} shows an example dataflow kernel used to
-value European options. Kernels are defined as regular C functions
-with inputs clearly defined as arguments in the function
-signature. Streams are represented as regular C99-style pointers.
-Normal array notation can be used to generate either previous or
-future values or dereference the stream to obtain the current stream
-value. Negative indices are allowed for accessing previous stream
-values and supported offset expressions are linear expressions
-comprised of constants or variables (either loop induction variables,
-or normal variables but for which a compile time range of values is
-specified, as a requirement for generating efficient
-hardware). Constructs such as loops are supported as long as their
-bounds are known at compilation time and are used to parametrise
+
+Additionally and API is provided for higher-level constructs such as
+I/O functions (\texttt{in()}, \texttt{out()}), counters
+(Listing \ref{lst:fast-bscholesp}, Lines~4--5) and functions to multiplex
+streams (\texttt{mux()}).
+
+\Cref{table:maxc-features} summarises the features of \FAST{} and
+shows that many features are implemented the using C99 style
+syntax. Mathematical functions are specified using their standard C
+library results in a more intuitive, easier to learn programming model
+but complicates the mapping of \FAST{} designs to FPGA dataflow
+designs. Another important consequence of maintaining compatibility
+with C99 syntax is the ability to directly translate C applications to
 dataflow designs.
+
 
 \begin{table}[!h]
   \centering
   \renewcommand{\arraystretch}{1.5}
-  \caption{Summary of the main features of the \FAST{} language.}
-  \label{table:maxc-features}
-  \begin{tabularx}{\textwidth}{X|X|X}
+  \begin{tabularx}{\textwidth}{p{3.5cm}|X|X}
     \hline
     \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
     \hline\hline
@@ -138,22 +172,18 @@ dataflow designs.
     \hline
     Hardware \  Mapping                  & C pragmas                   & C99 (line 17)                                \\
   \end{tabularx}
+  \caption{Summary of the main features of the \FAST{} language.}
+  \label{table:maxc-features}
 \end{table}
 
-The \FAST{} API provides higher-level constructs such as I/O functions
-(\texttt{in()}, \texttt{out()}), counters (Fig.~\ref{fig:maxc-1dconv},
-Lines~4--5) and functions to multiplex streams (\texttt{mux()}). C
-function calls are mapped to dataflow kernels via pragmas (Line 17)
-which provides the flexibility of selecting a particular dataflow
-configuration based on run-time conditions. Support for run-time
-reconfiguration is included but will be described in a future
-publication due to lack of space.
+In the remainder of this section we provide an in-depth analysis of
+these features and design challenges associated with capturing them in
+a simple imperative language.
 
-
-\subsection{Kernels}
+\subsection{Kernels and Streams}
 
 Kernels represent a unit of computation that is mapped to the FPGA.
-They are C functions that can be used directly (as below) or linked
+They are C functions that can be called directly (as below) or linked
 via pragmas in C application code.
 
 \begin{lstlisting}[caption={Simple \FAST{} dataflow kernel.}]
@@ -164,14 +194,17 @@ via pragmas in C application code.
     ...
   }
 
-  #pragma maxc dataflow(y)
-  void PassThrough(int *x, int *y) {
-    *y =  x;
+  #pragma fast
+  void PassThrough_CPU(int32 *x, int *y) {
+    in(x);
+out(y);
   }
 \end{lstlisting}
 
-\subsection{Streams}
-The example above shows a very simple kernels with two streams:
+The kernel inputs can be streams or run-time constants. The kernel
+produces as output one or more streams of data.
+
+The example above shows a very simple kernel with two streams:
 
 \begin{itemize}
 \item output (write) stream "y" - allows access to previous and current values;
@@ -201,7 +234,7 @@ offset expressions. For example in the kernel shown below, the input
 stream "offests" contains offsets at which to select elements from
 input stream "x". We may, for example, know that our application is
 only expect to use offsets smaller than 256, so we can provide this
-optimization hint to the compiler.
+optimisation hint to the compiler.
 
 \begin{lstlisting}[caption={\FAST{} kernel using offsets.}]
   void Bounds(int *x, int *offsets, int *y) {
@@ -245,10 +278,12 @@ Par times.
 \item C arithmetic operators can be used as usual on stream values (not streams themselves).
 \item Arithmetic on streams (equiv. to pointer arithmetic) is illegal.
 \item C math.h function calls are automatically mapped to efficient hardware blocks.
-
+  p
 \end{itemize}
 
-The example below computes the difference between the arithmetic and geometric average of two consecutive elements in a streams (boundary cases ignored).
+The example below computes the difference between the arithmetic and
+geometric average of two consecutive elements in a streams (boundary
+cases ignored).
 
 
 \begin{lstlisting}
@@ -308,12 +343,12 @@ Instead of specifying inputs and outputs manually, the \fastc{}
 compiler can be extended to automatically infer the type of streams
 (read or write). This is based on the rules:
 \begin{itemize}
-  \item If a stream is assigned to at least once then it is a write stream
-  \item If a stream is assigned to more than once, then this is an error
-  \item If a stream is declared in the kernel header and not written
-    to, then it is a read stream
-  \item If a stream is declared within the body of the dataflow
-    kernel, it is a read/write stream
+\item If a stream is assigned to at least once then it is a write stream
+\item If a stream is assigned to more than once, then this is an error
+\item If a stream is declared in the kernel header and not written
+  to, then it is a read stream
+\item If a stream is declared within the body of the dataflow
+  kernel, it is a read/write stream
 \end{itemize}
 
 Additionally casting between variable types can be inferred in some
@@ -335,8 +370,8 @@ form a design \Cref{sec:back-maxcompiler}.
 To support this scenario in FAST we extend our original pragma
 notations to enable the specification of:
 \begin{itemize}
-  \item correlation between input and output
-  \item kernel instances (how?)
+\item correlation between input and output
+\item kernel instances (how?)
 \end{itemize}
 
 Since this can result in a fairly long-winded
@@ -387,13 +422,13 @@ three kernel design that implements the required pricing computation.
 \begin{lstlisting}[
   label={lst:fast-bscholesr},
   caption={\FAST{} dataflow kernel for European Options pricing}
-]
+  ]
   float i4 = 0;
   float i1 = 0;
   void Price_FPGA(
-    float* p, float *r,
-    float c_0_0_0, float c_p_0_0, float c_n_0_0,
-    int n1, int ORDER)
+  float* p, float *r,
+  float c_0_0_0, float c_p_0_0, float c_n_0_0,
+  int n1, int ORDER)
   {
 
     i4 = i4 >= n1    ? 0 : i4 + 1;
@@ -402,9 +437,9 @@ three kernel design that implements the required pricing computation.
     #pragma FAST DSPBalance:full
     int result =
 
-      p[0]  * c_0_0_0 +
-      p[1]  * c_p_0_0 +
-      p[-1] * c_n_0_0;
+    p[0]  * c_0_0_0 +
+    p[1]  * c_p_0_0 +
+    p[-1] * c_n_0_0;
 
     int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
     r = up ? result : p;
@@ -420,3 +455,62 @@ three kernel design that implements the required pricing computation.
 
 
 \section{Summary}
+
+We have introduced the \FAST{} language one of the components required
+as part of the proposed Aspect-oriented design flow. We have shown the
+most important features of the \FAST{} language and how they map to
+hardware components on the FPGA based dataflow engine. We have
+highlighted the challenges of capturing these constructs with a simple
+imperative language such as C and some possible solutions which we
+investigate in  \Cref{sec:implementation}.
+
+Finally, table \ref{table:feature-comparison} contrasts the \FAST{}
+approach proposed in this project with existing work, highlighting the
+improved capabilities for automated design space exploration.
+
+
+\begin{table}[!ht]
+  \renewcommand{\arraystretch}{2.1}
+  \centering
+  \label{table:feature-comparison}
+  \begin{tabularx}{\textwidth}{ X | p{2.5cm} | p{3cm} | p{1.9cm} }
+    \hline
+    \bf{Language}                 & \bf{Syntax}              & \bf{Paradigm}               & \bf{Support}              \\
+    \hline \hline
+    \bf{Lucid}                    & Lucid                    & Functional                  & \multirow{3}{*}{Software} \\
+    \cline{1-3}
+    \bf{SISAL}                    & SISAL                    & Functional                  &                           \\
+    \cline{1-3}
+    \bf{Lustre}                   & Lustre                   & Synchronous                 &                           \\
+    \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) Dataflow(HW) & \multirow{3}{*}{Combined} \\
+    \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) CSP(HW)      &                           \\
+    \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) Dataflow(HW) &                           \\
+  \end{tabularx}
+  \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
+\end{table}
+
+
+\begin{comment}
+\begin{sidewaystable}[!ht]
+  \renewcommand{\arraystretch}{2.1}
+  \centering
+  \label{table:feature-comparison}
+  \begin{tabularx}{\textwidth}{ m{2.5cm} | p{2.5cm} | p{3cm} | p{1.9cm}| p{2.8cm} | p{3.2cm} | p{2.5cm}}
+    \hline
+    \bf{Language}                 & \bf{Syntax}              & \bf{Paradigm}                            & \bf{Support}              & \bf{Implementation}             & \bf{Design Parametrisation}                     & \bf{Optimisation Strategies}            \\
+    \hline \hline
+    \bf{Lucid}                    & Lucid                    & Functional                               & \multirow{3}{*}{Software} & \multirow{3}{*}{Multiprocessor} & \multirow{3}{3cm}{Manual Source Transformation} & \multirow{5}{3cm}{Manual Code Revision} \\
+    \cline{1-3}
+    \bf{SISAL}                    & SISAL                    & Functional                               &                           &                                 &                                                 &                                         \\
+    \cline{1-3}
+    \bf{Lustre}                   & Lustre                   & Synchronous                              &                           &                                 &                                                 &                                         \\
+    \cline{1-6}
+    \bf{MaxCompiler}              & C99(SW) Java(HW)         & Imperative(SW) Dataflow(HW)              & \multirow{6}{*}{Combined} & \multirow{6}{*}{CPU + FPGA}     & Meta-programming                                &                                         \\
+    \cline{1-3}\cline{6}
+    \bf{Streams-C} \bf{ImpulseC}\ & C99                      & Imperative(SW) CSP(HW)                   &                           &                                 & Compiler \newline Directives                    &                                         \\
+    \cline{1-3}\cline{6-7}
+    \bf{\FAST{}}/\bf{LARA}        & C99(SW/HW) LARA(Aspects) & Imperative(SW) Dataflow(HW) AOP(Aspects) &                           &                                 & \multicolumn{2}{p{5.5cm}}{Compiler Directives + \newline Automated Aspect-Directed Source Transformation} \\
+  \end{tabularx}
+  \caption{Feature comparison of the \FAST{}/LARA approach and existing dataflow implementations.}
+\end{sidewaystable}
+\end{comment}

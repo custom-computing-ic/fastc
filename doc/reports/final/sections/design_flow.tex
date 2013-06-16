@@ -313,27 +313,58 @@ accelerator. We consider additional optimisations to achieve
 performance improvements as a result of a systematic design space
 exploration process.
 
-%\XXX{Compare with MaxCompiler}
+Compared to the MaxCompiler approach described in
+\Cref{sec:back-maxcompiler}, the proposed design flow has a number of
+benefits, the most exciting being the capability of capturing dataflow
+designs using vanilla C and aspects. This is in direct contrast with
+the meta-programming\cite{metaprogramming} approach used in
+MaxCompiler which can be confusing to new users as suggested by many
+queries on very basic matters from novice users on the Maxeler
+Developer Forums\cite{mdx}. In addition, the MaxCompiler design
+approach does not enable automating the design space exploration
+process effectively. Because the dataflow design and run-time
+component are written in different languages, integration with tools
+for aspect weaving requires double the effort. The idea behind the
+\FAST{} approach is to facilitate better integration with other tools
+by providing a single language implementation. The reason behind using
+meta-programming in MaxCompiler is to provide good support for design
+parametrisation. In the \FAST{} approach this is achieved by
+specifying optimisation strategies in the aspect descriptions,
+simultaneously achieving the goals of decoupling optimisations form
+application code and simplifying the programming model for dataflow
+designs. This leads to improved productivity without affecting the
+efficiency of the generated designs.
 
-%\XXX{Compare with Vivado or other similar tools}
-
-%\XXX{Compare with MaxgenFD}
+On top of MaxCompiler, Maxeler offers a domain-specific compiler for
+finite difference applications, MaxGenFD\cite{MaxelerFD}. This
+simplifies the creation of finite difference kernels (such as those
+required for the stencil applications described in
+\Cref{sec:stencil-comp}). Although this abstracts effectively the
+creation and optimisation of stencils, the process is not transparent
+to the users and cannot be exposed to external design space
+exploration tools. Like MaxCompiler, MaxGenFD provides no specific
+support for designs with run-time reconfiguration.
 
 \section{Extensions}
 
-We present our extensions to the original design flow required to
-support run-time reconfiguration.
+To support run-time reconfiguration effectively, the design flow of
+\Cref{fig:design-flow} should be extended to support modelling and
+recording of design resource usage, execution time, latency and power
+metrics. These data are required when writing strategies for run-time
+reconfiguration.
 
 \subsection{Design Modelling}
 
 A design model for resource usage, pipeline depth and timing
-information can be created using limited user input. This is to be used
-in the run-time reconfiguration to determine optimal partition
-scheduling.
+information can be created using limited user input. This is to be
+used in the run-time reconfiguration to determine optimal partition
+scheduling. Alternatively this information can be extracted from
+portable platform description files such as those used in HARNESS
+which contain a detailed specification of platform characteristics.
 
 \begin{figure}[!ht]
   \centering
-  \def\svgwidth{\textwidth}
+  \def\svgwidth{45em}
   \input{figs/rep-modelling.pdf_tex}
   \caption{High-level aspects controlling generation of design
     resource, performance and timing modelling.}
@@ -353,10 +384,29 @@ when mapping arithmetic to FF/LUT pairs vs DSPs.
 
 \subsection{Run-time Reconfiguration Support}
 
-Extensions to the original flow are required to support the automation
-of run-time reconfiguration support. Figure
-\ref{fig:reconfig-design-flow} presents an overview of the revised
-design flow.
+In the proposed design flow we distinguish between:
+\begin{itemize}
+\item \textbf{static run-time reconfiguration} -- where partitions can
+  be statically scheduled at compilation time after the design space
+  exploration process has completed
+\item \textbf{adaptive run-time reconfiguration} -- where partitioning
+  depends on user input and an optimal schedule cannot be generated at
+  compile time
+\end{itemize}
+
+Supporting both types of reconfiguration requires the introduction of
+an additional modelling step which is performed prior to the
+application of transformations for run-time
+reconfiguration. Additionally a performance test suite is used to
+measure and validate the results of partitioning.
+
+Figure \ref{fig:reconfig-design-flow} presents an overview of the
+revised design flow supporting run-time reconfiguration.
+
+An additional requirement for adaptive run-time reconfiguration is a
+configuration database where generated configurations and their
+specification are stored for extraction, based on run-time
+conditions.
 
 \begin{figure}[!ht]
   \centering
@@ -376,7 +426,7 @@ design flow.
 \item Based on predicted models (from step 2) and possibly on existing
   empirical information from the Design DB we partition the
   application and schedule the partitions to achieve user requirements
-  and optimization goals.
+  and optimisation goals.
 \item Finally a number of executables and designs are created,
   corresponding to the generated configurations from step 3. Based on
   compilation and execution (of automated performance tests) we refine
@@ -389,7 +439,7 @@ proposed approach is shown in Figure \ref{fig:reconfig-runtime}.
 
 \begin{figure}[!ht]
   \centering
-  \def\svgwidth{\textwidth}
+  \def\svgwidth{30em}
   \input{figs/fpt13-runtime.pdf_tex}
   \caption{Run-time architecture required to support run-time reconfiguration}
   \label{fig:reconfig-runtime}
@@ -401,9 +451,18 @@ proposed approach is shown in Figure \ref{fig:reconfig-runtime}.
 \item The CPU can request the FPGA to abort execution of the current
   design. Current results are saved (i.e. streamed back to CPU)
   before reconfiguration is triggered.
-\item The CPU can select a new design to be uploaded and
+\item The CPU can select a new design to be uploaded
 \item Empirical results are recorded in the Design Database, to
   improve future estimates of performance, power and thermal values.
 \end{enumerate}
 
 \section{Summary}
+
+We have introduced the proposed Aspected-oriented design flow for
+dataflow engines and introduced the components required to support
+it. Optimisations are encapsulated in aspect descriptions, separated
+from functional application code which leads to a more maintainable
+and easier to understand programming model, with minimal impact on
+performance. We show what extensions are required to the original
+model in order to support the specification of strategies using
+run-time reconfiguration to increase efficiency.
