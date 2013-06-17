@@ -22,13 +22,13 @@ this chapter:
   flow. Numerical differentiation is used in situations where the
   analytical form of a functions is not available, for example on
   large sets of experimental data;
-\begin{comment}
-\item \textbf{Black Scholes Option Pricing} is a one dimensional
-  stencil computation, with multiple time step iterations which
-  requires the use of on-board DRAM to maximise efficiency; the Black
-  Scholes model is one of the most commonly used models in finance for
-  pricing derivatives of European options;
-\end{comment}
+  \begin{comment}
+  \item \textbf{Black Scholes Option Pricing} is a one dimensional
+    stencil computation, with multiple time step iterations which
+    requires the use of on-board DRAM to maximise efficiency; the Black
+    Scholes model is one of the most commonly used models in finance for
+    pricing derivatives of European options;
+  \end{comment}
 \item \textbf{Reverse Time Migration} is an advanced high-performance
   application for seismic imaging. It is the most widely used
   application in the Oil and Gas industry for identifying geological
@@ -171,17 +171,17 @@ and fails to route or takes an extremely large time to achieve timing
 closure.
 
 \begin{table}[ht!]
-\begin{tabularx}{\textwidth}{X|X|X|X|X}
-  Pipes & LUT Usage & FF Usage & DSP Usage & BRAM Usage \\
-\hline\hline
-  1     & 10.01     & 6.65     & 8.45      & 0.75       \\
-  2     & 18.91     & 13.21    & 17.51     & 1.50       \\
-  4     & 37.13     & 25.32    & 33.12     & 3.75       \\
-  6     & 56.17     & 39.28    & 50.31     & 4.50       \\
-  8     & 79.63     & 51.22    & 49.55     & 7.75       \\
-\end{tabularx}
-\caption{Pipeline scalability of the numerical differentiation algorithm for a 7 point stencil.}
-\label{table:nd1}
+  \begin{tabularx}{\textwidth}{X|X|X|X|X}
+    Pipes & LUT Usage & FF Usage & DSP Usage & BRAM Usage \\
+    \hline\hline
+    1     & 10.01     & 6.65     & 8.45      & 0.75       \\
+    2     & 18.91     & 13.21    & 17.51     & 1.50       \\
+    4     & 37.13     & 25.32    & 33.12     & 3.75       \\
+    6     & 56.17     & 39.28    & 50.31     & 4.50       \\
+    8     & 79.63     & 51.22    & 49.55     & 7.75       \\
+  \end{tabularx}
+  \caption{Pipeline scalability of the numerical differentiation algorithm for a 7 point stencil.}
+  \label{table:nd1}
 \end{table}
 
 \Cref{table:nd2} shows that the maximum achievable stencil width with
@@ -192,25 +192,25 @@ assumed 4 parallel pipelines as shown on lines 4, 8 and 9 of
 \Cref{table:nd2}).
 
 \begin{table}[ht!]
-\begin{tabularx}{\textwidth}{X|X|X|X|X|X}
- Kernel                    & Stencil Width & LUT Usage & FF Usage & DSP Usage & BRAM Usage   \\
-\hline\hline
- \multirow{4}{*}{GSDiff}   & 5             & 2.03      & 1.55     & 0.99      & 0            \\
-                           & 7             & 2.79      & 2.08     & 2.92      &              \\
-                           & 9             & 3.33      & 2.48     & 3.76      & 0            \\
-\cline{2-6}
-                           & \multicolumn{5}{c}{Max = $100 / 3.76 * 9 / 4 = 239 / 4 = 59 $} \\
-\hline
- \multirow{4}{*}{GSSmooth} & 5             & 2.34      & 1.44     & 2.23      & 0            \\
-                           & 7             & 2.91      & 1.81     & 2.97      & 0            \\
-                           & 9             & 3.47      & 2.21     & 3.91      & 0            \\
-\cline{2-6}
-                           & \multicolumn{5}{c}{Max = $100 / 3.91 * 9 / 4 = 239 / 4 = 57 $} \\
-\hline
-Both                       & \multicolumn{5}{c}{Max = $100 / (3.91 + 3.76) * 9 / 4 = 29 $}  \\
-\end{tabularx}
-\caption{Resource usage per stencil width, per kernel, per compute pipe.}
-\label{table:nd2}
+  \begin{tabularx}{\textwidth}{X|X|X|X|X|X}
+    Kernel                    & Stencil Width & LUT Usage & FF Usage & DSP Usage & BRAM Usage   \\
+    \hline\hline
+    \multirow{4}{*}{GSDiff}   & 5             & 2.03      & 1.55     & 0.99      & 0            \\
+    & 7             & 2.79      & 2.08     & 2.92      &              \\
+    & 9             & 3.33      & 2.48     & 3.76      & 0            \\
+    \cline{2-6}
+    & \multicolumn{5}{c}{Max = $100 / 3.76 * 9 / 4 = 239 / 4 = 59 $} \\
+    \hline
+    \multirow{4}{*}{GSSmooth} & 5             & 2.34      & 1.44     & 2.23      & 0            \\
+    & 7             & 2.91      & 1.81     & 2.97      & 0            \\
+    & 9             & 3.47      & 2.21     & 3.91      & 0            \\
+    \cline{2-6}
+    & \multicolumn{5}{c}{Max = $100 / 3.91 * 9 / 4 = 239 / 4 = 57 $} \\
+    \hline
+    Both                       & \multicolumn{5}{c}{Max = $100 / (3.91 + 3.76) * 9 / 4 = 29 $}  \\
+  \end{tabularx}
+  \caption{Resource usage per stencil width, per kernel, per compute pipe.}
+  \label{table:nd2}
 \end{table}
 
 
@@ -221,7 +221,7 @@ original MaxCompiler design which requires 14 API calls and 37 lines
 of code.
 
 
-%\section{Black Scholes}nn
+% \section{Black Scholes}nn
 
 \section{Reverse Time Migration}
 \label{sec:RTM}
@@ -264,9 +264,9 @@ translate to increased productivity.
 \end{table}
 
 Results of the design space exploration using the aspect in
-Fig.~\ref{fig:aspect-exploration} with variable mantissa illustrate
+\Cref{fig:aspect-exploration} with variable mantissa illustrate
 the trade-offs between accuracy and resource usage
-(Fig.~\ref{fig:precision}). We observe irregular, large variations
+(\Cref{fig:precision}). We observe irregular, large variations
 when decreasing the mantissa from 18 to 16 and 24 to 22 which is the
 effect of the backend tools mapping arithmetic to a combination of
 both DSPs and LUT/FF elements. The mantissa boundaries at which this
@@ -276,13 +276,97 @@ aspects and decoupling it from the original source code makes the
 application more portable and facilitates discovery of interesting
 trade-off opportunities using design space exploration.
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[scale=1.2]{figs/pre}
-\caption{Exploration of accuracy vs resource usage trade-offs using the aspect
-shown in Fig.~\ref{fig:aspect-exploration} with variable mantissa.}
-\label{fig:precision}
+\begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=1.5]
+    \selectcolormodel{gray}
+    \begin{axis}[
+      xmin=16,
+      ymin=0,
+      % no markers,
+      enlargelimits=0.15,
+      font=\tiny,
+      axis y line*=left,
+      xlabel=Mantissa Bits,
+      ylabel=Resource Usage(\%),
+      xtick={16,18,20,22,24},
+      ytick={4, 10, 20, 40, 50, 70, 80, 100},
+      legend columns=4,
+      legend entries={
+        DSP Usage,
+        FF Usage,
+        LUT Usage,
+        BRAM Usage},
+      legend style={
+        at={(-0.1,1.1)},
+        anchor=west
+      }
+      ]
+      \addplot[dotted] coordinates {
+        (24, 34.82)
+        (22, 15.18)
+        (20, 15.18)
+        (18, 15.18)
+        (16, 10.12)
+      };
+      \addplot[mark=*, dotted] coordinates {
+        (24, 24.09)
+        (22, 31.17)
+        (20, 29.96)
+        (18, 28.68)
+        (16, 26.44)
+      };
+      \addplot[mark=none, dashed] coordinates {
+        (24, 34.13)
+        (22, 45.02)
+        (20, 43.54)
+        (18, 40.81)
+        (16, 39.62)
+      };
+      \addplot[mark=*, dashed] coordinates {
+        (24, 27.73)
+        (22, 27.73)
+        (20, 27.16)
+        (18, 26.88)
+        (16, 26.60)
+      };
+    \end{axis}
+    \begin{axis}[
+      ylabel=Precision (1E-6),
+      font=\tiny,
+      axis y line*=right,
+      axis x line=none,
+      ylabel style={at={(1.35,0.5)}}
+      ]
+      \addplot[mark=none] coordinates {
+        (16, 15.2585)
+        (18, 3.8146)
+        (20, 0.9536)
+        (22, 0.2394)
+        (24, 0.0596)
+      };
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Scalability of the RTM dataflow design explored using the aspect
+    shown in Fig.~\ref{fig:aspect-exploration}.}
+  \label{fig:precision}
 \end{figure}
+
+Computation precision using floating point types can be estimated by:
+$$ \text{precision} = \frac{1}{2^{\text{mantissa bits}}} $$
+
+
+\begin{table}
+  \begin{tabularx}{\textwidth}{c|c|X|X|X|X|X}
+    Exp. & Mant. & FF    & BRAM  & LUT   & DSP   & Precision ($1E-6$) \\
+    \hline\hline
+    8      & 24    & 24.09 & 27.73 & 34.13 & 34.82 & 0.0596             \\
+    8      & 22    & 31.17 & 27.73 & 45.02 & 15.18 & 0.2384             \\
+    8      & 20    & 29.96 & 27.16 & 43.54 & 15.18 & 0.9536             \\
+    8      & 18    & 28.68 & 26.88 & 40.81 & 15.18 & 3.8146             \\
+    8      & 16    & 26.44 & 26.60 & 39.62 & 10.12 & 15.2585            \\
+  \end{tabularx}
+\end{table}
 
 The DSP balancing aspect shown in Fig.~\ref{fig:aspect-DSP} allows to
 explore the resource trade-offs of implementing arithmetic operations
@@ -290,12 +374,12 @@ in either DSPs or LUTs and FFs (Fig.~\ref{fig:arith}) and helps to
 avoid over mapping on DSPs for arithmetic intensive applications.
 
 \begin{figure}[!ht]
-\centering
-\includegraphics[scale=1.2]{figs/arith}
-\caption{Exploration of DSP and LUT/FF balancing for functional units
-  implementing a single arithmetic operation using the aspect shown
-  in Fig.~\ref{fig:aspect-DSP}.}
-\label{fig:arith}
+  \centering
+  \includegraphics[scale=1.2]{figs/arith}
+  \caption{Exploration of DSP and LUT/FF balancing for functional units
+    implementing a single arithmetic operation using the aspect shown
+    in Fig.~\ref{fig:aspect-DSP}.}
+  \label{fig:arith}
 \end{figure}
 
 Design space exploration using the aspect in
@@ -311,15 +395,6 @@ published FPGA results for static designs
 \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, \cite{araya2011assessing}.
 
 
-\pgfplotsset{every axis x label/.style={
-  at={(0.5,0)},
-  below,
-  yshift=-5pt}}
-
-\pgfplotsset{every axis y label/.style={
-  at={(0,0.5)},
-  xshift=-20pt,
-  rotate=90}}
 
 
 \begin{figure}[!h]
@@ -327,27 +402,27 @@ published FPGA results for static designs
   \begin{tikzpicture}[scale=1.8]
     \selectcolormodel{gray}
     \begin{axis}[
-        xmin=1,
-        ymin=1,
-        %no markers,
-        font=\tiny,
-        xlabel=Pipes,
-        ylabel=Speedup,
-        xtick={1,2,3,6,12},
-        ytick={4, 10, 20, 40, 50, 70, 80, 100},
-        legend columns=2,
-        legend entries={
-          Static (S),
-          RTR (S),
-          Static (M),
-          RTR (M),
-          Static (L),
-          RTR (L)},
-        legend style={
-          draw=none,
-          at={(0.05,0.85) },
-          anchor=west
-        }
+      xmin=1,
+      ymin=1,
+      % no markers,
+      font=\tiny,
+      xlabel=Pipes,
+      ylabel=Speedup,
+      xtick={1,2,3,6,12},
+      ytick={4, 10, 20, 40, 50, 70, 80, 100},
+      legend columns=2,
+      legend entries={
+        Static (S),
+        RTR (S),
+        Static (M),
+        RTR (M),
+        Static (L),
+        RTR (L)},
+      legend style={
+        draw=none,
+        at={(0.05,0.85) },
+        anchor=west
+      }
       ]
 
       \addplot[mark=none] coordinates {
@@ -395,7 +470,7 @@ published FPGA results for static designs
     \end{axis}
   \end{tikzpicture}
   \caption{Scalability of the RTM dataflow design explored using the aspect
-shown in Fig.~\ref{fig:aspect-exploration}.}
+    shown in Fig.~\ref{fig:aspect-exploration}.}
   \label{fig:scalability}
 \end{figure}
 
@@ -417,37 +492,37 @@ design space exploration to be carried out on various platforms (hence
 subject to varying resource constraints) without manual intervention.
 
 \begin{comment}
-\begin{sidewaystable}
-  \begin{tabularx}{\textwidth}{p{3.5cm}|X|X|X|X|X|X|X|X|X|X|X|X|X|}
-    Aspects & DSP Balance & Par & Mem Freq & Width & FPGA  Time (Ms) & Total Time (s) & Total Power (Watt) & Dyn. Power (Watt) & LUT (\%) & FF(\%) & BRAM (\%) & DSP (\%) & Build Time \\
-    \hline \hline
-    \multirow{5}{2cm}{OptimizeDSPUsage, ExploreParallelism}     & Bal.    & 1   & 303      & 8\_24 & 492             & 3.347          & 117                & 30                & 19.89    & 14.13  & 23.31     & 1.69     & 1h 49      \\
-            & None        &     &          &       & 492             & 3.453          & 117                & 30                & 22.62    & 15.56  & 23.31     & 0        & 2 h 9      \\
-            & Full        &     &          &       & 492             & 3.103          & 117                & 30                & 17.68    & 12.79  & 23.31     & 5.8      & 2 h 2      \\
-            \hline
-            & Bal.    & 2   &          &       & 247             & 2.917          &	121                & 34                & 25.44    & 25.44  & 24.53     & 3.37     & 2h30       \\
-            & None        &     &          &       & 247             & 3.006          &	121                & 34                & 30.95    & 20.53  & 24.53     & 0        & 3h5        \\
-            & Full        &     &          &       & 246             & 3.153          &	121                & 34                & 21.18    & 15     & 24.44     & 11.61    & 2h8        \\
-            \hline
-            & Bal.    & 3   &          &       & 225             & 3.506          & 121                & 34                & 31.56    & 21.32  & 24.06     & 5.06     & 2h30       \\
-            & None        &     &          &       & 224             & 3.124          & 121                & 34                & 39.16    & 25.61  & 24.06     & 0        & 3h20       \\
-            & Full        &     &          &       & 226             & 3.123          & 125                & 38                & 25.06    & 17.3   & 23.97     & 17.41    & 2h18       \\
-            \hline
-            & Bal.    & 6   &          &       & 226             & 3.125          & 125                & 38                & 52.61    & 30.52  & 20.12     & 17.41    & 3h17       \\
-            & None        &     &          &       & 223             & 3.156          & 125                & 38                & 65.11    & 40.58  & 28.95     & 0        & 4h50       \\
-            & Full        &     &          &       & 224             & 3.016          &	122                & 35                & 35.63    & 24.11  & 27.73     & 34.82    & 3h42       \\
-            \hline
-    \multirow{5}{2cm}{OptimizeWordWidth, OptimizeFrequency, ExploreParallelism}        & Full        & 6   & 303      & 8\_22 & 224             & 2.98           & 122                & 35                & 45.02    & 31.17  & 27.73     & 15.18    & 3h13       \\
-            &             &     &          & 8\_20 & 224             & 3.006          &	122                & 35                & 43.54    & 29.96  & 27.16     & 15.18    & 3h30       \\
-            &             &     &          & 8\_18 & 224             & 3.076          & 122                & 35                & 40.81    & 28.68  & 26.88     & 15.18    & 3h13       \\
-            &             &     &          & 8\_16 & 224             & 3.033          & 122                & 35                & 39.62    & 26.44  & 26.6      & 10.12    & 2h50       \\
-            &             &     &          & 8\_24 & 82              & 1.723          & 122                & 35                & 34.13    & 24.09  & 27.73     & 34.82    & 4h17       \\
-            \hline
-            &             & 2   & 400      & 8\_24 & 247             & 3.133          &	122                & 35                & 21.32    & 14.98  & 24.44     & 11.61    & 2h30       \\
-            &             & 3   &          & 8\_24 & 164             & 2.964          & 122                & 35                & 25.43    & 17.28  & 23.97     & 17.41    & 2h35       \\
+  \begin{sidewaystable}
+    \begin{tabularx}{\textwidth}{p{3.5cm}|X|X|X|X|X|X|X|X|X|X|X|X|X|}
+      Aspects & DSP Balance & Par & Mem Freq & Width & FPGA  Time (Ms) & Total Time (s) & Total Power (Watt) & Dyn. Power (Watt) & LUT (\%) & FF(\%) & BRAM (\%) & DSP (\%) & Build Time \\
+      \hline \hline
+      \multirow{5}{2cm}{OptimizeDSPUsage, ExploreParallelism}     & Bal.    & 1   & 303      & 8\_24 & 492             & 3.347          & 117                & 30                & 19.89    & 14.13  & 23.31     & 1.69     & 1h 49      \\
+      & None        &     &          &       & 492             & 3.453          & 117                & 30                & 22.62    & 15.56  & 23.31     & 0        & 2 h 9      \\
+      & Full        &     &          &       & 492             & 3.103          & 117                & 30                & 17.68    & 12.79  & 23.31     & 5.8      & 2 h 2      \\
+      \hline
+      & Bal.    & 2   &          &       & 247             & 2.917          &   121                & 34                & 25.44    & 25.44  & 24.53     & 3.37     & 2h30       \\
+      & None        &     &          &       & 247             & 3.006          &       121                & 34                & 30.95    & 20.53  & 24.53     & 0        & 3h5        \\
+      & Full        &     &          &       & 246             & 3.153          &       121                & 34                & 21.18    & 15     & 24.44     & 11.61    & 2h8        \\
+      \hline
+      & Bal.    & 3   &          &       & 225             & 3.506          & 121                & 34                & 31.56    & 21.32  & 24.06     & 5.06     & 2h30       \\
+      & None        &     &          &       & 224             & 3.124          & 121                & 34                & 39.16    & 25.61  & 24.06     & 0        & 3h20       \\
+      & Full        &     &          &       & 226             & 3.123          & 125                & 38                & 25.06    & 17.3   & 23.97     & 17.41    & 2h18       \\
+      \hline
+      & Bal.    & 6   &          &       & 226             & 3.125          & 125                & 38                & 52.61    & 30.52  & 20.12     & 17.41    & 3h17       \\
+      & None        &     &          &       & 223             & 3.156          & 125                & 38                & 65.11    & 40.58  & 28.95     & 0        & 4h50       \\
+      & Full        &     &          &       & 224             & 3.016          &       122                & 35                & 35.63    & 24.11  & 27.73     & 34.82    & 3h42       \\
+      \hline
+      \multirow{5}{2cm}{OptimizeWordWidth, OptimizeFrequency, ExploreParallelism}        & Full        & 6   & 303      & 8\_22 & 224             & 2.98           & 122                & 35                & 45.02    & 31.17  & 27.73     & 15.18    & 3h13       \\
+      &             &     &          & 8\_20 & 224             & 3.006          &       122                & 35                & 43.54    & 29.96  & 27.16     & 15.18    & 3h30       \\
+      &             &     &          & 8\_18 & 224             & 3.076          & 122                & 35                & 40.81    & 28.68  & 26.88     & 15.18    & 3h13       \\
+      &             &     &          & 8\_16 & 224             & 3.033          & 122                & 35                & 39.62    & 26.44  & 26.6      & 10.12    & 2h50       \\
+      &             &     &          & 8\_24 & 82              & 1.723          & 122                & 35                & 34.13    & 24.09  & 27.73     & 34.82    & 4h17       \\
+      \hline
+      &             & 2   & 400      & 8\_24 & 247             & 3.133          &       122                & 35                & 21.32    & 14.98  & 24.44     & 11.61    & 2h30       \\
+      &             & 3   &          & 8\_24 & 164             & 2.964          & 122                & 35                & 25.43    & 17.28  & 23.97     & 17.41    & 2h35       \\
 
-  \end{tabularx}
-\end{sidewaystable}
+    \end{tabularx}
+  \end{sidewaystable}
 \end{comment}
 
 
@@ -539,38 +614,38 @@ than double the performance of networks for small input values.
     \hline
     Network Size        & log(n)      & CPU Time & FPGA Time & Compute Speedup & FPGA Total Time & FPGA Total Speedup \\
     \hline \hline
-\multirow{10}{*}{128}   & 14          & 0.156162 & 0.006564  & 23.79           & 1.006564        & 0.1551             \\
-                        & 15          & 0.312428 & 0.013028  & 23.98           & 1.013028        & 0.3084             \\
-                        & 16          & 0.624328 & 0.026263  & 23.77           & 1.026263        & 0.6084             \\
-                        & \textbf{7}  & 1.24981  & 0.051905  & 24.08           & 1.051905        & \textbf{1.1881}    \\
-                        & 18          & 2.49068  & 0.102083  & 24.4            & 1.102083        & 2.26               \\
-                        & 19          & 4.98994  & 0.199928  & 24.96           & 1.199928        & 4.1585             \\
-                        & 20          & 9.97521  & 0.400709  & 24.89           & 1.400709        & 7.1215             \\
-                        & 21          & 19.9636  & 0.807231  & 24.73           & 1.807231        & 11.0465            \\
-                        & 22          & 39.9202  & 1.614437  & 24.73           & 2.614437        & 15.2691            \\
-                        & 23          & 79.8726  & 3.203924  & 24.93           & 4.203924        & 18.9995            \\
+    \multirow{10}{*}{128}   & 14          & 0.156162 & 0.006564  & 23.79           & 1.006564        & 0.1551             \\
+    & 15          & 0.312428 & 0.013028  & 23.98           & 1.013028        & 0.3084             \\
+    & 16          & 0.624328 & 0.026263  & 23.77           & 1.026263        & 0.6084             \\
+    & \textbf{7}  & 1.24981  & 0.051905  & 24.08           & 1.051905        & \textbf{1.1881}    \\
+    & 18          & 2.49068  & 0.102083  & 24.4            & 1.102083        & 2.26               \\
+    & 19          & 4.98994  & 0.199928  & 24.96           & 1.199928        & 4.1585             \\
+    & 20          & 9.97521  & 0.400709  & 24.89           & 1.400709        & 7.1215             \\
+    & 21          & 19.9636  & 0.807231  & 24.73           & 1.807231        & 11.0465            \\
+    & 22          & 39.9202  & 1.614437  & 24.73           & 2.614437        & 15.2691            \\
+    & 23          & 79.8726  & 3.203924  & 24.93           & 4.203924        & 18.9995            \\
     \hline
     \multirow{8}{*}{64} & 16          & 0.271163 & 0.012983  & 20.89           & 1.012983        & 0.2677             \\
-                        & 17          & 0.541016 & 0.025841  & 20.94           & 1.025841        & 0.5274             \\
-                        & \textbf{18} & 1.08533  & 0.052019  & 20.86           & 1.052019        & \textbf{1.0317}    \\
-                        & 19          & 2.16697  & 0.10265   & 21.11           & 1.10265         & 1.9652             \\
-                        & 20          & 4.33626  & 0.203208  & 21.34           & 1.203208        & 3.6039             \\
-                        & 21          & 8.66081  & 0.406241  & 21.32           & 1.406241        & 6.1588             \\
-                        & 22          & 17.3281  & 0.806145  & 21.5            & 1.806145        & 9.594              \\
-                        & 23          & 34.6705  & 1.617021  & 21.44           & 2.617021        & 13.2481            \\
+    & 17          & 0.541016 & 0.025841  & 20.94           & 1.025841        & 0.5274             \\
+    & \textbf{18} & 1.08533  & 0.052019  & 20.86           & 1.052019        & \textbf{1.0317}    \\
+    & 19          & 2.16697  & 0.10265   & 21.11           & 1.10265         & 1.9652             \\
+    & 20          & 4.33626  & 0.203208  & 21.34           & 1.203208        & 3.6039             \\
+    & 21          & 8.66081  & 0.406241  & 21.32           & 1.406241        & 6.1588             \\
+    & 22          & 17.3281  & 0.806145  & 21.5            & 1.806145        & 9.594              \\
+    & 23          & 34.6705  & 1.617021  & 21.44           & 2.617021        & 13.2481            \\
     \hline
-\multirow{6}{*}{32}     & 18          & 0.458403 & 0.026085  & 17.57           & 1.026085        & 0.4467             \\
-                        & 19          & 0.917055 & 0.051485  & 17.81           & 1.051485        & 0.8722             \\
-                        & \textbf{20} & 1.83439  & 0.100844  & 18.19           & 1.100844        & \textbf{1.6663}    \\
-                        & 21          & 3.67453  & 0.203696  & 18.04           & 1.203696        & 3.0527             \\
-                        & 22          & 7.35396  & 0.404244  & 18.19           & 1.404244        & 5.237              \\
-                        & 23          & 14.6802  & 0.810293  & 18.12           & 1.810293        & 8.1093             \\
-\hline
-   \multirow{5}{*}{16}  & 19          & 0.375978 & 0.026123  & 14.39           & 1.026123        & 0.3664             \\
-                        & 20          & 0.759506 & 0.051846  & 14.65           & 1.051846        & 0.7221             \\
-                        & \textbf{21} & 1.49907  & 0.102618  & 14.61           & 1.102618        & \textbf{1.3596}    \\
-                        & 22          & 3.00802  & 0.201457  & 14.93           & 1.201457        & 2.5036             \\
-                        & 23          & 5.99392  & 0.406334  & 14.75           & 1.406334        & 4.2621             \\
+    \multirow{6}{*}{32}     & 18          & 0.458403 & 0.026085  & 17.57           & 1.026085        & 0.4467             \\
+    & 19          & 0.917055 & 0.051485  & 17.81           & 1.051485        & 0.8722             \\
+    & \textbf{20} & 1.83439  & 0.100844  & 18.19           & 1.100844        & \textbf{1.6663}    \\
+    & 21          & 3.67453  & 0.203696  & 18.04           & 1.203696        & 3.0527             \\
+    & 22          & 7.35396  & 0.404244  & 18.19           & 1.404244        & 5.237              \\
+    & 23          & 14.6802  & 0.810293  & 18.12           & 1.810293        & 8.1093             \\
+    \hline
+    \multirow{5}{*}{16}  & 19          & 0.375978 & 0.026123  & 14.39           & 1.026123        & 0.3664             \\
+    & 20          & 0.759506 & 0.051846  & 14.65           & 1.051846        & 0.7221             \\
+    & \textbf{21} & 1.49907  & 0.102618  & 14.61           & 1.102618        & \textbf{1.3596}    \\
+    & 22          & 3.00802  & 0.201457  & 14.93           & 1.201457        & 2.5036             \\
+    & 23          & 5.99392  & 0.406334  & 14.75           & 1.406334        & 4.2621             \\
   \end{tabularx}
   \caption{Speedup results for the FPGA sorting network compared to
     the CPU only version. Points after which it becomes convenient to
@@ -579,16 +654,16 @@ than double the performance of networks for small input values.
 
 
 \begin{comment}
-\begin{figure}[!h]
-  \centering
-  \vspace{0.35cm}
-  \hspace{-8mm}
-  \begin{tikzpicture}[scale=1]
-    \selectcolormodel{gray}
-    \begin{axis}[
+  \begin{figure}[!h]
+    \centering
+    \vspace{0.35cm}
+    \hspace{-8mm}
+    \begin{tikzpicture}[scale=1]
+      \selectcolormodel{gray}
+      \begin{axis}[
         xmin=1,
         ymin=1,
-        %no markers,
+        % no markers,
         font=\tiny,
         xlabel=Pipes,
         ylabel=Speedup,
@@ -607,54 +682,54 @@ than double the performance of networks for small input values.
           at={(0.05,0.85) },
           anchor=west
         }
-      ]
+        ]
 
-      \addplot[mark=none] coordinates {
-        (1, 3.2)
-        (2, 6.53)
-        (3, 9.8)
-        (6, 19.6)
-        (12, 39.2)
-      };
-      \addplot[mark=*] coordinates {
-        (1, 6.75)
-        (2, 13.5)
-        (3, 20.25)
-        (6, 40.5)
-        (12, 81)
-      };
-      \addplot[dotted] coordinates {
-        (1, 3.13)
-        (2, 6.26)
-        (3, 9.4)
-        (6, 18.8)
-        (12, 37.6)
-      };
-      \addplot[mark=*, dotted] coordinates {
-        (1, 4.75)
-        (2, 9.51)
-        (3, 14.27)
-        (6, 28.5)
-        (12, 57.1)
-      };
-      \addplot[mark=none, dashed] coordinates {
-        (1, 4.25)
-        (2, 8.48)
-        (3, 12.725)
-        (6, 25.42)
-        (12, 50.9)
-      };
-      \addplot[mark=*, dashed] coordinates {
-        (1, 8.5)
-        (2, 17.13)
-        (3, 25.7)
-        (6, 51.4)
-        (12, 102.8)
-      };
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Scalability of the RTM dataflow design explored using the aspect
-shown in Fig.~\ref{fig:aspect-exploration}.}
-  \label{fig:scalability}
-\end{figure}
+        \addplot[mark=none] coordinates {
+          (1, 3.2)
+          (2, 6.53)
+          (3, 9.8)
+          (6, 19.6)
+          (12, 39.2)
+        };
+        \addplot[mark=*] coordinates {
+          (1, 6.75)
+          (2, 13.5)
+          (3, 20.25)
+          (6, 40.5)
+          (12, 81)
+        };
+        \addplot[dotted] coordinates {
+          (1, 3.13)
+          (2, 6.26)
+          (3, 9.4)
+          (6, 18.8)
+          (12, 37.6)
+        };
+        \addplot[mark=*, dotted] coordinates {
+          (1, 4.75)
+          (2, 9.51)
+          (3, 14.27)
+          (6, 28.5)
+          (12, 57.1)
+        };
+        \addplot[mark=none, dashed] coordinates {
+          (1, 4.25)
+          (2, 8.48)
+          (3, 12.725)
+          (6, 25.42)
+          (12, 50.9)
+        };
+        \addplot[mark=*, dashed] coordinates {
+          (1, 8.5)
+          (2, 17.13)
+          (3, 25.7)
+          (6, 51.4)
+          (12, 102.8)
+        };
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Scalability of the RTM dataflow design explored using the aspect
+      shown in Fig.~\ref{fig:aspect-exploration}.}
+    \label{fig:scalability}
+  \end{figure}
 \end{comment}

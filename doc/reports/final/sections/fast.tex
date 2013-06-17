@@ -616,6 +616,99 @@ three kernel design that implements the required pricing computation.
 
 \end{lstlisting}
 
+\section{The \fastc{} Compiler}
+\label{sec:implementation}
+
+\subsection{Tools}
+
+An initial analysis on existing compiler frameworks was carried
+out. Table \ref{table:compiler-comparison} summarises the main
+advantages and disadvantages of existing compiler frameworks that we
+analysed for the purpose of implementing a prototype of the \FAST{}
+language
+
+\begin{table}[ht!]
+\begin{tabularx}{\textwidth}{X|X|X|X|X}
+  Framework & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+  LLVM\cite{LLVM} & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+  Cetus\cite{Cetus} & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+  ROSE\cite{}& AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
+\end{tabularx}\cite{ROSE, Quinlan:2000}
+\caption{Feature comparison of compiler frameworks considered for implementation of \texttt{fastc}}
+\label{table:compiler-comparison}
+\end{table}
+
+Based on these features we selected the ROSE compiler framework for the following reasons:
+\begin{itemize}
+\item Reliable full featured front-end support
+\end{itemize}
+
+
+\subsection{Architecture}
+
+The compiler runs several passes on the input files:
+
+\begin{enumerate}
+\item Extract dataflow kernels
+\item Infer input and output types for dataflow kernels
+\item Generate MaxJ Design for extracted dataflow kernels
+\item Process pragmas inside regular C code to extract a manager design
+\item Process pragams inside regular C code to generate runtime code for uploading the bitstream and running the design
+\end{enumerate}
+
+To infer kernel inputs and outputs:
+\begin{itemize}
+\item extract kernel parameters
+\item pointer parameters are streams
+\item do a written analysis and record variables that are written to in the written set
+\item the intersection of written and params set is the set of output streams
+\item all other streams are input streams
+\item only one assignment is allowed to output streams
+\item transform assignments to output streams (replace them with output node in the resulting dataflow design)
+\end{itemize}
+
+It is required to infer data types as otherwise the resulting kernel
+may not compile.  This task is simplified by the fact that MaxCompiler
+supports some degree of type inference where the type of a variable is
+inferred where possible starting from it's initial type.
+
+A complication arises when using Boolean variables inside the
+kernel. These are commonly used for enable signals and thus are
+required to be supported by our approach. The problem is that C99 has
+no type for Booleans just int. This makes it impossible to infer the
+type Boolean for a signal whose C type is int.
+
+We present three possiblities for addressing these issues:
+\begin{itemize}
+\item Adding a Boolean type to the FAST language; in the context of
+  our prototype which relies heavily on compatibility with C99, this
+  can be achieved by adding a macro or typedef which can be adequately
+  handled by \fastc{}, directly indicating that the type of a kernel
+  parameter is Boolean; an advantage of this approach is the simple
+  implementation, while a potential disadvantage is the addition of
+  non-standard types; this definition may  conflict with existing definitions
+  in custom applications (affecting our Integration goal);
+
+\item Use the definition of bool in the <stdbool.h> header; this may
+  affect portability to Windows platforms (which do not normally use
+  this header by default);
+
+\item the alternative is to automatically infer the Boolean type based
+  on the dataflow kernel; this can be achieved by an analysis of the
+  function calls; thus the type of an input parameter should be
+  Boolean if and only if:
+  \begin{itemize}
+  \item it is used as the enable signal of a hardware construct:
+    counter, ROM or RAM element or DRAM command generator;
+  \item its value may propagate to such a call through assignment,
+    Boolean operations etc.
+  \end{itemize}
+  This shows that a backward dataflow analysis \cite{aho1977principles}\cite{cooper2011engineering}can be used to
+  detect the set of all Boolean variables (enable signals) required
+  for the kernel
+\end{itemize}
+
+
 
 \section{Summary}
 
