@@ -1,37 +1,74 @@
 \chapter{Conclusion}
 
-\section{Results}
+We introduced a novel development approach for dataflow designs. By
+decoupling optimisations from design specification the proposed design
+flow both simplifies the development and maintenance of dataflow
+applications and highlights opportunities for platform specific
+optimisations. We present extensions to our design flow that are
+required to support modelling of design performance and generation of
+run-time reconfigurable designs.
 
-\section{Limitations}
+To support the proposed design flow we introduced \FAST{} a novel
+language for specifying dataflow designs which facilitates integration
+with existing aspect weaving tools by adopting a standard C99
+syntax. Other important features of \FAST{} include support for
+hardware/software co-design, which allows embedding of dataflow
+kernels in regular C style applications and support for variable bit
+width operand representation via a pragma based mechanism. We
+implemented a compiler for the \FAST{} language that translates
+\FAST{} dataflow designs to MaxCompiler 2012.1 designs based on the
+MaxCompilerRT interface.
+
+To complement the \FAST{} dataflow designs we introduced a number of
+novel aspect descriptions that enable effective design space
+exploration with minimal user input.
+
+We evaluate our approach on a number of applications and show that
+significant improvements can be achieved in terms of productivity at
+minimal cost to performance. The proposed flow can be used to support
+design space exploration that highlights interesting trade-off
+opportunities for increasing design parallelism at minimal cost to
+accuracy.
+
+Finally, as part of the project, a full paper was accepted for
+publication at the 24th IEEE International Conference on
+Application-specific Systems, Architectures and Processors, ASAP 2013
+and the project has been included in the FP7\footnote{European Union
+  Seventh Framework Programme} funded HARNESS Project where it is to
+used for generating efficient dataflow implementations for key cloud
+applications based on user requirements.
 
 \section{Future Work}
 
-\emph{Extending the approach to other classes of parallel
-  computation}.  Based on the evaluation results, I will investigate
-extending the approach to support the generation of aspect
-descriptions for additional classes of parallel computation such as
-Sparse or Dense Linear Algebra, MapReduce or N-Body Simulation which
-are quintessential examples of parallel kernels
-\cite{Asanovic:Bodik:Catanzaro:Gebis:Husbands:Keutzer:Patterson:Plishker:Shalf:Williams:Yelick:2006}. This
-step could also provide valuable feedback which can be used to refine
-and validate the proposed approach.
 
-\emph{Support MaxCompiler 2013.1}. MaxCompiler 2013.1 introduces a new
-interface and interesting opportunities for optimisations. It
-introduces the possibility to control groups of DFEs and.
+Current and future work possibilities include:
 
-\emph{Support a standardise set of pragams} such as OpenACC.
+\begin{itemize}
+\item \emph{Extending the approach to other classes of parallel
+    computation}.  Based on the evaluation results, the approach can
+  be extended to support the generation of aspect descriptions for
+  additional classes of parallel computation such as Sparse or Dense
+  Linear Algebra, MapReduce or N-Body Simulation which are
+  quintessential examples of parallel kernels
+  \cite{Asanovic:Bodik:Catanzaro:Gebis:Husbands:Keutzer:Patterson:Plishker:Shalf:Williams:Yelick:2006}. This
+  could also provide valuable feedback which can be used to refine and
+  validate the proposed approach.
 
-\emph{Extension to heterogeneous systems}. Apart from including
-specific support for reconfiguration our approach is intentionally
-platform agnostic to allow extension to other platforms for dataflow
-computing (such as CPU and GPGPUs).
+\item \emph{Support MaxCompiler 2013.1}. MaxCompiler 2013.1 introduces
+  a new interface and interesting opportunities for optimisations. It
+  introduces the possibility to control groups of DFEs and.
 
-\emph{Extension to applications in other areas of finance}
-Current and future work includes aspect descriptions and the related
-facilities that cover systems with different types of accelerators,
-and their optimisation. Our approach can also be extended to cover
-systematic development of aspect descriptions for optimising a variety
-of application domains, from Monte-Carlo simulations in
-finance~\cite{Jin:2012} to genetic sequence
-matching~\cite{Arram:2013}.
+\item \emph{Support a standardise set of pragams} such as OpenACC.
+
+\item \emph{Extension to heterogeneous systems}. Apart from including
+  specific support for reconfiguration our approach is intentionally
+  platform agnostic to allow extension to other platforms for dataflow
+  computing (such as CPU and GPGPUs).
+
+\item \emph{Extension to applications in other areas of finance}
+  systematic development of aspect descriptions for optimising a
+  variety of application domains, from Monte-Carlo simulations in
+  finance~\cite{Jin:2012} to genetic sequence
+  matching~\cite{Arram:2013}.
+
+\end{itemize}
