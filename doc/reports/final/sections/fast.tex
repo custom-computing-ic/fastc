@@ -25,9 +25,22 @@ required by the proposed flow:
 \begin{itemize}
 \item \emph{Imperative specification of dataflow designs}. C99 syntax
   is enforced by the \FAST{} compiler which is based on the ROSE
-  Framework~\cite{Quinlan:2000}. The familiar syntax makes the
-  language easy to adopt thus facilitating translation of existing
-  implementations to dataflow designs.
+  Framework~\cite{Quinlan:2000}. We have chosen C99 syntax for the following reasons:
+\begin{itemize}
+\item the standard is widely adopted and should be instantly familiar
+  to developers
+\item it simplifies integration with many existing high-performance
+  applications (which tend to be written in C/C++)
+\item it includes a limited number of basic features (arithmetic,
+  pointers, functions) but also some convenient escape hatches (such
+  as macros, type definitions or pragmas) that can be used to
+  complement these features in a standard manner
+\item the Harmonic Aspect Weaver, used in the HARNESS project only
+  supports C99 syntax so this provides a mean to integrate our
+  dataflow designs with the wider HARNESS project
+\item considerable infrastructure is readily available (compilers,
+  source-to-source translation and optimisation tools exist for C/C++)
+\end{itemize}
 \item \emph{Good integration with existing source level translation and
     weaving tools}. Simple syntax allows the language to interact well
   with existing compilers or source to source translation frameworks,
@@ -183,127 +196,241 @@ a simple imperative language.
 \subsection{Kernels and Streams}
 
 Kernels represent a unit of computation that is mapped to the FPGA.
-They are C functions that can be called directly (as below) or linked
-via pragmas in C application code.
+They are C functions that can be linked via pragmas placed before a
+corresponding CPU (non-accelerated) function call in the C
+application.  It is not convenient, or correct for that matter, to
+allow the direct calling of dataflow kernels. First of all, from the
+execution model point of view this would not make sense and would
+confuse the user since a ``call'' to the dataflow kernel more
+precisely maps to a sequence of calls where the data are streamed, one
+value per cycle, into the kernel and the stream counters are
+incremented at each kernel iteration (as shown in Algorithm
+\ref{alg:kernel-sim}).  Secondly, this can also lead to spurious
+warnings and even unexpected errors when compiling and running with a
+different compiler than \fastc{}.
 
-\begin{lstlisting}[caption={Simple \FAST{} dataflow kernel.}]
+\begin{algorithm}
+  \caption{Kernel Execution Loop}
+  \label{alg:kernel-sim}
+  \begin{algorithmic}
+    \Function{RunKernel}{kernel, cyclesToRun}
+    \State kInParams $\gets$ kernel.InputStreamPointers
+    \State kOutParams $\gets$ kernel.OutputStreamPointers
+    \State kConstantParams $\gets$ kernel.ConstantParams
+    \State MAX\_CYCLE $\gets$ cyclesToRun
+    \For{cycle $\in$ {1 ... cyclesToRun}}
+    \State CURRENT\_CYCLE $\gets$ cycle
+    \State call kernel(kInParams, kConstantParams)
+    \For{streamPointer $\in$ kStreamParams}
+    \State streamPointer $\gets$ streamPointer + 1
+    \EndFor
+    \EndFor
+    \For{streamOutPointer $\in$ kOutParams }
+    \State streamOutPointer $\gets$ streamOutPointer - cyclesToRun
+    \EndFor
+    \State \Return kOutParams
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+However, although disallowing direct calls to \FAST{} dataflow kernels
+enforces a more robust separation between the dataflow and CPU
+components, it introduces the complication of passing parameters to
+the kernel. We use the convention over configuration approach
+\cite{chen2006convention} to simplify parameter passing, assuming the
+following implicit mapping:
+\begin{enumerate}
+\item the first parameter of the CPU function call maps to the number
+  of kernel cycles; this is mapped to a special variable named
+  \texttt{MAX\_CYCLES} which is accessible within the dataflow kernel;
+  it does not need to listed as a separate parameter in the kernel definition
+\item stream and constant parameters map to the identically named
+  dataflow kernel parameters
+\item output streams are listed in identical order in the kernel
+  function call as in the dataflow kernel design
+\item for situations where these conventions are not ideal, we provide
+  the means of specifying parameter mappings using pragma parameters
+  of the form \texttt{map:stream\_CPU, stream\_Kernel}.
+\item the special variable \texttt{CURRENT\_CYCLE} is updated with the
+  current cycle count at each cycle as per Algorithm \ref{alg:kernel-sim}
+\end{enumerate}
+
+These conventions are illustrated in Listing \ref{lst:fast-kernel} and
+the resulting parameter mapping is explained in
+\Cref{table:fast-params}.
+
+\begin{table}[!ht]
+\begin{tabularx}{\textwidth}{X|X|c}
+  \textbf{CPU Parameter} & \textbf{Dataflow Parameter} & \textbf{Explanation} \\
+\hline
+\hline
+  n & MAX\_CYCLES & Rule 1 \\
+  x &  a & Rule 4 \\
+  y & y & Rule 2 \\
+  y & s & Rule 2 \\
+  prod & result1 & Rule 3 \\
+  sum  & result2 & Rule 3 \\
+  -- & CURRENT\_CYCLE & Rule 5
+\end{tabularx}
+\caption{Mapping of parameters from CPU function calls to \FAST{} dataflow kernel.}
+\label{table:fast-params}
+\end{table}
+
+Additionally we assume that all input and output streams and constant
+values are correctly allocated according to the C99 standard before
+the function call to the dataflow kernel is occurs.
+
+\begin{lstlisting}[caption={Simple \FAST{} dataflow kernel.}, label={lst:fast-kernel}]
   // standard C main function
   int main() {
-    int *x = ..., *y = ...;
-    PassThrough(x, y);
-    ...
+    // allocate and pre-set x, y, prod and sum
+
+    #pragma fast kernel:MovingAverage map:x, a
+    MovingAverage(n, x, y, s, prod, sum);
+
+    // do something useful with prod and sum
   }
 
-  #pragma fast
-  void PassThrough_CPU(int32 *x, int *y) {
-    in(x);
-out(y);
+  void MovingAverage(int32 *a, int32 *y, int32 s) {
+    int32 result1 = a[0] * y[0] * CURRENT_CYCLE;
+    int32 result2 = a[0] + y[0] + s;
+    out(result1); out(result2);
   }
 \end{lstlisting}
 
 The kernel inputs can be streams or run-time constants. The kernel
-produces as output one or more streams of data.
-
-The example above shows a very simple kernel with two streams:
+produces as output one or more streams of data. We distinguish between:
 
 \begin{itemize}
-\item output (write) stream "y" - allows access to previous and current values;
-\item input (read) stream "x" - allows access to previous, current and future values;
+\item \textbf{output/write stream}  -- allows access to previous and
+  current values; write streams are created via calls to the
+  \texttt{out} function as shown in Listing \ref{lst:fast-kernel};
+\item \textbf{input/read stream} -- allows access to previous, current
+  and future values; these are the streams defined in kernel
+  declaration (e.g. \texttt{a} and \texttt{y} in Listing
+  \ref{lst:fast-kernel});
+\item \textbf{mixed output/input} streams -- allows access to
+  previous, current and future values; mixed streams are streams that
+  are defined within the kernel body.
 \end{itemize}
 
-The kernel Sum shown below computes the sum of input stream
-x. CURRENT\_CYCLE is a special value defined by MaxC that holds the
-value of the current kernel cycle.
+\subsubsection{Stream Type}
+A key to obtaining high-performance FPGA designs is the use of custom
+data types, where the FPGA offers a higher degree of flexibility than
+the C implementation. We can for example create fixed point precision
+data types of arbitrary bit width for integer and fractional part or
+non-standard floating point formats. A key design space exploration
+step is that of identifying required data types based on application
+specific accuracy requirements. For example in the case of Reverse
+Time Migration decreasing operator width can result in dramatic
+improvements in performance (2 times faster) with unnoticeable effects
+on image quality \cite{hfu2010accelerating}.
 
-\begin{lstlisting}[caption={\FAST{} kernel computing the sum of an input stream.}]
-  #pragma maxc dataflow(y)
-  void Sum(int *x, int *y) {
-    if ( CURRENT_CYCLE == 0 )
-    *y = x[0];
-    else
-    *y = y[-1] + x[0];
-  }
+Hence, variable bit width integer, fixed and floating point data types
+should be supported. However, the C standard does not provide means to
+specify arbitrary width types \cite[pp. 33]{Cstandard}.  Although
+arbitrary bit width fields can be specified this can only be done
+inside \texttt{structs} and requires padding to a multiple of 8 bits,
+which severely limits and complicates the use of values defined in
+this manner.
+
+An alternative to the standard defined types is the introduction of
+custom type definitions. These can bear specific meaning to the
+\fastc{} compiler while remaining completely transparent to standard
+compilers such as GCC. This initial approach is illustrated in
+Listings \ref{lst:fast-kernel} and \ref{lst:fast-bscholesp}. A
+complete list of the type definitions and their corresponding C99 types
+is shown in \Cref{table:data-type}.
+
+\begin{table}[ht!]
+\begin{tabularx}{\textwidth}{c|c|c|X}
+\textbf{FAST Type}  & \textbf{C Type} & \textbf{Example} & \textbf{Explanation}                                                             \\
+\hline \hline
+float(exp)\_(mant)  & float           & float8\_22       & Single precision floating point value with 8 exponent bits and 22 mantissa bits  \\
+double(exp)\_(mant) & double          & double11\_50     & Double precision floating point value with 11 exponent bits and 50 mantissa bits \\
+fixed(exp)\_(mant)  & float           & fixed3\_12       & Fixed precision value with 3 integer bits and 12 fractional bits                 \\
+int(width)          & int             & int15            & Integer value with 15 bits                                                       \\
+uint(width)         & int             & uint15           & Unsigned integer value 15 bits                                                   \\
+s\_(type)           & type*           & s\_float8\_24    & Stream of single precision floating point values                                 \\
+s\_array\_(type)    & type**          & s\_array\_int32  & Stream array of integer values                                                   \\
+\end{tabularx}
+\caption{\FAST{} custom data type for variable bit width integer, fixed and floating-point values.}
+\label{table:data-type}
+\end{table}
+
+
+\subsubsection{Stream Offsets}
+
+Stream offset expressions are used to access previous or future stream
+values using the array index notation (as shown in Listing
+\ref{lst:fast-offsets}). These expressions should be linear
+combinations of compile time constants or constant inputs to the
+kernel. More efficient hardware can be constructed if bounds for the
+offset are specified. This can be done via the \texttt{pragma
+  var:var\_name type:offset min:min\_value max:max\_value} shown on
+Line 1 of Listing \ref{lst:fast-offsets}.
+
+The array index notation offers a simple means of accessing stream
+values but introduces, for maintaining compatibility with the C
+standard to annotate all stream variables. For example this leads to
+the superfluous \texttt{x[0]} on Line 3 of Listing
+\ref{lst:fast-offsets}. In the context of large dataflow kernels it
+can be tedious and error-prone to annotate stream values so we
+introduce the possibility of declaring stream values as regular scalar
+(non-pointer/array) types. For example, on line 4 of Listing
+\ref{lst:fast-offsets}, the value of r can be used without need for
+annotation. This, however introduces the limitation that future or
+past values of the stream ``r'' cannot be accessed in the kernel
+anymore, as shown on Line 4.
+
+\begin{lstlisting}[caption={\FAST{} kernel using offsets.},label={lst:fast-offsets}]
+  #pragma fast var:off type:offset min:-128 max:128
+  void (int32 *x, int32 off) {
+    int32 r = x[-off] + x[off] + x[1] + x[-1] + x[0];
+    int32 o = 2 * r + 5;
+    // int32 o = 2 * r[-1] + 5;  -- Illegal!
+    out(o);
+ }
 \end{lstlisting}
 
-All streams declared within a kernel are write streams.
 
-The indices for stream offsets can be compile time values as in the
-example above. When using run-time values, it can be more efficient
-(in terms of FPGA resource utilization) to specify bounds for the
-offset expressions. For example in the kernel shown below, the input
-stream "offests" contains offsets at which to select elements from
-input stream "x". We may, for example, know that our application is
-only expect to use offsets smaller than 256, so we can provide this
-optimisation hint to the compiler.
-
-\begin{lstlisting}[caption={\FAST{} kernel using offsets.}]
-  void Bounds(int *x, int *offsets, int *y) {
-    int bounded_offset = make_offset(*offsets, 0, 256);
-    *y = x[*offsets] * 2;
-  }
-\end{lstlisting}
-
-\subsection{Inputs and Outputs}
-
-In the examples above we declare inputs and outputs in the kernel
-headers. Assigning to a declared output stream automatically outputs
-the value. Assignments to input streams are illegal and an error is
-indicated by the compiler.
-
-\subsection{Control}
-
-\subsubsection*{Conditionals}
+\subsection{Control and Computation}
 
 Regular control statements can be used. When conditionals are based on
-stream values, the control statement maps to hardware multiplexers
-(e.g. in the Sum kernel above, if ( CURRENT\_CYCLE == 0 )).
-
-\subsubsection*{Loops}
+stream values, the control statements are mapped by \fastc{} to
+hardware multiplexers.
 
 It is only possible to use loops statements (while, for) if their
-bounds and induction variables are known at compile time. In the
-ParallelSum kernel below the loop is used to replicate the computation
-Par times.
+bounds and induction variables are known at compile time. In Listing
+\ref{lst:fast-compute-control} the loop is used to generate parallel
+arithmetic pipelines for every pair of inputs followed by an adder
+tree that reduces the result.
 
-\begin{lstlisting}[caption={Using loops for \FAST{} design parametrisation}]
-  void ParallelSum(int *x[Par], int *Sum[Par]) {
-    for (int i=0; i <Par; i++)
-    sum[i][0] = sum[i-1][0] + x[i][0];
-  }
-\end{lstlisting}
-\subsection{Computation}
-
+Computation is captured using a mix of C operators and standard
+functions:
 \begin{itemize}
-
-\item C arithmetic operators can be used as usual on stream values (not streams themselves).
-\item Arithmetic on streams (equiv. to pointer arithmetic) is illegal.
-\item C math.h function calls are automatically mapped to efficient hardware blocks.
-  p
+\item C arithmetic operators can be used as usual on stream values (not streams themselves);
+\item C math.h function calls are automatically mapped to efficient hardware blocks;
+\item Arithmetic on streams (equivalent of pointer arithmetic) is
+  illegal. Instead stream values must be extract by use of the current
+  values operators (* or [0]).
 \end{itemize}
 
-The example below computes the difference between the arithmetic and
-geometric average of two consecutive elements in a streams (boundary
-cases ignored).
+\begin{lstlisting}[caption={Compute and control example in \FAST{}}, label={lst:fast-compute-control}]
+  // constants can be used for design parametrisation
+  const int nPairs = 2;
 
+  void PairwiseSquareRootSum(s_array_float8_24 x) {
+    float8_24 prod, sum;
 
-\begin{lstlisting}
-  void AvgDiff(int *x, int *y) {
-    int arithmetic_avg = (x[0] + x[-1]) / 2;
-    int geometric_avg  = (sqrt(x[0] * x[-1]);
-    *y = geom - avg;
-  }
-\end{lstlisting}
+    // loop is used for design parametrisation
+    for (int i = 0; i < nPairs; i++) {
+      prod = x[2 * i][0] + x[2 * i + 1][0];
 
-\subsection{State}
-State can be saved and subsequently accessed between kernel iterations
-by use of global values as shown in the kernel CycleSum that adds the
-current cycle count to the value of the input stream, and also updates
-the cycle value before the next iteration
-\begin{lstlisting}
-  int cycle = 0;
-  void CycleSum(int *x, int *y) {
-    *y = *x + cycle;
-    cycle++;
+      // C99  arithmetic functions can be mapped to hardware blocks
+      sum = sum + sqrt(abs(prod));
+    }
+    out(sum);
   }
 \end{lstlisting}
 
