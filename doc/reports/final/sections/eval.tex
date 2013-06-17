@@ -1,16 +1,17 @@
 \chapter{Evaluation}
 \label{sec:evaluation}
 
-\section{Methodology}
+We evaluate our approach by implementing a number of dataflow kernels
+for applications including advanced high-performance applications. We
+measure productivity, in terms of lines of code, number of function
+calls and cyclomatic complexity. We measure efficiency in terms of
+performance and energy consumption and compare the software only
+version, the version accelerated using MaxCompiler (manually written
+dataflow kernels) and the proposed approach (MaxCompiler dataflow
+kernels automatically generated using \fastc{}).
 
-To evaluate our approach we develop and implement a number of applications
-to test both the flexibility and generality of our approach but also to
-ensure that we can support high-performance applications. There are in general
-no standard benchmarks for FPGAs as there are for CPU/GPU systems.
-
-\subsection{Benchmark}
 \label{sec:benchmark}
-Our benchmark for consists of the following applications:
+Our benchmark consists of the following applications:
 \begin{itemize}
 \item Numerical Differentiation
 \item Black Scholes Option Pricing
@@ -19,8 +20,6 @@ Our benchmark for consists of the following applications:
 relies on compile-time loops, auxiliary function calls and input
 groups to generate a readable description.
 \end{itemize}
-
-\subsection{Equipment}
 
 All dataflow designs are run on Maxeler MaxWorkstation
 \cite{MaxWorkstation} which comprises:
@@ -121,7 +120,7 @@ aspects and decoupling it from the original source code makes the
 application more portable and facilitates discovery of interesting
 trade-off opportunities using design space exploration.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[scale=1.2]{figs/pre}
 \caption{Exploration of accuracy vs resource usage trade-offs using the aspect
@@ -134,7 +133,7 @@ explore the resource trade-offs of implementing arithmetic operations
 in either DSPs or LUTs and FFs (Fig.~\ref{fig:arith}) and helps to
 avoid over mapping on DSPs for arithmetic intensive applications.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[scale=1.2]{figs/arith}
 \caption{Exploration of DSP and LUT/FF balancing for functional units
@@ -261,7 +260,7 @@ improves portability of the design, allowing optimisations based on
 design space exploration to be carried out on various platforms (hence
 subject to varying resource constraints) without manual intervention.
 
-
+\begin{comment}
 \begin{sidewaystable}
   \begin{tabularx}{\textwidth}{p{3.5cm}|X|X|X|X|X|X|X|X|X|X|X|X|X|}
     Aspects & DSP Balance & Par & Mem Freq & Width & FPGA  Time (Ms) & Total Time (s) & Total Power (Watt) & Dyn. Power (Watt) & LUT (\%) & FF(\%) & BRAM (\%) & DSP (\%) & Build Time \\
@@ -293,6 +292,7 @@ subject to varying resource constraints) without manual intervention.
 
   \end{tabularx}
 \end{sidewaystable}
+\end{comment}
 
 
 \section{Bitonic Sort}
