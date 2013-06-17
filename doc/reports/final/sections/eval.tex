@@ -11,34 +11,69 @@ dataflow kernels) and the proposed approach (MaxCompiler dataflow
 kernels automatically generated using \fastc{}).
 
 \label{sec:benchmark}
-Our benchmark consists of the following applications:
+
+Our benchmark includes a variety of interesting real-life
+applications, which are discussed in more detail in the remainder of
+this chapter:
 \begin{itemize}
-\item Numerical Differentiation
-\item Black Scholes Option Pricing
-\item Reverse Time Migration -- high-performance, design parallelism
-\item bitonic sorting network -- a recursive design, that heavily
-relies on compile-time loops, auxiliary function calls and input
-groups to generate a readable description.
+\item \textbf{Numerical Differentiation} is a 1D stencil computation which
+  is highly sensitive to floating point accuracy and tests the
+  variable bit width optimisation capabilities of the proposed design
+  flow. Numerical differentiation is used in situations where the
+  analytical form of a functions is not available, for example on
+  large sets of experimental data;
+\begin{comment}
+\item \textbf{Black Scholes Option Pricing} is a one dimensional
+  stencil computation, with multiple time step iterations which
+  requires the use of on-board DRAM to maximise efficiency; the Black
+  Scholes model is one of the most commonly used models in finance for
+  pricing derivatives of European options;
+\end{comment}
+\item \textbf{Reverse Time Migration} is an advanced high-performance
+  application for seismic imaging. It is the most widely used
+  application in the Oil and Gas industry for identifying geological
+  structures that resemble patches of oil. This application is also
+  part of the HARNESS validation studies;
+\item \textbf{Add Prediction} is an application for click-through rate
+  prediction used in Microsoft's Bing search engine for Sponsored
+  Search. This is an arithmetic intensive kernel, and requires the
+  ability to effectively tune operator bit width and design parameters
+  to reach reach timing closure. This is also part of the HARNESS
+  validation studies;
+\item \textbf{Bitonic Sorting Network} is a high-throughput sorting
+  network for limited input size. It can be used as the first stage of
+  a multi-gigabyte FPGA sorting algorithm, to separate the inputs into
+  sorted buckets of up to 256 elements, after which a merging stage is
+  applied. The sorting network is a recursively defined design, that
+  heavily relies on compile-time loops, auxiliary function calls and
+  input groups to generate a readable and parameterised
+  description. Additionally by adapting operator bit-width to run-time
+  inputs the network input width can be increased
+  substantially,leading to improved throughput.
 \end{itemize}
 
 All dataflow designs are run on Maxeler MaxWorkstation
 \cite{MaxWorkstation} which comprises:
 \begin{itemize}
+\item Vectis Dataflow Engine, 24 GB DRAM, Xilinx Virtex 6 FPGA Chip
 \item Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz, cache size 8192 KB
-\item 16 GB DRAM
-\item Vectis dataflow engine with 24 GB DRAM,
+\item 16 GB DRAM connected to the CPU
 \item DFEs connect to CPU via PCI Express gen2 x8
 \end{itemize}
 
-Hardware builds usually take a long time. Additionally they are
-required to meet timing and resource usage constraints. The process of
-placing and routing a dataflow design can take anywhere from 20
-minutes to several days. Since this is a stochastic process, usually
-mutliple builds are started in parallel and when one terminates the
-whole build process is terminated and that design is used. Hence the
-build process requires substantial amount of DRAM and CPU cores,
-particulary during the design space exploration step. Hence the builds
-were ran on the Custom Computing cluster machines:
+Theoretical memory bandwidth of the on-board DFE DRAM is 38 GB/s and
+PCI-Express bandwidth (used for transferring data from the DRAM
+connected to the CPU to the on-board DFE DRAM) is 2GB/s.
+
+The process of placing and routing a dataflow design can take anywhere
+from 20 minutes to several days. Since this is a stochastic process,
+usually mutliple builds are started in parallel and when one
+terminates successfully the whole build process is stop and that
+design is used. Hence the build process requires substantial amount of
+DRAM and CPU cores, particulary during the design space exploration
+step where multiple instances of the same design are compiled to
+identify maximum performance configuration. Hence the builds were ran
+on the Custom Computing cluster machines:
 
 \begin{itemize}
 \item \texttt{cccad3} -- 2 8 core, hyperthreaded (16 threads) Intel
@@ -53,46 +88,166 @@ All CPU applications are compiled using GCC 4.4 with all optimisations
 enabled (-O3 flag) and FPGA Designs are compiled with MaxCompiler
 2012.1.
 
-%\section{Numerical Differentiation}
+\section{Numerical Differentiation}
 
-%\section{Black Scholes}
+Numerical differentiation is an important application in engineering
+and can be used to estimate derivative values when an analytical form
+of the function is not available. Consider for example the case of
+measuring a sample of displacements form which we want to derive the
+instantaneous speed. As explained in \Cref{sec:num-diff-back} a 5
+point linear stencil can be used to approximate the value of the
+derivative.
+
+However, in practice, experimental data often contains noise (unwanted
+random addition to a signal) which impacts the accuracy of the
+estimation. To filter the noise, a smoothing step is applied to the
+experimental data with the goal of improving the signal-to-noise
+ratio. One of the most commonly used examples is the Savitzky-Golay
+Filter \cite{savitzky1964smoothing} which applies a polynomial
+regression to a set of a m data points, also a linear stencil
+computation.  Using higher order stencils (up to a few hundreds even)
+results in an smoother, less noisy regression.
+
+Hence our implementation of the differentiation algorithm consists of
+two steps: \emph{1)} applying the smoothing filter to the input data,
+\emph{2)} estimating the derivative using a linear stencil. The
+algorithm for an arbitrary stencil order is shown in Algorithm
+\ref{alg:sg-numdiff}.
+
+\begin{algorithm}
+  \caption{Savitzky-Golay Numerical Differentiation}
+  \label{alg:sg-numdiff}
+  \begin{algorithmic}
+    \Function{NumericalDifferentiation}{$values, Order, sCoefs, dCoefs, sn, dn, Step$}
+    \State smoothValues $\gets$ \Call{Convolve}{$values, sCoefs, Order, sn$}
+    \State diffValues  $\gets$ \Call{Convolve}{$values, dCoefs, Order, dn * step$}
+    \State \Return $diffValues$
+    \EndFunction
+
+    \Function{Convolve}{$values, coeffs, Order, Normalizer$}
+    \State result[] $\gets$ 0
+    \For{$x = Order \to (nCoefs - Order)$}
+    \For{$c = 1 \to nCoefs$}
+    \State result[x] $\gets$ result[x] + value[x - Order + c] * coeffs[c]
+    \EndFor
+    \State result[x] $\gets$ result[x] / Normalizer
+    \EndFor
+    \State \Return result
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Our \FAST{} dataflow designs consist of two kernels one for smoothing
+and one for differentiation. We explore the possibility of generating
+an efficient run-time reconfigurable design either for improving
+design performance, or for supporting larger dimension stencils, via
+time-sharing. We measure resource usage and performance for stencil
+size of 5, 7 and 9 points and estimate the resource usage for larger
+stencils to identify sizes at which run-time reconfiguration becomes
+convenient. To maximise performance we write a parametrised design
+which can be parallelised up to the point where it becomes memory
+bound.
+
+Since the design uses PCI-E the maximum parallelism that can be
+achieved before it becomes I/O bound is given by:
+$$\frac{\text{PCI-E bits per cycle}}{\text{kernel input bits}} = \frac{128}{32} = 4$$
+
+Hence, when using PCI-E a kernel replication factor of 4 is ideal for
+maximising throughput.
+
+If data were available straight from FPGA DRAM the design parallelism
+could be increased to:
+$$\frac{\text{memory bits per cycle}}{\text{kernel input bits}} = \frac{1536}{32} = 48$$
+
+However, for this algorithm transferring data to on-board DRAM will
+not improve overall throughput since data are only used once, hence we
+investigate the PCI-E design.
+
+The measured resource usage scales linearly with the parallelism level
+as shown in \Cref{table:nd1} and shows that for a 7 point stencil,
+approximately 10 pipelines can mapped onto the FPGA. However, beyond
+80\% resource usage level, the design usually becomes fairly congested
+and fails to route or takes an extremely large time to achieve timing
+closure.
+
+\begin{table}[ht!]
+\begin{tabularx}{\textwidth}{X|X|X|X|X}
+  Pipes & LUT Usage & FF Usage & DSP Usage & BRAM Usage \\
+\hline\hline
+  1     & 10.01     & 6.65     & 8.45      & 0.75       \\
+  2     & 18.91     & 13.21    & 17.51     & 1.50       \\
+  4     & 37.13     & 25.32    & 33.12     & 3.75       \\
+  6     & 56.17     & 39.28    & 50.31     & 4.50       \\
+  8     & 79.63     & 51.22    & 49.55     & 7.75       \\
+\end{tabularx}
+\caption{Pipeline scalability of the numerical differentiation algorithm for a 7 point stencil.}
+\label{table:nd1}
+\end{table}
+
+\Cref{table:nd2} shows that the maximum achievable stencil width with
+the static design (which uses both kernels onto the FPGA chip) is 29
+whereas using run-time reconfiguration to swap the individual kernels
+increases the maximum stencil width to around 59 points (computed an
+assumed 4 parallel pipelines as shown on lines 4, 8 and 9 of
+\Cref{table:nd2}).
+
+\begin{table}[ht!]
+\begin{tabularx}{\textwidth}{X|X|X|X|X|X}
+ Kernel                    & Stencil Width & LUT Usage & FF Usage & DSP Usage & BRAM Usage   \\
+\hline\hline
+ \multirow{4}{*}{GSDiff}   & 5             & 2.03      & 1.55     & 0.99      & 0            \\
+                           & 7             & 2.79      & 2.08     & 2.92      &              \\
+                           & 9             & 3.33      & 2.48     & 3.76      & 0            \\
+\cline{2-6}
+                           & \multicolumn{5}{c}{Max = $100 / 3.76 * 9 / 4 = 239 / 4 = 59 $} \\
+\hline
+ \multirow{4}{*}{GSSmooth} & 5             & 2.34      & 1.44     & 2.23      & 0            \\
+                           & 7             & 2.91      & 1.81     & 2.97      & 0            \\
+                           & 9             & 3.47      & 2.21     & 3.91      & 0            \\
+\cline{2-6}
+                           & \multicolumn{5}{c}{Max = $100 / 3.91 * 9 / 4 = 239 / 4 = 57 $} \\
+\hline
+Both                       & \multicolumn{5}{c}{Max = $100 / (3.91 + 3.76) * 9 / 4 = 29 $}  \\
+\end{tabularx}
+\caption{Resource usage per stencil width, per kernel, per compute pipe.}
+\label{table:nd2}
+\end{table}
+
+
+The \FAST{} dataflow kernel that implements the differentiation
+operation is shown in Listing {}. It uses no API (non-user defined)
+function calls and a total of 20 lines of code, compared to the
+original MaxCompiler design which requires 14 API calls and 37 lines
+of code.
+
+
+%\section{Black Scholes}nn
 
 \section{Reverse Time Migration}
 \label{sec:RTM}
-We evaluate the proposed approach by implementing a high-performance
-application based on the Reverse Time Migration method for seismic
-imaging which is used to detect geological structures, based on the
-Earth's response to injected acoustic waves. The technique models the
-propagation of injected waves using the isotropic acoustic wave
-equation \cite{araya2011assessing}:
-\begin{align}
-\frac{d^2p(r,t)}{dt^2} + {dvv(r)}^2\bigtriangledown^2p(r,t) = f(r,t)
-o\end{align}
+The Reverse Time Migration method for seismic imaging which is used to
+detect geological structures, based on the Earth's response to
+injected acoustic waves. Background on istropoic acoustic modelling
+and the RTM algorithm is introduced in \Cref{sec:rtm-back}. For the
+purpose of our implementation we approximate the differential equation
+using stencil computation to perform a fifth-order Taylor expansion in
+space and first-order expansion in time.
 
-We approximate the differential equation using stencil computation to
-perform a fifth-order Taylor expansion in space and first-order Taylor
-expansion in time.
-
-We use \FAST{} to implement the dataflow kernels and aspects to
-generate multiple configurations for the design by creating two
-kernels that are used to control the memory command read and write
-streams (CmdRead, CmdWrite) and the computation kernel (RTM).
-
-To illustrate the potential benefits of our approach we analyse the
-results of using the debugging aspect of Section
-\ref{sect:asp_debug}. Table~\ref{table:loc} compares the number of
-lines of code required for the \FAST{} with aspect design with the
+We use \FAST{} to implement the dataflow kernels for both read and
+write memory controllers (\texttt{kernel\_CmdRead},
+\texttt{kernel\_CmdWrite}) and the application compute kernel
+(\texttt{kernel\_RTM}).  To illustrate the benefits of our approach we
+analyse the results of using the debugging aspect of
+\Cref{sect:asp_debug}. \Cref{table:loc} compares the number of lines
+of code required for the \FAST{} with aspect design with the
 equivalent MaxCompiler implementation showing a reduction in code size
 of up to 42\% for the run-time reconfigurable design and a reduction
 in the number of API calls (including debug calls) of up to 67\% which
 translate to increased productivity.
 
 \begin{table}[!h]
-  \renewcommand{\arraystretch}{1.2}
+
   \centering
-  \caption{Code measures for the RTM kernels comparing \FAST{} and
-    MaxCompiler.}
-  \label{table:loc}
   \begin{tabular}{c|ccc|cc}
     \hline
     \multirow{2}{*}{\bf{Kernel}} & \bf{Aspect } & \multicolumn{2}{c|}{\bf{\FAST{}}} & \multicolumn{2}{c}{\bf{MaxCompiler}}                   \\
@@ -103,9 +258,10 @@ translate to increased productivity.
     RTM Static                   & 12           & 246                            &     43         & 403     &       175        \\
     RTM RTR                      & 12           & 377                            &     91         & 669     &       275       \\
   \end{tabular}
+  \caption{Code measures for the RTM kernels comparing \FAST{} and
+    MaxCompiler.}
+  \label{table:loc}
 \end{table}
-
-\subsection{Results}
 
 Results of the design space exploration using the aspect in
 Fig.~\ref{fig:aspect-exploration} with variable mantissa illustrate
