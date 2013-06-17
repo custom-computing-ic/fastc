@@ -347,16 +347,16 @@ trade-off opportunities using design space exploration.
       };
     \end{axis}
   \end{tikzpicture}
-  \caption{Scalability of the RTM dataflow design explored using the aspect
-    shown in Fig.~\ref{fig:aspect-exploration}.}
+  \caption{Exploration of accuracy vs resource usage trade-offs using
+    the aspect shown in \Cref{fig:aspect-exploration} with variable
+    mantissa.}
   \label{fig:precision}
 \end{figure}
 
 Computation precision using floating point types can be estimated by:
 $$ \text{precision} = \frac{1}{2^{\text{mantissa bits}}} $$
 
-
-\begin{table}
+\begin{table}[!ht]
   \begin{tabularx}{\textwidth}{c|c|X|X|X|X|X}
     Exp. & Mant. & FF    & BRAM  & LUT   & DSP   & Precision ($1E-6$) \\
     \hline\hline
@@ -366,6 +366,7 @@ $$ \text{precision} = \frac{1}{2^{\text{mantissa bits}}} $$
     8      & 18    & 28.68 & 26.88 & 40.81 & 15.18 & 3.8146             \\
     8      & 16    & 26.44 & 26.60 & 39.62 & 10.12 & 15.2585            \\
   \end{tabularx}
+  \caption{Resource usage vs accuracy trade-off exploration data.}
 \end{table}
 
 The DSP balancing aspect shown in Fig.~\ref{fig:aspect-DSP} allows to
@@ -373,9 +374,66 @@ explore the resource trade-offs of implementing arithmetic operations
 in either DSPs or LUTs and FFs (Fig.~\ref{fig:arith}) and helps to
 avoid over mapping on DSPs for arithmetic intensive applications.
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
   \centering
-  \includegraphics[scale=1.2]{figs/arith}
+  \hspace{-2cm}
+  \begin{tikzpicture}[scale=1.5]
+    \selectcolormodel{gray}
+    \begin{axis}[
+      xmin=0,
+      ymin=0,
+      % no markers,
+      enlargelimits=0.15,
+      font=\tiny,
+      axis y line*=left,
+      xlabel=Arithmetic transformation ratio,
+      ylabel=Units Used,
+      xtick={0, 0.5, 1},
+      legend columns=1,
+      legend entries={
+        DSP Usage (Add),
+        DSP Usage (Multiply),
+        FF Usage x 100 (Add),
+        FF Usage x 100 (Multiply),
+        LUT Usage x 100 (Add),
+        LUT Usage x 100 (Multiply),
+      },
+      legend style={
+        draw=none
+      }
+      ]
+      \addplot[mark=*] coordinates {
+        (0, 0)
+        (0.5, 0)
+        (1, 1)
+      };
+      \addplot[] coordinates {
+        (0, 0)
+        (0.5, 2)
+        (1, 3)
+      };
+      \addplot[mark=*, dotted] coordinates {
+        (0, 2.75)
+        (0.5, 2.68)
+        (1, 1.50)
+      };
+     \addplot[dotted] coordinates {
+        (0, 6.5)
+        (0.5, 1.5)
+        (1, 0)
+      };
+      \addplot[mark=*, dashed] coordinates {
+        (0, 2)
+        (0.5, 2.1)
+        (1, 0)
+      };
+      \addplot[dashed] coordinates {
+        (0, 6.13)
+        (0.5, 1.2)
+        (1, 0)
+      };
+    \end{axis}
+  \end{tikzpicture}
   \caption{Exploration of DSP and LUT/FF balancing for functional units
     implementing a single arithmetic operation using the aspect shown
     in Fig.~\ref{fig:aspect-DSP}.}
@@ -395,21 +453,20 @@ published FPGA results for static designs
 \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}, \cite{araya2011assessing}.
 
 
-
-
 \begin{figure}[!h]
   \centering
-  \begin{tikzpicture}[scale=1.8]
-    \selectcolormodel{gray}
+  \hspace{-1cm}
+  \begin{tikzpicture}[scale=1.5]
     \begin{axis}[
       xmin=1,
       ymin=1,
+      enlargelimits=0.15,
       % no markers,
       font=\tiny,
       xlabel=Pipes,
       ylabel=Speedup,
-      xtick={1,2,3,6,12},
-      ytick={4, 10, 20, 40, 50, 70, 80, 100},
+%      xtick={1,2,3,6,12},
+%      ytick={4, 10, 20, 40, 50, 70, 80, 100},
       legend columns=2,
       legend entries={
         Static (S),
@@ -424,7 +481,6 @@ published FPGA results for static designs
         anchor=west
       }
       ]
-
       \addplot[mark=none] coordinates {
         (1, 3.2)
         (2, 6.53)
@@ -473,6 +529,7 @@ published FPGA results for static designs
     shown in Fig.~\ref{fig:aspect-exploration}.}
   \label{fig:scalability}
 \end{figure}
+
 
 
 
