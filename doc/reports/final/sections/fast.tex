@@ -436,15 +436,21 @@ functions:
 
 \subsection{Pragmas}
 
-Pragmas are used to indicate:
+Pragmas are used to indicate information that pertains to the
+optimisation process rather than the functionality of an
+application. In particular they indicate:
 \begin{itemize}
-\item the link between hardware and software
 \item optimisation options exposed by the backend tools
+\item additional type information required to generate variable width
+  representations of operands
 \end{itemize}
 
-This enables users to switch seamlessly between compilers and,
-eventually backend compilers, contributing towards the Integration
-requirement of our design flow.
+One exception is the hardware software linkage pragma which maps a
+software call to its corresponding dataflow engine version.
+
+The use of pragmas enables users to switch seamlessly between
+compilers and, eventually backend compilers, contributing towards the
+Integration requirement of our design flow.
 
 However, unlike in other approaches pragmas are not
 meant to be inserted manually -- although this is possible -- but
@@ -458,17 +464,53 @@ towards our Portability requirement.
 
 Pragams in \FAST{} follow the syntax:
 
-This facilitates...
+\texttt{pragma fast (param\_name:param\_value)* (func:func\_name)?}
+
+The function name parameter simplifies loading of pragma information
+into a global data structure.
 
 \section{Extensions}
 
 \label{sec:fast-extensions}
 
+In this section we present the extensions we implemented on top of our
+\FAST{} and \fastc{} prototype in order to improve ease of use and
+simplify the language as much as possible. This simplifies adoption by
+users and also integration with the Harmonic Aspect weaver.
+
 \subsection{Inferring Stream Type}
 
-Instead of specifying inputs and outputs manually, the \fastc{}
-compiler can be extended to automatically infer the type of streams
-(read or write). This is based on the rules:
+Our original approach to specifying variable stream types is
+problematic since it fails to decouple effectively the variable bit
+width optimisation from the application code. This in turn can lead to
+complications when writing aspect descriptions for exploring the
+design space of bit width optimisations since a more intensive
+analysis of the entire application is required in order to recognise
+optimisation pointcuts and generate correct designs when attempting to
+vary the representation of certain operands.
+
+To handle this situation we observe that, in general to classes of
+types are interesting to vary:
+\begin{itemize}
+\item I/O type -- this is the representation of a stream that when
+  interfacing with the CPU; this has to be a standard C type to avoid
+  data corruption
+\item kernel/compute type -- this the representation of a stream used
+  inside the dataflow kernel, and hence, on the FPGA dataflow
+  engine. This can be varied freely to non-standard types subject to
+  accuracy requirements
+\end{itemize}
+
+Hence we introduce the following pragma for IO \texttt{pragma fast
+  var:stream\_name ioType:typeToUseForIOInterface
+  computeType:typeToUseInsideKernel}. Such pragmas can be
+automatically inserted by the aspect weaver based on various
+optimisation strategies and can be easily compiled by \fastc{} into
+corresponding MaxCompiler designs.
+
+Additionally, the \fastc{} compiler can be extended to automatically
+infer input and output streams (without requiring superfluous calls to
+the \texttt{in()} and \texttt{out}) method calls based on the following rules:
 \begin{itemize}
 \item If a stream is assigned to at least once then it is a write stream
 \item If a stream is assigned to more than once, then this is an error
@@ -478,35 +520,36 @@ compiler can be extended to automatically infer the type of streams
   kernel, it is a read/write stream
 \end{itemize}
 
-Additionally casting between variable types can be inferred in some
-instances by using type coercion.
-
-
 \subsection{Multiple Kernel Support}
 
-Some designs may require more than one dataflow kernel. This may
-required for instance if one kernel is to perform operations
-asynchronously from the other. A recurrent pattern is where a separate
-kernel is used to generate the memory command stream, which contains
-the addresses that are to be read from DRAM (\Cref{sec:fast-dram}).
+Some designs may require more than one dataflow kernel. Indeed all the
+applications in our benchmark contain at least three kernels: one
+computational kernel, and two kernels for generating read and write
+commands for the on-board DRAM. This is a typical use case where one
+kernel is to perform operations asynchronously from the other: merging
+the command generator kernels with the computation kernel can lead to
+a congested design and very easily to a kernel freeze (the equivalent
+of a deadlock in software). Hence, a recurrent pattern is where a
+separate kernel is used to generate the memory command stream, which
+contains the addresses that are to be read from DRAM
+(\Cref{sec:fast-dram}).
 
 To support this scenario, MaxCompiler uses the concept of a manager
 which specifies how kernels are instantiated and connected together to
-form a design \Cref{sec:back-maxcompiler}.
+form a design (as described in \Cref{sec:back-maxcompiler}).
 
 To support this scenario in FAST we extend our original pragma
 notations to enable the specification of:
 \begin{itemize}
 \item correlation between input and output
-\item kernel instances (how?)
+\item kernel instances
 \end{itemize}
 
-Since this can result in a fairly long-winded
-T
-
+\begin{comment}
 \subsection{Support Designs with DRAM}
 \label{sec:fast-dram}
 
+Designs described
 To support DRAM a dataflow design requires additional kernels that
 generate memory commands asynchronously from the computational kernel.
 
@@ -527,7 +570,7 @@ reconfiguration needs to be added. This contains:
   computation
 \end{itemize}
 
-
+\end{comment}
 
 \section{Revised FAST Example}
 \label{sec:fast-ref}
@@ -536,7 +579,9 @@ Listing \ref{lst:fast-bscholesr} shows the revised Black Scholes
 implementation with the revised FAST language. No API calls are
 required for the counters or state saving. Inputs and outputs are
 clearly declared in the kernel header and the compiler can
-automatically infer whether a parameter stream is input or output.
+automatically infer whether a parameter stream is input or output. The
+type width information is decoupled from the application code and can
+be added automatically via aspect generated pragma statements.
 
 Additionally, we can use FPGA DRAM (bandwidth of 40GB/s) as the source
 for data, not just PCI-Express (2GB/s) which is a major improvement in
@@ -550,34 +595,25 @@ three kernel design that implements the required pricing computation.
   label={lst:fast-bscholesr},
   caption={\FAST{} dataflow kernel for European Options pricing}
   ]
-  float i4 = 0;
-  float i1 = 0;
-  void Price_FPGA(
-  float* p, float *r,
-  float c_0_0_0, float c_p_0_0, float c_n_0_0,
-  int n1, int ORDER)
+  // 1. both input and output streams are declared in kernel header
+  // 2. no need for additional type definitions
+  void Price_FPGA(float* stockPrices, float *r,
+                  ... /* same as before */)
   {
 
-    i4 = i4 >= n1    ? 0 : i4 + 1;
-    i1 = i1 >= 1000  ? 0 : i1 + 1;
+    // 3. CURRENT CYCLE value used instead of counter API
+    int stockstep  = (CURRENT_CYCLE / n1) \% timesteps;
 
-    #pragma FAST DSPBalance:full
-    int result =
+    #pragma fast DSPBalance:full
+    int result = ....; /* same as before */;
 
-    p[0]  * c_0_0_0 +
-    p[1]  * c_p_0_0 +
-    p[-1] * c_n_0_0;
+    // 4. boolean types used for conditions
+    bool up = ...; /* same as before */ );
 
-    int up = (i1 >= ORDER) && (i1 < n1 - ORDER);
-    r = up ? result : p;
+    // 5. assigning to output stream automatically outputs value
+    r[0] = up ? result : stockPrices;
   }
 
-  void Price_CPU(...) {...}
-
-  int main() {
-    #pragma FAST hw:Price_FPGA
-    Price_CPU(...);
-  }
 \end{lstlisting}
 
 
