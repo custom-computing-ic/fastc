@@ -1,8 +1,6 @@
 \chapter{Aspect Descriptions}
 \label{sec:aspects}
 
-\section{Overview}
-
 Aspects are standalone modules that capture functional cross-cutting
 concerns that are decoupled from the primary function of a
 program. AspectJ\cite{Kiczales:2005:AP:1062455.1062640}, a widely used
@@ -442,12 +440,13 @@ main:g:3 & fast\_g & c1 \\
 \hline
 \end{tabular}
 \end{table}
-
+\begin{comment}
 \subsection{Feedback Aspects}
 Used to complement predicted model data (such as resource usage) from
 back-end compilation reports or execution of automated performance
 test suites. This improves estimates (e.g. for reconfiguration cost /
 performance improvement etc.)
+\end{comment}
 
 \section{Implementation Aspect Descriptions}
 
@@ -640,3 +639,20 @@ end
 
 
 \section{Summary}
+
+We have introduced the four main classes of novel aspect descriptions
+used with our the proposed design flow. System aspect descriptions
+operate at the whole system level (C + \FAST{} specification) to
+generate hardware/software partitioning, run-time reconfiguration
+designs, monitorisation and modelling of resource usage and
+performance data.  Implementation aspect descriptions operate at the
+design level and perform low level optimisations such as mapping of
+computation to DSPs or adjusting word length. Exploration aspect
+descriptions are used to drive the design space exploration process,
+for example, iteratively increase a certain design property (such as
+parallelism or clock frequency) until a certain requirement is met
+(e.g. resource usage threshold is exceeded or execution time
+requirement is met). Finally, development aspect descriptions can be
+used to capture strategies that are related to the development
+process, such as the need for monitoring values or reducing
+compilation time.
