@@ -1,51 +1,63 @@
 \chapter{Aspect Descriptions}
 \label{sec:aspects}
 
-Aspects are standalone modules that capture functional cross-cutting
-concerns that are decoupled from the primary function of a
-program. AspectJ\cite{Kiczales:2005:AP:1062455.1062640}, a widely used
-extension for Aspect-Oriented Programming (AOP) in Java, captures
-program execution points (such as method calls) at run-time to allow
-new code to be executed before, after or in place of these execution
-points through a process called \emph{weaving}. The main motivation
-behind AspectJ in particular, and AOP in general, is to solve the
-modularisation problem when dealing with multiple cross-cutting
-functional concerns.
+Aspects descriptions are modules that capture functional cross-cutting
+concerns that are decoupled from the primary function of a program. In
+traditional Aspect-oriented approaches, program execution points
+(e.g. method calls) are intercepted at run-time to allow new code to
+be executed before, after or in place of these execution points. The
+process through which this is achieved is called \emph{weaving}. The
+main motivation behind AOP is to solve the modularisation problem when
+dealing with multiple cross-cutting functional concerns.
 
 The LARA aspect-oriented design-flow
-\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}, on the
-other hand, performs the weaving process at compile-time to satisfy
-non-functional concerns, such as to improve performance on a
-particular hardware platform. For this purpose, the LARA weaving
-process manipulates and transforms the application sources. These new
-generated sources (woven code) incorporate functional elements of the
-original sources, and non-functional concerns captured by LARA
-aspects.
+\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012}, depicted
+in \Cref{fig:aspect-weaving}, performs the weaving process at
+compile-time to meet non-functional optimisation goals, such as
+improving application performance on particular hardware
+platforms. The weaving process manipulates and transforms the
+application sources generating new sources (woven code) that
+incorporate both functional elements of the original sources, and
+non-functional concerns captured by LARA aspects.
 
-In this paper, we combine the LARA aspect design-flow with \FAST{}
-dataflow designs. In particular, \FAST{} uses standard C99 syntax to
-capture dataflow computations while aspects specify decoupled
-optimisation and transformation strategies that operate on \FAST{}
-descriptions. This approach makes the functionality of the application
-easier to understand, more maintainable and portable since it is no
-longer obscured by various structural or algorithmic transformations,
-as well as platform specific optimisations. In addition, strategies
-coded in LARA can be re-applied automatically in different
-applications, thus improving developer productivity.
+\begin{figure}[!ht]
+  \centering
+  \def\svgwidth{\textwidth}
+  \input{figs/meng-aspect-weaving.pdf_tex}
+  \caption{Aspect weaving overview.}
+  \label{fig:aspect-weaving}
+\end{figure}
+In this project we combine the LARA aspect design-flow with \FAST{}
+dataflow designs. As explained in \Cref{sec:fast}, \FAST{} uses
+standard C99 syntax to capture dataflow computations while aspects
+specify decoupled optimisation and transformation strategies that
+operate on \FAST{} descriptions. This approach makes the functionality
+of the application easier to understand, more maintainable and
+portable since it is no longer obscured by various structural or
+algorithmic transformations, or platform specific optimisations. In
+addition, strategies coded in LARA can be re-applied automatically in
+different applications, thus improving developer productivity.
 
-We report four types of aspect descriptions (Table~\ref{tbl:aspects}) used with
-designs in \FAST{}:
+We introduce novel aspect descriptions to use with \FAST{} dataflow
+designs, which we group in four main classes as shown in
+\Cref{tbl:aspects}:
 
 \begin{itemize}
-  \item System Aspect Descriptions
-  \item Implementation Aspect Descriptions
-  \item Exploration Aspect Descriptions
-  \item Development Aspect Description
+\item \textbf{System Aspect Descriptions} are applied at the whole
+  system level (\FAST{} + C application) to capture the mapping
+  between application modules and accelerator
+\item \textbf{Implementation Aspect Descriptions} are applied at the
+  level of the dataflow design, to apply platform specific
+  optimisations
+\item \textbf{Exploration Aspect Descriptions} are used to explore the
+  design space of optimisation trade-offs
+\item \textbf{Development Aspect Description} are used to support
+    the development process
 \end{itemize}
 
 \begin{table}[tp]
 \caption{Types of Aspects used in \FAST{}}
-\renewcommand{\arraystretch}{1.5}
+\renewcommand{\arraystretch}{1.2}
 \label{tbl:aspects}
 \centering
 \begin{tabular}{l|l|l}
@@ -88,36 +100,29 @@ additional resources can be dedicated to functions that are
 active \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
 
 
-\subsection{Hardware/software partitioning}
+\subsection{Hardware/Software Partitioning}
 \label{sect:asp_hsp}
 \FAST{} functions describing dataflow computations can be embedded
-within the C application but cannot be invoked directly by software C
-functions.  Instead, a \FAST{} pragma must be used on top of software
-function definitions or C calls to indicate an alternate hardware
-implementation. For instance, the code shown in
-Fig. \ref{fig:aspect-switch} indicates that the software
+within the C application but, as explained in
+\Cref{sec:kernels-streams}, cannot be invoked directly by software C
+functions.  Instead, a \FAST{} pragma must is used to indicate the
+link between the software function call and the alternate hardware
+implementation as shown in Listing  \ref{lst:aspect-switch}. indicates that the software
 implementation of \texttt{f()} can be mapped to the dataflow
 implementation described in \texttt{fast\_f()}. This way, our
 design-flow can automatically switch from a pure software application
 to a software/hardware design.
 
 \lstset{style=MaxC}
-\begin{figure}[!h]
-\begin{lstlisting}
-(*@\marktext{void fast\_f()}@*) {/* dataflow implementation */}
-
-void      f() {/* software implementation */}
-
-(*@ \marktext{\#pragma FAST hw:fast\_f} @*)
-f();
+\begin{lstlisting}{caption={Mapping of C function calls to dataflow kernels using \FAST{} pragmas.}, label={lst:aspect-switch}}
+void fast_f()  {/* dataflow implementation */}
+void      f()  {/* software implementation */}
+int main() {
+  #pragma fast hw:fast_f
+  f();
+}
 \end{lstlisting}
-\caption{Mapping of C function calls to dataflow kernels using \FAST{} pragmas.}
-\label{fig:aspect-switch}
-\end{figure}
-
-
-\noindent
-
+\
 Hence, a hardware/software partitioning strategy can be performed in
 five steps:
 \begin{enumerate}
@@ -140,27 +145,32 @@ combined to form a hardware/software partitioning strategy.
 
 \subsection{Monitorisation}
 \label{sect:asp_mon}
-To find potential hotspots in the application, for instance to perform
-hardware/software partitioning, we can use the aspect in
-Fig.~\ref{fig:hotspot}.  With this aspect, the weaver can
+To find potential hotspots in the application, we can use the aspect
+in Listing \ref{fig:hotspot}.  With this aspect, the weaver can
 automatically instrument any C application to self-monitor its
 innermost loops at run-time, as they are natural candidates for
 dataflow-based acceleration. In particular, this monitorization aspect
-can compute the following information for every innermost loop: (a)
-the average number of times it has been executed, (b) the average
-number of iterations, (c) the loop average time, and (d) the loop
-iteration average time. For this purpose, we use a monitoring API
-composed of 4 functions to mark the beginning and end of the loop
-(\texttt{monitor\_instanceI} and \texttt{monitor\_instanceE}
-respectively), and to mark the beginning and end of an iteration
-(\texttt{monitor\_iterI} and \texttt{monitor\_iterE}
-respectively). These monitoring functions keep an account of the
-frequency of execution and the time to complete the whole loop and a
-single iteration.
+can compute the following information for every innermost loop:
+\begin{enumerate}
+\item the average number of times it has been executed,
+\item the average number of iterations,
+\item the loop average execution time,
+\item the loop iteration average execution time.
+\end{enumerate}
+
+For this purpose, we use a simple monitoring API, to record the
+frequency of execution and the loop iteration and execution time:.
+\begin{itemize}
+\item \texttt{monitor\_instanceI} and \texttt{monitor\_instanceE} -- mark
+  the beginning and end of the loop respectively;
+\item \texttt{monitor\_iterI} and \texttt{monitor\_iterE} -- mark the
+  beginning and end of an iteration respectively.
+\end{itemize}
 
 \lstset{style=lara}
-\begin{figure}[!h]
-\begin{lstlisting}
+\begin{lstlisting}[caption={Aspect that instruments the application to monitor loop
+  activity. The information generated can be used to identify
+  hotspots.}, label={lst:hotspot}]
 aspectdef LoopMonitor
 select function.loop{is_innermost} end
 apply
@@ -180,24 +190,19 @@ apply $begin.insert before
 end
 end
 \end{lstlisting}
-\caption{Aspect that instruments the application to monitor loop
-  activity. The information generated can be used to identify
-  hotspots.}
-\label{fig:hotspot}
-\end{figure}
 
-  The aspect code is as follows: line~2 selects all
-loops in the application that are innermost (loops with no other loops
-enclosed); lines~3--8 place an instance monitor call before and after
-each selected loop; lines 10--13 select all entry points inside the
-loop and insert a monitoring call to mark the beginning of each
-iteration; lines~14--17 place an instance monitor call to mark the end
-of each iteration. The following table shows an example of applying
-the aspect from Fig.~\ref{fig:hotspot} on a C-style function containing a loop:
-\vspace{2mm}
+The aspect code is shown in Listing~\ref{lst:hotspot}. Lines~2--8 select
+all innermost loop instances and place an instance monitor call before
+and after each selected loop. Lines~10--13 select all entry points
+inside the loop and insert a monitoring call to mark the beginning of
+each iteration. Lines~14--17 place an instance monitor call to mark
+the end of each iteration. The following table shows an example of
+applying the aspect from Listing~\ref{lst:hotspot} on a C-style function
+containing a loop:
 
 {\footnotesize
 \fontfamily{pcr}\selectfont
+\begin{center}
 \begin{tabular}{l|l}
 \hline
 \bf{original code}           & \bf{woven code}                                   \\
@@ -216,139 +221,134 @@ void f() \{                  & void f() \{                                      
 %\hspace{3ex}$\ldots$        & \hspace{3ex}$\ldots$                              \\
 \hline
 \end{tabular}
+\end{center}
 }
-\vspace{2ex}
 
-\noindent Each monitoring call in the woven code receives as a
-parameter the loop key, which uniquely identifies the loop within the
-application. The loop key is generated by concatenating the function
-name with the hierarchical position of the loop within the abstract
-syntax tree. For instance, \emph{f:2:1} corresponds to the 1st loop
-inside the 2nd outermost loop of function \texttt{f}. The hotspots can
-be identified by an aspect (not shown) that takes the profiling
-information generated by the monitorization API calls, and that uses
-an heuristic to compute the most profitable computations to be
-offloaded to hardware.
+Each monitoring call in the woven code receives as a parameter a
+unique loop key which identifies the loop within the application. The
+loop key is generated by concatenating the function name with the
+hierarchical position of the loop within the abstract syntax tree. For
+instance, \emph{f:2:1} corresponds to the 1st loop inside the 2nd
+outermost loop of function \texttt{f}. The hotspots can be identified
+by an aspect (not shown) that takes the profiling information
+generated by the monitorization API calls, and that uses an heuristic
+to compute the most profitable computations to be offloaded to
+hardware.
 
 \subsection{Modelling}
 
-Used to generate design models from FAST source code.
+A prerequisite of developing more advanced aspects is the ability to
+effectively model resource usage. In practice, an approximate resource
+usage and performance model is developed by application engineers,
+prior to the design optimisation process. Presently, this is done
+manually, or can be automated but not at a high enough level
+abstraction (e.g. C programming level). An automatically derived
+resource model improve developer productivity by providing design
+information earlier in the development process, albeit just an
+estimates.
 
-In the example below we assume the existence of an operation resource
-usage map (opUsageMap) that contains the per operation resource
-usage. This can be refined via analysis of backend tool reports and
-will probably be a very rough estimate initially.
+Modelling aspect descriptions can be used to generate design models
+for FAST dataflow designs.  For example, the aspect description of
+Listing \ref{lst:asp-modelling} can be used to estimate resource usage
+of arithmetic operations. It relies on the existence of an operation
+resource usage map (opUsageMap) that contains an estimate of the per
+operation resource usage. This estimate can be refined via analysis of
+backend tool reports, using the feedback capabilities of the LARA
+design space exploration flow. Based on this estimate the aspect
+updates the current designModel with estimates of total resource usage
+for each loop loop statement
 
 \begin{lstlisting}[
   style=lara,
-  caption={Aspect for modelling resource usage of arithmetic operations.}
+  caption={Aspect for modelling resource usage of arithmetic operations.},
+  label={lst:asp-modelling}
 ]
-aspectdef usageLUT (opUsageMap, designModel) {
-	totalUsageLUT = 0
-	for each innermost loop
-nadds = additions(loop) // would include other ops as well
-usageLUT = opUsageMap[+].LUT * nadds * loop max iteration // if known
-switch (loop.balanceDSP) {
-	FULL: usageLUT = 0
-	BALANCED: usageLUT *= 0.5
-	NONE: usageLUT *= 1
-}
-desginModel.block[loop].resource.LUT = usageLUT
-totalUsageLUT += usageLUT
-
-designModel.resource.LUT= totalUsageLUT
-}
+aspectdef usageLUT
+input
+  opUsageMap, designModel
+end
+  var totalUsageLUT = 0;
+select function.statement
+apply
+  for(var op in {+, -, *, /})
+    nOpps = statement.num_construct[op]
+    usageLUT = opUsageMap[op].LUT * nadds * loop max iteration
+    switch (loop.balanceDSP) {
+      FULL: usageLUT = 0
+      BALANCED: usageLUT *= 0.5
+      NONE: usageLUT *= 1
+    }
+    desginModel.block[loop].resource.LUT = usageLUT
+    totalUsageLUT += usageLUT
+    designModel.resource.LUT= totalUsageLUT
+  end
+end
 \end{lstlisting}
 
-To model the performance we can for example use the following aspect
-to estimate the pipeline depth. Based on this we can estimate latency
-as depth / frequency
+
+To model design performance we can, for example, use the aspect of
+Listing \ref{lst:asp-pipedepth} to estimate the pipeline depth, based
+on which design latency can be estimated as $\text{depth} *
+\text{design clock frequency}$. This operates similarly to the
+previous aspect, by expecting as input an operator pipeline depth and
+then estimating the pipeline depth of loop constructs.
 
 \begin{lstlisting}[
   style=lara,
-  caption={Aspect for modelling pipeline depth of arithmetic kernels.}
+  caption={Aspect for modelling pipeline depth of arithmetic kernels.},
+  label={lst:asp-pipedepth}
 ]
-aspectdef pipelineDepth (opPipelineMap, designModel) {
-	designDepth = 0
-	for each innermost loop
-loopDepth = tree_depth(loop_body, opPipelineMap)
-loopDepth *= loop.pipelineFactor
-designDepth += loopDepth
-designModel.block[loop].performance.pipeDepth = loopDepth
-designModel.performance.pipeDepth = designDepth
-}
+aspectdef pipelineDepth
+input
+  opPipelineMap, designModel
+end
+var designDepth = 0;
+select function.loop{is_innermost}
+apply
+  loopDepth = tree_depth(loop_body, opPipelineMap) * loop.pipelineFactor
+  designDepth += loopDepth
+  designModel.block[loop].performance.pipeDepth = loopDepth
+  designModel.performance.pipeDepth = designDepth
+  designModel.performance.pipeDepth = designDepth
+end
 \end{lstlisting}
 
 These aspects are called by a higher level aspect that is intended as
 the primary means for users to interact and parametrize the lower
-level aspects.
+level aspects. This hierarchical approach ensures a gradual
+abstraction of details, which simplifies the development process.  The
+aspect of Listing \ref{lst:asp-modhigh} provides a single entry point
+for the modelling flow, where the operator can maintain a list of
+platform level properties. Such portable descriptions already exist
+for more widely used FPGA based systems, requiring just a simple
+translation step to fully automate the modelling process.
 
 \begin{lstlisting}[
   style=lara,
-  caption={Higher-level aspect for modelling design resource usage.}
+  caption={Higher-level aspect for modelling design resource usage.},
+  label={lst:asp-modhigh}
 ]
-aspectdef designModel () {
-	// user configurable values
-	opPipelineMap = …
-	opUsageMap  = …
-
-	for each design in DesignDB
-	call usageLUT(opUsageMap, design)
-	call pipelineDepth(opPipelineMap, design)
-}
+aspectdef designModel
+input
+opPipelineMap
+opUsageMap
+end
+for (var design in DesignDatabse)
+  call usageLUT(opUsageMap, design)
+  call pipelineDepth(opPipelineMap, design)
+end
 \end{lstlisting}
 
 \subsection{Run-time Reconfiguration}
 \label{sect:asp_reconfig}
 
 
-Used to generate boilerplate code required for reconfiguration based
-on user specified requirements / optimisation goals
-
-Consider the following aspect for monitoring thermal status. When the
-temperature exceeds critical, the CPU requests the current design to
-stop execution, selects a different algorithm (smaller thermal
-footprint) and uploads and runs it on the DFE. If no compatible
-algorithm exists (which may be possible due to variations in memory
-layout etc.) an idle circuit is uploaded until temperature drops below
-critical.
-
-Below is a simple template for a stencil computation.
-
-\begin{lstlisting}
-for t
-  for y
-   for x
-    a_next[i,j] = stencil(i, j, a);
- swap(a, a_next)
-\end{lstlisting}
-
-In this case it is safe to interrupt the current algorithm after a
-swap has taken place. And replace it with a different version.
-
-The aspect would transform the simple \texttt{run\_kernel} call required to
-perform the computation on the DFE with the following monitoring code@
-
-\begin{lstlisting}
-run_kernel_async()
-while (!done)  {
-	done = poll_kernel_done_status()
-	sensors = poll_kernel_sensors()
-	if (sensors[thermal] > crit_value) {
-		design = select(DesignDB, {thermal < crit_value}) // simple constaint language
-		request_abort()
-		while(!abort_done) {}
-		transfer_state()
-		set_up_new_kernel();
-		run_kenrel_async();
-}
-\end{lstlisting}
-
-Additionally the aspect transforms the DFE design to include the abort code and the ability to perform the state transfer (Possibly a different design uplodaed for this?)
+Run-time reconfiguration aspects are used to partition and generate
+hardware/software links required for reconfiguration based on user
+specified requirements and optimisation goals.
 
 To support run-time reconfiguration, we specify the configuration
 associated with the function call in the \FAST{} pragma. For instance:
-
 
 \noindent\texttt{\footnotesize{\marktext{\#pragma FAST hw:fast\_f0 cfg:c0}\\
 x = f(0); \\
