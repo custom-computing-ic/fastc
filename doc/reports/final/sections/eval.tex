@@ -548,75 +548,56 @@ improves portability of the design, allowing optimisations based on
 design space exploration to be carried out on various platforms (hence
 subject to varying resource constraints) without manual intervention.
 
-\begin{comment}
-  \begin{sidewaystable}
-    \begin{tabularx}{\textwidth}{p{3.5cm}|X|X|X|X|X|X|X|X|X|X|X|X|X|}
-      Aspects & DSP Balance & Par & Mem Freq & Width & FPGA  Time (Ms) & Total Time (s) & Total Power (Watt) & Dyn. Power (Watt) & LUT (\%) & FF(\%) & BRAM (\%) & DSP (\%) & Build Time \\
-      \hline \hline
-      \multirow{5}{2cm}{OptimizeDSPUsage, ExploreParallelism}     & Bal.    & 1   & 303      & 8\_24 & 492             & 3.347          & 117                & 30                & 19.89    & 14.13  & 23.31     & 1.69     & 1h 49      \\
-      & None        &     &          &       & 492             & 3.453          & 117                & 30                & 22.62    & 15.56  & 23.31     & 0        & 2 h 9      \\
-      & Full        &     &          &       & 492             & 3.103          & 117                & 30                & 17.68    & 12.79  & 23.31     & 5.8      & 2 h 2      \\
-      \hline
-      & Bal.    & 2   &          &       & 247             & 2.917          &   121                & 34                & 25.44    & 25.44  & 24.53     & 3.37     & 2h30       \\
-      & None        &     &          &       & 247             & 3.006          &       121                & 34                & 30.95    & 20.53  & 24.53     & 0        & 3h5        \\
-      & Full        &     &          &       & 246             & 3.153          &       121                & 34                & 21.18    & 15     & 24.44     & 11.61    & 2h8        \\
-      \hline
-      & Bal.    & 3   &          &       & 225             & 3.506          & 121                & 34                & 31.56    & 21.32  & 24.06     & 5.06     & 2h30       \\
-      & None        &     &          &       & 224             & 3.124          & 121                & 34                & 39.16    & 25.61  & 24.06     & 0        & 3h20       \\
-      & Full        &     &          &       & 226             & 3.123          & 125                & 38                & 25.06    & 17.3   & 23.97     & 17.41    & 2h18       \\
-      \hline
-      & Bal.    & 6   &          &       & 226             & 3.125          & 125                & 38                & 52.61    & 30.52  & 20.12     & 17.41    & 3h17       \\
-      & None        &     &          &       & 223             & 3.156          & 125                & 38                & 65.11    & 40.58  & 28.95     & 0        & 4h50       \\
-      & Full        &     &          &       & 224             & 3.016          &       122                & 35                & 35.63    & 24.11  & 27.73     & 34.82    & 3h42       \\
-      \hline
-      \multirow{5}{2cm}{OptimizeWordWidth, OptimizeFrequency, ExploreParallelism}        & Full        & 6   & 303      & 8\_22 & 224             & 2.98           & 122                & 35                & 45.02    & 31.17  & 27.73     & 15.18    & 3h13       \\
-      &             &     &          & 8\_20 & 224             & 3.006          &       122                & 35                & 43.54    & 29.96  & 27.16     & 15.18    & 3h30       \\
-      &             &     &          & 8\_18 & 224             & 3.076          & 122                & 35                & 40.81    & 28.68  & 26.88     & 15.18    & 3h13       \\
-      &             &     &          & 8\_16 & 224             & 3.033          & 122                & 35                & 39.62    & 26.44  & 26.6      & 10.12    & 2h50       \\
-      &             &     &          & 8\_24 & 82              & 1.723          & 122                & 35                & 34.13    & 24.09  & 27.73     & 34.82    & 4h17       \\
-      \hline
-      &             & 2   & 400      & 8\_24 & 247             & 3.133          &       122                & 35                & 21.32    & 14.98  & 24.44     & 11.61    & 2h30       \\
-      &             & 3   &          & 8\_24 & 164             & 2.964          & 122                & 35                & 25.43    & 17.28  & 23.97     & 17.41    & 2h35       \\
 
-    \end{tabularx}
-  \end{sidewaystable}
-\end{comment}
 
 
 \section{Bitonic Sort}
 
-We implement a design for sorting $n$ arrays of size $k = (4, 8, 32,
-64, 128, 256)$ elements. We compare the performance of the design with
-the ANSI C implementation of \texttt{qsort()} which is a hybrid of
-insertion-sort and quicksort. For a fixed network size, we vary the
-input size to compare the software and hardware implementations and
-report the average results of 50 runs.
+Sorting networks \cite{batcher1968sorting} are an interesting
+benchmark application for our approach since it is both an important
+application but also fairly challenging to fit into the proposed
+programming model:
+\begin{itemize}
+\item Sorting networks constitute the basic blocks for
+  high-performance multi-gigabyte sorting which in the context of the
+  HARNESS project, is an important case study for key cloud
+  applications;
+\item Sorting networks are not easily mapped to FPGA since resource
+  constraints limited considerably the input size of the network; for
+  example, our sorting network implementation fails to achieve timing
+  closure
+\item Comparison based sorting requires very little arithmetic, which
+  is a major disadvantage on the Maxeler Platform, since DSPs cannot
+  be utilised
+\item Sorting in general is an application that does not map well onto
+  the streaming model of computation, since due to the aforementioned
+  resource constraints, merging of buckets of values is required which
+  leads to a feed-back loop in the design;
+\end{itemize}
+
+We implement a bitonic sorting network for inputs of $n$ arrays of
+size $k = (4, 8, 32, 64, 128, 256)$ elements. We compare the
+performance of the design with the ANSI C implementation of
+\texttt{qsort()}
+\footnote{http://www.umcs.maine.edu/~chaw/200801/capstone/n/qsort.c}
+which is a hybrid of insertion-sort and quicksort. For a fixed network
+size, we vary the input size to compare the software and hardware
+implementations and report the average results of 50 runs.
+
+The implemented sorting network has the following properties:
+\begin{itemize}
+\item $\text{complexity} = \text{network depth} = \frac{n * log(n)}{2} = O(log^2(n))  $
+\item $\text{comparators} = n * log(n) * (log(n) + 1) / 4 = O(n * log^2(n)) $
+\end{itemize}
 
 
-
-1. Bitonic sort
-\begin{enumerate}
-\item $complexity = network depth = n(logn)/2 =  (O(log^2(n)))  $
-\item $ comparators = n (logn) (logn + 1) / 4 = O(nlog^2(n)) $
-\end{enumerate}
-
-
-2. The software algorithm is qsort (<stdlib.h>
-http://www.umcs.maine.edu/~chaw/200801/capstone/n/qsort.c). This is a
-hybrid quick sort - insertion sort.
-
-
-\subsection{HW/SW Performance comparison}
-
-The results show that the hardware version outperforms the software
-version for values of n larger than $2^4$ with speedups increasing from
-1.25X to 24X, in proportion with the value of n.  Also the execution
-time is dominated by data transfer time over PCIe from main memory to
-the FPGA accelerator. The impact of the pipeline stages is so small
-(less that 1%) that it cannot be measured accurately using the Linux
-timing utilities ( gettimeofday() ).
-
-\subsection{Reconfiguration Cutpoint}
+Execution results ares summarised in and include in show that the hardware version
+outperforms the software version for values of n larger than $2^4$
+with speedups increasing from 1.25X to 24X, in proportion with the
+value of n.  Also the execution time is dominated by data transfer
+time over PCIe from main memory to the FPGA accelerator. The impact of
+the pipeline stages is so small that it cannot be measured accurately
+using the Linux timing utilities (e.g. \texttt{gettimeofday()}).
 
 Given that execution time is dominated by the transfer time,
 reconfiguring the design to increase parallelism will bring a small
@@ -635,15 +616,10 @@ also decrease the communication overhead. Since all network inputs
 must be present, additional padding is required for arrays that are
 not of a length which is a power of two. (Requires additional data)
 
-
-\subsection{Word Length}
-
 Results of varying the word length show that decreasing word width and
 varying the type (floating or fixed point, based on the input
 characteristics) allow us to build larger network sizes. This can more
 than double the performance of networks for small input values.
-
-\subsection{Results}
 
 \begin{table}[!ht]
   \begin{tabularx}{\textwidth}{X | X | X | X | X | X}
@@ -657,7 +633,7 @@ than double the performance of networks for small input values.
     \hline
     int & 8 & 256 & 95430 / 188245 & no (260878 / 458532) & no \\
     \hline
-    float & 32(8, 24) & 64 & 101758 / 107901 & yes & no \\
+    float & (8, 24) & 64 & 101758 / 107901 & yes & no \\
     \hline
     fixed point & (8, 24) & 128 & 127344 / 260434 & yes & no \\
     \hline
@@ -666,48 +642,7 @@ than double the performance of networks for small input values.
   \caption{Results of exploring different network sizes and data types for the bitonic sorting network}
 \end{table}
 
-\begin{table}
-  \begin{tabularx}{\textwidth}{X|X|X|X|X|X|X}
-    \hline
-    Network Size        & log(n)      & CPU Time & FPGA Time & Compute Speedup & FPGA Total Time & FPGA Total Speedup \\
-    \hline \hline
-    \multirow{10}{*}{128}   & 14          & 0.156162 & 0.006564  & 23.79           & 1.006564        & 0.1551             \\
-    & 15          & 0.312428 & 0.013028  & 23.98           & 1.013028        & 0.3084             \\
-    & 16          & 0.624328 & 0.026263  & 23.77           & 1.026263        & 0.6084             \\
-    & \textbf{7}  & 1.24981  & 0.051905  & 24.08           & 1.051905        & \textbf{1.1881}    \\
-    & 18          & 2.49068  & 0.102083  & 24.4            & 1.102083        & 2.26               \\
-    & 19          & 4.98994  & 0.199928  & 24.96           & 1.199928        & 4.1585             \\
-    & 20          & 9.97521  & 0.400709  & 24.89           & 1.400709        & 7.1215             \\
-    & 21          & 19.9636  & 0.807231  & 24.73           & 1.807231        & 11.0465            \\
-    & 22          & 39.9202  & 1.614437  & 24.73           & 2.614437        & 15.2691            \\
-    & 23          & 79.8726  & 3.203924  & 24.93           & 4.203924        & 18.9995            \\
-    \hline
-    \multirow{8}{*}{64} & 16          & 0.271163 & 0.012983  & 20.89           & 1.012983        & 0.2677             \\
-    & 17          & 0.541016 & 0.025841  & 20.94           & 1.025841        & 0.5274             \\
-    & \textbf{18} & 1.08533  & 0.052019  & 20.86           & 1.052019        & \textbf{1.0317}    \\
-    & 19          & 2.16697  & 0.10265   & 21.11           & 1.10265         & 1.9652             \\
-    & 20          & 4.33626  & 0.203208  & 21.34           & 1.203208        & 3.6039             \\
-    & 21          & 8.66081  & 0.406241  & 21.32           & 1.406241        & 6.1588             \\
-    & 22          & 17.3281  & 0.806145  & 21.5            & 1.806145        & 9.594              \\
-    & 23          & 34.6705  & 1.617021  & 21.44           & 2.617021        & 13.2481            \\
-    \hline
-    \multirow{6}{*}{32}     & 18          & 0.458403 & 0.026085  & 17.57           & 1.026085        & 0.4467             \\
-    & 19          & 0.917055 & 0.051485  & 17.81           & 1.051485        & 0.8722             \\
-    & \textbf{20} & 1.83439  & 0.100844  & 18.19           & 1.100844        & \textbf{1.6663}    \\
-    & 21          & 3.67453  & 0.203696  & 18.04           & 1.203696        & 3.0527             \\
-    & 22          & 7.35396  & 0.404244  & 18.19           & 1.404244        & 5.237              \\
-    & 23          & 14.6802  & 0.810293  & 18.12           & 1.810293        & 8.1093             \\
-    \hline
-    \multirow{5}{*}{16}  & 19          & 0.375978 & 0.026123  & 14.39           & 1.026123        & 0.3664             \\
-    & 20          & 0.759506 & 0.051846  & 14.65           & 1.051846        & 0.7221             \\
-    & \textbf{21} & 1.49907  & 0.102618  & 14.61           & 1.102618        & \textbf{1.3596}    \\
-    & 22          & 3.00802  & 0.201457  & 14.93           & 1.201457        & 2.5036             \\
-    & 23          & 5.99392  & 0.406334  & 14.75           & 1.406334        & 4.2621             \\
-  \end{tabularx}
-  \caption{Speedup results for the FPGA sorting network compared to
-    the CPU only version. Points after which it becomes convenient to
-    use FPGA acceleration are highlighted.}
-\end{table}
+
 
 
 \begin{comment}
