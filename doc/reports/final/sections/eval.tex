@@ -32,12 +32,6 @@ this chapter:
   application in the Oil and Gas industry for identifying geological
   structures that resemble patches of oil. This application is also
   part of the HARNESS validation studies;
-\item \textbf{Add Prediction} is an application for click-through rate
-  prediction used in Microsoft's Bing search engine for Sponsored
-  Search. This is an arithmetic intensive kernel, and requires the
-  ability to effectively tune operator bit width and design parameters
-  to reach reach timing closure. This is also part of the HARNESS
-  validation studies;
 \item \textbf{Bitonic Sorting Network} is a high-throughput sorting
   network for limited input size. It can be used as the first stage of
   a multi-gigabyte FPGA sorting algorithm, to separate the inputs into
@@ -47,7 +41,13 @@ this chapter:
   input groups to generate a readable and parameterised
   description. Additionally by adapting operator bit-width to run-time
   inputs the network input width can be increased
-  substantially,leading to improved throughput.
+  substantially,leading to improved throughput;
+\item \textbf{Add Prediction} is an application for click-through rate
+  prediction used in Microsoft's Bing search engine for Sponsored
+  Search. This is an arithmetic intensive kernel, and requires the
+  ability to effectively tune operator bit width and design parameters
+  to reach reach timing closure. This is also part of the HARNESS
+  validation studies.
 \end{itemize}
 
 All dataflow designs are run on Maxeler MaxWorkstation
@@ -220,14 +220,27 @@ lines of code.
 
  \section{Black Scholes}
 
- The implementation for the Black Scholes application is interesting
- since it requires support for on-board DRAM to achieve maximum
- performance. This is because the PCI-E bus can only provide a maximum
- bandwidth of 2GB/s whereas DRAM achieves a maximum of 38GB/s.
+ The finite difference implementation for the Black Scholes
+ application is interesting since it introduces an element
+ characteristic to stencil computations and also to designs that
+ perform well on the Maxeler platform: multiple time step
+ iteration. This enables and requires local data reuse via on-board
+ DRAM to achieve maximum performance. This is because the PCI-E bus
+ can only provide a maximum bandwidth of 2GB/s whereas DRAM achieves a
+ maximum of 38GB/s.
 
- A parameterised \FAST{} kernel for the Black Scholes finite
- difference kernel and DRAM command read generators are shown in
- \Cref{app:bscholes} and Listing \ref{mem-ctl}.
+ The \FAST{} kernel for the Black Scholes finite difference kernel was
+ introduced in \Cref{sec:fast-ref}. The DRAM command read generator is
+ shown in Listing \ref{mem-ctl}. This requires a more complicated
+ chain counter structure (where one counter is only enabled when its
+ child in the chain is just about to wrap to zero) in order to control
+ the memory access pattern. Additionally, a call to \texttt{DRAMOutput}
+ is required to send the memory commands to the appropriate stream
+ controller. For this reason, this kernel is an example where our
+ approach is not very effective at reducing code size or number of API
+ calls. Still, the equivalent MaxCompiler design shown in
+ \Cref{app:mem-read-kernel} requires 23 API calls and 19 lines of
+ code, compared to 3 API calls and 13 lines of code required in \FAST{}.
 
 \begin{lstlisting}[caption={\FAST{} Memory Controller Kernel}, label={mem-ctl}]
 #include "fastc/fast.h"
@@ -253,7 +266,6 @@ void kernel_Cmdread(unsigned int iniBursts, unsigned int totalBursts,
  processing pipelines. However the \Cref{fig:bscoles-exp} shows that
  the maximum measured parallelism is 48, since after this point the
  kernel becomes I/O bound even with DRAM.
-
 
 \begin{figure}[!h]
   \centering
@@ -778,3 +790,116 @@ design overmaps or fails to meet timing at the next iteration (columns
   \caption{Results of exploring different network sizes and data types for the bitonic sorting network}
   \label{table:bsort-bitwidth}
 \end{table}
+
+
+\section{Add Prediction}
+
+The Add prediction kernel implemented for this benchmark application
+was proposed for predicting click-through rate for sponsored search on
+the Bing search engine \cite{graepel2010web}. Given as input the prior
+probability for a number of features, Bayesian inference is used to
+determine the posterior probability. The values of features are
+arbitrarily large (so fixed point optimisations cannot be used) and
+prediction accuracy increases with number of features considered by
+the algorithm. Increasing the number of features results in
+replicating most of the computational pipeline and additional levels
+being added to the adder tree that reduces the results. It is an
+interesting application because it makes use of expensive arithmetic
+operations such as exponentiation and square root. The original
+MaxCompiler implementation was developed as part of the HARNESS
+validation studies. Additionally, helper functions require function in
+lining. The results of the design space exploration show that this is
+a particularly challenging application to map onto the FPGA and
+requires ability to tune floating point mantissa. This makes use of
+our pragma for specifying stream I/O and compute type.
+
+The \FAST{} dataflow implementation is shown in
+\Cref{app:add-prediction}.  The total number of lines of code for the
+Add Prediction kernel is 67 and the kernel requires 3 API calls. The
+original MaxCompiler design has 90 lines of code and 49 API calls.
+
+
+The iterative exploration aspect description and the operator
+optimisation aspect can be used for design space exploration to vary
+the number of features of the algorithm and the DSP mapping factor to
+achieve timing closure.
+
+\Cref{table:adp-dse} shows the parameters used for design space
+exploration to achieve timing closure. The ability to map operations
+from LUT/FFs to DSP enables the design space exploration process to
+achieve timing closure.
+\begin{table}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{X|X|X|X}
+  \textbf{Features} & \textbf{DSP Factor} & \textbf{Representation} & \textbf{Meets Timing} \\
+ \hline \hline
+ 10        & Full       & float(8, 24)   & No           \\
+ 10        & Balanced   & float(8, 24)   & No           \\
+ 10        & Zero       & float(8, 24)   & No           \\
+ 10        & None       & float(8, 16)   & No           \\
+ 10        & None       & float(8, 10)   & No          \\
+ 10        & Full       & float(8, 10)   & Yes          \\
+ 8         & None       & float(8, 24)   & No           \\
+ 8         & Full       & float(8, 24)   & No           \\
+ 8         & Balanced   & float(8, 24)   & No           \\
+ 4         & Full       & float(8, 24)   & Yes          \\
+ 4         & Balanced   & float(8, 24)   & Yes          \\
+ 4         & Full       & float(8, 16)   & Yes          \\
+ 4         & Full       & float(8, 10)   & Yes          \\
+ 2         & None       & float(8, 24)   & Yes          \\
+ 2         & Balanced   & float(8, 24 )  & Yes          \\
+ 2         & Full       & float(8, 24)   & Yes          \\
+
+\end{tabularx}
+\caption{Design exploration space for the Add Prediction kernel.}
+\label{table:adp-dse}
+\end{table}
+
+\section{Summary}
+
+We have analysed our implementation on a number of real-life
+applications. Table{conc:summary} summarises our experimental results
+and shows that for the considered applications we can achieve close to
+identical performance to hand crafted MaxCompiler designs, while
+requiring significantly less line of code and API calls even without
+taking into account savings that can be achieved from using aspect
+descriptions.
+
+\begin{table}[ht!]
+\begin{tabularx}{\textwidth}{X|X|X|X|X}
+\textbf{Kernel} & \textbf{LOC Ratio} & \textbf{API Calls Ratio} & \textbf{Performance*}        & \textbf{Resource*}
+          \\
+\hline\hline
+CmdRead         & 1.76                              & 4.33                                     & \multirow{7}{*}{Identical} & \multirow{7}{*}{Identical} \\
+CmdWrite        & 1.45                              & 4.13                                     &                            &                            \\
+RTM             & 1.17                              & 10                                       &                            &                            \\
+SGSmooth        & 1.85                              & 14                                       &                            &                            \\
+SGDifff         & 1.75                              & 14                                       &                            &                            \\
+Black-Scholes   & 2.5                               & 5.5                                      &                            &                            \\
+Add Prediction  & 67                                & 16                                       &                            &                            \\
+\end{tabularx}
+\caption{Lines of code, API calls performance and resource usage ratio of original manual MaxCompiler design and \FAST{} design.}
+\label{conc:summary}
+\end{table}
+
+
+Our extensions for multiple kernel support and supporting designs with
+DRAM has helped match the performance of MaxCompiler designs that
+benefit from higher memory bandwidth (such as Black Scholes or
+RTM). In the meantime the ability to infer types has helped simplify
+the language reducing the number of API calls substantially. The
+aspect oriented design flow can be used to effectively explore the
+design space of available optimisation for operand bit width, or
+varying specific design constants in order to achieve timing closure
+or maximise performance. Although these results are promising, it must
+be noted that these metrics alone are not a definitive indication of
+increased productivity and that future large scale studies should be
+performed.
+
+One limitation of our current implementation is that we cannot control
+design parameters that are not directly accessible to the dataflow
+kernel. For example stream clock frequency and DRAM frequecy are
+controlled from within the MaxCompiler manager. To work around this
+limitation for evaluation purposes we have reproduced the same manager
+design in both the original MaxCompiler design and the \FAST{} design
+when measuring performance.
