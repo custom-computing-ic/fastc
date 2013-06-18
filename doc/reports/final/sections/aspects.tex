@@ -105,16 +105,19 @@ active \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012}.
 \FAST{} functions describing dataflow computations can be embedded
 within the C application but, as explained in
 \Cref{sec:kernels-streams}, cannot be invoked directly by software C
-functions.  Instead, a \FAST{} pragma must is used to indicate the
+functions. Instead, a \FAST{} pragma must be used to indicate the
 link between the software function call and the alternate hardware
-implementation as shown in Listing  \ref{lst:aspect-switch}. indicates that the software
-implementation of \texttt{f()} can be mapped to the dataflow
-implementation described in \texttt{fast\_f()}. This way, our
-design-flow can automatically switch from a pure software application
-to a software/hardware design.
+implementation as shown in Listing \ref{lst:aspect-switch}. This
+indicates that the software implementation of \texttt{f()} can be
+mapped to the dataflow implementation described in
+\texttt{fast\_f()}. This way, our design-flow can automatically switch
+from a pure software application to a software/hardware design.
 
 \lstset{style=MaxC}
-\begin{lstlisting}{caption={Mapping of C function calls to dataflow kernels using \FAST{} pragmas.}, label={lst:aspect-switch}}
+\begin{lstlisting}[
+  caption={Mapping of C function calls to dataflow kernels using \FAST{} pragmas.},
+  label={lst:aspect-switch}
+]
 void fast_f()  {/* dataflow implementation */}
 void      f()  {/* software implementation */}
 int main() {
@@ -146,7 +149,7 @@ combined to form a hardware/software partitioning strategy.
 \subsection{Monitorisation}
 \label{sect:asp_mon}
 To find potential hotspots in the application, we can use the aspect
-in Listing \ref{fig:hotspot}.  With this aspect, the weaver can
+in Listing \ref{lst:hotspot}.  With this aspect, the weaver can
 automatically instrument any C application to self-monitor its
 innermost loops at run-time, as they are natural candidates for
 dataflow-based acceleration. In particular, this monitorization aspect

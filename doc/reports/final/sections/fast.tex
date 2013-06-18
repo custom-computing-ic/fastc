@@ -169,7 +169,7 @@ dataflow designs.
   \renewcommand{\arraystretch}{1.5}
   \begin{tabularx}{\textwidth}{p{3.5cm}|X|X}
     \hline
-    \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Fig.~\ref{fig:maxc-1dconv})} \\
+    \bf{Feature}                   & \bf{Description}                   & \bf{Method (see Listing \ref{lst:fast-bscholesp})} \\
     \hline\hline
     \multirow{2}{*}{Input/Output}         & Declared in function header          & C99 (line 1)                                 \\\cline{2-3}       & \texttt{in()},\texttt{out()}  & \FAST{} API (lines 2,11) \\
     \hline
@@ -326,7 +326,7 @@ step is that of identifying required data types based on application
 specific accuracy requirements. For example in the case of Reverse
 Time Migration decreasing operator width can result in dramatic
 improvements in performance (2 times faster) with unnoticeable effects
-on image quality \cite{hfu2010accelerating}.
+on image quality \cite{hfu2010accelerate}.
 
 Hence, variable bit width integer, fixed and floating point data types
 should be supported. However, the C standard does not provide means to
@@ -466,7 +466,7 @@ towards our Portability requirement.
 
 Pragams in \FAST{} follow the syntax:
 
-\texttt{pragma fast (param\_name:param\_value)* (func:func\_name)?}
+\texttt{\#pragma fast (param\_name:param\_value)* (func:func\_name)?}
 
 The function name parameter simplifies loading of pragma information
 into a global data structure.
@@ -534,8 +534,7 @@ the command generator kernels with the computation kernel can lead to
 a congested design and very easily to a kernel freeze (the equivalent
 of a deadlock in software). Hence, a recurrent pattern is where a
 separate kernel is used to generate the memory command stream, which
-contains the addresses that are to be read from DRAM
-(\Cref{sec:fast-dram}).
+contains the addresses that are to be read from DRAM.
 
 To support this scenario, MaxCompiler uses the concept of a manager
 which specifies how kernels are instantiated and connected together to
