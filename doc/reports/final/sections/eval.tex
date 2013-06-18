@@ -22,13 +22,11 @@ this chapter:
   flow. Numerical differentiation is used in situations where the
   analytical form of a functions is not available, for example on
   large sets of experimental data;
-  \begin{comment}
-  \item \textbf{Black Scholes Option Pricing} is a one dimensional
+\item \textbf{Black Scholes Option Pricing} is a one dimensional
     stencil computation, with multiple time step iterations which
     requires the use of on-board DRAM to maximise efficiency; the Black
     Scholes model is one of the most commonly used models in finance for
     pricing derivatives of European options;
-  \end{comment}
 \item \textbf{Reverse Time Migration} is an advanced high-performance
   application for seismic imaging. It is the most widely used
   application in the Oil and Gas industry for identifying geological
@@ -215,13 +213,98 @@ assumed 4 parallel pipelines as shown on lines 4, 8 and 9 of
 
 
 The \FAST{} dataflow kernel that implements the differentiation
-operation is shown in Listing {}. It uses no API (non-user defined)
-function calls and a total of 20 lines of code, compared to the
-original MaxCompiler design which requires 14 API calls and 37 lines
-of code.
+operation is shown in \Cref{app:numdiff}. It uses no API (non-user
+defined) function calls and a total of 20 lines of code, compared to
+the original MaxCompiler design which requires 14 API calls and 37
+lines of code.
+
+ \section{Black Scholes}
+
+ The implementation for the Black Scholes application is interesting
+ since it requires support for on-board DRAM to achieve maximum
+ performance. This is because the PCI-E bus can only provide a maximum
+ bandwidth of 2GB/s whereas DRAM achieves a maximum of 38GB/s.
+
+ A parameterised \FAST{} kernel for the Black Scholes finite
+ difference kernel and DRAM command read generators are shown in
+ \Cref{app:bscholes} and Listing \ref{mem-ctl}.
+
+\begin{lstlisting}[caption={\FAST{} Memory Controller Kernel}, label={mem-ctl}]
+#include "fastc/fast.h"
+
+void kernel_Cmdread(unsigned int iniBursts, unsigned int totalBursts,
+		    unsigned int wordsPerBurst, bool Enable)
+{
+    int wordCount = count_p(32, wordsPerBurst, 1, Enable);
+    int* wrap;
+    *wrap = (wordCount == wordsPerBurst - 1) & Enable;
+    int burstCount = count_p(32, totalBursts, Burst_inc, wrap);
+    int *Control;
+    *Control = (wordCount == 0) & Enable;
+    DRAMOutput("dram_read", Control,
+               burstCount + iniBursts,
+               Burst_inc, 1, 0, 0);
+}
+
+\end{lstlisting}
+
+ Design space exploration using the iterative design exploration
+ aspect shows that the design can easily fit up to 60 parallel
+ processing pipelines. However the \Cref{fig:bscoles-exp} shows that
+ the maximum measured parallelism is 48, since after this point the
+ kernel becomes I/O bound even with DRAM.
 
 
-% \section{Black Scholes}nn
+\begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}
+    \selectcolormodel{gray}
+    \begin{axis}[
+      axis y line*=left,
+      xlabel=Parallel Compute Pipelines,
+      ylabel=Normalised Performance,
+      xtick=data,
+      legend columns=1,
+      legend entries={
+        PCI-Express Only,
+        On Board DRAM
+      },
+      legend style={
+        draw=none,
+        at={(0.5, 0.9)}
+      }
+      ]
+      \addplot[solid] coordinates {
+        (60, 47.56)
+        (54, 47.16)
+        (48, 47.23)
+        (32, 31.18)
+        (16, 15.71)
+        (8, 7.56)
+        (4, 3.99)
+        (2, 1.78)
+        (1, 1)
+      };
+      \addplot[dashed] coordinates {
+        (60, 3.77)
+        (54, 3.67)
+        (48, 3.91)
+        (32, 3.87)
+        (16, 4.11)
+        (8, 3.81)
+        (4, 4.16)
+        (2, 2.3)
+        (1, 1)
+      };
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Bandwidth / computation ratio exploration using the
+    iterative exploration aspect description.}
+  \label{fig:bscoles-exp}
+\end{figure}
+
+
+
 
 \section{Reverse Time Migration}
 \label{sec:RTM}

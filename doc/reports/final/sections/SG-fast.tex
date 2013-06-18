@@ -2,9 +2,11 @@
 
 \section{Numerical Differentiation}
 
+\label{app:numdiff}
+
 The \FAST{} dataflow kernel that implements the differentiation
-operation is shown in Listing {}. It uses no API (non-user defined)
-function calls and a total of 20 lines of code.
+operation is shown in the Listing below. It uses no API (non-user
+defined) function calls and a total of 20 lines of code.
 
 \begin{lstlisting}
 #include ``fastc/fast.h''
@@ -34,5 +36,13 @@ void kernel_SGDiff( float* value[Par], int width, int size, double step){
   }
 }
 \end{lstlisting}
+
+\section{Black Scholes}
+
+\label{app:bscholes}
+
+\section{Memory Command Generator}
+
+\label{app:mem-read}
 
 \section{Add Prediction}

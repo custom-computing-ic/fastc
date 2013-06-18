@@ -13,13 +13,13 @@ optimised implementation running on a multi-core microprocessor
 is not widely adopted and imperative languages are significantly more
 popular \cite{Tiobe:2012}. The fact that a large number of
 high-performance applications are written in C/C++ indicates the
-attraction and potential of translating programs in these languages to
-dataflow designs to improve performance and energy efficiency. Once
-the dataflow design for a particular application has been generated,
-it is optimised for the target architecture to maximise performance
-subject to constraints such as latency, power consumption or
-cost. Even when performed manually, this approach can result in
-significant performance improvements.
+attraction and potential of translating programs in these
+languages to dataflow designs to improve performance and energy
+efficiency. Once the dataflow design for a particular application has
+been generated, it is optimised for the target architecture to
+maximise performance subject to constraints such as latency, power
+consumption or cost. Even when performed manually, this approach can
+result in significant performance improvements.
 
 \section{Motivation}
 
@@ -98,6 +98,8 @@ cloud computing \cite{710029}.
 
 \section{Challenges}
 
+\label{sec:intro-challenges}
+
 Combining the dataflow paradigm with an aspect driven synthesis
 flow could be expected to result in improved performance, portability
 and developer productivity.  We believe that the following challenges
@@ -153,71 +155,33 @@ improve both design performance and designer productivity. This is
 achieved by allowing the specification of reusable optimisation
 strategies, and decoupling them and platform specific transformations
 from the original application making it easier to maintain and more
-portable.
-
-\section{Objectives}
-
-The aim of the project is to study how techniques of Aspect Oriented
-Programming can be applied to the compilation and optimisation of
-designs targeting streaming Data Flow Engines (special computing
-devices built around Field Programmable Gate Array chips that
-implement the dataflow paradigm of computation). This includes
-identifying efficient compiled patterns for streaming DFEs and how
-such patterns can be obtained from high level descriptions using AOP
-design techniques.
+portable. We study how techniques of Aspect Oriented Programming can
+be applied to the compilation and optimisation of designs targeting
+streaming Data Flow Engines (special computing devices built around
+Field Programmable Gate Array chips that implement the dataflow
+paradigm of computation). This includes identifying efficient compiled
+patterns for streaming DFEs and how such patterns can be obtained from
+high level descriptions using AOP design techniques.
 
 We identify the following objectives:
 
 \begin{enumerate}
-
+\item \emph{Introduce a design flow that can be applied to integrate
+    dataflow tools for FPGAs with flexible aspect weaving and design
+    space exploration tools}
 \item \emph{Identify novel aspect descriptions that enable design
   space exploration of dataflow designs from high level
-  descriptions}. This stage will focus on the translation process and
-  will result in straightforward, unoptimised designs for stencil type
-  computations. This is a class of iterative kernels with wide
-  applications in areas such as heat diffusion, and fluid dynamics so
-  is a suitable motivating example for the initial stage of the
-  project.  Aspect descriptions will initially be specified in a
-  pseudo-code, implementation agnostic language. Then, a prototype
-  implementation will be devised based on existing dataflow languages
-  (e.g. MaxJ \cite{MaxelerTechnologies:2012}, StreamIt
-  \cite{Thies:Karczmarek:Amarasinghe:2002}, Streams-C
-  \cite{Gokhale:Stone:Arnold:Kalinowski:2000}) and aspect oriented
-  languages (LARA, AspectC++ \cite{Spinczyk:Gal:Schroder:2002},
-  AspectJ \cite{Gradecki:Lesiecki:2003} etc.).
+  descriptions}.
 
 \item \emph{Capture dataflow and platform specific optimisations
   using aspect descriptions and apply them to the generated
-  designs}. This will involve developing new aspect descriptions to
-  encapsulate optimisation strategies based on run-time
-  reconfiguration and other algorithmic transformations. Some possible
-  transformations include partitioning to enable optimal use of
-  non-idle design functionality via run-time reconfiguration
-  \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} or to minimise communication
-  overhead between the dataflow design, CPU and main memory
-  \cite{Sato:Inoguchi:Luk:Nahamura:2012} and transformations to
-  improve memory access locality ameliorating the memory bottleneck
-  \cite{Cong:Zhang:Zou:2012, Cong:Zhang:Zou:2011}, loop
-  transformations to expose parallelism \cite{wolfe1995high} or bit
-  level transformations to optimise resource usage (such as conversion
-  from floating point to fixed point or to non-standard formats as
-  required by the input characteristics
-  \cite[pp. 13-26]{Cardoso:Diniz:Weinhardt:2010}).
+  designs}.
 
 \item \emph{Evaluate the approach by implementing advanced
-  high-performance applications}. An implementation for Reverse Time
-  Migration will be developed using the proposed approach and compared
-  with results described in \cite{fu2011eliminating,
-    araya2011assessing}. Additionally, implementations of various
-  benchmarks such as the Himeno Benchmark
-  \cite{Sato:Inoguchi:Luk:Nahamura:2012} will provide a good
-  comparison with existing state of the art high-performance
-  implementations for both GPUs and CPUs.
-
+  high-performance applications}.
 \end{enumerate}
 
 \section{Contributions}
-
 
 We propose a methodology for addressing the challenges and meeting our
 objectives based on the following contributions:
