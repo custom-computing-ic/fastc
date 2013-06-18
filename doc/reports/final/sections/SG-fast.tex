@@ -14,7 +14,6 @@ const int Par;
 int stream_diff(float *value[Par], int offset, int pipe) {
   int cycle_offset = (pipe + offset) / Par;
   int pipe_offset  = (pipe + offset) % Par;
-
   int cycle_offset_neg = (Par - 1 - pipe + offset) / Par;
   int pipe_offset_neg  = Par - 1 - (Par - 1 - pipe + offset) % Par;
   return value[pipe_offset][cycle_offset] -

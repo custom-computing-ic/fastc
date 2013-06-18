@@ -481,6 +481,7 @@ simplify the language as much as possible. This simplifies adoption by
 users and also integration with the Harmonic Aspect weaver.
 
 \subsection{Inferring Stream Type}
+\label{sec:inf-stream-type}
 
 Our original approach to specifying variable stream types is
 problematic since it fails to decouple effectively the variable bit
@@ -621,95 +622,103 @@ three kernel design that implements the required pricing computation.
 \section{The \fastc{} Compiler}
 \label{sec:implementation}
 
-\subsection{Tools}
+The \fastc{} compiler is an experimental compiler for the \FAST{}
+language. It takes C applications with embedded \FAST{} dataflow
+designs and produces a functionally correct and complete MaxCompiler
+design.
 
-An initial analysis on existing compiler frameworks was carried
-out. Table \ref{table:compiler-comparison} summarises the main
-advantages and disadvantages of existing compiler frameworks that we
-analysed for the purpose of implementing a prototype of the \FAST{}
-language
+\fastc{} extends the ROSE\cite{ROSE, Quinlan:2000} compiler framework
+to provide support for generating dataflow designs. ROSE uses EDG as
+its fronted to produce an Abstract Syntax Tree(AST) from C
+sources. The resulting AST is directly manipulated by \fastc{} in a
+series of compiler passes. Finally, MaxJ code is generated for the
+dataflow kernels and the original C is left unmodified. In addition,
+\fastc{} produces a Make file and deployment script based on user
+configuration to completely automate the development of the dataflow
+design.
 
-\begin{table}[ht!]
-\begin{tabularx}{\textwidth}{X|X|X|X|X}
-  Framework & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
-  LLVM\cite{LLVM} & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
-  Cetus\cite{Cetus} & AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
-  ROSE\cite{}& AST Manipulation & Source to Source transformation & Front-end & Supported Languages \\
-\end{tabularx}\cite{ROSE, Quinlan:2000}
-\caption{Feature comparison of compiler frameworks considered for implementation of \texttt{fastc}}
-\label{table:compiler-comparison}
-\end{table}
-
-Based on these features we selected the ROSE compiler framework for the following reasons:
-\begin{itemize}
-\item Reliable full featured front-end support
-\end{itemize}
-
-
-\subsection{Architecture}
-
-The compiler runs several passes on the input files:
+The following sequence of compiler passes is run on the input \FAST{}
++ C code:
 
 \begin{enumerate}
-\item Extract dataflow kernels
-\item Infer input and output types for dataflow kernels
-\item Generate MaxJ Design for extracted dataflow kernels
-\item Process pragmas inside regular C code to extract a manager design
-\item Process pragams inside regular C code to generate runtime code for uploading the bitstream and running the design
+\item \textbf{Extract dataflow kernels} -- separates \FAST{} dataflow
+  kernels from the rest of the source C application and initialises
+  the \texttt{Design} object which is passed through to each
+  subsequent pass. The \texttt{Design} object contains references to
+  the extracted kernels, and is subsequently enriched with information
+  about the structure and properties of the dataflow design which is
+  required for the final code generation pass. Identification of
+  kernels is performed via querying the ROSE AST for:
+\begin{itemize}
+  \item all function names beginning with \texttt{kernel\_}
+  \item all pragma definitions of the form \texttt{\#pragma fast
+      dataflow} which are located exactly before a function definition (
+    or after a number of other pragma declarations)
+\end{itemize}
+\item \textbf{Constant Extraction} -- extracts design constants from
+  the source files. These are global constants used to parameterise
+  the \FAST{} dataflow designs and can be shared with the CPU
+  code. This type of parameterisation is useful for example when
+  defining the width of an input stream (in terms of number of
+  elements per cycle). Note that design parameters that are not
+  constant are consider illegal since they would lead to ambiguities
+  in the execution model (for example users might expect them to be
+  synchronised between the CPU and dataflow components at
+  run-time). The set of design constants is given by the kernel read
+  only values (obtained through a read/write analysis step) minus the
+  set of kernel par meters;
+\item \textbf{Pragma Extraction} -- the pragma extraction pass
+  analyses pragmas that specify types of streams, ranges of offset
+  streams etc. These are a pre-requisite for subsequent passes for
+  type inference and checking and code generation. The extracted
+  information is used to update the \texttt{Design} object;
+\item \textbf{Infer input and output streams} -- as explained in
+  \Cref{sec:inf-stream-type}, \fastc{} can infer the direction of
+  streams by following the steps:
+\begin{enumerate}
+\item extract kernel parameter set, $P$
+\item extract pointer parameters which corresponds to the stream set, $ S \subset P $
+\item perform a written analysis and record the kernel modifies set, $M$
+\item compute the set of output streams, $O = M \cap S$
+\item compute the set of inputs streams, $I = P - O$
+\item detach assignments to output streams from the original AST to
+  prevent traversal on future passes and add corresponding output (and
+  input) nodes in the dataflow design
+\end{enumerate}
+\item \textbf{Inline auxiliary functions} -- perform inlining of all
+  function calls that appear inside a \FAST{} dataflow kernel body
+  (except those defined as part of the language API).
+\item \textbf{Static Single Assignment Renaming} -- rename variables
+  to the Static Single assignment form; this step is required after
+  inlininig to ensure that duplicate local variable name clashes do not occur;
+\item \textbf{Type Checking and Inference} -- based on the type of
+  input and output streams and values of constants infer and check
+  type consistency; this task is simplified by the fact that the
+  MaxCompiler backend supports some degree of type inference.  A
+  complication arises when using Boolean variables inside the
+\item \textbf{Dataflow Graph Generation} -- traverse the AST of every
+  dataflow kernel to create a corresponding dataflow graph. An example
+  generated dataflow graph is show in \Cref{fig:fast-dfg}. It
+  illustrates \texttt{Input}, \texttt{Offset} and \texttt{Arithmetic}
+  nodes. The in edge of input nodes is connected to a special node
+  name \texttt{Sink}. Additional examples of \fastc{} DFG nodes
+  include \texttt{Counter} and \texttt{Output}. The out edge of output
+  nodes is also connected to a special \texttt{Source} node;
+\item \textbf{Remove FAST} -- removes the function nodes corresponding
+  to the dataflow kernels from the AST and verifies AST integrity
+  (namely that there were no direct calls to these kernels)
+\item \textbf{MaxJ Code Generation} -- traverse the constructed
+  dataflow graph and the original AST generate corresponding MaxJ
+  Design for extracted dataflow kernels
+
 \end{enumerate}
 
-To infer kernel inputs and outputs:
-\begin{itemize}
-\item extract kernel parameters
-\item pointer parameters are streams
-\item do a written analysis and record variables that are written to in the written set
-\item the intersection of written and params set is the set of output streams
-\item all other streams are input streams
-\item only one assignment is allowed to output streams
-\item transform assignments to output streams (replace them with output node in the resulting dataflow design)
-\end{itemize}
-
-It is required to infer data types as otherwise the resulting kernel
-may not compile.  This task is simplified by the fact that MaxCompiler
-supports some degree of type inference where the type of a variable is
-inferred where possible starting from it's initial type.
-
-A complication arises when using Boolean variables inside the
-kernel. These are commonly used for enable signals and thus are
-required to be supported by our approach. The problem is that C99 has
-no type for Booleans just int. This makes it impossible to infer the
-type Boolean for a signal whose C type is int.
-
-We present three possiblities for addressing these issues:
-\begin{itemize}
-\item Adding a Boolean type to the FAST language; in the context of
-  our prototype which relies heavily on compatibility with C99, this
-  can be achieved by adding a macro or typedef which can be adequately
-  handled by \fastc{}, directly indicating that the type of a kernel
-  parameter is Boolean; an advantage of this approach is the simple
-  implementation, while a potential disadvantage is the addition of
-  non-standard types; this definition may  conflict with existing definitions
-  in custom applications (affecting our Integration goal);
-
-\item Use the definition of bool in the <stdbool.h> header; this may
-  affect portability to Windows platforms (which do not normally use
-  this header by default);
-
-\item the alternative is to automatically infer the Boolean type based
-  on the dataflow kernel; this can be achieved by an analysis of the
-  function calls; thus the type of an input parameter should be
-  Boolean if and only if:
-  \begin{itemize}
-  \item it is used as the enable signal of a hardware construct:
-    counter, ROM or RAM element or DRAM command generator;
-  \item its value may propagate to such a call through assignment,
-    Boolean operations etc.
-  \end{itemize}
-  This shows that a backward dataflow analysis \cite{aho1977principles}\cite{cooper2011engineering}can be used to
-  detect the set of all Boolean variables (enable signals) required
-  for the kernel
-\end{itemize}
-
+\begin{figure}
+\centering
+\includegraphics[scale=0.5, clip=true, trim=880 740 650 0]{figs/MaxCtemplateDFG.png}
+\caption{Section of a dataflow graph generated using \fastc{}.}
+\label{fig:fast-dfg}
+\end{figure}
 
 
 \section{Summary}
@@ -743,7 +752,7 @@ compilers.
 
 
 \begin{table}[!ht]
-  \renewcommand{\arraystretch}{1.5}
+  \renewcommand{\arraystretch}{1.2}
   \centering
   \begin{tabularx}{\textwidth}{X | p{2.5cm} | p{3cm} | p{1.9cm} }
     \hline
@@ -764,7 +773,7 @@ compilers.
 
 
 \begin{table}[!ht]
-  \renewcommand{\arraystretch}{1.5}
+  \renewcommand{\arraystretch}{1.2}
   \centering
   \begin{tabularx}{\textwidth}{ m{2.5cm} | X | X | p{2.5cm}}
     \hline

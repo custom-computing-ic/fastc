@@ -29,27 +29,11 @@ public class RTM extends Kernel {
     HWFloat real    = hwFloat(8,24);
     HWFix   fix_4_24= hwFix(4,24,HWFix.SignMode.TWOSCOMPLEMENT);
 
-//------------------------------Parameter configuration --------------------------------
     OffsetExpr nx = stream.makeOffsetParam("nx",  24/Par, 48/Par);
     OffsetExpr nxy = stream.makeOffsetParam("nxy",32* nx, 32 * nx);
 
-    HWVar c_0   = constant.var(-0.000000056202665632554272);
-    HWVar c_1_0 = constant.var( 0.000000010666666661052204);
-    HWVar c_1_1 = constant.var(-0.000000001523809300962853);
-    HWVar c_1_2 = constant.var( 0.000000000253968179819708);
-    HWVar c_1_3 = constant.var(-0.000000000031745984313547);
-    HWVar c_1_4 = constant.var( 0.000000000002031744130576);
-    HWVar c_2_0 = constant.var( 0.000000010666666661052204);
-    HWVar c_2_1 = constant.var(-0.000000001523809300962853);
-    HWVar c_2_2 = constant.var( 0.000000000253968179819708);
-    HWVar c_2_3 = constant.var(-0.000000000031745984313547);
-    HWVar c_2_4 = constant.var( 0.000000000002031744130576);
-    HWVar c_3_0 = constant.var( 0.000000010666666661052204);
-    HWVar c_3_1 = constant.var(-0.000000001523809300962853);
-    HWVar c_3_2 = constant.var( 0.000000000253968179819708);
-    HWVar c_3_3 = constant.var(-0.000000000031745984313547);
-    HWVar c_3_4 = constant.var( 0.000000000002031744130576);
-
+    // Application Specific constants omitted
+    (...)
     HWVar bc    = constant.var(-0.0005);
 
     HWVar n1    = io.scalarInput("n1",    hwUInt(32));
@@ -58,7 +42,6 @@ public class RTM extends Kernel {
     HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
     HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
 
-//------------------------------Output control --------------------------------
     CounterChain chain = control.count.makeCounterChain();
     HWVar i4 = chain.addCounter(1000,1).cast(hwUInt(32));//iteration
     HWVar i3 = chain.addCounter(n3,  1).cast(hwUInt(32));//outest loop
@@ -69,17 +52,12 @@ public class RTM extends Kernel {
     for (int i=0; i <Par; i++)
     up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
 
-    HWVar output_ring;
-    output_ring= n3  > i3  & i3 >= n3 - ORDER;
-    //output_ring= n3 - ORDER > i3  & i3 >= n3 - 2 * ORDER;
+    HWVar output_ring = n3  > i3  & i3 >= n3 - ORDER;
 
-    HWVar input_ring;
-    input_ring = ORDER > i3;
-    //input_ring = 2 * ORDER > i3 & i3 >= ORDER;
+    HWVar input_ring = ORDER > i3;
 
-    HWVar output_enable;
-    output_enable= (n3 - ORDER > i3 & i3 >= ORDER);
-//------------------------------Data input --------------------------------
+    HWVar output_enable = (n3 - ORDER > i3 & i3 >= ORDER);
+
     // input
     KArray<HWVar> burst_p     =io.input("burst_p",      burst_in);
     KArray<HWVar> burst_pp    =io.input("burst_pp",     burst_in);
@@ -101,14 +79,11 @@ public class RTM extends Kernel {
       source[i]=  burst_source[i].cast(real);
     }
 
-
-
-//------------------------------Forward Data-path --------------------------------
     HWVar cur[][][][]    = new HWVar[Mul][11+Par+1][11][11];
     HWVar inter[][]      = new HWVar[Par][Mul];
     HWVar result[][]     = new HWVar[Par][Mul];
 
-    // setup the optimisation factor to transfer operations between DSPs and Luts
+
     optimization.pushDSPFactor(1);
     //Cache
     for (int i=0; i <Par; i++)
@@ -193,8 +168,6 @@ public class RTM extends Kernel {
     //setup configuration
     optimization.popDSPFactor();
 
-//------------------------------Data output --------------------------------
-
     // control counter
     KArray<HWVar> output_p  = burst_out.newInstance(this);
     KArray<HWVar> output_pp = burst_out.newInstance(this);
@@ -205,27 +178,9 @@ public class RTM extends Kernel {
       output_pp[i] <== cur[Mul-1][6+i][5][5].cast(hwFloat(8,24));
     }
 
-//  io.output("burst_output", burst_output, burst_out, output_burst);
-//  io.output( "ring_beg",    burst_output, burst_out,  input_ring);
-//  io.output( "ring_end",    burst_output, burst_out, output_ring);
-
     io.output("ker_p",     output_p,  burst_out);
     io.output("output_pp", output_pp, burst_out);
 
-//------------------------------Debug --------------------------------
-//  debug.printf("cycle:%d-%d-%d-%d\n",i4,i3,i2,i1);
-//  debug.printf("up[0]:%d\n",up[0]);
-//  debug.printf("p[0]:%.28f\n",   p[0]);
-//  debug.printf("pp_i[0]:%.28f\n",pp_i[0]);
-//  debug.printf("dvv[0]:%.28f\n", dvv[0]);
-//  debug.printf("source[0]:%.28f\n",source[0]);
-//  debug.printf("result[0]:%.28f\n",inter[0][Mul-1]);
-//  debug.printf("up[1]:%d\n",up[1]);
-//  debug.printf("p[1]:%.28f\n",   p[1]);
-//  debug.printf("pp_i[1]:%.28f\n",pp_i[1]);
-//  debug.printf("dvv[1]:%.28f\n", dvv[1]);
-//  debug.printf("source[1]:%.28f\n",source[1]);
-//  debug.printf("result[1]:%.28f\n",inter[1][Mul-1]);
   }
 }
 \end{lstlisting}
