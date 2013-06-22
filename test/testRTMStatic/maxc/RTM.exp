@@ -1,0 +1,126 @@
+package engine;
+
+import com.maxeler.maxcompiler.v1.kernelcompiler.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.*    ;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
+
+public class RTM extends Kernel {
+
+  public RTM(KernelParameters parameters) {
+    super(parameters);
+
+
+
+    HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+    HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+    HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+    HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+    HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+
+    CounterChain chain_i4 = control.count.makeCounterChain();
+
+    KArray<HWVar> burst_p     =io.input("burst_p",      new KArrayType<HWVar>(hwFloat(8, 24),  1));
+    KArray<HWVar> burst_pp    =io.input("burst_pp",     new KArrayType<HWVar>(hwFloat(8, 24),  1));
+    KArray<HWVar> burst_dvv   =io.input("burst_dvv",    new KArrayType<HWVar>(hwFloat(8, 24),  1));
+    KArray<HWVar> burst_source=io.input("burst_source", new KArrayType<HWVar>(hwFloat(8, 24),  1));
+    HWVar i4 = chain_i4.addCounter(1000,1);
+    HWVar i3 = chain_i4.addCounter(n3,  1);
+    HWVar i2 = chain_i4.addCounter(n2,  1);
+    HWVar i1 = chain_i4.addCounter(n1, 1);
+
+    HWVar c_0   = constant.var(-0.000000056202665632554272);
+    HWVar c_1_0 = constant.var( 0.000000010666666661052204);
+    HWVar c_1_1 = constant.var(-0.000000001523809300962853);
+    HWVar c_1_2 = constant.var( 0.000000000253968179819708);
+    HWVar c_1_3 = constant.var(-0.000000000031745984313547);
+    HWVar c_1_4 = constant.var( 0.000000000002031744130576);
+    HWVar c_2_0 = constant.var( 0.000000010666666661052204);
+    HWVar c_2_1 = constant.var(-0.000000001523809300962853);
+    HWVar c_2_2 = constant.var( 0.000000000253968179819708);
+    HWVar c_2_3 = constant.var(-0.000000000031745984313547);
+    HWVar c_2_4 = constant.var( 0.000000000002031744130576);
+    HWVar c_3_0 = constant.var( 0.000000010666666661052204);
+    HWVar c_3_1 = constant.var(-0.000000001523809300962853);
+    HWVar c_3_2 = constant.var( 0.000000000253968179819708);
+    HWVar c_3_3 = constant.var(-0.000000000031745984313547);
+    HWVar c_3_4 = constant.var( 0.000000000002031744130576);
+    HWVar up[] = new HWVar[1];
+	for (int i = 0;i < 1;i++) {
+		up[i] = ((((((i3 >= ORDER) & (i3 < (n3 - ORDER))) & (i2 >= ORDER)) & (i2 < (n2 - ORDER))) & (i1 >= (ORDER - i))) & (i1 < ((n1 - ORDER) - i)));
+	}
+
+    HWVar p[]       =new HWVar[1];
+    HWVar pp_i[]    =new HWVar[1];
+    HWVar dvv[]     =new HWVar[1];
+    HWVar source[]  =new HWVar[1];
+
+	for (int i = 0;i < 1;i++) {
+		p[i] = burst_p[i].cast(hwFloat(8, 24));
+		pp_i[i] = burst_pp[i].cast(hwFloat(8, 24));
+		dvv[i] = burst_dvv[i].cast(hwFloat(8, 24));
+		source[i] = burst_source[i].cast(hwFloat(8, 24));
+	}
+
+    HWVar inter[][]      = new HWVar[1][1];
+    HWVar cur[][][][]    = new HWVar[1][13][11][11];
+    HWVar result[][]     = new HWVar[1][1];
+	OffsetExpr nx = stream.makeOffsetParam("nx",(24 / 1),(48 / 1));
+    OffsetExpr nxy = stream.makeOffsetParam("nxy",(32 * nx),(32 * nx));
+    optimization.pushDSPFactor(1);
+	for (int i = 0;i < 1;i++) {
+		int k = (-6 / 1);
+		for (int x = -6;x <= 6;x += 1) {
+			for (int y = -5;y <= 5;y++) {
+				for (int z = -5;z <= 5;z++) {
+					cur[0][(x + 6) + i][y + 5][z + 5] = stream.offset(p[i], (((z * nxy) + (y * nx)) + k));
+				}
+			}
+			++k;
+		}
+	}
+
+	for (int i = 0;i < 1;i++) {
+		result[i][0] = ((((cur[0][6 + i][5][5] * 2.0) - pp_i[i]) + (dvv[i] * ((((((((((((((((cur[0][6 + i][5][5] * c_0) + ((cur[0][5 + i][5][5] + cur[0][7 + i][5][5]) * c_1_0)) + ((cur[0][4 + i][5][5] + cur[0][8 + i][5][5]) * c_1_1)) + ((cur[0][3 + i][5][5] + cur[0][9 + i][5][5]) * c_1_2)) + ((cur[0][2 + i][5][5] + cur[0][10 + i][5][5]) * c_1_3)) + ((cur[0][1 + i][5][5] + cur[0][11 + i][5][5]) * c_1_4)) + ((cur[0][6 + i][4][5] + cur[0][6 + i][6][5]) * c_2_0)) + ((cur[0][6 + i][3][5] + cur[0][6 + i][7][5]) * c_2_1)) + ((cur[0][6 + i][2][5] + cur[0][6 + i][8][5]) * c_2_2)) + ((cur[0][6 + i][1][5] + cur[0][6 + i][9][5]) * c_2_3)) + ((cur[0][6 + i][0][5] + cur[0][6 + i][10][5]) * c_2_4)) + ((cur[0][6 + i][5][4] + cur[0][6 + i][5][6]) * c_3_0)) + ((cur[0][6 + i][5][3] + cur[0][6 + i][5][7]) * c_3_1)) + ((cur[0][6 + i][5][2] + cur[0][6 + i][5][8]) * c_3_2)) + ((cur[0][6 + i][5][1] + cur[0][6 + i][5][9]) * c_3_3)) + ((cur[0][6 + i][5][0] + cur[0][6 + i][5][10]) * c_3_4)))) + source[i]);
+		inter[i][0] = control.mux(up[i], pp_i[i], result[i][0]);
+	}
+
+	for (int j = 1;j < 1;j++) {
+		for (int i = 0;i < 1;i++) {
+			int k = (-6 / 1);
+			for (int x = -6;x <= 6;x += 1) {
+				for (int y = -5;y <= 5;y++) {
+					for (int z = -5;z <= 5;z++) {
+						cur[j][(x + 6) + i][y + 5][z + 5] = stream.offset(inter[i][j - 1], (((z * nxy) + (y * nx)) + k));
+					}
+				}
+				++k;
+			}
+		}
+
+	for (int i = 0;i < 1;i++) {
+		result[i][j] = ((((cur[j][6 + i][5][5] * 2.0) - cur[j - 1][6 + i][5][5]) + (dvv[i] * ((((((((((((((((cur[j][6 + i][5][5] * c_0) + ((cur[j][5 + i][5][5] + cur[j][7 + i][5][5]) * c_1_0)) + ((cur[j][4 + i][5][5] + cur[j][8 + i][5][5]) * c_1_1)) + ((cur[j][3 + i][5][5] + cur[j][9 + i][5][5]) * c_1_2)) + ((cur[j][2 + i][5][5] + cur[j][10 + i][5][5]) * c_1_3)) + ((cur[j][1 + i][5][5] + cur[j][11 + i][5][5]) * c_1_4)) + ((cur[j][6 + i][4][5] + cur[j][6 + i][6][5]) * c_2_0)) + ((cur[j][6 + i][3][5] + cur[j][6 + i][7][5]) * c_2_1)) + ((cur[j][6 + i][2][5] + cur[j][6 + i][8][5]) * c_2_2)) + ((cur[j][6 + i][1][5] + cur[j][6 + i][9][5]) * c_2_3)) + ((cur[j][6 + i][0][5] + cur[j][6 + i][10][5]) * c_2_4)) + ((cur[j][6 + i][5][4] + cur[j][6 + i][5][6]) * c_3_0)) + ((cur[j][6 + i][5][3] + cur[j][6 + i][5][7]) * c_3_1)) + ((cur[j][6 + i][5][2] + cur[j][6 + i][5][8]) * c_3_2)) + ((cur[j][6 + i][5][1] + cur[j][6 + i][5][9]) * c_3_3)) + ((cur[j][6 + i][5][0] + cur[j][6 + i][5][10]) * c_3_4)))) + source[i]);
+		inter[i][j] = control.mux(up[i], cur[j - 1][6 + i][5][5], result[i][j]);
+	}
+
+	}
+
+    optimization.popDSPFactor();
+	KArray<HWVar>output_pp_inter = (new KArrayType<HWVar>(hwFloat(8,24),1)).newInstance(this);
+	KArray<HWVar>output_p = (new KArrayType<HWVar>(hwFloat(8,24),1)).newInstance(this);
+
+	for (int i = 0;i < 1;i++) {
+           output_p[i] <== inter[i][1 - 1].cast(hwFloat(8, 24));
+           output_pp_inter[i] <== cur[1 - 1][6 + i][5][5].cast(hwFloat(8, 24));
+
+	}
+
+	io.output("ker_p", output_p, new KArrayType<HWVar>(hwFloat(8, 24),  1));
+	io.output("output_pp", output_pp_inter, new KArrayType<HWVar>(hwFloat(8, 24),  1));
+  }
+}
