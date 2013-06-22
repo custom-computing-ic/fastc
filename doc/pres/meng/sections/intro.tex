@@ -120,54 +120,12 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Kernel Optimisations: Bit Width}
+  \frametitle{Kernel Optimisations Space}
   \begin{figure}[!ht]
     \centering
-    \def\svgwidth{.7\linewidth}
-    \input{figs/dfg-cast.pdf_tex}
+    \def\svgwidth{\linewidth}
+    \input{figs/dfg-opt-all.pdf_tex}
   \end{figure}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Kernel Optimisations: Stream Pipelineing}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{.7\linewidth}
-    \input{figs/dfg-pipeline.pdf_tex}
-  \end{figure}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Kernel Optimisations: Pipeline Replication}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{.7\linewidth}
-    \input{figs/dfg-parallel.pdf_tex}
-  \end{figure}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{A Typical Dataflow Kernel: RTM}
-  \begin{itemize}
-  \item RTM - Reverse Time Migration for seismic imaging
-  \item MaxJ - Java API for dataflow programming with FPGAs
-  \end{itemize}
-
-  \begin{lstlisting}
-    // I/O type
-    burstIn = new KArrayType(hwFloat(8,24), Par);
-
-    // Compute type
-    for (int i = 0; i < Par; i++)
-      source[i] = burstIn[i].cast(hwFloat(8, 22));
-
-    // Optimisations
-    optimization.pushDSPFactor(1);
-
-    // Pipeline replication
-    for (int i = 0; i < Par; i++)
-      result[i][0] = cur[0][6+i][5][5] * 2.0 - (...)
-  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]

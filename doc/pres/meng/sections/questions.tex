@@ -1,0 +1,23 @@
+\begin{frame}[fragile]
+  \frametitle{A Typical Dataflow Kernel: RTM}
+  \begin{itemize}
+  \item RTM - Reverse Time Migration for seismic imaging
+  \item MaxJ - Java API for dataflow programming with FPGAs
+  \end{itemize}
+
+  \begin{lstlisting}
+    // I/O type
+    burstIn = new KArrayType(hwFloat(8,24), Par);
+
+    // Compute type
+    for (int i = 0; i < Par; i++)
+      source[i] = burstIn[i].cast(hwFloat(8, 22));
+
+    // Optimisations
+    optimization.pushDSPFactor(1);
+
+    // Pipeline replication
+    for (int i = 0; i < Par; i++)
+      result[i][0] = cur[0][6+i][5][5] * 2.0 - (...)
+  \end{lstlisting}
+\end{frame}
