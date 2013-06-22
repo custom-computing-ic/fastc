@@ -1,4 +1,58 @@
 \section{Desgin Flow}
 \begin{frame}
+  \frametitle{Challenges}
+
+  \begin{beamerboxesrounded}{1. Specify Dataflow Designs}
+    \begin{itemize}
+    \item adopt intuitive, concise, well-understood language
+    \item facilitate optimisation of existing designs
+    \end{itemize}
+  \end{beamerboxesrounded}
+
+  \begin{beamerboxesrounded}{2. Specify Optimisation Strategies}
+    \begin{itemize}
+    \item decouple non-functional descriptions from application code
+    \item capture transformations at multiple levels of abstraction
+    \end{itemize}
+  \end{beamerboxesrounded}
+
+  \begin{beamerboxesrounded}{3. Support Design Space Exploration}
+    \begin{itemize}
+    \item automate systematic exploration of design trade-offs
+    \end{itemize}
+  \end{beamerboxesrounded}
+  \begin{beamerboxesrounded}{4. Support Development of Correct and Optimised Designs}
+    \begin{itemize}
+    \item assist debugging and performance monitoring
+    \end{itemize}
+  \end{beamerboxesrounded}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Contributions}
+  \begin{beamerboxesrounded}{1. FAST: Facile Aspect-driven Source Transformation}
+    Dataflow language based on C99 that facilitates integration with
+    existing applications and tools.
+  \end{beamerboxesrounded}
+
+  \begin{beamerboxesrounded}{2. Aspect-driven Design Flow: Improve Efficiency \& Productivity}
+    Introduce novel classes of aspect descriptions: system,
+    implementation, exploration and development aspect descriptions.
+  \end{beamerboxesrounded}
+
+  \begin{beamerboxesrounded}{3. Demonstrate Automated Design Flow}
+    Significant reduction of code size and API calls for a number of
+    real life applications (Reverse Time Migration, Black Scholes, Ad
+    Prediction) with minimal performance overhead
+  \end{beamerboxesrounded}
+\end{frame}
+
+\begin{frame}
   \frametitle{Design Flow}
+  \vspace{-0.3cm}
+  \begin{figure}
+    \centering
+    \def\svgwidth{0.88\textwidth}
+    \input{figs/asap13-design-flow.pdf_tex}
+  \end{figure}
 \end{frame}

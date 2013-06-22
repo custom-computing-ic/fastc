@@ -9,7 +9,6 @@
         \includegraphics[scale=0.2]{figs/oil-gas-industry.jpg}\\
         \caption{Oil and Gas}
       \end{figure}
-      \vspace{-0.5cm}
       \begin{figure}
         \includegraphics[scale=0.3]{figs/scientific-computing.jpg}\\
         \caption{Scientific Computing}
@@ -21,53 +20,32 @@
         \includegraphics[scale=0.31]{figs/finance.jpg}\\
         \caption{Finance}
       \end{figure}
-            \vspace{-0.5cm}
       \begin{figure}
         \includegraphics[scale=0.31]{figs/ads.jpg}\\
         \caption{Online Advertising}
       \end{figure}
     \end{center}
   \end{columns}
-  \vspace{0.5cm}
-  \begin{beamerboxesrounded}{Goals}
-    Must be fast, energy efficient, easy to develop and maintain.
-  \end{beamerboxesrounded}
 \end{frame}
 
 \begin{frame}
   \frametitle{High Performance Computing}
-  \begin{columns}
-    \column{.5\textwidth}
-    \begin{center}
-      \begin{figure}
-        \includegraphics[scale=0.2]{figs/oil-gas-industry.jpg}\\
-        \caption{Oil and Gas}
-      \end{figure}
-      \vspace{-0.5cm}
-      \begin{figure}
-        \includegraphics[scale=0.3]{figs/scientific-computing.jpg}\\
-        \caption{Scientific Computing}
-      \end{figure}
-    \end{center}
-    \column{.5\textwidth}
-    \begin{center}
-      \begin{figure}
-        \includegraphics[scale=0.31]{figs/finance.jpg}\\
-        \caption{Finance}
-      \end{figure}
-            \vspace{-0.5cm}
-      \begin{figure}
-        \includegraphics[scale=0.31]{figs/ads.jpg}\\
-        \caption{Online Advertising}
-      \end{figure}
-    \end{center}
-  \end{columns}
-  \vspace{0.5cm}
+  \begin{beamerboxesrounded}{Goals}
+    HPC software must to be:
+    \begin{itemize}
+      \item fast
+      \item energy efficient
+      \item easy to develop and maintain
+    \end{itemize}
+    \end{beamerboxesrounded}
+    \vspace{0.75cm}
   \begin{beamerboxesrounded}{This Project}
-    Investigate more efficient and more productive HPC solutions.
+    Investigates more efficient and more productive HPC solutions using
+    dataflow engines and aspect-oriented programming.
   \end{beamerboxesrounded}
 \end{frame}
 
+\begin{comment}
 \begin{frame}[fragile]
   \frametitle{HPC: The CPU Way}
   \begin{lstlisting}
@@ -78,15 +56,25 @@
     some assembly
   \end{lstlisting}
 \end{frame}
+\end{comment}
 
 \begin{frame}
   \frametitle{HPC: The Dataflow Way}
-  Show a dataflow graph..
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{0.7\linewidth}
+    \input{figs/dataflow-graph.pdf_tex}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{HPC: The Dataflow Way}
-  Show run time architecture using FPGA
+  Run-time environment -- MaxWorkstation
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/max-workstation.pdf_tex}
+  \end{figure}
 \end{frame}
 
 
@@ -119,17 +107,30 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{A Typical Dataflow Kernel}
-  \begin{lstlisting}
-    compute dataflow(maxPiplines, ioType, computeType) {
-      stream s = stream_input(type, maxPipelines)
-      stream c = stream_cast(s, computeType, maxPipelines)
-      for (pipeline = 1, maxPipelines) {
-        output = (...) // do some computation
-      }
-      output = stream_output(ioType, result)
-    end
-  \end{lstlisting}
+  \frametitle{Kernel Optimisations: Bit Width}
+      \begin{figure}[!ht]
+        \centering
+        \def\svgwidth{.7\linewidth}
+        \input{figs/dfg-cast.pdf_tex}
+      \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kernel Optimisations: Stream Pipelineing}
+      \begin{figure}[!ht]
+        \centering
+        \def\svgwidth{.7\linewidth}
+        \input{figs/dfg-pipeline.pdf_tex}
+      \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kernel Optimisations: Pipeline Replication}
+      \begin{figure}[!ht]
+        \centering
+        \def\svgwidth{.7\linewidth}
+        \input{figs/dfg-parallel.pdf_tex}
+      \end{figure}
 \end{frame}
 
 \begin{frame}[fragile]

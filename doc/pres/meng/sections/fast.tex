@@ -1,4 +1,55 @@
 \section{FAST}
+\begin{frame}[fragile]
+  \frametitle{FAST Example}
+
+\begin{lstlisting}
+void Price_FPGA(float* stockPrices, float* result,
+                float c1, float c2, float c3,
+                int nStocks, int order, int timesteps) {
+  int step  = (CURRENT_CYCLE / n1) \% timesteps;
+
+  #pragma fast DSPBalance:full
+  float inter =  stockPrices[0] * c1
+       + stockPrices[1] * c2 + stockPrices[-1] * c3;
+  bool up = (step >= order) && (step < nStocks - order);
+  result[0] = up ? inter : stockPrices);
+}
+
+void Price_CPU(...) { /* Regular C implementation */}
+
+int main() {
+  #pragma fast hw:Price_FPGA
+  Price_CPU(...);
+}
+\end{lstlisting}
+
+\end{frame}
+
 \begin{frame}
-  \frametitle{FAST}
+  \frametitle{FAST Features}
+
+\begin{table}[!h]
+  \centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{l|l|l}
+\hline
+\bf{Feature}                        & \bf{Description}              & \bf{Method}          \\
+\hline\hline
+  I/O                               & Kernel arguments              & Inferred             \\
+\hline
+  Control                           & Ternary op. (?:), \texttt{if} & C99                  \\
+\hline
+\multirow{2}{*}{Computation}        & +, *, /, -                    & C99                  \\
+                                    & log, exp, sqrt, sin etc.      & $<$math.h$>$         \\
+\hline
+  \multirow{2}{*}{Streams}          & Declared as pointers          & \multirow{2}{*}{C99} \\
+                                    & Array index access     &                      \\
+\hline
+  Optimisation                      & \multirow{2}{*}{C pragmas}    & \multirow{2}{*}{C99} \\
+  Hardware \  Mapping               &                               &                      \\
+\hline
+  \multirow{2}{*}{Parameterization} & Constants, variables,         & \multirow{2}{*}{C99} \\
+                                    & \texttt{for}, \texttt{while}  &                      \\
+\end{tabular}
+\end{table}
 \end{frame}

@@ -2,6 +2,8 @@
 
 \usepackage[final]{listings}
 \usepackage{verbatim}
+\usepackage{multirow}
+\usepackage{multicol}
 
 \usepackage[normalem]{ulem}
 
@@ -29,7 +31,7 @@
   escapeinside={(*@}{@*)}
 }
 
-
+\newcommand{\MAXC}[0]{FAST}
 \newcommand\reduline{\bgroup\markoverwith
   {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
 
@@ -95,9 +97,8 @@
     \input{sections/background.tex}
     \input{sections/design-flow.tex}
     \input{sections/fast.tex}
-    \input{sections/aspects.tex
-}
-    \input{sections/conclusions.tex}
+    \input{sections/aspects.tex}
+%    \input{sections/conclusions.tex}
 
 
    \end{document}

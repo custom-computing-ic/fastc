@@ -1,4 +1,24 @@
 \section{Aspect Descriptions}
 \begin{frame}
   \frametitle{Aspect Descriptions}
+\begin{enumerate}
+  \item  system aspect descriptions (e.g. monitor performance)
+  \item implementation aspect descriptions (e.g. optimise word-length for operators)
+  \item exploration aspect descriptions (e.g. control automation of design space exploration)
+  \item development aspect descriptions (e.g. assist debugging)
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{System Aspects}
+Hardware/Software Partitioning:
+\begin{enumerate}
+  \item detect hotspots
+  \item detect code patterns suitable for acceleration
+  \item perform outlining transformation
+  \item derive dataflow \texttt{fast\_f()} from \texttt{f()}
+  \item place FAST pragma to link \texttt{fast\_f()} with \texttt{f()}
+\end{enumerate}
 \end{frame}
