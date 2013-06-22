@@ -1,0 +1,36 @@
+* Simple Passthrough example.
+
+** The entire file should look like what is in examples/passthrough.c.
+*** 1. How does the compiler know the difference between a normal function and a dataflow one? (pragma)
+*** 2. What do we do with (int n vs no size)? How does the kernel know for how many cicles to run the design?
+par
+We want this example to compile as follows:
+maxc passthrough.c -> generates a maxcompiler project containing:
+   1. source code for CPU part
+     device == simulation  | maxeler0 based on cl argument (-sim, -hw)
+     kernel_cycles should be set based on n
+   2. source code for kernel part
+   3. source code for manager
+
+* Reduce /tree type computations?
+
+* Need to figure out what stencil computation is exactly and need to come up with sinpler examples.
+
+
+* General questions
+** How do we handle multiple kernels?
+*** The problem is not having multiple kernels, but specifying how they relate to each other.
+** How do we handle managers?
+*** One solution would be to disallow multiple kernels.
+*** However, it is possible we will have problems (.i.e. may not be possible to express certain things).
+For example consider the case with RTM. It's quite important that the
+DRAM kernel is able to operate asynchronously with the compute
+kernel. (Are there any other cases?)  These links can't always be
+inferred unless we assume in/out pairs must match exactly.  In this
+case it's not unlikely that we loose code reuse possibility, since we
+will eed one implementation for each design.
+
+* Evaluation
+** LINPACK
+** Sorting Networks
+** Matrix Multiply
