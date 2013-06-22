@@ -45,9 +45,12 @@ running at a few hundred megahertz can outperform a CPU implementation
 running at a few gigahertz while being more energy efficient
 \cite{Pell:Mencer:2011}.
 
-
-\begin{figure}[h] \centering
-  \includegraphics[scale=0.4, trim=0 200 0 150]{figs/cpu-vs-dfe.png}
+\begin{figure}[!ht]
+\vspace{-2cm}
+  \centering
+  \def\svgwidth{\textwidth}
+  \input{figs/compute.pdf_tex}
+\vspace{-2cm}
   \caption{Comparison between general purpose CPU architecture and a
     streaming Data Flow Engine. In the case of the latter instructions are
     not stored in memory but encoded in the dataflow graph. }
@@ -209,9 +212,13 @@ FPGA chip.
 The system is connected to the dataflow engine via PCIe as shown in
 Figure \ref{fig:max3}.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
+\vspace{-2cm}
   \centering
-  \includegraphics[scale=0.4, trim=0 200 0 200]{figs/max3.png} \caption{
+  \def\svgwidth{\textwidth}
+  \input{figs/max3.pdf_tex}
+\vspace{-2cm}
+ \caption{
     The Maxeler acceleration solution: the DFE is connected to
     the host machine via PCIe. The board comprises 48GB of DRAM and a
     Virtex 6 FPGA chip. }

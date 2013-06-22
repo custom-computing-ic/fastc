@@ -57,7 +57,7 @@ applicability of our approach to exciting classes of problems. Current
 and future work possibilities include:
 
 \begin{itemize}
-\item \emph{Extending the approach to other classes of parallel
+\item \emph{Extending the approach to cover other classes of parallel
     computation}.  Based on the positive evaluation results, we
   believe that the approach can be extended to support the generation
   of efficient dataflow designs for additional classes of parallel
@@ -69,14 +69,15 @@ and future work possibilities include:
   validate the proposed approach.
 
 
-\item \emph{Extension to heterogeneous systems}. With the increasing
-  demand in cloud computing solutions, it is believed that
+\item \emph{Extension to cover heterogeneous systems}. With the
+  increasing demand in cloud computing solutions, it is believed that
   heterogeneous computing platforms can provide a better mix of
   performance, energy and cost efficiency than traditional CPU only
   based platforms. From the onset of this project we have kept the
-  approach as platform agnostic as possible, to enable the support for  reconfiguration
-  our approach is intentionally platform agnostic to allow extension
-  to other platforms for dataflow computing (such as CPU and GPGPUs).
+  approach as platform agnostic as possible, to enable the support for
+  reconfiguration our approach is intentionally platform agnostic to
+  allow extension to other platforms for dataflow computing (such as
+  CPU and GPGPUs).
 
 \item \emph{Support a standardised set of pragams}. In the context of
   heterogeneous computing platforms, to facilitate the adoption of the
@@ -102,8 +103,8 @@ and future work possibilities include:
   serve as common backend representation for interfacing with
   MaxCompiler and the language specific front-end passes.
 
-\item \emph{Extension to other applications domains}.  Based on the
-  previous extension, domain specific languages for application
+\item \emph{Extension to cover other applications domains}.  Based on
+  the previous extension, domain specific languages for application
   domains ranging from Monte-Carlo simulations in
   finance~\cite{Jin:2012} to genetic sequence
   matching~\cite{Arram:2013} could be supported.
@@ -128,7 +129,13 @@ and future work possibilities include:
   \emph{validate our claim of improved productivity and
     portability}. This was beyond the scope of this project since it
   required a level of effort which could not have been achieved within the
-  limited time span.
+  limited time span;
+
+\item Aspect descriptions can be used to \emph{support verification}
+  of designs, thus simplifying what is often a more elaborate process
+  than design development itself. For example, the proposed approach
+  is compatible with verification by symbolic simulation and
+  equivalence checking as explained in \cite{todman2012verification};
 
 \item Finally, the implementation presented in this report is a
   prototype and, although functional, it requires \emph{further
