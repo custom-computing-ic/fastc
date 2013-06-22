@@ -132,31 +132,19 @@
   \frametitle{Issues}
   Developers must manually transform the original design to:
   \begin{enumerate}
-  \item specify I/O type and width to interface with host API
-  \item minimise compute type width to optimise resource usage
-  \item specify casting between types to ensure correct values
-  \item apply FPGA specific optimisations
-  \item apply per stream or per block optimisation function calls
+  \item ensure I/O interface compatibility with host
+  \item optimise resource usage by minimising operand width
+  \item ensure result correctness by casting
+  \item apply FPGA and dataflow specific optimisations
+  \item replicate computational pipelines
   \end{enumerate}
-
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Issues}
+\vspace{0.5cm}
   \begin{beamerboxesrounded}{The Problem}
-    Mixing optimisations with functional application code:
+    Mixing optimisations with functional code makes it:
     \begin{itemize}
-    \item harder to infer
-    \item harder to automate
-    \item less portable (cannot apply to other applications)
-    \end{itemize}
-  \end{beamerboxesrounded}
-  \begin{beamerboxesrounded}{Our Solution}
-    Decouple optimisations from application code:
-    \begin{itemize}
-    \item infer information as much as possible
-    \item encapsulate optimisations in separate modules
-    \item apply them automatically to explore the design space
+    \item harder to infer optimal designs (more constraints)
+    \item harder to automate design space exploration
+    \item impossible to re-target optimisations automatically
     \end{itemize}
   \end{beamerboxesrounded}
 \end{frame}
