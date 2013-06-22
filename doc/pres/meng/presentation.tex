@@ -1,5 +1,38 @@
 \documentclass{beamer}
 
+\usepackage[final]{listings}
+\usepackage{verbatim}
+
+\usepackage[normalem]{ulem}
+
+\graphicspath{{figs/}}
+
+\lstset{escapeinside={(*@}{@*)}}
+
+\lstdefinestyle{lara}{ language=C++,
+  morekeywords={aspectdef, var, apply, select, condition, begin, end, input}}
+
+\lstdefinestyle{MaxC}{language=C++,
+  morekeywords={s_int32, int32, float8_24, sin_float8_24,
+    sout_float8_24, float8_24, s_int, s_float8_24, s_bool, in, out, count, countChain},
+  deletekeywords={static}}
+
+\lstdefinestyle{MaxJ}{
+  morekeywords={HWVar, io, hwFloat, stream}
+}
+
+\lstset{
+  basicstyle=\footnotesize\sffamily,
+  keywordstyle=\color{black}\bfseries,
+  captionpos=b,
+  breaklines=true,
+  escapeinside={(*@}{@*)}
+}
+
+
+\newcommand\reduline{\bgroup\markoverwith
+  {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
+
 \mode<presentation>
     {
 %      \usetheme{Pittsburgh}
@@ -44,8 +77,8 @@
     \newcommand{\imgidea}{\pgfuseimage{idea}}
     \newcommand{\imgqm}{\pgfuseimage{qm}}
 
-    \title{\Large Aspect Oriented Design for Streaming Dataflow Engines}
-    \author{\large MEng Individual Project \hfill \\[0.5cm] {\small Paul Grigoras}} % ZOMG
+    \title{\Large Aspect Oriented Design for Dataflow Engines}
+    \author{{\small Paul Grigora\c{s}}}
     \date{}
 
     \begin{document}
@@ -54,15 +87,16 @@
       \titlepage
     \end{frame}
 
-    \begin{frame}
-      \tableofcontents
-    \end{frame}
+%    \begin{frame}
+%      \tableofcontents
+%    \end{frame}
 
     \input{sections/intro.tex}
     \input{sections/background.tex}
     \input{sections/design-flow.tex}
     \input{sections/fast.tex}
-    \input{sections/aspects.tex}
+    \input{sections/aspects.tex
+}
     \input{sections/conclusions.tex}
 
 

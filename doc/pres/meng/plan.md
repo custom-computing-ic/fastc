@@ -21,7 +21,7 @@ application specific circuits. But the high level of flexibility leads
 to a large design space -- hard to explore manually.
 Table showing some dataflow speedup results
 
-3. This project is about :
+3. This project is about:
 * improving productivity
 * maintaining/improving efficiency
 
