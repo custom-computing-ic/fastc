@@ -83,28 +83,13 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Dataflow HPC: Kernels}
+  \frametitle{Dataflow High-Performance Computing}
   \begin{figure}[!ht]
     \centering
-    \def\svgwidth{0.7\linewidth}
-    \input{figs/dataflow-graph.pdf_tex}
+    \def\svgwidth{0.9\linewidth}
+    \input{figs/dataflow-both.pdf_tex}
   \end{figure}
 \end{frame}
-
-\begin{frame}
-  \frametitle{Dataflow HPC: Hardware}
-  Kernel compiled and uploaded to Maxeler Dataflow Engine:
-  \begin{itemize}
-  \item Field Programmable Gate Arrays (reconfigurable chip)
-  \item large, high-bandwidth on-board DRAM
-  \end{itemize}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/max-workstation.pdf_tex}
-  \end{figure}
-\end{frame}
-
 
 \begin{frame}
   \frametitle{CPU vs Dataflow}
@@ -170,59 +155,32 @@
 
   \begin{lstlisting}
     // I/O type
-    KArrayType burstIn = new KArrayType(hwFloat(8,24), Par);
+    burstIn = new KArrayType(hwFloat(8,24), Par);
 
     // Compute type
     for (int i = 0; i < Par; i++)
-    source[i] = burstIn[i].cast(hwFloat(8, 22));
+      source[i] = burstIn[i].cast(hwFloat(8, 22));
 
     // Optimisations
     optimization.pushDSPFactor(1);
 
     // Pipeline replication
     for (int i = 0; i < Par; i++)
-    result[i][0] = cur[0][6+i][5][5] * 2.0 - (...)
+      result[i][0] = cur[0][6+i][5][5] * 2.0 - (...)
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Issues}
-  Have to:
+  Developers must manually transform the original design to:
   \begin{enumerate}
-
   \item specify I/O type and width to interface with host API
   \item minimise compute type width to optimise resource usage
   \item specify casting between types to ensure correct values
-  \end{enumerate}
-
-  \begin{lstlisting}
-    // IOType
-    KArrayType burstIn = new KArrayType((*@\reduline{hwFloat(8, 24)}@*), (*@\reduline{Par}@*));
-
-    // Compute Type
-    for (int i = 0; i < Par; i++)
-    source[i] = burstIn[i].(*@\reduline{cast(hwFloat(8, 22))}@*);
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Issues}
-  Have to:
-  \begin{enumerate}
-    \setcounter{enumi}{4}
   \item apply FPGA specific optimisations
   \item apply per stream or per block optimisation function calls
   \end{enumerate}
-  \begin{lstlisting}
-    // Map arithmetic to Digital Signal Processors
-    optimization.pushDSPFactor(1);
-    { /* compute block */ }
-    optimization.popDSPFactor();
 
-    // Add pipeline registers to stream (improve timing)
-    optimization.pipeline(stream);
-
-  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
