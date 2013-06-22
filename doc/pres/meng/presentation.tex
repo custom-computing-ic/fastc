@@ -2,6 +2,7 @@
 
 \usepackage[final]{listings}
 \usepackage{verbatim}
+\usepackage{xcolor}
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{pgfplots}
@@ -33,7 +34,15 @@
 }
 
 % --- PGF Plots ---
-\pgfplotsset{width=0.9\textwidth, enlargelimits=0.15}
+\pgfplotsset{
+  width=0.9\textwidth,
+  enlargelimits=0.1,
+  compat=1.8,
+  tick label style={font=\footnotesize},
+  label style={font=\small},
+  legend style={font=\footnotesize}
+}
+
 
 % --- Tables ---
 \renewcommand{\arraystretch}{1.5}
@@ -58,10 +67,6 @@
 
 
     \usetikzlibrary{shapes,arrows}
-
-    \usepackage{caption}
-    \captionsetup{labelformat=empty,labelsep=none}
-
 
     \pgfdeclareimage[height=0.25cm]{tick-green}{images/tick-green.png}
     \pgfdeclareimage[height=0.25cm]{tick-gray}{images/tick-gray.png}
