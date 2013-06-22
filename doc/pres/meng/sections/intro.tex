@@ -7,59 +7,83 @@
     \begin{center}
       \begin{figure}
         \includegraphics[scale=0.2]{figs/oil-gas-industry.jpg}\\
-        \caption{Oil and Gas}
       \end{figure}
+      \vspace{0.5cm}
+      Oil and Gas
       \begin{figure}
         \includegraphics[scale=0.3]{figs/scientific-computing.jpg}\\
-        \caption{Scientific Computing}
       \end{figure}
+      Scientific Computing
     \end{center}
     \column{.5\textwidth}
     \begin{center}
       \begin{figure}
         \includegraphics[scale=0.31]{figs/finance.jpg}\\
-        \caption{Finance}
       \end{figure}
+      \vspace{0.5cm}
+      Finance
       \begin{figure}
         \includegraphics[scale=0.31]{figs/ads.jpg}\\
-        \caption{Online Advertising}
       \end{figure}
+      Online Advertising
     \end{center}
   \end{columns}
 \end{frame}
 
 \begin{frame}
   \frametitle{High Performance Computing}
-  \begin{beamerboxesrounded}{Goals}
-    HPC software must to be:
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{center}
+        \begin{figure}
+          \includegraphics[scale=0.1, clip=true, trim=0 200 50 250]{figs/fast.jpg}\\
+        \end{figure}
+        Fast
+      \end{center}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{center}
+        \begin{figure}[!ht]
+          \def\svgwidth{0.6\linewidth}
+          \input{figs/energy-efficiency.pdf_tex}
+        \end{figure}
+        Energy Efficient
+      \end{center}
+    \end{column}
+  \end{columns}
+  \begin{center}
+    \begin{figure}
+      \includegraphics[scale=0.3]{figs/productive.jpg}\\
+    \end{figure}
+    Productive
+  \end{center}
+
+\end{frame}
+
+\begin{frame}{This Project}
+  \begin{beamerboxesrounded}{Objectives}
     \begin{itemize}
-      \item fast
-      \item energy efficient
-      \item easy to develop and maintain
+    \item more efficient HPC -- using dataflow computing
+    \item more productive HPC -- using aspect-oriented design
     \end{itemize}
-    \end{beamerboxesrounded}
-    \vspace{0.75cm}
-  \begin{beamerboxesrounded}{This Project}
-    Investigates more efficient and more productive HPC solutions using
-    dataflow engines and aspect-oriented programming.
+  \end{beamerboxesrounded}
+  \vspace{0.5cm}
+  \begin{beamerboxesrounded}{Impact}
+    \begin{itemize}
+      \item first aspect-oriented compilation flow:
+      \begin{itemize}
+      \item for high-performance dataflow computing
+      \item supporting run-time reconfiguration
+      \end{itemize}
+    \item 40--80\% code reduction, minimal performance overhead
+    \item techniques deployed in FP7 HARNESS project
+    \item best paper award candidate at ASAP 2013
+    \end{itemize}
   \end{beamerboxesrounded}
 \end{frame}
 
-\begin{comment}
-\begin{frame}[fragile]
-  \frametitle{HPC: The CPU Way}
-  \begin{lstlisting}
-    for (int i = 0; i < n; i++)
-    sum+=x[i]
-  \end{lstlisting}
-  \begin{lstlisting}
-    some assembly
-  \end{lstlisting}
-\end{frame}
-\end{comment}
-
 \begin{frame}
-  \frametitle{HPC: The Dataflow Way}
+  \frametitle{Dataflow HPC: Kernels}
   \begin{figure}[!ht]
     \centering
     \def\svgwidth{0.7\linewidth}
@@ -68,8 +92,12 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{HPC: The Dataflow Way}
-  Run-time environment -- MaxWorkstation
+  \frametitle{Dataflow HPC: Hardware}
+  Kernel compiled and uploaded to Maxeler Dataflow Engine:
+  \begin{itemize}
+  \item Field Programmable Gate Arrays (reconfigurable chip)
+  \item large, high-bandwidth on-board DRAM
+  \end{itemize}
   \begin{figure}[!ht]
     \centering
     \def\svgwidth{\linewidth}
@@ -108,53 +136,53 @@
 
 \begin{frame}[fragile]
   \frametitle{Kernel Optimisations: Bit Width}
-      \begin{figure}[!ht]
-        \centering
-        \def\svgwidth{.7\linewidth}
-        \input{figs/dfg-cast.pdf_tex}
-      \end{figure}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{.7\linewidth}
+    \input{figs/dfg-cast.pdf_tex}
+  \end{figure}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Kernel Optimisations: Stream Pipelineing}
-      \begin{figure}[!ht]
-        \centering
-        \def\svgwidth{.7\linewidth}
-        \input{figs/dfg-pipeline.pdf_tex}
-      \end{figure}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{.7\linewidth}
+    \input{figs/dfg-pipeline.pdf_tex}
+  \end{figure}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Kernel Optimisations: Pipeline Replication}
-      \begin{figure}[!ht]
-        \centering
-        \def\svgwidth{.7\linewidth}
-        \input{figs/dfg-parallel.pdf_tex}
-      \end{figure}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{.7\linewidth}
+    \input{figs/dfg-parallel.pdf_tex}
+  \end{figure}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{A Typical Dataflow Kernel: RTM}
   \begin{itemize}
-    \item RTM - Reverse Time Migration for seismic imaging
-    \item MaxJ - Java API for dataflow programming with FPGAs
+  \item RTM - Reverse Time Migration for seismic imaging
+  \item MaxJ - Java API for dataflow programming with FPGAs
   \end{itemize}
 
   \begin{lstlisting}
-// I/O type
-KArrayType burstIn = new KArrayType(hwFloat(8,24), Par);
+    // I/O type
+    KArrayType burstIn = new KArrayType(hwFloat(8,24), Par);
 
-// Compute type
-for (int i = 0; i < Par; i++)
-  source[i] = burstIn[i].cast(hwFloat(8, 22));
+    // Compute type
+    for (int i = 0; i < Par; i++)
+    source[i] = burstIn[i].cast(hwFloat(8, 22));
 
-// Optimisations
-optimization.pushDSPFactor(1);
+    // Optimisations
+    optimization.pushDSPFactor(1);
 
-// Pipeline replication
-for (int i = 0; i < Par; i++)
-  result[i][0] = cur[0][6+i][5][5] * 2.0 - (...)
-\end{lstlisting}
+    // Pipeline replication
+    for (int i = 0; i < Par; i++)
+    result[i][0] = cur[0][6+i][5][5] * 2.0 - (...)
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -162,17 +190,17 @@ for (int i = 0; i < Par; i++)
   Have to:
   \begin{enumerate}
 
-    \item specify I/O type and width to interface with host API
-    \item minimise compute type width to optimise resource usage
-    \item specify casting between types to ensure correct values
-    \end{enumerate}
+  \item specify I/O type and width to interface with host API
+  \item minimise compute type width to optimise resource usage
+  \item specify casting between types to ensure correct values
+  \end{enumerate}
 
-\begin{lstlisting}
-  // IOType
-  KArrayType burstIn = new KArrayType((*@\reduline{hwFloat(8, 24)}@*), (*@\reduline{Par}@*));
+  \begin{lstlisting}
+    // IOType
+    KArrayType burstIn = new KArrayType((*@\reduline{hwFloat(8, 24)}@*), (*@\reduline{Par}@*));
 
-  // Compute Type
-  for (int i = 0; i < Par; i++)
+    // Compute Type
+    for (int i = 0; i < Par; i++)
     source[i] = burstIn[i].(*@\reduline{cast(hwFloat(8, 22))}@*);
   \end{lstlisting}
 \end{frame}
@@ -182,37 +210,37 @@ for (int i = 0; i < Par; i++)
   Have to:
   \begin{enumerate}
     \setcounter{enumi}{4}
-      \item apply FPGA specific optimisations
-      \item apply per stream or per block optimisation function calls
-      \end{enumerate}
-    \begin{lstlisting}
-// Map arithmetic to Digital Signal Processors
-optimization.pushDSPFactor(1);
-{ /* compute block */ }
-optimization.popDSPFactor();
+  \item apply FPGA specific optimisations
+  \item apply per stream or per block optimisation function calls
+  \end{enumerate}
+  \begin{lstlisting}
+    // Map arithmetic to Digital Signal Processors
+    optimization.pushDSPFactor(1);
+    { /* compute block */ }
+    optimization.popDSPFactor();
 
-// Add pipeline registers to stream (improve timing)
-optimization.pipeline(stream);
+    // Add pipeline registers to stream (improve timing)
+    optimization.pipeline(stream);
 
-    \end{lstlisting}
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Issues}
-    \begin{beamerboxesrounded}{The Problem}
-      Mixing optimisations with functional application code:
-      \begin{itemize}
-        \item harder to infer
-        \item harder to automate
-        \item less portable (cannot apply to other applications)
-      \end{itemize}
-    \end{beamerboxesrounded}
-    \begin{beamerboxesrounded}{The Solution}
-      Decouple optimisations from application code:
+  \begin{beamerboxesrounded}{The Problem}
+    Mixing optimisations with functional application code:
+    \begin{itemize}
+    \item harder to infer
+    \item harder to automate
+    \item less portable (cannot apply to other applications)
+    \end{itemize}
+  \end{beamerboxesrounded}
+  \begin{beamerboxesrounded}{Our Solution}
+    Decouple optimisations from application code:
     \begin{itemize}
     \item infer information as much as possible
     \item encapsulate optimisations in separate modules
     \item apply them automatically to explore the design space
     \end{itemize}
-    \end{beamerboxesrounded}
+  \end{beamerboxesrounded}
 \end{frame}

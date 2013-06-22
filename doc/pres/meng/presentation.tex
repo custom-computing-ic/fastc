@@ -1,4 +1,13 @@
-\documentclass{beamer}
+\documentclass[11pt]{beamer}
+
+\usepackage[T1]{fontenc}
+%\usepackage{lmodern}
+
+%\usepackage{mathptmx}
+%\usepackage{helvet}
+%\renewcommand{\rmdefault}{ptm}
+
+
 
 \usepackage[final]{listings}
 \usepackage{verbatim}
@@ -39,7 +48,7 @@
   enlargelimits=0.1,
   compat=1.8,
   tick label style={font=\footnotesize},
-  label style={font=\small},
+  label style={font=\footnotesize},
   legend style={font=\footnotesize}
 }
 
@@ -65,6 +74,10 @@
     }
 
 
+\useinnertheme[]{rounded}
+%\useoutertheme{shadow}
+%\usecolortheme{orchid}
+%\usecolortheme{whale}
 
     \usetikzlibrary{shapes,arrows}
 

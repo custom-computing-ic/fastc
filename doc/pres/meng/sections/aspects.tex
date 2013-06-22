@@ -26,25 +26,18 @@ Hardware/Software Partitioning:
 
 \begin{frame}[fragile]
   \frametitle{System Aspects: Monitoring}
+  For all innermost loops:
+\begin{itemize}
+  \item Monitor every loop iteration
+  \item Monitor every loop entry and exit
+\end{itemize}
 \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef LoopMonitor
- select function.loop{is_innermost} end
- apply
-   $loop.insert before
-   %{monitor_instanceI("[[$loop.key]]");}%;
-   $loop.insert after
-   %{monitor_instanceE("[[$loop.key]]");}%;
- end
-
- select function.loop{is_innermost}.entry end
- apply $begin.insert after
-       %{monitor_iterI("[[$loop.key]]");}%;
- end
-
- select function.loop{is_innermost}.exit end
- apply $begin.insert before
-       %{monitor_iterE("[[$loop.key]]");}%;
- end
+  function.loop{is_innermost}:
+    entry:   prepend(mon_iterationIn());
+    exit :   append (mon_iterationOut());
+    default: prepend(mon_instanceIn());
+             append(mon_instanceOut());
 end
 \end{lstlisting}
 \end{frame}
@@ -52,25 +45,31 @@ end
 \begin{frame}
   \frametitle{Monitorisation: Aspect Weaving}
 \begin{center}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{p{5cm}|p{5cm}}
 \hline
-\bf{original code}           & \bf{woven code}                                   \\
-\hline
+\bf{Original Code}           & \bf{Woven Code}                                   \\
 \hline
 void f() \{                  & void f() \{                                       \\
                              & \hspace{3ex}\emph{monitor\_instanceI("f:1");} \\
-\hspace{3ex}while (i < N) \{ & \hspace{3ex}while (i < N) \{                      \\
+\hspace{3ex}while (i $ < $ N) \{ & \hspace{3ex}while (i$ < $N) \{                      \\
                              & \hspace{6ex}\emph{monitor\_iterI("f:1");}     \\
 \hspace{6ex}i++;             & \hspace{6ex}i++;                                  \\
                              & \hspace{6ex}\emph{monitor\_iterE("f:1");}     \\
 \hspace{3ex}\}               & \hspace{3ex}\}                                    \\
                              & \hspace{3ex}\emph{monitor\_instanceE("f:1");} \\
 \}                           & \}                                                \\
-\hline
 \end{tabular}
 \end{center}
 \end{frame}
 
+\begin{frame}{System Aspects: Run-time Reconfiguration}
+Explain why run-time reconfiguration is useful
+\end{frame}
+
+\begin{frame}{System Aspects: Run-time Reconfiguration}
+Show aspects for run-time reconfiguration and general strategy
+\end{frame}
 
 \begin{frame}[fragile]{Implementation Aspects: Operator Optimisation}
 \begin{lstlisting}[label=lst:label, style=lara]
@@ -134,9 +133,7 @@ end
 \end{lstlisting}
 
 \begin{itemize}
-\item useful since no run-time debugger available
-\item debug blocks influence resource usage and performance
-\item comment out => code may not compile => req. fix => reduce productivity solution:
-\item aspect descriptions to automatically log values of variables on assignment
+\item useful since no run-time is debugger available
+\item aspect descriptions automatically log values of variables on assignment
 \end{itemize}
 \end{frame}
