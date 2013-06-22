@@ -2,9 +2,9 @@
 \begin{frame}
   \frametitle{Challenges}
 
-  \begin{beamerboxesrounded}{1. Specify Dataflow Designs}
+  \begin{beamerboxesrounded}{1. Support Aspect Weaving for Dataflow Designs}
     \begin{itemize}
-    \item adopt intuitive, concise, well-understood language
+    \item integrate tools for AOP and dataflow compilation
     \item facilitate optimisation of existing designs
     \end{itemize}
   \end{beamerboxesrounded}
@@ -29,21 +29,27 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Contributions}
-  \begin{beamerboxesrounded}{1. FAST: Facile Aspect-driven Source Transformation}
-    Dataflow language based on C99 that facilitates integration with
-    existing applications and tools.
+  \frametitle{Approach: Putting It All Together}
+  \begin{beamerboxesrounded}{1. Introduce Design Flow Supporting AOP}
+  \end{beamerboxesrounded}
+  \begin{beamerboxesrounded}{2. Facilitate application of AOP
+      techniques to dataflow designs}
+    \begin{itemize}
+    \item Introduce FAST (Facile Aspect-driven Source Transformation),
+      simple C-style language
+    \end{itemize}
   \end{beamerboxesrounded}
 
-  \begin{beamerboxesrounded}{2. Aspect-driven Design Flow: Improve Efficiency \& Productivity}
-    Introduce novel classes of aspect descriptions: system,
-    implementation, exploration and development aspect descriptions.
+  \begin{beamerboxesrounded}{3. Devise Aspects to Improve Efficiency
+      \& Productivity}
   \end{beamerboxesrounded}
 
-  \begin{beamerboxesrounded}{3. Demonstrate Automated Design Flow}
-    Significant reduction of code size and API calls for a number of
-    real life applications (Reverse Time Migration, Black Scholes, Ad
-    Prediction) with minimal performance overhead
+  \begin{beamerboxesrounded}{4. Demonstrate Automated Design Flow}
+    \begin{itemize}
+    \item Investigate productivity and performance impact on real-life
+      applications: Reverse Time Migration, Black Scholes, Ad
+      Prediction, etc.
+    \end{itemize}
   \end{beamerboxesrounded}
 \end{frame}
 

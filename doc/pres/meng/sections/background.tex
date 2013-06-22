@@ -1,31 +1,15 @@
 \section{Background}
 
 \begin{frame}[fragile]
-  \frametitle{Encapsulating Optimisations: AOP}
-  \begin{beamerboxesrounded}{Aspect Oriented Programming(AOP)}
+  \frametitle{Decoupling Optimisations: Aspect-Oriented Design}
+  \begin{beamerboxesrounded}{Aspect Oriented Programming (AOP)}
     \begin{itemize}
       \item encapsulate cross-cutting concerns in aspect descriptions
       \item apply them at run-time to alter behaviour
       \item apply them at specified points (pointcut model)
     \end{itemize}
   \end{beamerboxesrounded}
-\vspace{0.75cm}
-\begin{beamerboxesrounded}{AOP Example: Logging}
-\vspace{-0.5cm}
-  \begin{lstlisting}[label=lst:label]
-aspect Logger {
-  void Client.receive(from, to, payload, logger) {
-    logger.info("Received...");
-  }
-}
-\end{lstlisting}
-\end{beamerboxesrounded}
-
-
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Encapsulating Optimisations: AOP}
+  \vspace{0.75cm}
   \begin{beamerboxesrounded}{AOP for Dataflow Engines}
     \begin{itemize}
       \item capture aspects of quality and their realisation
@@ -37,18 +21,12 @@ aspect Logger {
       \item use aspects to generate multiple variants of a design
     \end{itemize}
   \end{beamerboxesrounded}
-  \begin{beamerboxesrounded}{Goals}
-    \begin{enumerate}
-      \item minimal overhead on performance and energy efficiency
-      \item automate design space exploration
-      \item reduce lines of code and API calls
-    \end{enumerate}
-  \end{beamerboxesrounded}
+
 
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Encapsulating Optimisations: AOP}
+  \frametitle{Decoupling Optimisations: Aspect-Oriented Design}
   \begin{figure}[!ht]
   \centering
   \def\svgwidth{\textwidth}
