@@ -8,12 +8,18 @@ EXE=maxcc
 ############ Test Functions #############
 
 runTest() {
-    ${EXE} test/$1.c > test/$1.out
-    output=`diff -wbB test/$1.out test/$1.exp`
+    base=`basename $1`
+    dir=`dirname $1`
+    cd test/$dir && ${EXE} $base.c
+    echo $base
+    echo $dir
+    runOut=build/engine/$base.java
+    echo $runOut
+    output=`diff -wbB $runOut $base.exp`
     res=$?
     if [ "$res" = "1" ]; then
         printf "[FAIL!] $1.c\n"
-        printf " ---- Diff (meld test/$1.out test/$1.exp) ---- \n"
+        printf " ---- Diff (meld test/$dir/$runOut test/$dir/$base.exp) ---- \n"
         printf "$output\n"
         printf " ---------------------\n"
     else
@@ -34,9 +40,9 @@ runLocalTestSuite() {
     test=$1
     if [ "$test" = "" ]; then
 
-        runTest "testRTMStatic/maxc/testRTMStatic"
+        runTest "testRTMStatic/maxc/RTM"
 
-        runTest "testArrays/maxc/testArrays"
+        runTest "testArrays/maxc/Arrays"
 
         runTest "testCommon/maxc/testCmdRead"
 
