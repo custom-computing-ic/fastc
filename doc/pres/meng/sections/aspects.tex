@@ -22,3 +22,121 @@ Hardware/Software Partitioning:
   \item place FAST pragma to link \texttt{fast\_f()} with \texttt{f()}
 \end{enumerate}
 \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{System Aspects: Monitoring}
+\begin{lstlisting}[label=lst:label, style=lara]
+aspectdef LoopMonitor
+ select function.loop{is_innermost} end
+ apply
+   $loop.insert before
+   %{monitor_instanceI("[[$loop.key]]");}%;
+   $loop.insert after
+   %{monitor_instanceE("[[$loop.key]]");}%;
+ end
+
+ select function.loop{is_innermost}.entry end
+ apply $begin.insert after
+       %{monitor_iterI("[[$loop.key]]");}%;
+ end
+
+ select function.loop{is_innermost}.exit end
+ apply $begin.insert before
+       %{monitor_iterE("[[$loop.key]]");}%;
+ end
+end
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Monitorisation: Aspect Weaving}
+\begin{center}
+\begin{tabular}{p{5cm}|p{5cm}}
+\hline
+\bf{original code}           & \bf{woven code}                                   \\
+\hline
+\hline
+void f() \{                  & void f() \{                                       \\
+                             & \hspace{3ex}\emph{monitor\_instanceI("f:1");} \\
+\hspace{3ex}while (i < N) \{ & \hspace{3ex}while (i < N) \{                      \\
+                             & \hspace{6ex}\emph{monitor\_iterI("f:1");}     \\
+\hspace{6ex}i++;             & \hspace{6ex}i++;                                  \\
+                             & \hspace{6ex}\emph{monitor\_iterE("f:1");}     \\
+\hspace{3ex}\}               & \hspace{3ex}\}                                    \\
+                             & \hspace{3ex}\emph{monitor\_instanceE("f:1");} \\
+\}                           & \}                                                \\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]{Implementation Aspects: Operator Optimisation}
+\begin{lstlisting}[label=lst:label, style=lara]
+aspectdef DspBalancing
+var op_granularity =
+ [{DspBalance:’full’,MultiplyOp: 5,AddOp: 5 },
+  {DspBalance:’balanced’,MultiplyOp:3}];
+
+select function.statement end
+apply
+ for (var i in op_granularity) {
+   var gprofile = op_granularity[i];
+   var match = true;
+   for (var k in gprofile) {
+     if (k != ’DspBalance’) {
+       match &= ($statement.num_construct(k)
+                 >= gprofile[k]);}}
+   if (match) {
+     var pragma = ’#pragma FAST balanceDSP:’
+                   + gprofile.DspFactor;
+     $statement.insert before "[[pragma]]";
+     break;}}
+   end
+end
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Exploration Aspects: Control DSE}
+\begin{lstlisting}[label=lst:label, style=lara]
+aspectdef DesignExploration
+  input
+   attribute,
+   start, step,
+   resource, resource_threshold,
+   config
+end
+config[attribute] = start;
+var i = 0;
+do {
+  var designName = genName(config);
+  call genFAST(designName, config);
+  buildFAST(designName);
+  config[attribute] += step; i++;
+} while (@hw[designName]. resource < resource_threshold && i < LIMIT);
+end
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Development Aspects: Debugging}
+\begin{lstlisting}[label=lst:label, style=lara]
+aspectdef WatchVar
+select function.vref end
+apply
+  $vref.parent_stmt.insert before
+  %{ log("[[$vref.name]]", [[$vref.name]]); }%
+  $vref.parent_stmt.insert after
+  %{ log("[[$vref.name]]", [[$vref.name]]); }%
+end
+condition $vref.is_out end
+end
+\end{lstlisting}
+
+\begin{itemize}
+\item useful since no run-time debugger available
+\item debug blocks influence resource usage and performance
+\item comment out => code may not compile => req. fix => reduce productivity solution:
+\item aspect descriptions to automatically log values of variables on assignment
+\end{itemize}
+\end{frame}

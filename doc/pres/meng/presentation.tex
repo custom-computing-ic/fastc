@@ -4,25 +4,26 @@
 \usepackage{verbatim}
 \usepackage{multirow}
 \usepackage{multicol}
-
+\usepackage{pgfplots}
 \usepackage[normalem]{ulem}
+\usepackage[english]{babel}
+\usepackage{times}
+\usepackage{tikz}
 
+% --- Setttings
 \graphicspath{{figs/}}
 
+% --- Listings
 \lstset{escapeinside={(*@}{@*)}}
-
 \lstdefinestyle{lara}{ language=C++,
   morekeywords={aspectdef, var, apply, select, condition, begin, end, input}}
-
 \lstdefinestyle{MaxC}{language=C++,
   morekeywords={s_int32, int32, float8_24, sin_float8_24,
     sout_float8_24, float8_24, s_int, s_float8_24, s_bool, in, out, count, countChain},
   deletekeywords={static}}
-
 \lstdefinestyle{MaxJ}{
   morekeywords={HWVar, io, hwFloat, stream}
 }
-
 \lstset{
   basicstyle=\footnotesize\sffamily,
   keywordstyle=\color{black}\bfseries,
@@ -31,26 +32,31 @@
   escapeinside={(*@}{@*)}
 }
 
+% --- PGF Plots ---
+\pgfplotsset{width=0.9\textwidth, enlargelimits=0.15}
+
+% --- Tables ---
+\renewcommand{\arraystretch}{1.5}
+
+
 \newcommand{\MAXC}[0]{FAST}
 \newcommand\reduline{\bgroup\markoverwith
   {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
 
 \mode<presentation>
     {
+%      \usetheme{Darmstadt}
+% \usetheme{Rochester}
 %      \usetheme{Pittsburgh}
-      \usetheme{Singapore}
+%      \usetheme{Singapore}
 %      \usecolortheme{whale}
-      \usecolortheme{default}
+%      \usecolortheme{default}
 %      \setbeamercovered{transparent}
       % or whatever (possibly just delete it)
     }
 
 
-    \usepackage[english]{babel}
-    \usepackage[latin1]{inputenc}
-    \usepackage{times}
-    \usepackage[T1]{fontenc}
-    \usepackage{tikz}
+
     \usetikzlibrary{shapes,arrows}
 
     \usepackage{caption}
@@ -66,8 +72,8 @@
     \pgfdeclareimage[height=0.3cm]{qm}{images/qm.png}
 
 
-    %\setbeamertemplate{navigation symbols}{}%remove navigation symb
-    \setbeamertemplate{footline}{}
+    \setbeamertemplate{navigation symbols}{}%remove navigation symb
+    %\setbeamertemplate{footline}{}
     \setbeamertemplate{headline}{}
     %\setbeamertemplate{caption}{\figurename}
 
@@ -98,7 +104,8 @@
     \input{sections/design-flow.tex}
     \input{sections/fast.tex}
     \input{sections/aspects.tex}
-%    \input{sections/conclusions.tex}
+    \input{sections/evaluation.tex}
+    \input{sections/conclusions.tex}
 
 
    \end{document}
