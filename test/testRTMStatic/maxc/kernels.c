@@ -1,5 +1,3 @@
-#include "../include/params_dse.h"
-
 // Memory write kernel
 #include "../../testCommon/maxc/testCmdWrite.c"
 
@@ -7,4 +5,4 @@
 #include "../../testCommon/maxc/testCmdRead.c"
 
 // RTM kernel
-#include "testRTMStatic.c"
+#include "RTM.c"
