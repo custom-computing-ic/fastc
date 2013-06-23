@@ -1,6 +1,7 @@
 \section{FAST}
+
 \begin{frame}[fragile]
-  \frametitle{FAST Example}
+  \frametitle{2. FAST -- Facile Aspect-driven Source Transformation}
 
 \begin{lstlisting}
 void Price_FPGA(float* stockPrices, float* result,
@@ -22,15 +23,10 @@ int main() {
   Price_CPU(...);
 }
 \end{lstlisting}
-
-\end{frame}
-
-\begin{frame}{FAST vs C}
-  FAST has C syntax but is not C. Explain why.
 \end{frame}
 
 \begin{frame}
-  \frametitle{FAST Features}
+  \frametitle{2. FAST: Features}
 
 \begin{table}[!h]
   \centering
@@ -56,4 +52,21 @@ int main() {
                                     & \texttt{for}, \texttt{while}  &                      \\
 \end{tabular}
 \end{table}
+\end{frame}
+
+\begin{frame}{2. FAST: FAST vs C}
+\begin{itemize}
+\item Fast only uses C syntax to simplify integration with compiler
+  frameworks.
+\item  Key differences
+\begin{itemize}
+\item execution model only supports kernels
+\item pointers are regarded as   streams
+\item negative offsets are allowed
+\item only compile time loop bounds are allowed
+\item direct interoperability with C code is not possible, but
+  simulated via pragmas
+\end{itemize}
+\end{itemize}
+
 \end{frame}

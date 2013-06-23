@@ -1,6 +1,6 @@
 \section{Aspect Descriptions}
 \begin{frame}
-  \frametitle{Aspect Descriptions}
+  \frametitle{3. Aspect Descriptions}
 \begin{enumerate}
   \item  system aspect descriptions (e.g. monitor performance)
   \item implementation aspect descriptions (e.g. optimise word-length for operators)
@@ -12,7 +12,7 @@
 
 
 \begin{frame}
-  \frametitle{System Aspects}
+  \frametitle{3. Aspect Descriptions: System Aspects}
 Hardware/Software Partitioning:
 \begin{enumerate}
   \item detect hotspots
@@ -25,7 +25,7 @@ Hardware/Software Partitioning:
 
 
 \begin{frame}[fragile]
-  \frametitle{System Aspects: Monitoring}
+  \frametitle{3. Aspect Descriptions: Monitoring}
   For all innermost loops:
 \begin{itemize}
   \item Monitor every loop iteration
@@ -42,36 +42,15 @@ end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Monitorisation: Aspect Weaving}
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{p{5cm}|p{5cm}}
-\hline
-\bf{Original Code}           & \bf{Woven Code}                                   \\
-\hline
-void f() \{                  & void f() \{                                       \\
-                             & \hspace{3ex}\emph{monitor\_instanceI("f:1");} \\
-\hspace{3ex}while (i $ < $ N) \{ & \hspace{3ex}while (i$ < $N) \{                      \\
-                             & \hspace{6ex}\emph{monitor\_iterI("f:1");}     \\
-\hspace{6ex}i++;             & \hspace{6ex}i++;                                  \\
-                             & \hspace{6ex}\emph{monitor\_iterE("f:1");}     \\
-\hspace{3ex}\}               & \hspace{3ex}\}                                    \\
-                             & \hspace{3ex}\emph{monitor\_instanceE("f:1");} \\
-\}                           & \}                                                \\
-\end{tabular}
-\end{center}
-\end{frame}
-
-\begin{frame}{System Aspects: Run-time Reconfiguration}
+\begin{frame}{3. Aspect Descriptions: Run-time Reconfiguration}
 Explain why run-time reconfiguration is useful
 \end{frame}
 
-\begin{frame}{System Aspects: Run-time Reconfiguration}
+\begin{frame}{3. Aspect Descriptions: Run-time Reconfiguration}
 Show aspects for run-time reconfiguration and general strategy
 \end{frame}
 
-\begin{frame}[fragile]{Implementation Aspects: Operator Optimisation}
+\begin{frame}[fragile]{3. Aspect Descriptions: Operator Optimisation}
 \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef DspBalancing
 var op_granularity =
@@ -97,7 +76,7 @@ end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Exploration Aspects: Control DSE}
+\begin{frame}[fragile]{3. Aspect Descriptions: Exploration Aspects}
 \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef DesignExploration
   input
@@ -118,7 +97,7 @@ end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Development Aspects: Debugging}
+\begin{frame}[fragile]{3. Aspect Descriptions: Development Aspects}
 \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef WatchVar
 select function.vref end

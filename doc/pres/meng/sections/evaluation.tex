@@ -1,31 +1,31 @@
-\begin{frame}{Evaluation: Benchmark}
+\begin{frame}{4. Evaluation: Benchmark}
 
   \begin{itemize}
   \item \textbf{Numerical Differentiation} for experimental data
     \begin{itemize}
-      \item 1D stencil computation, sensitive to computation accuracy
-      \end{itemize}
+    \item 1D stencil computation, sensitive to computation accuracy
+    \end{itemize}
   \item \textbf{Black Scholes} for finite difference option pricing
     \begin{itemize}
-      \item 1D stencil, multiple time steps, requires DRAM
+    \item 1D stencil, multiple time steps, requires DRAM
     \end{itemize}
   \item \textbf{Reverse Time Migration} for seismic imaging
     \begin{itemize}
-      \item 3D stencil, design parallelism, operator tuning
-      \end{itemize}
+    \item 3D stencil, design parallelism, operator tuning
+    \end{itemize}
   \item \textbf{Bitonic Network} for high-throughput sorting
     \begin{itemize}
-      \item recursive definition, design parametrisation
-      \end{itemize}
+    \item recursive definition, design parametrisation
+    \end{itemize}
   \item \textbf{Add Prediction} for Bing's sponsored search
     \begin{itemize}
     \item arithmetic intensive kernel
     \item requires effective tuning to achieve timing closure
-  \end{itemize}
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Evaluation: Reverse Time Migration}
+\begin{frame}{4. Evaluation: Reverse Time Migration}
   \begin{itemize}
   \item seismic imaging application for oil and gas exploration
   \item 3 dataflow kernels
@@ -35,11 +35,12 @@
     \item CmdRead -- memory read command generator
     \end{itemize}
   \item computationally demanding
-  \item   use run-time reconfiguration to improve performance and efficiency
+  \item use run-time reconfiguration to improve performance and efficiency
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Evaluation: RTM Design Space Exploration}
+
+\begin{frame}{4. Evaluation: RTM Design Space Exploration}
   \begin{figure}[!h]
     \centering
     \begin{tikzpicture}
@@ -101,7 +102,7 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}{Evaluation: RTM Word Length Exploration}
+\begin{frame}{4. Evaluation: RTM Word Length Exploration}
   \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -172,7 +173,7 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}{Evaluation: RTM Parallelism}
+\begin{frame}{4. Evaluation: RTM Parallelism}
   \begin{figure}[!h]
     \centering
     \begin{tikzpicture}
@@ -243,13 +244,31 @@
       \end{axis}
     \end{tikzpicture}
   \end{figure}
-
-
-
 \end{frame}
 
 
-\begin{frame}{Evaluation: Benchmark}
+\begin{frame}{4. Evaluation: Reverse Time Migration}
+  Evaluation results show that aspect descriptions can effectively:
+  \begin{itemize}
+  \item control DSP mapping: explore trade-off of reducing LUT/FF usage,
+    improving timing, reducing build time vs increasing parallelism (when DSP bound)
+  \item control word length: explore improving computation accuracy vs
+    reducing resource usage (also increasing parallelism)
+  \item explore design space to reveal unintuitive results that can
+    lead to substantial (2X) performance increase with minimal impact
+    on accuracy (when reducing mantissa from 24 bits to 22 bits)
+  \item control design parallelism: explore increased performance vs
+    increased compilation time
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{4. Evaluation: Reverse Time Migration}
+  \begin{table}
+
+  \end{table}
+\end{frame}
+
+\begin{frame}{4. Evaluation: Benchmark}
   Comparing manual MaxCompiler designs to FAST designs:
   \begin{table}
     \renewcommand{\arraystretch}{1.2}
