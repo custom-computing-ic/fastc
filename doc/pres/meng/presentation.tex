@@ -25,20 +25,25 @@
 
 % --- Listings
 \lstset{escapeinside={(*@}{@*)}}
-\lstdefinestyle{lara}{ language=C++,
-  morekeywords={aspectdef, var, apply, select, condition, begin, end, input}}
+\lstdefinestyle{lara}{language=C++,
+  frame=single, frameround=tttt,
+  rulecolor=\color{gray},
+  morekeywords={aspectdef, var, apply, select, condition, begin, end, input, entry, exit}}
 \lstdefinestyle{MaxC}{language=C++,
   morekeywords={s_int32, int32, float8_24, sin_float8_24,
-    sout_float8_24, float8_24, s_int, s_float8_24, s_bool, in, out, count, countChain},
+    sout_float8_24, float8_24, s_int, s_float8_24, s_bool, count, countChain,
+  CURRENT_CYCLE, MAX_CYCLE, pragma},
   deletekeywords={static}}
 \lstdefinestyle{MaxJ}{
   morekeywords={HWVar, io, hwFloat, stream}
 }
+
 \lstset{
-  basicstyle=\footnotesize\sffamily,
+  basicstyle=\footnotesize,
   keywordstyle=\color{black}\bfseries,
   captionpos=b,
   breaklines=true,
+  showspaces=false,
   escapeinside={(*@}{@*)}
 }
 
