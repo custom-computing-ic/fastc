@@ -1,122 +1,160 @@
 \section{Aspect Descriptions}
 \begin{frame}
   \frametitle{3. Aspect Descriptions}
-\begin{enumerate}
-\item \textbf{System Aspect Descriptions} -- applied at the whole
-  system level (FAST + C application) to capture the mapping
-  between application modules and accelerator
-\item \textbf{Implementation Aspect Descriptions} -- applied at the
-  level of the dataflow design, to perform platform specific
-  optimisations
-\item \textbf{Exploration Aspect Descriptions} -- used to explore the
-  design space of optimisation trade-offs
-\item \textbf{Development Aspect Description}  -- used to support
+  \begin{enumerate}
+  \item \textbf{System Aspect Descriptions} -- applied at the whole
+    system level (FAST + C application) to capture the mapping
+    between application modules and accelerator
+  \item \textbf{Implementation Aspect Descriptions} -- applied at the
+    level of the dataflow design, to perform platform specific
+    optimisations
+  \item \textbf{Exploration Aspect Descriptions} -- used to explore the
+    design space of optimisation trade-offs
+  \item \textbf{Development Aspect Description}  -- used to support
     the development process
-\end{enumerate}
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}
   \frametitle{3. Aspect Descriptions: System Aspects}
-Hardware/Software Partitioning:
-\begin{enumerate}
+  Hardware/Software Partitioning:
+  \begin{enumerate}
   \item detect hotspots
   \item detect code patterns suitable for acceleration
   \item perform outlining transformation
   \item derive dataflow \texttt{fast\_f()} from \texttt{f()}
   \item place FAST pragma to link \texttt{fast\_f()} with \texttt{f()}
-\end{enumerate}
+  \end{enumerate}
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{3. Aspect Descriptions: Monitoring}
   For all innermost loops:
-\begin{itemize}
+  \begin{itemize}
   \item Monitor every loop iteration
   \item Monitor every loop entry and exit
-\end{itemize}
-\begin{lstlisting}[label=lst:label, style=lara]
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef LoopMonitor
-  function.loop{is_innermost}:
-    entry:   prepend(mon_iterationIn());
-    exit :   append (mon_iterationOut());
-    default: prepend(mon_instanceIn());
-             append(mon_instanceOut());
+function.loop{is_innermost}:
+  entry:   prepend(mon_iterationIn())
+  exit :   append (mon_iterationOut())
+  default: prepend(mon_instanceIn())
+append(mon_instanceOut())
 end
-\end{lstlisting}
+  \end{lstlisting}
 \end{frame}
 
-\begin{frame}{3. Aspect Descriptions: Run-time Reconfiguration}
-Explain why run-time reconfiguration is useful
+\begin{frame}[fragile]{3. Aspect Descriptions: Run-time Reconfiguration}
+  \begin{itemize}
+  \item Run-time reconfiguration can be used to remove idle functions
+  \item FAST pragmas can specify configurations, grouping one
+    or more functions.
+    \begin{lstlisting}
+x = f(0);
+#pragma fast hw:f1 cfg:c1
+y = f(x);
+#pragma fast hw:g1 cfg:c1
+z = g(x);
+    \end{lstlisting}
+  \item Due to data-dependency one function may be idle => load a
+    different configuration for the useful functions in its place,
+    reducing overall computation time
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{3. Aspect Descriptions: Run-time Reconfiguration}
-Show aspects for run-time reconfiguration and general strategy
+\begin{frame}[fragile]{3. Aspect Descriptions: Run-time Reconfiguration}
+
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      Automatically add FAST pragmas based on partition information.
+    \end{column}
+    \begin{column}{.5\textwidth}
+      {\footnotesize
+      \begin{table}[!h]
+        \centering
+        \begin{tabular}{c|c|c}
+          \hline
+          \multicolumn{3}{c}{\bf{partition}} \\
+          \hline
+          \bf{call.key} & \bf{hw} & \bf{cfg}  \\
+          \hline
+          main:f:1 & fast\_f0 & c0 \\
+          main:f:2 & fast\_f1 & c1 \\
+          main:g:3 & fast\_g & c1 \\
+          \hline
+        \end{tabular}
+      \end{table}
+    }
+    \end{column}
+  \end{columns}
+  \begin{lstlisting}[style=lara]
+aspectdef AspReconfig
+input: partition
+function.call:
+  if (call.key in partition) {
+    config = partition[call.key].cfg;
+    kernel = partition[call.key].hw;
+    call.prepend('#pragma fast hw:'kernel' cfg:'config)
+  }
+end
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{3. Aspect Descriptions: Operator Optimisation}
-\begin{lstlisting}[label=lst:label, style=lara]
+  Map computation to Digital Signal Processors:
+  \begin{itemize}
+  \item $ \text{opMapping} : \overrightarrow{\text{opOccurence}} \rightarrow \text{factor}$
+  \item $\text{factor} \in \{\text{none}, \text{balanced}, \text{full}\} $
+  \item mapping can be varied by different aspect to support design
+    space exploration
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef DspBalancing
-var op_granularity =
- [{DspBalance:’full’,MultiplyOp: 5,AddOp: 5 },
-  {DspBalance:’balanced’,MultiplyOp:3}];
-
-select function.statement end
-apply
- for (var i in op_granularity) {
-   var gprofile = op_granularity[i];
-   var match = true;
-   for (var k in gprofile) {
-     if (k != ’DspBalance’) {
-       match &= ($statement.num_construct(k)
-                 >= gprofile[k]);}}
-   if (match) {
-     var pragma = ’#pragma FAST balanceDSP:’
-                   + gprofile.DspFactor;
-     $statement.insert before "[[pragma]]";
-     break;}}
-   end
+input: opMapping
+function.stmt:
+  opUsage = countOperatorUsage(stmt)
+  factor  = opMapping[opUsage]
+  if (factor != '')
+    stmt.prepend('#pragma fast balanceDSP:' + factor);
 end
-\end{lstlisting}
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{3. Aspect Descriptions: Exploration Aspects}
-\begin{lstlisting}[label=lst:label, style=lara]
+  Automate design space exploration
+  \begin{itemize}
+  \item vary an attribute of a dataflow configuration
+  \item generate FAST configuration and compile FPGA bitstream
+  \item extract feedback from compilation report
+  \item stop when a resource usage limit is reached
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef DesignExploration
-  input
-   attribute,
-   start, step,
-   resource, resource_threshold,
-   config
+input: attribute, start, step, res, res_limit, config
+  config[attribute] = start
+  do {
+    var designName = genName(config)
+      generateFASTDesign(designName, config)
+      buildFASTDesign(designName)
+      config[attribute] += step
+    } while (@hw[designName].res < res_limit)
 end
-config[attribute] = start;
-var i = 0;
-do {
-  var designName = genName(config);
-  call genFAST(designName, config);
-  buildFAST(designName);
-  config[attribute] += step; i++;
-} while (@hw[designName]. resource < resource_threshold && i < LIMIT);
-end
-\end{lstlisting}
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{3. Aspect Descriptions: Development Aspects}
-\begin{lstlisting}[label=lst:label, style=lara]
+  For all variable references:
+  \begin{itemize}
+  \item Automatically log variables on assignment
+  \item Useful since no run-time is debugger available
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
 aspectdef WatchVar
-select function.vref end
-apply
-  $vref.parent_stmt.insert before
-  %{ log("[[$vref.name]]", [[$vref.name]]); }%
-  $vref.parent_stmt.insert after
-  %{ log("[[$vref.name]]", [[$vref.name]]); }%
+function.vref{is_written}:
+  vref.parent.prepend('log("vref.name", vref.name)')
+  vref.parent.append('log("vref.name", vref.name)')
 end
-condition $vref.is_out end
-end
-\end{lstlisting}
-
-\begin{itemize}
-\item useful since no run-time is debugger available
-\item aspect descriptions automatically log values of variables on assignment
-\end{itemize}
+  \end{lstlisting}
 \end{frame}

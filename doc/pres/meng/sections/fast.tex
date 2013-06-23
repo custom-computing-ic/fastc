@@ -3,24 +3,27 @@
 \begin{frame}[fragile]
   \frametitle{2. FAST -- Facile Aspect-driven Source Transformation}
 
-\begin{lstlisting}
-void Price_FPGA(float* stockPrices, float* result,
-                float c1, float c2, float c3,
-                int nStocks, int order, int timesteps) {
-  int step  = (CURRENT_CYCLE / n1) \% timesteps;
+\begin{lstlisting}[style=MaxC]
+// kernel defines input, output streams and scalars
+void kernel_MovingAvg(float* in, float* avg, int bound)
+{
+  // special macros implemented as counters
+  bool hasPrev = CURRENT_CYCLE >=bound;
+  bool hasNext = CURRENT_CYCLE < MAX_CYCLE - bound;
+  bool hasBoth = hasPrevious & hasNext;
 
-  #pragma fast DSPBalance:full
-  float inter =  stockPrices[0] * c1
-       + stockPrices[1] * c2 + stockPrices[-1] * c3;
-  bool up = (step >= order) && (step < nStocks - order);
-  result[0] = up ? inter : stockPrices);
+  // ternary operator, stream offsets, arithmetic
+  float prev = hasPrev ? in[-1] : 0.0;
+  float next = hasNext ? in[ 1] : 0.0;
+  float sum  = prev + in[0] + next;
+
+  // output assignment
+  avg[0] = hasBoth? sum / 3 : sum / 2;
 }
 
-void Price_CPU(...) { /* Regular C implementation */}
-
 int main() {
-  #pragma fast hw:Price_FPGA
-  Price_CPU(...);
+  #pragma fast hw:MovingAvg  // maps to dataflow kernel
+  MovingAvg_CPU(...);        // call regular C function
 }
 \end{lstlisting}
 \end{frame}
