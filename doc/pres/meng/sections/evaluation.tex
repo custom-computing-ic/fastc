@@ -250,15 +250,15 @@
 \begin{frame}{4. Evaluation: Reverse Time Migration}
   Evaluation results show that aspect descriptions can effectively:
   \begin{itemize}
-  \item control DSP mapping: explore trade-off of reducing LUT/FF usage,
-    improving timing, reducing build time vs increasing parallelism (when DSP bound)
-  \item control word length: explore improving computation accuracy vs
-    reducing resource usage (also increasing parallelism)
-  \item explore design space to reveal unintuitive results that can
-    lead to substantial (2X) performance increase with minimal impact
-    on accuracy (when reducing mantissa from 24 bits to 22 bits)
-  \item control design parallelism: explore increased performance vs
-    increased compilation time
+  \item \textbf{control DSP mapping} -- improved timing, reduced build time vs
+    increased parallelism (when DSP bound)
+  \item \textbf{control word length} -- increased accuracy vs reduced
+    resource usage
+  \item \textbf{reveal unintuitive results} -- 2 times more
+    parallelism with small impact on accuracy by reducing mantissa
+    from 24 bits to 22 bits
+  \item \textbf{control design parallelism} -- explore increased
+    performance vs increased compilation time
   \end{itemize}
 \end{frame}
 
@@ -271,22 +271,23 @@
 
 \begin{frame}{4. Evaluation: Benchmark}
   Comparing manual MaxCompiler designs to FAST designs:
+{\footnotesize
   \begin{table}
-    \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{l|p{1cm}|p{1cm}|c|p{2cm}}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{l|c|c|c|c}
       \textbf{Kernel} & \textbf{LOC} & \textbf{API Calls} & \textbf{Performance}              & \textbf{Resource}
       \\
       \hline\hline
-      CmdRead         & 1.76               & 4.33                     & \multirow{2}{*}{$ > 75\%$}        & \multirow{6}{3cm}{$\approx 100\%$} \\
+      CmdRead         & 1.76               & 4.33                     & \multirow{2}{1.5cm}{$ > 75\%$}        & \multirow{6}{1.5cm}{$\approx 100\%$} \\
       CmdWrite        & 1.45               & 4.13                     &                                   &                              \\
       \cline{1-4}
-      RTM             & 1.17               & 10                       & \multirow{5}{*}{$ \approx 100\%$} &                              \\
+      RTM             & 1.17               & 10                       & \multirow{5}{1.5cm}{$ \approx 100\%$} &                              \\
       SGSmooth        & 1.85               & 14                       &                                   &                              \\
       SGDifff         & 1.75               & 14                       &                                   &                              \\
       Black-Scholes   & 2.51               & 5.5                      &                                   &                              \\
       \cline{5-5}
       Add Prediction  & 1.67               & 16                       &                                   &    $ \approx 123 \% $                          \\
     \end{tabular}
-  \end{table}
+  \end{table}}
 
 \end{frame}
