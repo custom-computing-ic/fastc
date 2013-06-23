@@ -56,9 +56,14 @@ int main() {
 
 \begin{frame}{2. FAST: FAST vs C}
 \begin{itemize}
-\item Fast only uses C syntax to simplify integration with compiler
-  frameworks.
-\item  Key differences
+\item Fast only uses C \emph{syntax}
+\begin{itemize}
+\item to simplify integration with compilation tools (aspect weaving,
+  dataflow, compiler frameworks)
+  \item to express dataflow designs in a simple, intuitive fashion
+\end{itemize}
+\vspace{0.5cm}
+\item  Differences compared to C
 \begin{itemize}
 \item execution model only supports kernels
 \item pointers are regarded as   streams
