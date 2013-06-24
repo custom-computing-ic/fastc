@@ -95,6 +95,10 @@
     \pgfdeclareimage[height=0.3cm]{idea}{images/idea.png}
     \pgfdeclareimage[height=0.3cm]{qm}{images/qm.png}
 
+\definecolor{UniBlue}{RGB}{83,121,190}
+\setbeamercolor{title}{fg=UniBlue}
+\setbeamercolor{frametitle}{fg=UniBlue}
+\setbeamercolor{structure}{fg=UniBlue}
 
     \setbeamertemplate{navigation symbols}{}%remove navigation symb
     %\setbeamertemplate{footline}{}
@@ -111,7 +115,9 @@
     \newcommand{\imgqm}{\pgfuseimage{qm}}
 
     \title{\Large Aspect Oriented Design for Dataflow Engines}
-    \author{{\small Paul Grigora\c{s}}}
+    \author{
+      {\small Paul Grigora\c{s}} \\[0.2cm]
+      \href{mailto:paul.grigoras09@imperial.ac.uk}{\texttt{\scriptsize paul.grigoras09@imperial.ac.uk}}}
     \date{}
 
     \begin{document}

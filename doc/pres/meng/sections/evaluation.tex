@@ -1,6 +1,7 @@
 \begin{frame}{4. Evaluation: Benchmark}
 
   \begin{itemize}
+  \setlength{\itemsep}{10pt}
   \item \textbf{Numerical Differentiation} for experimental data
     \begin{itemize}
     \item 1D stencil computation, sensitive to computation accuracy
@@ -250,6 +251,7 @@
 \begin{frame}{4. Evaluation: Reverse Time Migration}
   Evaluation results show that aspect descriptions can effectively:
   \begin{itemize}
+  \setlength{\itemsep}{10pt}
   \item \textbf{control DSP mapping} -- improved timing, reduced build time vs
     increased parallelism (when DSP bound)
   \item \textbf{control word length} -- increased accuracy vs reduced
@@ -275,7 +277,7 @@
   \begin{table}
     \renewcommand{\arraystretch}{1.5}
     \begin{tabular}{l|c|c|c|c}
-      \textbf{Kernel} & \textbf{LOC} & \textbf{API Calls} & \textbf{Performance}              & \textbf{Resource}
+      \textbf{Kernel} & \textbf{LOC\footnote{LOC = Lines of Code}} & \textbf{API Calls} & \textbf{Performance}              & \textbf{Resource}
       \\
       \hline\hline
       CmdRead         & 1.76               & 4.33                     & \multirow{2}{1.5cm}{$ > 75\%$}        & \multirow{6}{1.5cm}{$\approx 100\%$} \\
