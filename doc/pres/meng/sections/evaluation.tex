@@ -44,9 +44,12 @@
 
 \begin{frame}{4. Evaluation}
   \frametitle{RTM Design Space Exploration}
+\begin{itemize}
+  \item timing closure, build time vs parallelism
+\end{itemize}
   \begin{figure}[!h]
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.8]
       \begin{axis}[
         cycle list name=exotic,
         xmin=0,
@@ -107,9 +110,13 @@
 
 \begin{frame}{4. Evaluation}
   \frametitle{RTM Word Length Exploration}
+  \begin{itemize}
+  \item   accuracy vs resource usage
+  \item  2X parallelism, reduced accuracy
+  \end{itemize}
   \begin{figure}
     \centering
-    \begin{tikzpicture}[scale=0.95]
+    \begin{tikzpicture}[scale=0.8]
       \begin{axis}[
         cycle list name=exotic,
         ymin=0,
@@ -179,9 +186,13 @@
 
 \begin{frame}{4. Evaluation}
   \frametitle{RTM Parallelism}
+    \begin{itemize}
+    \item performance vs build time
+    \item identify resource bottlenecks
+    \end{itemize}
   \begin{figure}
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.8]
       \begin{axis}[
         cycle list name=exotic,
         xmin=1,
@@ -250,11 +261,11 @@
 
   {\scriptsize
 
-      \begin{table}
-        \renewcommand{\arraystretch}{1.4}
-    \hspace*{-8pt}\makebox[\linewidth][c]{
+    \begin{table}
+      \renewcommand{\arraystretch}{1.4}
+      \hspace*{-8pt}\makebox[\linewidth][c]{
         \begin{tabular}{c|p{0.55cm}|p{0.5cm}|p{0.6cm}|p{0.6cm}|p{0.65cm}|p{0.65cm}|p{0.65cm}|p{0.75cm}|p{0.65cm}}
-                     & \textbf{CPU} & \textbf{GPU} \cite{himeno} & \textbf{GPU} \cite{datta} & \textbf{GPU} \cite{cirque} & \textbf{FPGA} \cite{arraya}& \textbf{FPGA} \cite{xinyu}\ & \textbf{FPGA} & \textbf{FPGA D\footnote{D = Dynamic (i.e. using run-time reconfiguration)}} \cite{xinyu} & \textbf{FPGA D} \\
+          & \textbf{CPU} & \textbf{GPU} \cite{himeno} & \textbf{GPU} \cite{datta} & \textbf{GPU} \cite{cirque} & \textbf{FPGA} \cite{arraya}& \textbf{FPGA} \cite{xinyu}\ & \textbf{FPGA} & \textbf{FPGA D\footnote{D = Dynamic (i.e. using run-time reconfiguration)}} \cite{xinyu} & \textbf{FPGA D} \\
           \hline \hline
           Freq.(GHz) & 2.7          & 1.15         &    1.15          &   1.15           &    0.1           & 0.1                 & 0.1                 & 0.1                 & 0.1                 \\
           Time (s)   & 1458         & 52           &    --          &     --         &    --           & 18                  & 18.3                & 13.4                & 13.6                \\
@@ -264,8 +275,8 @@
           Efficiency & 4.9          & --        &    78          &       --       &    --           & 527.1               & 527.7               & 715.6               & 721.6               \\
           Eff. Gains & 1           & --        &    15.9          &        --      & --            & 107.5              & \textbf{107.0}     & 146.0             & \textbf{147.1}     \\
         \end{tabular}
-    }
-      \end{table}
+      }
+    \end{table}
 
   }
 
@@ -273,24 +284,6 @@
   \item can generate functionally identical dataflow design
   \item > 97\% performance of manual FPGA design
   \item > 99\% energy efficiency of manual FPGA design
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{4. Evaluation}
-  \frametitle{RTM Productivity}
-  Evaluation results show that aspect descriptions can effectively:
-  \begin{itemize}
-    \setlength{\itemsep}{10pt}
-  \item \textbf{control DSP mapping} -- improved timing, reduced build time vs
-    increased parallelism (when DSP bound)
-  \item \textbf{control word length} -- increased accuracy vs reduced
-    resource usage
-  \item \textbf{reveal unintuitive results} -- 2 times more
-    parallelism with small impact on accuracy by reducing mantissa
-    from 24 bits to 22 bits
-  \item \textbf{control design parallelism} -- explore increased
-    performance vs increased compilation time; identify resource
-    bottlenecks
   \end{itemize}
 \end{frame}
 
