@@ -3,7 +3,7 @@
 \begin{frame}{Current and Future Work}
 
   \begin{itemize}
-  \setlength{\itemsep}{10pt}
+    \setlength{\itemsep}{10pt}
 
   \item Finish second paper for FPT'13: aspect descriptions and tools
     for run-time reconfiguration
@@ -45,8 +45,8 @@
 
   \begin{beamerboxesrounded}{Aspect Descriptions}
     \begin{itemize}
-      \item improve performance, productivity \& automate exploration
-      \item support for run-time reconfiguration
+    \item improve performance, productivity \& automate exploration
+    \item support for run-time reconfiguration
     \end{itemize}
   \end{beamerboxesrounded}
 
@@ -58,4 +58,45 @@
     \end{itemize}
   \end{beamerboxesrounded}
 
+\end{frame}
+
+\begin{frame}
+  \begin{beamerboxesrounded}{fastc}
+    \begin{itemize}
+    \item Experimental compiler
+    \item Architecture - multiple passes, created DFG, create MaxJ
+    \item A bit of background - lines of code, classes etc
+    \item ROSE framework
+    \end{itemize}
+  \end{beamerboxesrounded}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item Show Black Scholes kernel, user input
+    \begin{itemize}
+    \item Written in FAST
+    \item Simple description
+    \item No optimisations
+    \end{itemize}
+  \item Show lara aspects used, user input
+    \begin{itemize}
+    \item design space exploration
+    \item parameterisable descriptions
+    \item vary word length, design parameters
+    \end{itemize}
+  \item Show aspect weaving
+    \begin{itemize}
+    \item Multiple configurations generated automatically
+    \item Varying design parameters: compute width and parallelism
+    \item Debug build logs values
+    \end{itemize}
+  \item Show maxcompiler code generation
+    \begin{itemize}
+    \item casts inferred from pragma, remove manual casts, optimise resource usage
+    \item inputs infered from kernel headers and assignment
+    \item kernel replicated based on pragma parallel, reduced
+      complexity, improve performance
+    \end{itemize}
+  \end{itemize}
 \end{frame}
