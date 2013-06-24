@@ -39,8 +39,8 @@ will eed one implementation for each design.
 * Demo
 ** DONE aspect dir to store aspects
 ** DONE script to run the deom
-** any binaries?
-** may want to improve output formatting to make it look more interesting
+** DONE any binaries?
+** DONE may want to improve output formatting to make it look more interesting
 ** also run it in simulation  == REQUIRES Fixing Offsets, maybe postpone ?
 
 * Code Wrap-up
