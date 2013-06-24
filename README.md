@@ -25,7 +25,13 @@ Usage
 -----
 
 ~~~
-fastc /path/to/kernels.c
+fastc I/path/to/fastc/include/ /path/to/kernels.c
+~~~
+
+For example:
+
+~~~
+fastc -Iinclude/ test/testRTMStatic/maxc/RTM.c
 ~~~
 
 This will generate MaxJ design files from the specified FAST design file (which can contain one or multiple kernels).
