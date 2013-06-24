@@ -14,7 +14,7 @@ maxc passthrough.c -> generates a maxcompiler project containing:
 
 * Reduce /tree type computations?
 
-* Need to figure out what stencil computation is exactly and need to come up with sinpler examples.
+* Need to figure out what stencil computation is exactly and need to come up with simpler examples.
 
 
 * General questions
@@ -34,3 +34,33 @@ will eed one implementation for each design.
 ** LINPACK
 ** Sorting Networks
 ** Matrix Multiply
+
+
+* Demo
+** DONE aspect dir to store aspects
+** DONE script to run the deom
+** any binaries?
+** may want to improve output formatting to make it look more interesting
+** also run it in simulation  == REQUIRES Fixing Offsets, maybe postpone ?
+
+* Code Wrap-up
+** make submission target
+** update readme
+** add aspects from asap paper, presentation, report etc
+
+* Presentation
+** phone things
+** rehearse it + time it once
+** consider when to do demo (probably best at the end?)
+
+
+* Demo Plan:
+** Demo the generation of dataflow kernels
+** Use two examples: RTM and AdPrediction
+** Use two aspects: design space exploration and vary some parameters
+** Run the script, show that it generates different configurations (try to name accordingly)
+** Show what the differences are between the generated designs
+** Show how fastcc can generate deigns for both kernels
+** Run in Simulation? may take long to get it to work, but it does show we're serious about it working
+** Show some metrics for the generated/original/manual designs -> API calls, LOC,
+** try to fetch build data from maxfile directories? Show performance ?
