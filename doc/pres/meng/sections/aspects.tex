@@ -2,56 +2,67 @@
 \begin{frame}
   \frametitle{3. Aspect Descriptions}
   \begin{enumerate}
-  \setlength{\itemsep}{15pt}
-  \item \textbf{System Aspect Descriptions} -- applied at the whole
-    system level (FAST + C application) to capture the mapping
-    between application modules and accelerator
-  \item \textbf{Implementation Aspect Descriptions} -- applied at the
-    level of the dataflow design, to perform platform specific
-    optimisations
-  \item \textbf{Exploration Aspect Descriptions} -- used to explore the
-    design space of optimisation trade-offs
-  \item \textbf{Development Aspect Descriptions}  -- used to support
-    the development process
+    \setlength{\itemsep}{15pt}
+  \item \textbf{System Aspect Descriptions}
+    \begin{itemize}
+    \item FAST + C application
+    \end{itemize}
+  \item \textbf{Implementation Aspect Descriptions}
+    \begin{itemize}
+    \item dataflow specific optimisations
+    \end{itemize}
+  \item \textbf{Exploration Aspect Descriptions}
+    \begin{itemize}
+    \item user guided design space exploration strategies
+    \end{itemize}
+  \item \textbf{Development Aspect Descriptions}
+    \begin{itemize}
+    \item automate repetitive, error-prone development tasks
+    \end{itemize}
   \end{enumerate}
 \end{frame}
 
 \begin{comment}
-\begin{frame}
-  \frametitle{System Aspect Descriptions}
-  Hardware/Software Partitioning:
-  \begin{enumerate}
-  \setlength{\itemsep}{10pt}
-  \item detect hotspots
-  \item detect code patterns suitable for acceleration
-  \item perform outlining transformation
-  \item derive dataflow \texttt{fast\_f()} from \texttt{f()}
-  \item place FAST pragma to link \texttt{fast\_f()} with \texttt{f()}
-  \end{enumerate}
-\end{frame}
+  \begin{frame}
+    \frametitle{System Aspect Descriptions}
+    Hardware/Software Partitioning:
+    \begin{enumerate}
+      \setlength{\itemsep}{10pt}
+    \item detect hotspots
+    \item detect code patterns suitable for acceleration
+    \item perform outlining transformation
+    \item derive dataflow \texttt{fast\_f()} from \texttt{f()}
+    \item place FAST pragma to link \texttt{fast\_f()} with \texttt{f()}
+    \end{enumerate}
+  \end{frame}
 \end{comment}
 
 
 \begin{comment}
-\begin{frame}[fragile]
-  \frametitle{System Aspect Descriptions: Monitoring}
-  For all innermost loops:
-  \begin{itemize}
-  \item Monitor every loop iteration
-  \item Monitor every loop entry and exit
-  \end{itemize}
-  \begin{lstlisting}[label=lst:label, style=lara]
-aspectdef LoopMonitor
-function.loop{is_innermost}:
-  entry:   prepend(mon_iterationIn())
-  exit :   append (mon_iterationOut())
-  default: prepend(mon_instanceIn())
-           append(mon_instanceOut())
-end
-  \end{lstlisting}
-\end{frame}
+  \begin{frame}[fragile]
+    \frametitle{System Aspect Descriptions: Monitoring}
+    For all innermost loops:
+    \begin{itemize}
+    \item Monitor every loop iteration
+    \item Monitor every loop entry and exit
+    \end{itemize}
+    \begin{lstlisting}[label=lst:label, style=lara]
+      aspectdef LoopMonitor
+      function.loop{is_innermost}:
+      entry:   prepend(mon_iterationIn())
+      exit :   append (mon_iterationOut())
+      default: prepend(mon_instanceIn())
+      append(mon_instanceOut())
+      end
+    \end{lstlisting}
+  \end{frame}
 \end{comment}
 
+\begin{frame}{Run-time Reconfiguration}
+  Include a nice background picture explaining the problem with
+  idle-functions, dependencies and how RTR can be used to improve the
+  situation
+\end{frame}
 \begin{frame}[fragile]{3. Aspect Descriptions}
   \frametitle{System Aspects: Run-time Reconfiguration}
   \begin{itemize}
@@ -62,32 +73,32 @@ end
     \begin{columns}
       \begin{column}{.55\textwidth}
         \begin{center}
-    \begin{lstlisting}[style=MaxC]
-      x = f(0);
-      #pragma fast hw:f1 cfg:c1
-      y = f(x);
-      #pragma fast hw:g1 cfg:c1
-      z = g(x);
-    \end{lstlisting}
-    \end{center}
-    \end{column}
-    \begin{column}{.45\textwidth}
-      {\footnotesize
-      \begin{table}[!h]
-        \renewcommand{\arraystretch}{1.1}
-      \hspace{-1cm}
-        \begin{tabular}{c|c|c}
-          \multicolumn{3}{c}{\bf{partition}} \\
-          \hline
-          \bf{call.key} & \bf{hw} & \bf{cfg}  \\
-          \hline
-          main:f:1 & fast\_f0 & c0 \\
-          main:f:2 & fast\_f1 & c1 \\
-          main:g:3 & fast\_g & c1 \\
-        \end{tabular}
-      \end{table}
-    }
-    \end{column}
+          \begin{lstlisting}[style=MaxC]
+            x = f(0);
+            #pragma fast hw:f1 cfg:c1
+            y = f(x);
+            #pragma fast hw:g1 cfg:c1
+            z = g(x);
+          \end{lstlisting}
+        \end{center}
+      \end{column}
+      \begin{column}{.45\textwidth}
+        {\footnotesize
+          \begin{table}[!h]
+            \renewcommand{\arraystretch}{1.1}
+            \hspace{-1cm}
+            \begin{tabular}{c|c|c}
+              \multicolumn{3}{c}{\bf{partition}} \\
+              \hline
+              \bf{call.key} & \bf{hw} & \bf{cfg}  \\
+              \hline
+              main:f:1 & fast\_f0 & c0 \\
+              main:f:2 & fast\_f1 & c1 \\
+              main:g:3 & fast\_g & c1 \\
+            \end{tabular}
+          \end{table}
+        }
+      \end{column}
     \end{columns}
   \item Due to data-dependency one function may be idle => load a
     different configuration for the useful functions in its place,
@@ -105,15 +116,15 @@ end
   \end{itemize}
 
   \begin{lstlisting}[style=lara]
-aspectdef AspReconfig
-input: partition
-function.call:
-  if (call.key in partition) {
-    config = partition[call.key].cfg;
-    kernel = partition[call.key].hw;
-    call.prepend('#pragma fast hw:'kernel' cfg:'config)
-  }
-end
+    aspectdef AspReconfig
+    input: partition
+    function.call:
+    if (call.key in partition) {
+      config = partition[call.key].cfg;
+      kernel = partition[call.key].hw;
+      call.prepend('#pragma fast hw:'kernel' cfg:'config)
+    }
+    end
   \end{lstlisting}
 \end{frame}
 
@@ -127,14 +138,14 @@ end
     space exploration
   \end{itemize}
   \begin{lstlisting}[label=lst:label, style=lara]
-aspectdef DspBalancing
-input: opMapping
-function.stmt:
-  opUsage = countOperatorUsage(stmt)
-  factor  = opMapping[opUsage]
-  if (factor != '')
+    aspectdef DspBalancing
+    input: opMapping
+    function.stmt:
+    opUsage = countOperatorUsage(stmt)
+    factor  = opMapping[opUsage]
+    if (factor != '')
     stmt.prepend('#pragma fast balanceDSP:' + factor);
-end
+    end
   \end{lstlisting}
 \end{frame}
 
@@ -148,16 +159,16 @@ end
   \item stop when a resource usage limit is reached
   \end{itemize}
   \begin{lstlisting}[label=lst:label, style=lara]
-aspectdef DesignExploration
-input: attribute, start, step, res, res_limit, config
-  config[attribute] = start
-  do {
-    var designName = genName(config)
+    aspectdef DesignExploration
+    input: attribute, start, step, res, res_limit, config
+    config[attribute] = start
+    do {
+      var designName = genName(config)
       generateFASTDesign(designName, config)
       buildFASTDesign(designName)
       config[attribute] += step
     } while (@hw[designName].res < res_limit)
-end
+    end
   \end{lstlisting}
 \end{frame}
 
@@ -169,10 +180,10 @@ end
   \item Useful since no run-time is debugger available
   \end{itemize}
   \begin{lstlisting}[label=lst:label, style=lara]
-aspectdef WatchVar
-function.vref{is_written}:
-  vref.parent.prepend('log("vref.name", vref.name)')
-  vref.parent.append('log("vref.name", vref.name)')
-end
+    aspectdef WatchVar
+    function.vref{is_written}:
+    vref.parent.prepend('log("vref.name", vref.name)')
+    vref.parent.append('log("vref.name", vref.name)')
+    end
   \end{lstlisting}
 \end{frame}

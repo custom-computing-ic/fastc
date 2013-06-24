@@ -1,28 +1,15 @@
 \begin{frame}{4. Evaluation}
 
+  \begin{table}
+
+  \end{table}
   \begin{itemize}
     \setlength{\itemsep}{10pt}
   \item \textbf{Numerical Differentiation} for experimental data
-    \begin{itemize}
-    \item 1D stencil computation, sensitive to computation accuracy
-    \end{itemize}
   \item \textbf{Black Scholes} for finite difference option pricing
-    \begin{itemize}
-    \item 1D stencil, multiple time steps, requires DRAM
-    \end{itemize}
   \item \textbf{Reverse Time Migration} for seismic imaging
-    \begin{itemize}
-    \item 3D stencil, design parallelism, operator tuning
-    \end{itemize}
   \item \textbf{Bitonic Network} for high-throughput sorting
-    \begin{itemize}
-    \item recursive definition, design parametrisation
-    \end{itemize}
-  \item \textbf{Add Prediction} for Bing's sponsored search
-    \begin{itemize}
-    \item arithmetic intensive kernel
-    \item requires effective tuning to achieve timing closure
-    \end{itemize}
+  \item \textbf{Ad Prediction} for Bing's sponsored search
   \end{itemize}
 \end{frame}
 
@@ -44,9 +31,9 @@
 
 \begin{frame}{4. Evaluation}
   \frametitle{RTM Design Space Exploration}
-\begin{itemize}
+  \begin{itemize}
   \item timing closure, build time vs parallelism
-\end{itemize}
+  \end{itemize}
   \begin{figure}[!h]
     \centering
     \begin{tikzpicture}[scale=0.8]
@@ -186,10 +173,10 @@
 
 \begin{frame}{4. Evaluation}
   \frametitle{RTM Parallelism}
-    \begin{itemize}
-    \item performance vs build time
-    \item identify resource bottlenecks
-    \end{itemize}
+  \begin{itemize}
+  \item performance vs build time
+  \item identify resource bottlenecks
+  \end{itemize}
   \begin{figure}
     \centering
     \begin{tikzpicture}[scale=0.8]
@@ -287,13 +274,6 @@
   \end{itemize}
 \end{frame}
 
-\begin{comment}
-  \begin{frame}{4. Evaluation: Reverse Time Migration}
-    \begin{table}
-    \end{table}
-  \end{frame}
-\end{comment}
-
 \begin{frame}{4. Evaluation}
   \frametitle{Benchmark Results: LOC, Performance, Resource}
   Comparing manual MaxCompiler designs to FAST designs:
@@ -312,7 +292,7 @@
         SGDiff         & 1.75               & 14                       &                                   &                              \\
         Black-Scholes   & 2.51               & 5.5                      &                                   &                              \\
         \cline{5-5}
-        Add Prediction  & 1.67               & 16                       &                                   &    $ \approx 117 \% $                          \\
+        Ad Prediction  & 1.67               & 16                       &                                   &    $ \approx 117 \% $                          \\
         Bitonic Sort & 1.62             & 12                    &                                   &    $ \approx 100 \% $                          \\
       \end{tabular}
     \end{table}}
