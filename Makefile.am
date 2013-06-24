@@ -40,7 +40,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
 
 dist_noinst_SCRIPTS = autogen.sh tests.sh clean.sh
 
-EXTRA_DIST=test/ scripts doc example aspects demos
+EXTRA_DIST=test/ scripts doc example aspects demos include
 
 test: all
 	./tests.sh
