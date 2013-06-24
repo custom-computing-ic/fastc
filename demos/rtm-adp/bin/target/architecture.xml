@@ -1,0 +1,353 @@
+<PLATFORM>
+  <NAME>ML510</NAME>
+  <PROCESSING_ELEMENT>
+     <NAME>PPC</NAME>
+     <TYPE>GPP</TYPE>
+     <MODEL>440</MODEL>
+     <MASTER>YES</MASTER>
+     <ENDIANESS>LITTLE</ENDIANESS>
+     <TOOLCHAIN>
+       <NAME>GNU</NAME>
+       <CCOMPILER>
+	 <NAME>GCC</NAME>
+	 <VER>4.3.3</VER>
+	 <CMD>$(TARGET_CC)</CMD>
+	 <FLAGS>-DARCH_OMAP3530 -DLINUX</FLAGS>
+	 <BUILD_TYPE_FLAGS_MAP>
+	   <ALL>-O2 -g</ALL>
+	   <RELEASE>-O2</RELEASE>
+	   <MINSIZE>-Os</MINSIZE>
+	   <DEBUG>-g</DEBUG>
+	   <KERNDEBPROF>-O0 -g -DBBKERNDEBUG -DBBDEBUG -DBBPROFILE</KERNDEBPROF>
+	   <KERNDEBUG>-O0 -g -DBBKERNDEBUG</KERNDEBUG>
+	   <PROFILE>-O2 -p -DBBPROFILE</PROFILE>
+	 </BUILD_TYPE_FLAGS_MAP>
+	 <OPT_FLAGS_MAP>
+	   <LEVEL>-O0</LEVEL>
+	   <LEVEL>-O1</LEVEL>
+	   <LEVEL>-O2</LEVEL>
+	   <LEVEL>-O3</LEVEL>
+	 </OPT_FLAGS_MAP>
+	 <COMPILE_OBJECT_RULE>${COMPILER} ${CC_FLAGS} -DMASTER -D${DEFINES} -I${INCLUDE_DIRS} -o ${OBJECT} -I${SYSROOT}/platform/${PLATFORM}/include -I${SYSROOT}/include -c ${SOURCE}</COMPILE_OBJECT_RULE>
+	 <LINK_EXECUTABLE_RULE>${COMPILER} ${LD_FLAGS} -D${DEFINES} -I${INCLUDE_DIRS} ${CC_FLAGS} ${SOURCES}  -T${SYSROOT}/platform/${PLATFORM}/lib/omap3530.ld -L${SYSROOT}/platform/${PLATFORM}/lib  -Wl,--start-group ${BBRT} ${BBRTBEAGLE} -Wl,--end-group ${DSPLINK} -I${SYSROOT}/platform/${PLATFORM}/include -I${SYSROOT}/include -lpthread -L${LIBRARY_DIR} -l${LIBRARIES} -o ${EXECUTABLE}</LINK_EXECUTABLE_RULE>
+	 <OUTPUT_EXTENSION>elf</OUTPUT_EXTENSION>
+	 <ABI>
+	    <DATA_TYPE>
+	       <NAME>int</NAME>
+	       <PRECISION>32</PRECISION>
+	    </DATA_TYPE>
+       <DATA_TYPE>
+          <NAME>char</NAME>
+          <PRECISION>8</PRECISION>
+        </DATA_TYPE>
+
+        <DATA_TYPE>
+          <NAME>short</NAME>
+          <PRECISION>16</PRECISION>
+        </DATA_TYPE>
+        <DATA_TYPE>
+          <NAME>double</NAME>
+	  <PRECISION>64</PRECISION>
+        </DATA_TYPE> 
+        <DATA_TYPE>
+          <NAME>float</NAME>
+	  <PRECISION>32</PRECISION>
+        </DATA_TYPE> 
+        <DATA_TYPE>
+          <NAME>long</NAME>
+	  <PRECISION>32</PRECISION>
+        </DATA_TYPE>
+        <DATA_TYPE>
+          <NAME>long long</NAME>
+	  <PRECISION>64</PRECISION>
+        </DATA_TYPE>        
+        <DATA_TYPE>
+          <NAME>long double</NAME>
+	  <PRECISION>64</PRECISION>
+        </DATA_TYPE>        
+        
+        
+	   <FUNCTION>
+	     <MAX_REG_ARGS>4</MAX_REG_ARGS>
+	     <MAX_REG_SCRATCH>4</MAX_REG_SCRATCH>
+	     <CALLER_REG_SAVE>NO</CALLER_REG_SAVE>
+	   </FUNCTION>
+	 </ABI>
+       </CCOMPILER>
+       <LINKER>
+	 <NAME>LD</NAME>
+	 <VER>2.19.51.20090205</VER>
+	 <CMD>$(TARGET_CC)</CMD>
+	 <LINK_EXECUTABLE_RULE>${LINKER} ${LD_FLAGS} ${OBJECTS} -T${SYSROOT}/platform/${PLATFORM}/lib/omap3530.ld -Wl,--start-group ${BBRT} ${BBRTBEAGLE} -Wl,--end-group ${DSPLINK} -lpthread -L${LIBRARY_DIR} -l${LIBRARIES} -Wl,--allow-multiple-definition -o ${EXECUTABLE}</LINK_EXECUTABLE_RULE>
+       </LINKER>
+
+       <ARCHIVE>
+	 <NAME>AR</NAME>
+	 <VER>2.19</VER>
+	 <CMD>$(TARGET_AR)</CMD>
+       </ARCHIVE>
+       <LIBRARY>
+	 <NAME>BBRT</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>ALL</BUILD>
+	 <LIBNAME>libbbrt.a</LIBNAME>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+       <LIBRARY>
+	 <NAME>BBRT</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>PROFILE</BUILD>
+	 <LIBNAME>libbbrtprof.a</LIBNAME>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRT</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>KERNDEBUG</BUILD>
+	 <LIBNAME>libbbrtkernd.a</LIBNAME>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRT</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>KERNDEBPROF</BUILD>
+	 <LIBNAME>libbbrtkerndprof.a</LIBNAME>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRT</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>DEBUG</BUILD>
+	 <LIBNAME>libbbrtdebug.a</LIBNAME>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRTBEAGLE</NAME>
+	 <BUILD>ALL</BUILD>
+	 <LIBNAME>libbbrt_BEAGLE_OMAP3530_LINUX.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRTBEAGLE</NAME>
+	 <BUILD>PROFILE</BUILD>
+	 <LIBNAME>libbbrt_BEAGLE_OMAP3530_LINUXprof.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRTBEAGLE</NAME>
+	 <BUILD>DEBUG</BUILD>
+	 <LIBNAME>libbbrt_BEAGLE_OMAP3530_LINUXdebug.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRTBEAGLE</NAME>
+	 <BUILD>KERNDEBUG</BUILD>
+	 <LIBNAME>libbbrt_BEAGLE_OMAP3530_LINUXkernd.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRTBEAGLE</NAME>
+	 <BUILD>KERNDEBPROF</BUILD>
+	 <LIBNAME>libbbrt_BEAGLE_OMAP3530_LINUXkerndprof.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>DSPLINK</NAME>
+	 <BUILD>RELEASE</BUILD>
+	 <LIBNAME>dsplink.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/tools/dsplink/gpp/BUILD/EXPORT/RELEASE/</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>DSPLINK</NAME>
+	 <BUILD>DEBUG</BUILD>
+	 <LIBNAME>dsplink.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/tools/dsplink/gpp/BUILD/EXPORT/DEBUG/</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>DSPLINK</NAME>
+	 <BUILD>ALL</BUILD>
+	 <LIBNAME>dsplink.a</LIBNAME>
+	 <VER>1.0</VER>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/tools/dsplink/gpp/BUILD/EXPORT/DEBUG/</PATH>
+       </LIBRARY>
+
+       <OS>
+	 <NAME>LINUX</NAME>
+	 <VER>2.6.32</VER>
+	 <PATH>$(HOME)/ti-dvsdk_omap3530-evm_4_00_00_22/Linux</PATH>	   
+       </OS>
+    </TOOLCHAIN>            
+  </PROCESSING_ELEMENT>
+  
+  <PROCESSING_ELEMENT>
+    <NAME>VIRTEX5</NAME>
+    <TYPE>FPGA</TYPE>
+    <MODEL>Xilinx</MODEL>
+    <MASTER>NO</MASTER>
+    <ENDIANESS>LITTLE</ENDIANESS>
+    
+    <TOOLCHAIN>
+      <NAME>C6X</NAME>
+      <CCOMPILER>
+	<NAME>CL6X</NAME>
+	<VER>6.1.17</VER>
+	<CMD>cl6x</CMD>
+	<PATH>$(TOOL_TI_C6XCC_DIR)/bin/</PATH>
+	<FLAGS>-DHOSTED_IO -DMAX_DSPS=1 -DMAX_PROCESSORS=2 -DID_GPP=1 -DOMAP3530 -DOMAP3530_PHYINTERFACE=SHMEM_INTERFACE -DPROC_COMPONENT -DPOOL_COMPONENT -DNOTIFY_COMPONENT -DMPCS_COMPONENT -DRINGIO_COMPONENT -DMPLIST_COMPONENT -DMSGQ_COMPONENT -DMSGQ_ZCPY_LINK -DCHNL_COMPONENT -DCHNL_ZCPY_LINK -DZCPY_LINK -DPROCID=0 -dPHYINTERFACE=SHMEM_INTERFACE -DDSP_SWI_MODE -DARCH_OMAP --no_compress -q -pdr --gcc -pr -pden -mv6400+ -os -on=2 -s -op=3 -al -mw --stack=0x3000 --disable:sploop -I${COMPILER_PATH}/../include -I${SYSROOT}/include -I${SYSROOT}/platform/${PLATFORM}/include </FLAGS>
+	<OUTPUT_EXTENSION>.o</OUTPUT_EXTENSION>
+
+	<BUILD_TYPE_FLAGS_MAP>
+	   <ALL>-O3</ALL>
+	   <RELEASE>-O3</RELEASE>
+	   <MINSIZE>-ms=3</MINSIZE>
+	   <DEBUG>-g</DEBUG>
+	   <KERNDEBUG>-O0 -g -DBBKERNDEBUG</KERNDEBUG>
+	   <KERNDEBPROF>-O0 -g -DBBKERNDEBUG -DBBPROFILE</KERNDEBPROF>
+	   <PROFILE>-DBBPROFILE</PROFILE>
+	 </BUILD_TYPE_FLAGS_MAP>
+	 <OPT_FLAGS_MAP>
+	   <LEVEL>-O0</LEVEL>
+	   <LEVEL>-O1</LEVEL>
+	   <LEVEL>-O3</LEVEL>
+	   <LEVEL>-O3</LEVEL>
+	 </OPT_FLAGS_MAP>
+	<COMPILE_OBJECT_RULE>${COMPILER} -eo=.o ${CC_FLAGS} -I${INCLUDE_DIRS} -D${DEFINES} -fr=${OBJECT_DIR} -c ${SOURCE}</COMPILE_OBJECT_RULE>
+	<CREATE_STATIC_LIBRARY_RULE></CREATE_STATIC_LIBRARY_RULE>
+	<CREATE_SHARED_LIBRARY_RULE></CREATE_SHARED_LIBRARY_RULE>
+	<ABI>
+	
+	    <DATA_TYPE>
+	       <NAME>int</NAME>
+	       <PRECISION>32</PRECISION>
+	    </DATA_TYPE>	
+       <DATA_TYPE>
+          <NAME>char</NAME>
+          <PRECISION>8</PRECISION>
+        </DATA_TYPE>
+
+        <DATA_TYPE>
+          <NAME>short</NAME>
+          <PRECISION>16</PRECISION>
+        </DATA_TYPE>
+        <DATA_TYPE>
+          <NAME>double</NAME>
+	  <PRECISION>64</PRECISION>
+        </DATA_TYPE> 
+        <DATA_TYPE>
+          <NAME>float</NAME>
+	  <PRECISION>32</PRECISION>
+        </DATA_TYPE> 
+        <DATA_TYPE>
+          <NAME>long</NAME>
+	  <PRECISION>32</PRECISION>
+        </DATA_TYPE>
+        	
+
+	   <FUNCTION>
+	     <MAX_REG_ARGS>4</MAX_REG_ARGS>
+	     <MAX_REG_SCRATCH>4</MAX_REG_SCRATCH>
+	     <CALLER_REG_SAVE>NO</CALLER_REG_SAVE>
+	     <MAX_STACK_SIZE>1000</MAX_STACK_SIZE>
+	   </FUNCTION>
+	   
+	 </ABI>
+       </CCOMPILER>
+       <LINKER>
+	 <NAME>LD6X</NAME>
+	 <VER>6.1.17</VER>
+	 <CMD>lnk6x</CMD>
+	 <PATH>$(TOOL_TI_C6XCC_DIR)/bin/</PATH>
+	 <PRECMD>${TCONF} ${TCONF_FLAGS} ${SYSROOT}/platform/${PLATFORM}/lib/omap3530.tcf 0</PRECMD>
+	 <PRECMD>${COMPILER} ${CC_FLAGS} ${TMP}/${PLATFORM}_cfg_c.c ${TMP}/${PLATFORM}_cfg.s62 -c -I${DSPBIOS_PATH}/packages/ti/bios/include/ -fr=${OBJECT_DIR}</PRECMD>
+	 <CREATE_STATIC_LIBRARY_RULE>rule to create a static library if appliable</CREATE_STATIC_LIBRARY_RULE>
+	 <CREATE_SHARED_LIBRARY_RULE>rule to create a shared library if appliable</CREATE_SHARED_LIBRARY_RULE>
+	 <LINK_EXECUTABLE_RULE>${LINKER} ${LD_FLAGS} -l=${DSPLINK} ${OBJECTS} ${TMP}/${PLATFORM}_cfg_c.obj ${TMP}/${PLATFORM}_cfg.obj -o=${TMP}/${PE}.coff -i=${LINKER_PATH}../lib/ --stack=0x3000 -l=${BBRTC6X} ${TMP}/${PLATFORM}_cfg.cmd -i=${LIBRARY_DIR}</LINK_EXECUTABLE_RULE>
+	 <FLAGS>-c -q -x -i=${DSPBIOS_PATH}/packages/ti/bios/lib/ -m${TMP}/${PE}.map</FLAGS>
+
+	 <POSTCMD>${OMAP2ELF} ${TMP}/${PE}.map ${TMP}/${PE}.coff -o ${TMP}/${PE}.elf</POSTCMD>
+       </LINKER>
+
+       <ARCHIVE>
+	 <NAME>AR6X</NAME>
+	 <VER>6.1.17</VER>
+	 <CMD>ar6x</CMD>
+	 <PATH>$(TOOL_TI_C6XCC_DIR)/bin/</PATH>
+       </ARCHIVE>
+
+       <TOOL>
+	 <NAME>TCONF</NAME>
+	 <VER>3.16.03.36</VER>
+	 <CMD>tconf</CMD>
+	 <FLAGS>-Dconfig.programName="${TMP}/${PLATFORM}_" -Dconfig.importPath="${SYSROOT}/platform/${PLATFORM}/lib/;${DSPBIOS_PATH}/packages;${DSPBIOS_PATH}/packages/ti/bios;${DSPBIOS_PATH}/dsp/inc/DspBios;${DSPLINK_INCLUDE}"</FLAGS>
+	 <PATH>$(TOOL_TI_DSP_XDC)</PATH>
+       </TOOL>
+       <TOOL>
+	 <NAME>OMAP2ELF</NAME>
+	 <VER>1.0</VER>
+	 <CMD>o-map2elf</CMD>
+	 <FLAGS></FLAGS>
+	 <PATH>${SYSROOT}/bin/</PATH>
+       </TOOL>
+       <LIBRARY>
+	 <NAME>DSPLINK</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>ALL</BUILD>
+	 <LIBNAME>dsplink.lib</LIBNAME>
+	 <LIBNAME>dsplinkpool.lib</LIBNAME>
+	 <LIBNAME>dsplinkmpcs.lib</LIBNAME>
+	 <LIBNAME>dsplinkmplist.lib</LIBNAME>
+	 <LIBNAME>dsplinkmsg.lib</LIBNAME>
+	 <LIBNAME>dsplinkdata.lib</LIBNAME>
+	 <LIBNAME>dsplinknotify.lib</LIBNAME>
+	 <LIBNAME>dsplinkringio.lib</LIBNAME>
+	 <LIBINCLUDE>${SYSROOT}/platform/${PLATFORM}/tools/dsplink/dsp/inc</LIBINCLUDE>
+	 <LIBINCLUDE>${SYSROOT}/platform/${PLATFORM}/tools/dsplink/dsp/inc/DspBios/5.XX/OMAP3530</LIBINCLUDE>
+	 
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/tools/dsplink/dsp/BUILD/OMAP3530_0/EXPORT/RELEASE</PATH>
+       </LIBRARY>
+
+       <LIBRARY>
+	 <NAME>BBRTC6X</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>ALL</BUILD>
+	 <LIBNAME>libbbc6xrt_BEAGLE_OMAP3530_LINUX.a</LIBNAME>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib/c6x</PATH>
+       </LIBRARY>
+       <LIBRARY>
+	 <NAME>BBRTC6X</NAME>
+	 <VER>1.0</VER>
+	 <BUILD>KERNDEBUG</BUILD>
+	 <LIBNAME>libbbc6xrt_BEAGLE_OMAP3530_LINUXkernd.a</LIBNAME>
+	 <PATH>${SYSROOT}/platform/${PLATFORM}/lib/c6x</PATH>
+       </LIBRARY>
+       
+       <OS>
+	 <NAME>DSPBIOS</NAME>
+	 <VER>5.41.03.17</VER>
+	 <PATH>$(TOOL_TI_DSP_BIOS)</PATH>	   
+       </OS>
+       
+    </TOOLCHAIN>
+    <!--INSTANCES>5</INSTANCES-->
+  </PROCESSING_ELEMENT>
+     
+</PLATFORM>
+

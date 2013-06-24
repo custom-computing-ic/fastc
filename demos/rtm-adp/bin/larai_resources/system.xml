@@ -1,0 +1,29 @@
+<System>
+	 <Objects>
+			<Math/>
+			<System/>
+			<undefined/>
+			<java.io.File/>
+<ACCEPT_ALL/>
+	 </Objects>
+	 <Functions>
+			<print/>
+			<println/>
+			<printObject/>
+			<error/>
+			<eval/>
+			<errorln/>
+			<load/>
+			<read/>
+			<execute/>
+			<toLib/>
+			<cmd/>
+	 </Functions>
+	 <Constructors>
+		    <java.io.File/>
+			<Object/>
+			<Array/>
+			<Date/>
+			<String/> 
+	 </Constructors>
+</System>

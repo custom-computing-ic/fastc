@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<joinpoints>
+	<roots>
+    	<file/>
+	</roots>
+	<file type="file">
+		<function type="function"/>
+	</file>
+</joinpoints>

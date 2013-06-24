@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<RULES>
+   <VERSION ID="09i15821"/>
+   <AST NAME="SgUnaryAddOp" COST="4"/>
+   <AST NAME="SgPlusAssignOp" COST="4"/>
+   <AST NAME="SgPlusPlusOp" COST="4"/>
+   <AST NAME="SgAddOp" COST="4"/>
+   <AST NAME="SgSubtractOp" COST="4"/>
+   <AST NAME="SgMinusAssignOp" COST="4"/>
+   <AST NAME="SgMinusMinusOp" COST="4"/>
+   <AST NAME="SgMultiplyOp" COST="5"/>
+   <AST NAME="SgMultAssignOp" COST="5"/>
+   <AST NAME="SgDivideOp" COST="6"/>
+   <AST NAME="SgDivAssignOp" COST="6"/>
+
+   <AST NAME="SgAndOp" COST="2"/>
+   <AST NAME="SgOrOp" COST="2"/>
+
+   <AST NAME="SgLshiftOp" COST="2"/>
+   <AST NAME="SgLshiftAssignOp" COST="2"/>
+   <AST NAME="SgRshiftOp" COST="2"/>
+   <AST NAME="SgRshiftAssignOp" COST="2"/>
+
+   <AST NAME="SgAssignOp" COST="1"/>
+   <AST NAME="SgAssignOp" TYPE="float" COST="0.9"/>
+   <AST NAME="SgIfStmt" COST="1"/>
+   
+
+   <DATA_TYPE NAME="bool" FACTOR="0.5"/>
+   <DATA_TYPE NAME="char" FACTOR="0.5"/>
+   <DATA_TYPE NAME="double" FACTOR="1.5"/>
+   <DATA_TYPE NAME="float" FACTOR="2"/>
+   <DATA_TYPE NAME="int" FACTOR="1"/>
+   <DATA_TYPE NAME="long" FACTOR="0.8"/>
+   <DATA_TYPE NAME="long long" FACTOR="0.5"/>
+   <DATA_TYPE NAME="unsigned int" FACTOR="1"/>
+   <DATA_TYPE NAME="unsigned long" FACTOR="0.5"/>
+   <DATA_TYPE NAME="unsigned long long" FACTOR="0.5"/>
+
+   <FLOW_CONTROL NAME="SgIfStmt" FACTOR="1"/>
+   <FLOW_CONTROL NAME="SgSwitchStatement" FACTOR="1"/>
+   <FLOW_CONTROL NAME="SgWhileStmt" FACTOR="0.5"/>
+   <FLOW_CONTROL NAME="SgDoWhileStmt" FACTOR="0.5"/>
+   <FLOW_CONTROL NAME="SgForStatement" FACTOR="5"/>
+
+</RULES>
+

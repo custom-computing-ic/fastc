@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -rf *.dot code* *.code *.xml build rose*.c

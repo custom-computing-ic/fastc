@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<artifacts>
+    <!-- Attributes for all join points -->
+	<global>
+		<attribute name="file_name"  type="String"/>
+	</global>
+	
+	<artifact name="file" default="name">
+		<attribute name="name"  type="int"/>
+	</artifact>
+	<artifact name="function" default="name">
+		<attribute name="name" type="String"/>
+	</artifact>
+</artifacts>
