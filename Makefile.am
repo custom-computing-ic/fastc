@@ -3,9 +3,6 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 bin_PROGRAMS = maxcc
 
-passes = $(shell find -name "src/passes/*.cxx")
-passes_h = $(shell find -name "src/passes/*.hxx")
-
 maxcc_SOURCES = src/main.cxx src/main.hxx \
                 src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
                 src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
@@ -29,13 +26,21 @@ maxcc_SOURCES = src/main.cxx src/main.hxx \
 		src/passes/KernelVisitor.hxx src/passes/KernelVisitor.cxx \
 		src/passes/CodeGeneration.hxx src/passes/CodeGeneration.cxx \
 		src/passes/KernelExtraction.hxx src/passes/KernelExtraction.cxx \
-		src/passes/TaskExtraction.hxx src/passes/TaskExtraction.cxx
+		src/passes/TaskExtraction.hxx src/passes/TaskExtraction.cxx \
+		src/passes/HostCodeGeneration.hxx \
+		src/passes/PragmaExtraction.hxx \
+		src/passes/InlineKernels.hxx \
+		src/passes/ExtractDesignConstants.hxx \
+		src/passes/InputOutputExtraction.hxx
 
-BUILT_SOURCES = src/precompiled.hxx.gch
-src/precompiled.hxx.gch: src/precompiled.hxx
-	$(CXXCOMPILE) -c $<
 
-dist_noinst_SCRIPTS = autogen.sh
+#BUILT_SOURCES = src/precompiled.hxx.gch
+#src/precompiled.hxx.gch: src/precompiled.hxx
+#	$(CXXCOMPILE) -c $<
+
+dist_noinst_SCRIPTS = autogen.sh tests.sh clean.sh
+
+EXTRA_DIST=test/ scripts doc example aspects
 
 test: all
 	./tests.sh
