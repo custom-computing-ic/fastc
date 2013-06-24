@@ -1,0 +1,20 @@
+aspectdef usageLUT
+input
+  opUsageMap, designModel
+end
+  var totalUsageLUT = 0;
+select function.statement
+apply
+  for(var op in {+, -, *, /})
+    nOpps = statement.num_construct[op]
+    usageLUT = opUsageMap[op].LUT * nadds * loop max iteration
+    switch (loop.balanceDSP) {
+      FULL: usageLUT = 0
+      BALANCED: usageLUT *= 0.5
+      NONE: usageLUT *= 1
+    }
+    desginModel.block[loop].resource.LUT = usageLUT
+    totalUsageLUT += usageLUT
+    designModel.resource.LUT= totalUsageLUT
+  end
+end

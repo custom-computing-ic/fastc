@@ -1,0 +1,15 @@
+aspectdef AspReconfig
+input
+   partition
+end
+select function.call end
+apply
+   if ($call.key in partition) {
+      var cfg = partition[$call.key].cfg;
+      var hw = partition[$call.key].hw;
+      $call.insert before %{
+         #pragma FAST hw:[[hw]] cfg:[[cfg]]
+      }%;
+   }
+end
+end

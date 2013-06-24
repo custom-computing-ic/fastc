@@ -1,0 +1,9 @@
+aspectdef designModel
+input
+opPipelineMap
+opUsageMap
+end
+for (var design in DesignDatabse)
+  call usageLUT(opUsageMap, design)
+  call pipelineDepth(opPipelineMap, design)
+end

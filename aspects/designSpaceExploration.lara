@@ -1,0 +1,17 @@
+  aspectdef DesignExploration
+  input
+     attribute,
+     start, step,
+     lut_threshold,
+     config
+  end
+  config[attribute] = start;
+  var i = 0;
+  do {
+    var designName = genName(config);
+    call genFAST(designName, config);
+    buildFAST(designName);
+    config[attribute] += step; i++;
+  } while (@hw[designName].lut < lut_threshold
+           && i < LIMIT);
+  end

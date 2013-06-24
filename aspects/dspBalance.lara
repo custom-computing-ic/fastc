@@ -1,0 +1,21 @@
+aspectdef DspBalancing
+var op_granularity =
+ [{DspBalance:'full',MultiplyOp: 5,AddOp: 5 },
+  {DspBalance:'balanced',MultiplyOp:3}];
+
+select function.statement end
+apply
+   for (var i in op_granularity) {
+      var gprofile = op_granularity[i];
+      var match = true;
+      for (var k in gprofile) {
+         if (k != 'DspBalance') {
+            match &= ($statement.num_construct(k)
+                      >= gprofile[k]);}}
+      if (match) {
+         var pragma = '#pragma FAST balanceDSP:'
+                      + gprofile.DspFactor;
+         $statement.insert before "[[pragma]]";
+         break;}}
+   end
+end

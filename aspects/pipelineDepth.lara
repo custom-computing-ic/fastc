@@ -1,0 +1,13 @@
+aspectdef pipelineDepth
+input
+  opPipelineMap, designModel
+end
+var designDepth = 0;
+select function.loop{is_innermost}
+apply
+  loopDepth = tree_depth(loop_body, opPipelineMap) * loop.pipelineFactor
+  designDepth += loopDepth
+  designModel.block[loop].performance.pipeDepth = loopDepth
+  designModel.performance.pipeDepth = designDepth
+  designModel.performance.pipeDepth = designDepth
+end

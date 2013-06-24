@@ -1,0 +1,10 @@
+aspectdef WatchVar
+select function.vref end
+apply
+   $vref.parent_stmt.insert before
+    %{ log("[[$vref.name]]", [[$vref.name]]); }%
+   $vref.parent_stmt.insert after
+    %{ log("[[$vref.name]]", [[$vref.name]]); }%
+end
+condition $vref.is_out end
+end
