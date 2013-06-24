@@ -1,7 +1,8 @@
-\begin{frame}{4. Evaluation: Benchmark}
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.1 Application Benchmark}
 
   \begin{itemize}
-  \setlength{\itemsep}{10pt}
+    \setlength{\itemsep}{10pt}
   \item \textbf{Numerical Differentiation} for experimental data
     \begin{itemize}
     \item 1D stencil computation, sensitive to computation accuracy
@@ -26,7 +27,8 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{4. Evaluation: Reverse Time Migration}
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.2 Reverse Time Migration}
   \begin{itemize}
   \item seismic imaging application for oil and gas exploration
   \item 3 dataflow kernels
@@ -41,7 +43,8 @@
 \end{frame}
 
 
-\begin{frame}{4. Evaluation: RTM Design Space Exploration}
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.3 RTM Design Space Exploration}
   \begin{figure}[!h]
     \centering
     \begin{tikzpicture}
@@ -103,10 +106,11 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}{4. Evaluation: RTM Word Length Exploration}
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.4 RTM Word Length Exploration}
   \begin{figure}
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.9]
       \begin{axis}[
         cycle list name=exotic,
         ymin=0,
@@ -174,8 +178,9 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}{4. Evaluation: RTM Parallelism}
-  \begin{figure}[!h]
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.5  RTM Parallelism}
+  \begin{figure}
     \centering
     \begin{tikzpicture}
       \begin{axis}[
@@ -245,13 +250,41 @@
       \end{axis}
     \end{tikzpicture}
   \end{figure}
+
 \end{frame}
 
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.6 Performance}
 
-\begin{frame}{4. Evaluation: Reverse Time Migration}
+  {\small
+    \begin{table}
+      \renewcommand{\arraystretch}{1.4}
+      \begin{tabular}{c|c|c|p{1cm}|p{1cm}|p{1cm}|p{1cm}}
+                   & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA S (M)} & \textbf{FPGA S (A)} & \textbf{FPGA D (M)} & \textbf{FPGA D (A)} \\
+        \hline \hline
+        Freq.(GHz) & 2.7          & 1.15         & 0.1                 & 0.1                 & 0.1                 & 0.1                 \\
+        Time (s)   & 1458         & 52           & 18                  & 18.3                & 13.4                & 13.6                \\
+        GFLOP/s    & 0.9          & 51.2         & 68.0                & 66.8                & 91.6                & 90.2              \\
+        Speed-up   & 1x           & 56.8X        & 76.4X               & \textbf{74.22X}              & 102.9X              & \textbf{101.3X}              \\
+        Power (W)  & 185          & n / a        & 129                 & 126                 & 128                 & 125                 \\
+        Efficiency & 4.9          & n / a        & 527.1               & 527.7               & 715.6               & 721.6               \\
+        Eff. Gains & 1X           & n / a        & 107.5X              & \textbf{107.0X}              & 146.0X              & \textbf{147.1X}              \\
+      \end{tabular}
+    \end{table}
+  }
+
+  \begin{itemize}
+  \item > 97\% performance of manual FPGA design
+  \item > 99\% energy efficiency of manual FPGA design
+  \item functionally identical dataflow design
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.7 RTM Discussion}
   Evaluation results show that aspect descriptions can effectively:
   \begin{itemize}
-  \setlength{\itemsep}{10pt}
+    \setlength{\itemsep}{10pt}
   \item \textbf{control DSP mapping} -- improved timing, reduced build time vs
     increased parallelism (when DSP bound)
   \item \textbf{control word length} -- increased accuracy vs reduced
@@ -265,31 +298,32 @@
 \end{frame}
 
 \begin{comment}
-\begin{frame}{4. Evaluation: Reverse Time Migration}
-  \begin{table}
-  \end{table}
-\end{frame}
+  \begin{frame}{4. Evaluation: Reverse Time Migration}
+    \begin{table}
+    \end{table}
+  \end{frame}
 \end{comment}
 
-\begin{frame}{4. Evaluation: Benchmark}
+\begin{frame}{4. Evaluation}
+  \framesubtitle{4.8 Application Benchmark Results}
   Comparing manual MaxCompiler designs to FAST designs:
-{\footnotesize
-  \begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabular}{l|c|c|c|c}
-      \textbf{Kernel} & \textbf{LOC\footnote{LOC = Lines of Code}} & \textbf{API Calls} & \textbf{Performance}              & \textbf{Resource}
-      \\
-      \hline\hline
-      CmdRead         & 1.76               & 4.33                     & \multirow{2}{1.5cm}{$ > 75\%$}        & \multirow{6}{1.5cm}{$\approx 100\%$} \\
-      CmdWrite        & 1.45               & 4.13                     &                                   &                              \\
-      \cline{1-4}
-      RTM             & 1.17               & 10                       & \multirow{5}{1.5cm}{$ \approx 100\%$} &                              \\
-      SGSmooth        & 1.85               & 14                       &                                   &                              \\
-      SGDifff         & 1.75               & 14                       &                                   &                              \\
-      Black-Scholes   & 2.51               & 5.5                      &                                   &                              \\
-      \cline{5-5}
-      Add Prediction  & 1.67               & 16                       &                                   &    $ \approx 123 \% $                          \\
-    \end{tabular}
-  \end{table}}
+  {\footnotesize
+    \begin{table}
+      \renewcommand{\arraystretch}{1.5}
+      \begin{tabular}{l|c|c|c|c}
+        \textbf{Kernel} & \textbf{LOC\footnote{LOC = Lines of Code}} & \textbf{API Calls} & \textbf{Performance}              & \textbf{Resource}
+        \\
+        \hline\hline
+        CmdRead         & 1.76               & 4.33                     & \multirow{2}{1.5cm}{$ > 75\%$}        & \multirow{6}{1.5cm}{$\approx 100\%$} \\
+        CmdWrite        & 1.45               & 4.13                     &                                   &                              \\
+        \cline{1-4}
+        RTM             & 1.17               & 10                       & \multirow{5}{1.5cm}{$ \approx 100\%$} &                              \\
+        SGSmooth        & 1.85               & 14                       &                                   &                              \\
+        SGDifff         & 1.75               & 14                       &                                   &                              \\
+        Black-Scholes   & 2.51               & 5.5                      &                                   &                              \\
+        \cline{5-5}
+        Add Prediction  & 1.67               & 16                       &                                   &    $ \approx 123 \% $                          \\
+      \end{tabular}
+    \end{table}}
 
 \end{frame}

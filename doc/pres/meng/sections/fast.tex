@@ -2,81 +2,90 @@
 
 \begin{frame}[fragile]
   \frametitle{2. FAST -- Facile Aspect-driven Source Transformation}
+  \framesubtitle{2.1 Example}
 
-\begin{lstlisting}[style=MaxC]
-// kernel defines input, output streams and scalars
-void kernel_MovingAvg(float* in, float* avg, int bound)
-{
-  // special macros implemented as counters
-  bool hasPrev = CURRENT_CYCLE >=bound;
-  bool hasNext = CURRENT_CYCLE < MAX_CYCLE - bound;
-  bool hasBoth = hasPrevious & hasNext;
+  \begin{lstlisting}[style=MaxC,   basicstyle=\scriptsize]
+    // kernel defines input, output streams and scalars
+    void kernel_MovingAvg(float* in, float* avg, int bound)
+    {
+      // special macros implemented as counters
+      bool hasPrev = CURRENT_CYCLE >=bound;
+      bool hasNext = CURRENT_CYCLE < MAX_CYCLE - bound;
+      bool hasBoth = hasPrevious & hasNext;
 
-  // ternary operator, stream offsets, arithmetic
-  float prev = hasPrev ? in[-1] : 0.0;
-  float next = hasNext ? in[ 1] : 0.0;
-  float sum  = prev + in[0] + next;
+      // ternary operator, stream offsets, arithmetic
+      float prev = hasPrev ? in[-1] : 0.0;
+      float next = hasNext ? in[ 1] : 0.0;
+      float sum  = prev + in[0] + next;
 
-  // output assignment
-  avg[0] = hasBoth? sum / 3 : sum / 2;
-}
+      // output assignment
+      avg[0] = hasBoth? sum / 3 : sum / 2;
+    }
 
-int main() {
-  #pragma fast hw:MovingAvg  // maps to dataflow kernel
-  MovingAvg_CPU(...);        // call regular C function
-}
-\end{lstlisting}
+    int main() {
+      #pragma fast hw:MovingAvg  // maps to dataflow kernel
+      MovingAvg_CPU(...);        // call regular C function
+    }
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}
-  \frametitle{2. FAST: Features}
+  \frametitle{2. FAST}
+  \framesubtitle{2.2 Features}
 
-{\footnotesize
-\begin{table}[!h]
-  \centering
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l|l|l}
-\hline
-\bf{Feature}                        & \bf{Description}              & \bf{Method}          \\
-\hline\hline
-  I/O                               & Kernel arguments              & Inferred             \\
-\hline
-  Control                           & Ternary op. (?:), \texttt{if} & C99                  \\
-\hline
-\multirow{2}{*}{Computation}        & +, *, /, -                    & C99                  \\
-                                    & log, exp, sqrt, sin etc.      & $<$math.h$>$         \\
-\hline
-  \multirow{2}{*}{Streams}          & Declared as pointers          & \multirow{2}{*}{C99} \\
-                                    & Array index access     &                      \\
-\hline
-  Optimisation                      & \multirow{2}{*}{C pragmas}    & \multirow{2}{*}{C99} \\
-  Hardware \  Mapping               &                               &                      \\
-\hline
-  \multirow{2}{*}{Parameterization} & Constants, variables,         & \multirow{2}{*}{C99} \\
-                                    & \texttt{for}, \texttt{while}  &                      \\
-\end{tabular}
-\end{table}
-}
+  {\footnotesize
+    \begin{table}[!h]
+      \centering
+      \renewcommand{\arraystretch}{1.1}
+      \begin{tabular}{p{.3\textwidth}|p{.3\textwidth}|p{.2\textwidth}}
+        \hline
+        \bf{Feature}                        & \bf{Description}              & \bf{Method}          \\
+        \hline\hline
+        I/O                               & Kernel arguments              & Inferred             \\
+        \hline
+        Control                           & Ternary op. (?:), \texttt{if} & C99                  \\
+        \hline
+        \multirow{2}{*}{Computation}        & +, *, /, -                    & C99                  \\
+        & log, exp, sqrt, sin etc.      & $<$math.h$>$         \\
+        \hline
+        \multirow{2}{*}{Streams}          & Declared as pointers          & \multirow{2}{*}{C99} \\
+        & Array index access     &                      \\
+        \hline
+        Optimisation                      & \multirow{2}{*}{C pragmas}    & \multirow{2}{*}{C99} \\
+        Hardware \  Mapping               &                               &                      \\
+        \hline
+        \multirow{2}{*}{Parameterization} & Constants, variables,         & \multirow{2}{*}{C99} \\
+        & \texttt{for}, \texttt{while}  &                      \\
+      \end{tabular}
+    \end{table}
+  }
+  \begin{itemize}
+  \item simple and concise, well-understood
+  \item simplify integration with existing applications and tools
+  \item simplify translation from pure C/C++ applications
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{2. FAST: FAST vs C}
-\begin{itemize}
-\item Fast only uses C \emph{syntax}
-\begin{itemize}
-\item to simplify integration with compilation tools (aspect weaving,
-  dataflow, compiler frameworks)
-  \item to express dataflow designs in a simple, intuitive fashion
-\end{itemize}
-\vspace{0.5cm}
-\item  Differences compared to C
-\begin{itemize}
-\item execution model only supports kernels
-\item pointers are regarded as   streams
-\item negative offsets are allowed
-\item only compile time loop bounds are allowed
-\item direct interoperability with C code is not possible, but
-  simulated via pragmas
-\end{itemize}
-\end{itemize}
+\begin{frame}{2. FAST}
+  \framesubtitle{2.3 FAST vs C}
+  \begin{itemize}
+  \item FAST only uses C \emph{syntax}
+    \begin{itemize}
+      \setlength{\itemsep}{5pt}
+    \item to facilitate integration
+    \item to express dataflow designs in a simple, intuitive fashion
+    \end{itemize}
+    \vspace{0.5cm}
+  \item  Differences include:
+    \begin{itemize}
+      \setlength{\itemsep}{5pt}
+    \item execution model only supports kernels
+    \item pointers are regarded as   streams
+    \item negative offsets are allowed
+    \item only compile time loop bounds are allowed
+    \item direct interoperability with C code is not possible, but
+      simulated via pragmas
+    \end{itemize}
+  \end{itemize}
 
 \end{frame}
