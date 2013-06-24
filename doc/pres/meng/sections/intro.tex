@@ -70,7 +70,7 @@
   \vspace{0.3cm}
   \begin{beamerboxesrounded}{Impact}
     \begin{itemize}
-      \item first aspect-oriented compilation flow:
+    \item first aspect-oriented compilation flow:
       \begin{itemize}
       \item for high-performance dataflow computing
       \item supporting run-time reconfiguration
@@ -97,7 +97,7 @@
   \frametitle{CPU vs Dataflow}
   \begin{columns}
     \begin{column}{.5\linewidth}
-    \vspace{-1cm}
+      \vspace{-1cm}
       \begin{figure}[!ht]
         \centering
         \def\svgwidth{\linewidth}
@@ -110,7 +110,7 @@
       \end{itemize}
     \end{column}
     \begin{column}{.5\linewidth}
-    \vspace{-1cm}
+      \vspace{-1cm}
       \begin{figure}[!ht]
         \centering
         \def\svgwidth{\linewidth}
@@ -136,15 +136,17 @@
 
 \begin{frame}[fragile]
   \frametitle{Issues}
-  Developers must manually transform the original design to:
-  \begin{enumerate}
-  \item ensure I/O interface compatibility with host
-  \item optimise resource usage by minimising operand width
-  \item ensure result correctness by casting
-  \item apply FPGA and dataflow specific optimisations
-  \item replicate computational pipelines
-  \end{enumerate}
-\vspace{0.5cm}
+  \begin{comment}
+    Developers must manually transform the original design to:
+    \begin{enumerate}
+    \item ensure I/O interface compatibility with host
+    \item optimise resource usage by minimising operand width
+    \item ensure result correctness by casting
+    \item apply FPGA and dataflow specific optimisations
+    \item replicate computational pipelines
+    \end{enumerate}
+    \vspace{0.5cm}
+  \end{comment}
   \begin{beamerboxesrounded}{The Problem}
     Mixing optimisations with functional code makes it:
     \begin{itemize}
@@ -153,4 +155,40 @@
     \item impossible to re-target optimisations automatically
     \end{itemize}
   \end{beamerboxesrounded}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Decoupling Optimisations}
+  \framesubtitle{Aspect-Oriented Design}
+  \begin{beamerboxesrounded}{Aspect-Oriented Programming (AOP)}
+    \begin{itemize}
+      \item encapsulate cross-cutting concerns in aspect descriptions
+      \item apply them at run-time to alter behaviour
+      \item apply them at specified points (pointcut model)
+    \end{itemize}
+  \end{beamerboxesrounded}
+  \vspace{0.75cm}
+  \begin{beamerboxesrounded}{Aspect-Oriented Programming for Dataflow Engines}
+    \begin{itemize}
+      \item capture aspects of quality and their realisation
+        \begin{itemize}
+          \item speed, area, power, energy
+          \item numerical accuracy, parallel computation
+          \item optimisation, monitoring, debugging
+        \end{itemize}
+      \item use aspects to generate multiple variants of a design
+    \end{itemize}
+  \end{beamerboxesrounded}
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Decoupling Optimisations}
+  \framesubtitle{Example}
+  \begin{figure}[!ht]
+  \centering
+  \def\svgwidth{\textwidth}
+  \input{figs/meng-aspect-weaving.pdf_tex}
+\end{figure}
 \end{frame}
