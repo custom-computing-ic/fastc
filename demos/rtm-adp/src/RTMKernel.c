@@ -8,7 +8,7 @@ const int max_nx = 48;
 const int dim_y = 32;
 
 void kernel_RTM(
-                unsigned int n1, unsigned int n2, unsigned int n3,
+                unsigned int scalar_n1, unsigned int scalar_n2, unsigned int scalar_n3,
 		unsigned int ORDER, unsigned int SPONGE,
 		float* burst_p[Par],
 		float* burst_dvv[Par],
@@ -21,9 +21,9 @@ void kernel_RTM(
 {
 
     int i4 = count(1000, 1);
-    int i3 = count_chain(n3, 1, i4);
-    int i2 = count_chain(n2, 1, i3);
-    int i1 = count_chain(n1, Par, i2);
+    int i3 = count_chain(scalar_n3, 1, i4);
+    int i2 = count_chain(scalar_n2, 1, i3);
+    int i1 = count_chain(scalar_n1, Par, i2);
 
     float c_0   = -0.000000056202665632554272;
     float c_1_0 =  0.000000010666666661052204;
@@ -44,7 +44,7 @@ void kernel_RTM(
 
     float up[Par];
     for (int i=0; i <Par; i++)
-        up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+        up[i] = i3>=ORDER & i3<scalar_n3-ORDER  & i2>=ORDER & i2<scalar_n2-ORDER  & i1>=ORDER-i  & i1<scalar_n1-ORDER-i;
 
     float* p[Par], *inter[Par][Mul];
     float pp_i[Par], dvv[Par], source[Par], cur[Mul][11+Par+1][11][11], result[Par][Mul];

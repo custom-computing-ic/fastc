@@ -5,7 +5,7 @@
         <parameter name="cparams" type="undefined"/>
         <parameter name="exp" type="undefined"/>
         <parameter name="debug" type="boolean">
-          <literal type="boolean" value="false"/>
+          <literal type="boolean" value="true"/>
         </parameter>
       </input>
     </parameters>
@@ -606,7 +606,15 @@
       <code desc="after"/>
     </statement>
   </aspect>
-  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:80:1:88:3" name="watchFloats">
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:80:1:92:3" name="watchFloats">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:81:4:81:19" name="vardecl">
+      <expression>
+        <literal type="string" value="logged"/>
+      </expression>
+      <expression desc="init">
+        <literal type="array"/>
+      </expression>
+    </statement>
     <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:82:4:82:27" label="watchFloats_select_0" name="select">
       <expression>
         <literal type="string" value="file"/>
@@ -637,80 +645,117 @@
       </expression>
       <expression/>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:83:4:85:6" label="watchFloats_apply_0_0" name="apply">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:83:4:87:6" label="watchFloats_apply_0_0" name="apply">
       <expression>
         <id name="watchFloats_select_0"/>
       </expression>
       <expression desc="_condition">
-        <op name="AND">
-          <op name="MATCH">
-            <property>
-              <id name="$function"/>
-              <literal type="string" value="name"/>
-            </property>
-            <literal type="string" value="kernel_.*"/>
-          </op>
-          <op name="AND">
-            <op name="EQ">
-              <property>
-                <property>
-                  <id name="$vref"/>
-                  <literal type="string" value="type"/>
-                </property>
-                <literal type="string" value="name"/>
-              </property>
-              <literal type="string" value="float"/>
-            </op>
-            <property>
-              <id name="$vref"/>
-              <literal type="string" value="is_defined"/>
-            </property>
-          </op>
+        <op name="MATCH">
+          <literal type="array">
+            <key name="0">
+              <literal type="array">
+                <key name="0">
+                  <property>
+                    <id name="$vref"/>
+                    <literal type="string" value="name"/>
+                  </property>
+                </key>
+              </literal>
+            </key>
+          </literal>
+          <literal type="string" value="scalar_."/>
         </op>
       </expression>
       <code desc="before"/>
       <code desc="do">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:84:6:84:10" name="expr">
-          <expression>
-            <call>
-              <method>
-                <property>
-                  <property>
-                    <id name="$vref"/>
-                    <literal type="string" value="parent_stmt"/>
-                  </property>
-                  <literal type="string" value="insert"/>
-                </property>
-              </method>
-              <argument>
-                <literal type="string" value="after"/>
-              </argument>
-              <argument>
-                <literal type="object">
-                  <key name="code">
-                    <literal type="code" value="harmonic.lara_code_1.code"/>
-                  </key>
-                  <key name="[[$vref.name]]">
-                    <property>
-                      <id name="$vref"/>
-                      <literal type="string" value="name"/>
-                    </property>
-                  </key>
-                  <key name="[[$function.name]]">
-                    <property>
-                      <id name="$function"/>
-                      <literal type="string" value="name"/>
-                    </property>
-                  </key>
-                  <key name="[[$vref.name]]">
-                    <property>
-                      <id name="$vref"/>
-                      <literal type="string" value="name"/>
-                    </property>
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:84:6:84:7" name="if">
+          <expression desc="condition">
+            <op name="NEQ">
+              <property>
+                <id name="logged"/>
+                <literal type="array">
+                  <key name="0">
+                    <literal type="array">
+                      <key name="0">
+                        <property>
+                          <id name="$vref"/>
+                          <literal type="string" value="name"/>
+                        </property>
+                      </key>
+                    </literal>
                   </key>
                 </literal>
-              </argument>
-            </call>
+              </property>
+              <literal type="int" value="1"/>
+            </op>
+          </expression>
+          <code desc="then">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:85:8:85:12" name="expr">
+              <expression>
+                <call>
+                  <method>
+                    <property>
+                      <property>
+                        <id name="$vref"/>
+                        <literal type="string" value="parent_stmt"/>
+                      </property>
+                      <literal type="string" value="insert"/>
+                    </property>
+                  </method>
+                  <argument>
+                    <literal type="string" value="after"/>
+                  </argument>
+                  <argument>
+                    <literal type="object">
+                      <key name="code">
+                        <literal type="code" value="harmonic.lara_code_1.code"/>
+                      </key>
+                      <key name="[[$vref.name]]">
+                        <property>
+                          <id name="$vref"/>
+                          <literal type="string" value="name"/>
+                        </property>
+                      </key>
+                      <key name="[[$function.name]]">
+                        <property>
+                          <id name="$function"/>
+                          <literal type="string" value="name"/>
+                        </property>
+                      </key>
+                      <key name="[[$vref.name]]">
+                        <property>
+                          <id name="$vref"/>
+                          <literal type="string" value="name"/>
+                        </property>
+                      </key>
+                    </literal>
+                  </argument>
+                </call>
+              </expression>
+            </statement>
+          </code>
+          <code desc="else"/>
+        </statement>
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:86:6:86:11" name="expr">
+          <expression>
+            <op name="ASSIGN">
+              <property>
+                <id name="logged"/>
+                <literal type="array">
+                  <key name="0">
+                    <literal type="array">
+                      <key name="0">
+                        <property>
+                          <id name="$vref"/>
+                          <literal type="string" value="name"/>
+                        </property>
+                      </key>
+                    </literal>
+                  </key>
+                </literal>
+              </property>
+              <literal type="int" value="1"/>
+            </op>
           </expression>
         </statement>
       </code>

@@ -17,7 +17,7 @@ rm -rf designs-ADP
 # --- RTM Code generation p
 cp src/RTMKernel.c .
 echo "[RTM] 1. Running Harmonic Weaver"
-larai $ASP_REP/main.lara -a "{csources:'RTMKernel.c', cflags: '-I../../include/', cparams:[ { Par: 1, Mul: 1}, { Par: 2, Mul: 1 } ], exps:'[20, 22, 24]'}" &> /dev/null
+larai $ASP_REP/main.lara -a "{csources:'RTMKernel.c', cflags: '-I../../include/', cparams:[ { Par: 1, Mul: 1}, { Par: 2, Mul: 1 } ], exps:'[20, 22, 24]'}" #&> /dev/null
 #harmonic -csources="$src" -cflags="-I../../include/" -aspLARA=$ASP_REP/harmonic.lara -aspArgv="{cparams:{'Par':2, 'Mul':3}, exp:15, debug:true}"
 echo "[RTM] 2. Compiling FAST ==> MaxJ"
 find designs/ -name "*.c" -exec fastcc -I../../include {} \; -exec bash -c   'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \;
