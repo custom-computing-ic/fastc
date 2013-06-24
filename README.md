@@ -32,21 +32,4 @@ This will generate MaxJ design files from the specified MaxC design file (which 
 
 (NOTE! MaxCompiler Manager generation is not currently supported.)
 
-MaxC
-----
-
-Examples of projects/kernels are listed below.
-
-#### MaxC Designs
-
-MaxC design files only are in:
-~~~
-test/maxc
-    testRTMSing.c --> Kernel for RTM
-    test1dConvolutionKernel.c  --> Kernel for 1d Convolution
-    testMaxCTemplate    --> Kenrel for a simple convolution
-    testCmdRead.c       --> Memory Controller (Read)
-    testCmdWrite.c      --> Memory Controller (Write)
-~~~
-
 Please check the [wiki](https://github.com/paul-g/maxcc/wiki) to get started!
