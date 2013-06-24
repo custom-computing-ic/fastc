@@ -1,4 +1,4 @@
-MaxCC
+fastc
 =====
 
 Cloning This Repo
@@ -14,7 +14,7 @@ cloning the repository, if you intend to build documentation  that depends on th
 
 Installation
 ------------
-To install maxcc run:
+To install fastc run:
 ~~~~
 tar xvzf maxcc-${version}.tar.gz && cd maxcc-${version}
 configure --with-boost=/path/to/boost --with-rose=/path/to/rose
@@ -28,7 +28,7 @@ Usage
 maxcc /path/to/kernels.c
 ~~~
 
-This will generate MaxJ design files from the specified MaxC design file (which can contain one or multiple kernels).
+This will generate MaxJ design files from the specified FAST design file (which can contain one or multiple kernels).
 
 (NOTE! MaxCompiler Manager generation is not currently supported.)
 
