@@ -1,4 +1,4 @@
-#include "../../../include/maxcc.h"
+#include <maxcc.h>
 
 float PDF(float z) {
   float root2pi = 2.50662827463100050242;
@@ -88,4 +88,7 @@ void kernel_Adp(
     post_s[i][0] = ps_s;
   }
 
+}
+
+int main() {
 }

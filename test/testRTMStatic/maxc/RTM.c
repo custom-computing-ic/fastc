@@ -1,4 +1,4 @@
-#include "../../../include/maxcc.h"
+#include <maxcc.h>
 //#include "../include/params_dse.h"
 
 // design parameters
