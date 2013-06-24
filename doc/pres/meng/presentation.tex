@@ -1,11 +1,11 @@
 \documentclass[11pt]{beamer}
 
 \usepackage[T1]{fontenc}
-%\usepackage{lmodern}
+% \usepackage{lmodern}
 
-%\usepackage{mathptmx}
-%\usepackage{helvet}
-%\renewcommand{\rmdefault}{ptm}
+% \usepackage{mathptmx}
+% \usepackage{helvet}
+% \renewcommand{\rmdefault}{ptm}
 
 
 
@@ -19,7 +19,7 @@
 \usepackage[english]{babel}
 \usepackage{times}
 \usepackage{tikz}
-%\usepackage{tabularx}
+% \usepackage{tabularx}
 
 % --- Setttings
 \graphicspath{{figs/}}
@@ -33,7 +33,7 @@
 \lstdefinestyle{MaxC}{language=C++,
   morekeywords={s_int32, int32, float8_24, sin_float8_24,
     sout_float8_24, float8_24, s_int, s_float8_24, s_bool, count, countChain,
-  CURRENT_CYCLE, MAX_CYCLE, pragma},
+    CURRENT_CYCLE, MAX_CYCLE, pragma},
   deletekeywords={static}}
 \lstdefinestyle{MaxJ}{
   morekeywords={HWVar, io, hwFloat, stream}
@@ -69,75 +69,100 @@
   {\textcolor{red}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}
 
 \mode<presentation>
-    {
-%      \usetheme{Darmstadt}
-% \usetheme{Rochester}
-%      \usetheme{Pittsburgh}
-%      \usetheme{Singapore}
-%      \usecolortheme{whale}
-%      \usecolortheme{default}
-%      \setbeamercovered{transparent}
-      % or whatever (possibly just delete it)
-    }
+{
+  % \usetheme{Darmstadt}
+  % \usetheme{Rochester}
+  % \usetheme{Pittsburgh}
+  % \usetheme{Singapore}
+  % \usecolortheme{whale}
+  % \usecolortheme{default}
+  % \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
 
 
-%\useinnertheme[]{rounded}
-%\useoutertheme{shadow}
-%\usecolortheme{orchid}
-%\usecolortheme{whale}
+% \useinnertheme[]{rounded}
+% \useoutertheme{shadow}
+% \usecolortheme{orchid}
+% \usecolortheme{whale}
 
-    \usetikzlibrary{shapes,arrows}
+\usetikzlibrary{shapes,arrows}
 
-    \pgfdeclareimage[height=0.25cm]{tick-green}{images/tick-green.png}
-    \pgfdeclareimage[height=0.25cm]{tick-gray}{images/tick-gray.png}
-    \pgfdeclareimage[height=0.3cm]{good}{images/good.png}
-    \pgfdeclareimage[height=0.3cm]{bad}{images/bad.png}
-    \pgfdeclareimage[height=0.3cm]{problem}{images/problem.png}
-    \pgfdeclareimage[height=0.3cm]{idea}{images/idea.png}
-    \pgfdeclareimage[height=0.3cm]{qm}{images/qm.png}
+\pgfdeclareimage[height=0.25cm]{tick-green}{images/tick-green.png}
+\pgfdeclareimage[height=0.25cm]{tick-gray}{images/tick-gray.png}
+\pgfdeclareimage[height=0.3cm]{good}{images/good.png}
+\pgfdeclareimage[height=0.3cm]{bad}{images/bad.png}
+\pgfdeclareimage[height=0.3cm]{problem}{images/problem.png}
+\pgfdeclareimage[height=0.3cm]{idea}{images/idea.png}
+\pgfdeclareimage[height=0.3cm]{qm}{images/qm.png}
 
 \definecolor{UniBlue}{RGB}{83,121,190}
 \setbeamercolor{title}{fg=UniBlue}
 \setbeamercolor{frametitle}{fg=UniBlue}
 \setbeamercolor{structure}{fg=UniBlue}
 
-    \setbeamertemplate{navigation symbols}{}%remove navigation symb
-    %\setbeamertemplate{footline}{}
-    \setbeamertemplate{headline}{}
-    %\setbeamertemplate{caption}{\figurename}
-    \setbeamertemplate{footline}[frame number]
+\setbeamertemplate{navigation symbols}{}%remove navigation symb
+% \setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
+% \setbeamertemplate{caption}{\figurename}
+\setbeamertemplate{footline}[frame number]
 
-    \newcommand{\tickgray}{\pgfuseimage{tick-gray}}
-    \newcommand{\tickgreen}{\pgfuseimage{tick-green}}
-    \newcommand{\imggood}{\pgfuseimage{good}}
-    \newcommand{\imgbad}{\pgfuseimage{bad}}
-    \newcommand{\imgproblem}{\pgfuseimage{problem}}
-    \newcommand{\imgidea}{\pgfuseimage{idea}}
-    \newcommand{\imgqm}{\pgfuseimage{qm}}
+\newcommand{\tickgray}{\pgfuseimage{tick-gray}}
+\newcommand{\tickgreen}{\pgfuseimage{tick-green}}
+\newcommand{\imggood}{\pgfuseimage{good}}
+\newcommand{\imgbad}{\pgfuseimage{bad}}
+\newcommand{\imgproblem}{\pgfuseimage{problem}}
+\newcommand{\imgidea}{\pgfuseimage{idea}}
+\newcommand{\imgqm}{\pgfuseimage{qm}}
 
-    \title{\Large Aspect Oriented Design for Dataflow Engines}
-    \author{
-      {\small Paul Grigora\c{s}} \\[0.2cm]
-      \href{mailto:paul.grigoras09@imperial.ac.uk}{\texttt{\scriptsize paul.grigoras09@imperial.ac.uk}}}
-    \date{}
+\title{\Large Aspect Oriented Design for Dataflow Engines}
+\author{
+  {\small Paul Grigora\c{s}} \\[0.2cm]
+  \href{mailto:paul.grigoras09@imperial.ac.uk}{\texttt{\scriptsize paul.grigoras09@imperial.ac.uk}}}
+\date{}
 
-    \begin{document}
+\begin{document}
 
-    \begin{frame}
-      \titlepage
-    \end{frame}
+\begin{frame}
+  \titlepage
+\end{frame}
 
-%    \begin{frame}
-%      \tableofcontents
-%    \end{frame}
+% \begin{frame}
+%   \tableofcontents
+% \end{frame}
 
-    \input{sections/intro.tex}
-    \input{sections/background.tex}
-    \input{sections/design-flow.tex}
-    \input{sections/fast.tex}
-    \input{sections/aspects.tex}
-    \input{sections/evaluation.tex}
-    \input{sections/conclusions.tex}
+\input{sections/intro.tex}
+\input{sections/background.tex}
+\input{sections/design-flow.tex}
+\input{sections/fast.tex}
+\input{sections/aspects.tex}
+\input{sections/evaluation.tex}
+\input{sections/conclusions.tex}
 
+\begin{frame}{References}
+  {\footnotesize
+  \begin{thebibliography}{1}
+  \bibitem{himeno} Phillips, Everett H., and Massimiliano
+    Fatica. \emph{Implementing the Himeno benchmark with CUDA on GPU
+    clusters.} Parallel \& Distributed Processing (IPDPS), 2010 IEEE
+    International Symposium on. IEEE, 2010.
+  \bibitem{datta} Datta, Kaushik, et al. \emph{Stencil computation
+      optimization and auto-tuning on state-of-the-art multicore
+      architectures.} Proceedings of the 2008 ACM/IEEE conference on
+    Supercomputing. IEEE Press, 2008.
+  \bibitem{cirque}Yang, Yang, et al. \emph{A hybrid circular queue method
+    for iterative stencil computations on GPUs.} Journal of Computer
+    Science and Technology 27.1 (2012): 57-74.
+  \bibitem{arraya} Araya-Polo, Mauricio, et al. \emph{Assessing
+      accelerator-based HPC reverse time migration.} Parallel and
+    Distributed Systems, IEEE Transactions on 22.1 (2011): 147-162.
+  \bibitem{xinyu} Niu, Xinyu, et al. \emph{Exploiting run-time
+    reconfiguration in stencil computation.} Field Programmable Logic
+    and Applications (FPL), 2012 22nd International Conference
+    on. IEEE, 2012.
+  \end{thebibliography}
+  }
 
-   \end{document}
+\end{frame}
+
+\end{document}

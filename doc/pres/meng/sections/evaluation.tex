@@ -249,27 +249,31 @@
 \begin{frame}{4. Evaluation}
   \framesubtitle{4.6 RTM Performance}
 
-  {\small
-    \begin{table}
-      \renewcommand{\arraystretch}{1.4}
-      \begin{tabular}{c|c|c|p{1cm}|p{1cm}|p{1cm}|p{1cm}}
-                   & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA S (M)} & \textbf{FPGA S (A)} & \textbf{FPGA D (M)} & \textbf{FPGA D (A)} \\
-        \hline \hline
-        Freq.(GHz) & 2.7          & 1.15         & 0.1                 & 0.1                 & 0.1                 & 0.1                 \\
-        Time (s)   & 1458         & 52           & 18                  & 18.3                & 13.4                & 13.6                \\
-        GFLOP/s    & 0.9          & 51.2         & 68.0                & 66.8                & 91.6                & 90.2              \\
-        Speed-up   & 1x           & 56.8X        & 76.4X               & \textbf{74.22X}              & 102.9X              & \textbf{101.3X}              \\
-        Power (W)  & 185          & n / a        & 129                 & 126                 & 128                 & 125                 \\
-        Efficiency & 4.9          & n / a        & 527.1               & 527.7               & 715.6               & 721.6               \\
-        Eff. Gains & 1X           & n / a        & 107.5X              & \textbf{107.0X}              & 146.0X              & \textbf{147.1X}              \\
-      \end{tabular}
-    \end{table}
+  {\scriptsize
+
+      \begin{table}
+        \renewcommand{\arraystretch}{1.4}
+    \hspace*{-8pt}\makebox[\linewidth][c]{
+        \begin{tabular}{c|p{0.55cm}|p{0.5cm}|p{0.6cm}|p{0.6cm}|p{0.65cm}|p{0.65cm}|p{0.65cm}|p{0.75cm}|p{0.65cm}}
+                     & \textbf{CPU} & \textbf{GPU} \cite{himeno} & \textbf{GPU} \cite{datta} & \textbf{GPU} \cite{cirque} & \textbf{FPGA} \cite{arraya}& \textbf{FPGA} \cite{xinyu}\ & \textbf{FPGA} & \textbf{FPGA D\footnote{D = Dynamic (i.e. using run-time reconfiguration)}} \cite{xinyu} & \textbf{FPGA D} \\
+          \hline \hline
+          Freq.(GHz) & 2.7          & 1.15         &    1.15          &   1.15           &    0.1           & 0.1                 & 0.1                 & 0.1                 & 0.1                 \\
+          Time (s)   & 1458         & 52           &    --          &     --         &    --           & 18                  & 18.3                & 13.4                & 13.6                \\
+          GFLOP/s    & 0.9          & 51.2         &    36          &     64.5         &    35.8          & 68.0                & 66.8                & 91.6                & 90.2                \\
+          Speed-up(X)   & 1           & 56.8        &   40          &     71.6         &     39.7          & 76.4               & \textbf{74.22}     & 102.9              & \textbf{101.3}     \\
+          Power (W)  & 185          & --        &    461          &      --        &         --      & 129                 & 126                 & 128                 & 125                 \\
+          Efficiency & 4.9          & --        &    78          &       --       &    --           & 527.1               & 527.7               & 715.6               & 721.6               \\
+          Eff. Gains & 1           & --        &    15.9          &        --      & --            & 107.5              & \textbf{107.0}     & 146.0             & \textbf{147.1}     \\
+        \end{tabular}
+    }
+      \end{table}
+
   }
 
   \begin{itemize}
+  \item can generate functionally identical dataflow design
   \item > 97\% performance of manual FPGA design
   \item > 99\% energy efficiency of manual FPGA design
-  \item functionally identical dataflow design
   \end{itemize}
 \end{frame}
 
