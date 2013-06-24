@@ -1,0 +1,720 @@
+<aspects main="adpTransforms">
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:1:1:15:3" name="adpTransforms">
+    <parameters>
+      <input>
+        <parameter name="cparams" type="undefined"/>
+        <parameter name="exp" type="undefined"/>
+        <parameter name="debug" type="boolean">
+          <literal type="boolean" value="false"/>
+        </parameter>
+      </input>
+    </parameters>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:9:9:9:38" name="vardecl">
+      <expression>
+        <literal type="string" value="changeCodeParameters_larac_call_var_0"/>
+      </expression>
+      <expression desc="init">
+        <op name="NEW">
+          <call>
+            <method>
+              <id name="changeCodeParameters"/>
+            </method>
+          </call>
+        </op>
+      </expression>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:9:9:9:38" name="expr">
+      <expression>
+        <call>
+          <method>
+            <property>
+              <id name="changeCodeParameters_larac_call_var_0"/>
+              <literal type="string" value="call"/>
+            </property>
+          </method>
+          <argument>
+            <id name="cparams"/>
+          </argument>
+        </call>
+      </expression>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:10:9:10:36" name="vardecl">
+      <expression>
+        <literal type="string" value="changeComputePrecision_larac_call_var_0"/>
+      </expression>
+      <expression desc="init">
+        <op name="NEW">
+          <call>
+            <method>
+              <id name="changeComputePrecision"/>
+            </method>
+          </call>
+        </op>
+      </expression>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:10:9:10:36" name="expr">
+      <expression>
+        <call>
+          <method>
+            <property>
+              <id name="changeComputePrecision_larac_call_var_0"/>
+              <literal type="string" value="call"/>
+            </property>
+          </method>
+          <argument>
+            <id name="exp"/>
+          </argument>
+        </call>
+      </expression>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:11:4:11:5" name="if">
+      <expression desc="condition">
+        <id name="debug"/>
+      </expression>
+      <code desc="then">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:12:13:12:26" name="vardecl">
+          <expression>
+            <literal type="string" value="watchFloats_larac_call_var_0"/>
+          </expression>
+          <expression desc="init">
+            <op name="NEW">
+              <call>
+                <method>
+                  <id name="watchFloats"/>
+                </method>
+              </call>
+            </op>
+          </expression>
+        </statement>
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:12:13:12:26" name="expr">
+          <expression>
+            <call>
+              <method>
+                <property>
+                  <id name="watchFloats_larac_call_var_0"/>
+                  <literal type="string" value="call"/>
+                </property>
+              </method>
+            </call>
+          </expression>
+        </statement>
+      </code>
+      <code desc="else"/>
+    </statement>
+  </aspect>
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:18:1:25:3" name="changeCodeParameters">
+    <parameters>
+      <input>
+        <parameter name="cparams" type="undefined"/>
+      </input>
+    </parameters>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:22:4:22:6" name="loop">
+      <code desc="init">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:22:4:22:6" name="vardecl">
+          <expression>
+            <literal type="string" value="v"/>
+          </expression>
+          <expression desc="init"/>
+        </statement>
+      </code>
+      <expression desc="container">
+        <id name="cparams"/>
+      </expression>
+      <code desc="body">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:23:12:23:46" name="vardecl">
+          <expression>
+            <literal type="string" value="changeCodeParameter_larac_call_var_0"/>
+          </expression>
+          <expression desc="init">
+            <op name="NEW">
+              <call>
+                <method>
+                  <id name="changeCodeParameter"/>
+                </method>
+              </call>
+            </op>
+          </expression>
+        </statement>
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:23:12:23:46" name="expr">
+          <expression>
+            <call>
+              <method>
+                <property>
+                  <id name="changeCodeParameter_larac_call_var_0"/>
+                  <literal type="string" value="call"/>
+                </property>
+              </method>
+              <argument>
+                <id name="v"/>
+              </argument>
+              <argument>
+                <property>
+                  <id name="cparams"/>
+                  <id name="v"/>
+                </property>
+              </argument>
+            </call>
+          </expression>
+        </statement>
+      </code>
+    </statement>
+  </aspect>
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:27:1:37:3" name="changeCodeParameter">
+    <parameters>
+      <input>
+        <parameter name="var_name" type="undefined"/>
+        <parameter name="var_val" type="undefined"/>
+      </input>
+    </parameters>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:32:4:32:22" label="changeCodeParameter_select_0" name="select">
+      <expression>
+        <literal type="string" value="file"/>
+      </expression>
+      <expression>
+        <literal type="string" value="file"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="var"/>
+      </expression>
+      <expression>
+        <literal type="string" value="var"/>
+      </expression>
+      <expression/>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:33:4:35:6" label="changeCodeParameter_apply_0_0" name="apply">
+      <expression>
+        <id name="changeCodeParameter_select_0"/>
+      </expression>
+      <expression desc="_condition">
+        <op name="AND">
+          <op name="EQ">
+            <property>
+              <id name="$var"/>
+              <literal type="string" value="decl_type"/>
+            </property>
+            <literal type="string" value="global"/>
+          </op>
+          <op name="EQ">
+            <property>
+              <id name="$var"/>
+              <literal type="string" value="name"/>
+            </property>
+            <id name="var_name"/>
+          </op>
+        </op>
+      </expression>
+      <code desc="before"/>
+      <code desc="do">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:34:7:34:10" name="expr">
+          <expression>
+            <call>
+              <method>
+                <property>
+                  <property>
+                    <id name="$var"/>
+                    <literal type="string" value="decl"/>
+                  </property>
+                  <literal type="string" value="insert"/>
+                </property>
+              </method>
+              <argument>
+                <literal type="string" value="around"/>
+              </argument>
+              <argument>
+                <literal type="object">
+                  <key name="code">
+                    <literal type="string" value="const [[$var.type.name]] [[$var.name]] = [[var_val]];"/>
+                  </key>
+                  <key name="[[$var.type.name]]">
+                    <property>
+                      <property>
+                        <id name="$var"/>
+                        <literal type="string" value="type"/>
+                      </property>
+                      <literal type="string" value="name"/>
+                    </property>
+                  </key>
+                  <key name="[[$var.name]]">
+                    <property>
+                      <id name="$var"/>
+                      <literal type="string" value="name"/>
+                    </property>
+                  </key>
+                  <key name="[[var_val]]">
+                    <id name="var_val"/>
+                  </key>
+                </literal>
+              </argument>
+            </call>
+          </expression>
+        </statement>
+      </code>
+      <code desc="after"/>
+    </statement>
+  </aspect>
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:39:1:78:3" name="changeComputePrecision">
+    <parameters>
+      <input>
+        <parameter name="exp" type="undefined"/>
+      </input>
+    </parameters>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:44:4:44:20" name="vardecl">
+      <expression>
+        <literal type="string" value="params"/>
+      </expression>
+      <expression desc="init">
+        <literal type="object"/>
+      </expression>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:45:4:45:10" name="vardecl">
+      <expression>
+        <literal type="string" value="fn"/>
+      </expression>
+      <expression desc="init"/>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:47:4:47:26" label="changeComputePrecision_select_0" name="select">
+      <expression>
+        <literal type="string" value="file"/>
+      </expression>
+      <expression>
+        <literal type="string" value="file_hidden_0"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="function"/>
+      </expression>
+      <expression>
+        <literal type="string" value="function"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="body"/>
+      </expression>
+      <expression>
+        <literal type="string" value="body_hidden_1"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="var"/>
+      </expression>
+      <expression>
+        <literal type="string" value="var"/>
+      </expression>
+      <expression/>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:48:4:51:6" label="changeComputePrecision_apply_0_0" name="apply">
+      <expression>
+        <id name="changeComputePrecision_select_0"/>
+      </expression>
+      <expression desc="_condition">
+        <op name="AND">
+          <op name="MATCH">
+            <property>
+              <id name="$function"/>
+              <literal type="string" value="name"/>
+            </property>
+            <literal type="string" value="kernel_.*"/>
+          </op>
+          <op name="EQ">
+            <property>
+              <id name="$var"/>
+              <literal type="string" value="decl_type"/>
+            </property>
+            <literal type="string" value="param"/>
+          </op>
+        </op>
+      </expression>
+      <code desc="before"/>
+      <code desc="do">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:49:7:49:12" name="expr">
+          <expression>
+            <op name="ASSIGN">
+              <property>
+                <id name="params"/>
+                <property>
+                  <id name="$var"/>
+                  <literal type="string" value="name"/>
+                </property>
+              </property>
+              <literal type="boolean" value="true"/>
+            </op>
+          </expression>
+        </statement>
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:50:7:50:8" name="expr">
+          <expression>
+            <op name="ASSIGN">
+              <id name="fn"/>
+              <id name="$function"/>
+            </op>
+          </expression>
+        </statement>
+      </code>
+      <code desc="after"/>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:55:4:55:55" name="vardecl">
+      <expression>
+        <literal type="string" value="vrefs"/>
+      </expression>
+      <expression desc="init">
+        <call>
+          <method>
+            <property>
+              <property>
+                <call>
+                  <method>
+                    <property>
+                      <id name="fn"/>
+                      <literal type="string" value="pointcut"/>
+                    </property>
+                  </method>
+                  <argument>
+                    <literal type="string" value="body"/>
+                  </argument>
+                </call>
+                <literal type="int" value="0"/>
+              </property>
+              <literal type="string" value="pointcut"/>
+            </property>
+          </method>
+          <argument>
+            <literal type="string" value="vref"/>
+          </argument>
+        </call>
+      </expression>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:56:4:56:21" name="vardecl">
+      <expression>
+        <literal type="string" value="fparams"/>
+      </expression>
+      <expression desc="init">
+        <literal type="object"/>
+      </expression>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:57:4:57:6" name="loop">
+      <code desc="init">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:57:4:57:6" name="vardecl">
+          <expression>
+            <literal type="string" value="i"/>
+          </expression>
+          <expression desc="init"/>
+        </statement>
+      </code>
+      <expression desc="container">
+        <id name="vrefs"/>
+      </expression>
+      <code desc="body">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:58:8:58:24" name="vardecl">
+          <expression>
+            <literal type="string" value="v"/>
+          </expression>
+          <expression desc="init">
+            <property>
+              <id name="vrefs"/>
+              <id name="i"/>
+            </property>
+          </expression>
+        </statement>
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:59:8:59:9" name="if">
+          <expression desc="condition">
+            <op name="AND">
+              <op name="IN">
+                <property>
+                  <id name="v"/>
+                  <literal type="string" value="name"/>
+                </property>
+                <id name="params"/>
+              </op>
+              <property>
+                <id name="v"/>
+                <literal type="string" value="is_in"/>
+              </property>
+            </op>
+          </expression>
+          <code desc="then">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:60:11:60:12" name="if">
+              <expression desc="condition">
+                <op name="NOT">
+                  <op name="IN">
+                    <property>
+                      <id name="v"/>
+                      <literal type="string" value="name"/>
+                    </property>
+                    <id name="fparams"/>
+                  </op>
+                </op>
+              </expression>
+              <code desc="then">
+                <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:61:14:61:20" name="expr">
+                  <expression>
+                    <op name="ASSIGN">
+                      <property>
+                        <id name="fparams"/>
+                        <property>
+                          <id name="v"/>
+                          <literal type="string" value="name"/>
+                        </property>
+                      </property>
+                      <literal type="boolean" value="true"/>
+                    </op>
+                  </expression>
+                </statement>
+              </code>
+              <code desc="else"/>
+            </statement>
+          </code>
+          <code desc="else">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:63:15:63:16" name="if">
+              <expression desc="condition">
+                <op name="AND">
+                  <op name="IN">
+                    <property>
+                      <id name="v"/>
+                      <literal type="string" value="name"/>
+                    </property>
+                    <id name="params"/>
+                  </op>
+                  <op name="OR">
+                    <property>
+                      <id name="v"/>
+                      <literal type="string" value="is_inout"/>
+                    </property>
+                    <property>
+                      <id name="v"/>
+                      <literal type="string" value="is_out"/>
+                    </property>
+                  </op>
+                </op>
+              </expression>
+              <code desc="then">
+                <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:64:11:64:17" name="expr">
+                  <expression>
+                    <op name="ASSIGN">
+                      <property>
+                        <id name="fparams"/>
+                        <property>
+                          <id name="v"/>
+                          <literal type="string" value="name"/>
+                        </property>
+                      </property>
+                      <literal type="boolean" value="false"/>
+                    </op>
+                  </expression>
+                </statement>
+              </code>
+              <code desc="else"/>
+            </statement>
+          </code>
+        </statement>
+      </code>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:68:4:68:22" label="changeComputePrecision_select_1" name="select">
+      <expression>
+        <literal type="string" value="file"/>
+      </expression>
+      <expression>
+        <literal type="string" value="file_hidden_0"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="function"/>
+      </expression>
+      <expression>
+        <literal type="string" value="function"/>
+      </expression>
+      <expression/>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:69:4:76:6" label="changeComputePrecision_apply_1_0" name="apply">
+      <expression>
+        <id name="changeComputePrecision_select_1"/>
+      </expression>
+      <expression desc="_condition">
+        <op name="EQ">
+          <property>
+            <id name="$function"/>
+            <literal type="string" value="name"/>
+          </property>
+          <property>
+            <id name="fn"/>
+            <literal type="string" value="name"/>
+          </property>
+        </op>
+      </expression>
+      <code desc="before"/>
+      <code desc="do">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:70:7:70:9" name="loop">
+          <code desc="init">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:70:7:70:9" name="vardecl">
+              <expression>
+                <literal type="string" value="param"/>
+              </expression>
+              <expression desc="init"/>
+            </statement>
+          </code>
+          <expression desc="container">
+            <id name="fparams"/>
+          </expression>
+          <code desc="body">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:71:10:71:11" name="if">
+              <expression desc="condition">
+                <property>
+                  <id name="fparams"/>
+                  <id name="param"/>
+                </property>
+              </expression>
+              <code desc="then">
+                <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:72:23:72:31" name="expr">
+                  <expression>
+                    <call>
+                      <method>
+                        <property>
+                          <id name="$function"/>
+                          <literal type="string" value="insert"/>
+                        </property>
+                      </method>
+                      <argument>
+                        <literal type="string" value="before"/>
+                      </argument>
+                      <argument>
+                        <literal type="object">
+                          <key name="code">
+                            <literal type="code" value="harmonic.lara_code_0.code"/>
+                          </key>
+                          <key name="[[param]]">
+                            <id name="param"/>
+                          </key>
+                          <key name="[[exp]]">
+                            <id name="exp"/>
+                          </key>
+                          <key name="[[fn.name]]">
+                            <property>
+                              <id name="fn"/>
+                              <literal type="string" value="name"/>
+                            </property>
+                          </key>
+                        </literal>
+                      </argument>
+                    </call>
+                  </expression>
+                </statement>
+              </code>
+              <code desc="else"/>
+            </statement>
+          </code>
+        </statement>
+      </code>
+      <code desc="after"/>
+    </statement>
+  </aspect>
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:80:1:88:3" name="watchFloats">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:82:4:82:27" label="watchFloats_select_0" name="select">
+      <expression>
+        <literal type="string" value="file"/>
+      </expression>
+      <expression>
+        <literal type="string" value="file_hidden_0"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="function"/>
+      </expression>
+      <expression>
+        <literal type="string" value="function"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="body"/>
+      </expression>
+      <expression>
+        <literal type="string" value="body_hidden_1"/>
+      </expression>
+      <expression/>
+      <expression>
+        <literal type="string" value="vref"/>
+      </expression>
+      <expression>
+        <literal type="string" value="vref"/>
+      </expression>
+      <expression/>
+    </statement>
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:83:4:85:6" label="watchFloats_apply_0_0" name="apply">
+      <expression>
+        <id name="watchFloats_select_0"/>
+      </expression>
+      <expression desc="_condition">
+        <op name="AND">
+          <op name="MATCH">
+            <property>
+              <id name="$function"/>
+              <literal type="string" value="name"/>
+            </property>
+            <literal type="string" value="kernel_.*"/>
+          </op>
+          <op name="AND">
+            <op name="EQ">
+              <property>
+                <property>
+                  <id name="$vref"/>
+                  <literal type="string" value="type"/>
+                </property>
+                <literal type="string" value="name"/>
+              </property>
+              <literal type="string" value="float"/>
+            </op>
+            <property>
+              <id name="$vref"/>
+              <literal type="string" value="is_defined"/>
+            </property>
+          </op>
+        </op>
+      </expression>
+      <code desc="before"/>
+      <code desc="do">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:84:6:84:10" name="expr">
+          <expression>
+            <call>
+              <method>
+                <property>
+                  <property>
+                    <id name="$vref"/>
+                    <literal type="string" value="parent_stmt"/>
+                  </property>
+                  <literal type="string" value="insert"/>
+                </property>
+              </method>
+              <argument>
+                <literal type="string" value="after"/>
+              </argument>
+              <argument>
+                <literal type="object">
+                  <key name="code">
+                    <literal type="code" value="harmonic.lara_code_1.code"/>
+                  </key>
+                  <key name="[[$vref.name]]">
+                    <property>
+                      <id name="$vref"/>
+                      <literal type="string" value="name"/>
+                    </property>
+                  </key>
+                  <key name="[[$function.name]]">
+                    <property>
+                      <id name="$function"/>
+                      <literal type="string" value="name"/>
+                    </property>
+                  </key>
+                  <key name="[[$vref.name]]">
+                    <property>
+                      <id name="$vref"/>
+                      <literal type="string" value="name"/>
+                    </property>
+                  </key>
+                </literal>
+              </argument>
+            </call>
+          </expression>
+        </statement>
+      </code>
+      <code desc="after"/>
+    </statement>
+  </aspect>
+</aspects>

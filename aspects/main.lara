@@ -1,0 +1,40 @@
+aspectdef DSE
+   input
+       csources, cflags,
+       cparams, exps, args
+   end
+   args = { };
+   args.debug = false;
+   args.exps = [10, 11]; //exps;
+
+/*   
+   csources = 'RTMKernel.c';
+   args.cparams = [ { Par: 1, Mul: 1}, { Par: 2, Mul: 1 }, { Par: 3, Mul: 3}, { Par: 4, Mul: 5} ];
+
+
+   csources = 'ADPKernel.c';
+   args.cparams = [ { N: 8 }, { N: 9}, {N: 10} ];
+*/
+
+   args.cparams = cparams;
+   cmd('rm', ['-rf', 'designs']); cmd('mkdir', ['-p', 'designs']);
+   var i = 0;
+   var debug_vals=[false, true];
+for (deb in debug_vals) {
+   for (e in args.exps) {
+      for (cp in args.cparams) {       
+         run(tool:'harmonic', 
+             args:['-aspLARA=/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara', 
+                '-csources=' + csources, '-cflags=' + cflags, 
+                '-aspArgv={cparams:' + args.cparams[cp].toSource() + ', exp: ' + args.exps[e] + ', debug: ' + deb + ' }'], verbose:2);
+ 	 var design_name = 'designs/' + args.cparams[cp].toSource() + '_exp' + args.exps[e] + '_d' + debug_vals[deb];
+         cmd('mkdir', [design_name]);
+         cmd('mv', ['code_woven/' + csources,  design_name]);        
+         run(tool:'fastcc', args:[design_name + '/' + csources]);
+         cmd('mv', ['build/engine', design_name]);
+         cmd('./clean'); 
+         i++;
+      }
+   }
+}
+end

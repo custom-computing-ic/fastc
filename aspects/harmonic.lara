@@ -1,0 +1,95 @@
+aspectdef adpTransforms
+   /**************************************************/
+   input
+      cparams,
+      exp,
+      debug = true
+   end
+   /***************************************************/
+   call changeCodeParameters(cparams);
+   call changeComputePrecision(exp);
+   if (debug) {
+       call watchFloats();
+   }
+
+end
+
+
+aspectdef changeCodeParameters
+   input
+      cparams
+   end
+   for (var v in cparams) {
+      call changeCodeParameter(v, cparams[v]);
+   }
+end
+
+aspectdef changeCodeParameter
+   input
+      var_name, var_val
+   end
+   
+   select file.var end
+   apply
+      $var.decl.insert around "const [[$var.type.name]] [[$var.name]] = [[var_val]];";
+   end
+   condition $var.decl_type == "global" && $var.name == var_name end
+end
+
+aspectdef changeComputePrecision
+   input
+      exp
+   end
+   
+   var params = { };
+   var fn;
+
+   select function.var end
+   apply
+      params[$var.name] = true;
+      fn = $function;
+   end
+   condition $function.name ~= "kernel_.*" && $var.decl_type == "param" end
+   
+
+   var vrefs = fn.pointcut("body")[0].pointcut("vref");
+   var fparams = { };
+   for (var i in vrefs) {
+       var v = vrefs[i];   
+       if ((v.name in params) && v.is_in) {
+          if (!(v.name in fparams)) {
+             fparams[v.name] = true;
+          } 
+       } else if ((v.name in params) && (v.is_inout || v.is_out)) {
+          fparams[v.name] = false;
+       }
+   }
+   
+   select function end
+   apply
+      for (var param in fparams) {
+         if (fparams[param]) {
+		      $function.insert before %{ #pragma fast var:[[param]] ioType:float(8, 24) computeType:float(8,[[exp]]) func:[[fn.name]]
+		                              }%; 
+		   }
+      }
+   end
+   condition $function.name == fn.name end
+end
+
+aspectdef watchFloats 
+   var logged = []; 
+   select function.vref end
+   apply
+     if (logged[[[$vref.name]]] != 1) 
+       $vref.parent_stmt.insert after %{printf("variable [[$vref.name]]: [[$function.name]]: %f\n", [[$vref.name]]);}%;
+     logged[[[$vref.name]]] = 1;
+   end
+ // condition $function.name ~= "kernel_.*" && $vref.type.name == "float" && $vref.is_defined end
+
+  condition [[$vref.name]] ~= "scalar_." end
+
+end
+
+
+
