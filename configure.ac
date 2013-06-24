@@ -1,5 +1,5 @@
-AC_INIT([MaxC Compiler], [0.1], [paul.grigoras90@gmail.com],
-[maxcc], [https://github.com/paul-g/maxcc])
+AC_INIT([FAST Compiler], [0.1], [paul.grigoras90@gmail.com],
+[fastc], [https://github.com/paul-g/fastc])
 AC_PREREQ([2.59])
 
 AC_PROG_CXX

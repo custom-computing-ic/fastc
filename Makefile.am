@@ -1,9 +1,9 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-bin_PROGRAMS = maxcc
+bin_PROGRAMS = fastc
 
-maxcc_SOURCES = src/main.cxx src/main.hxx \
+fastc_SOURCES = src/main.cxx src/main.hxx \
                 src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
                 src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
                 src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
@@ -40,7 +40,7 @@ maxcc_SOURCES = src/main.cxx src/main.hxx \
 
 dist_noinst_SCRIPTS = autogen.sh tests.sh clean.sh
 
-EXTRA_DIST=test/ scripts doc example aspects
+EXTRA_DIST=test/ scripts doc example aspects demos
 
 test: all
 	./tests.sh
