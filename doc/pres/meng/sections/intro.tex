@@ -1,64 +1,62 @@
 \section{Introduction}
 
-\begin{frame}
-  \frametitle{High Performance Computing}
-  \begin{columns}
-    \column{.5\textwidth}
-    \begin{center}
-      \begin{figure}
-        \includegraphics[scale=0.2]{figs/oil-gas-industry.jpg}\\
+
+
+\begin{frame}{High Performance Computing}
+  \vspace{0.5cm}
+  \begin{beamerboxesrounded}{Applications}
+    \begin{columns}[c]
+      \column{.3\textwidth}
+      \vspace{-1.2cm}
+      \begin{itemize}
+      \item Oil and Gas
+      \item Finance
+      \item Online Ads
+      \end{itemize}
+      \column{.6\textwidth}
+      \vspace{-1.2cm}
+      \begin{columns}
+        \column{.5\textwidth}
+        \begin{figure}[ht]
+          \centering
+          \includegraphics[scale=0.18]{figs/oil-gas-industry.jpg}\\
+        \end{figure}
+        \column{.5\textwidth}
+        \begin{figure}[ht]
+          \centering
+          \includegraphics[scale=0.29, clip=true, trim=0 0 0 0]{figs/finance.jpg}\\
+        \end{figure}
+      \end{columns}
+      \vspace{-0.45cm}
+      \begin{figure}[ht]
+        \centering
+        \includegraphics[scale=0.25]{figs/ads.jpg}\\
       \end{figure}
-      \vspace{0.5cm}
-      Oil and Gas
-      \begin{figure}
-        \includegraphics[scale=0.3]{figs/scientific-computing.jpg}\\
-      \end{figure}
-      Scientific Computing
-    \end{center}
-    \column{.5\textwidth}
-    \begin{center}
-      \begin{figure}
-        \includegraphics[scale=0.31]{figs/finance.jpg}\\
-      \end{figure}
-      \vspace{0.5cm}
-      Finance
-      \begin{figure}
-        \includegraphics[scale=0.31]{figs/ads.jpg}\\
-      \end{figure}
-      Online Advertising
-    \end{center}
-  \end{columns}
+    \end{columns}
+  \end{beamerboxesrounded}
+  \vspace{0.2cm}
+  \begin{beamerboxesrounded}{Requirements}
+    \begin{columns}
+      \column{.3\textwidth}
+      \begin{itemize}
+        \centering
+      \item Speed
+      \end{itemize}
+      \column{.35\textwidth}
+      \centering
+      \begin{itemize}
+        \centering
+      \item Energy Efficiency
+      \end{itemize}
+      \column{.3\textwidth}
+      \begin{itemize}
+      \centering
+      \item Productivity
+      \end{itemize}
+    \end{columns}
+  \end{beamerboxesrounded}
 \end{frame}
 
-\begin{frame}
-  \frametitle{High Performance Computing}
-  \begin{columns}
-    \begin{column}{.5\textwidth}
-      \begin{center}
-        \begin{figure}
-          \includegraphics[scale=0.1, clip=true, trim=0 200 50 250]{figs/fast.jpg}\\
-        \end{figure}
-        Fast
-      \end{center}
-    \end{column}
-    \begin{column}{.5\textwidth}
-      \begin{center}
-        \begin{figure}[!ht]
-          \def\svgwidth{0.6\linewidth}
-          \input{figs/energy-efficiency.pdf_tex}
-        \end{figure}
-        Energy Efficient
-      \end{center}
-    \end{column}
-  \end{columns}
-  \begin{center}
-    \begin{figure}
-      \includegraphics[scale=0.3]{figs/productive.jpg}\\
-    \end{figure}
-    Productive
-  \end{center}
-
-\end{frame}
 
 \begin{frame}{This Project}
   \begin{beamerboxesrounded}{Objectives}
@@ -75,8 +73,7 @@
       \item for high-performance dataflow computing
       \item supporting run-time reconfiguration
       \end{itemize}
-    \item produce fastest and most energy efficient dataflow design for
-      Reverse Time Migration
+    \item produce fastest, most energy efficient RTM dataflow design
     \item up to 80\% code reduction, 4 -- 16 times less API calls
     \item techniques deployed in FP7 HARNESS project
     \item best paper candidate at ASAP 2013 (4 of 125 submissions)
@@ -94,37 +91,37 @@
 \end{frame}
 
 \begin{comment}
-\begin{frame}
-  \frametitle{CPU vs Dataflow}
-  \begin{columns}
-    \begin{column}{.5\linewidth}
-      \vspace{-1cm}
-      \begin{figure}[!ht]
-        \centering
-        \def\svgwidth{\linewidth}
-        \input{figs/compute-cpu.pdf_tex}
-      \end{figure}
-      \vspace{-0.5cm}
-      \begin{itemize}
-      \item Fast to develop
-      \item Inefficient
-      \end{itemize}
-    \end{column}
-    \begin{column}{.5\linewidth}
-      \vspace{-1cm}
-      \begin{figure}[!ht]
-        \centering
-        \def\svgwidth{\linewidth}
-        \input{figs/compute-dfe.pdf_tex}
-      \end{figure}
-      \vspace{-0.5cm}
-      \begin{itemize}
-      \item Slow to develop
-      \item Efficient
-      \end{itemize}
-    \end{column}
-  \end{columns}
-\end{frame}
+  \begin{frame}
+    \frametitle{CPU vs Dataflow}
+    \begin{columns}
+      \begin{column}{.5\linewidth}
+        \vspace{-1cm}
+        \begin{figure}[!ht]
+          \centering
+          \def\svgwidth{\linewidth}
+          \input{figs/compute-cpu.pdf_tex}
+        \end{figure}
+        \vspace{-0.5cm}
+        \begin{itemize}
+        \item Fast to develop
+        \item Inefficient
+        \end{itemize}
+      \end{column}
+      \begin{column}{.5\linewidth}
+        \vspace{-1cm}
+        \begin{figure}[!ht]
+          \centering
+          \def\svgwidth{\linewidth}
+          \input{figs/compute-dfe.pdf_tex}
+        \end{figure}
+        \vspace{-0.5cm}
+        \begin{itemize}
+        \item Slow to develop
+        \item Efficient
+        \end{itemize}
+      \end{column}
+    \end{columns}
+  \end{frame}
 \end{comment}
 \begin{frame}[fragile]
   \frametitle{Kernel Optimisations Space}
@@ -159,36 +156,36 @@
 \end{frame}
 
 \begin{comment}
-\begin{frame}[fragile]
-  \frametitle{Decoupling Optimisations}
-  \framesubtitle{Aspect-Oriented Design}
-  \begin{beamerboxesrounded}{Aspect-Oriented Programming (AOP)}
-    \begin{itemize}
+  \begin{frame}[fragile]
+    \frametitle{Decoupling Optimisations}
+    \framesubtitle{Aspect-Oriented Design}
+    \begin{beamerboxesrounded}{Aspect-Oriented Programming (AOP)}
+      \begin{itemize}
       \item encapsulate cross-cutting concerns in aspect descriptions
       \item apply them at run-time to alter behaviour
       \item apply them at specified points (pointcut model)
-    \end{itemize}
-  \end{beamerboxesrounded}
-  \vspace{0.75cm}
-  \begin{beamerboxesrounded}{Aspect-Oriented Programming for Dataflow Engines}
-    \begin{itemize}
+      \end{itemize}
+    \end{beamerboxesrounded}
+    \vspace{0.75cm}
+    \begin{beamerboxesrounded}{Aspect-Oriented Programming for Dataflow Engines}
+      \begin{itemize}
       \item capture aspects of quality and their realisation
         \begin{itemize}
-          \item speed, area, power, energy
-          \item numerical accuracy, parallel computation
-          \item optimisation, monitoring, debugging
+        \item speed, area, power, energy
+        \item numerical accuracy, parallel computation
+        \item optimisation, monitoring, debugging
         \end{itemize}
       \item use aspects to generate multiple variants of a design
-    \end{itemize}
-  \end{beamerboxesrounded}
-\end{frame}
+      \end{itemize}
+    \end{beamerboxesrounded}
+  \end{frame}
 \end{comment}
 
 \begin{frame}[fragile]
   \frametitle{Decoupling Optimisations: Aspect-Oriented Design}
   \begin{figure}[!ht]
-  \centering
-  \def\svgwidth{\textwidth}
-  \input{figs/meng-aspect-weaving.pdf_tex}
-\end{figure}
+    \centering
+    \def\svgwidth{\textwidth}
+    \input{figs/meng-aspect-weaving.pdf_tex}
+  \end{figure}
 \end{frame}
