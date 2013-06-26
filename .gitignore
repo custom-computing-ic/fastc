@@ -72,3 +72,4 @@ engine/*
 /example/bitonic_sort/build/engine/*.java
 /test/testRTMStatic/engine/*.java
 /test/testRTMStatic/maxc/build/
+/fastc
