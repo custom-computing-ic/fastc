@@ -5,98 +5,47 @@
   \begin{itemize}
     \setlength{\itemsep}{10pt}
 
-  \item Finish second paper for FPT'13: aspect descriptions and tools
-    for run-time reconfiguration
+  \item Cover heterogeneous systems (HARNESS)
+    \begin{itemize}
+    \item support portable mapping of dataflow kernels to various FPGA
+      architectures, GPUs and CPUs
+    \end{itemize}
 
-  \item Cover other classes of parallel computation
+  \item Support domain specific languages
+    \begin{itemize}
+    \item investigate DSLs based on our approach (e.g. for stencil
+      computation)
+    \end{itemize}
 
-  \item Cover heterogeneous systems
-
-  \item Support other frontend languages
-
-  \item Cover other applications domains
-
-  \item Improved run-time support (CPU -- DFE interface)
-
-  \item Automated translation to dataflow designs
-
-  \item Validate improved productivity and
-    portability claims
+  \item Generate dataflow designs from high-level descriptions
+    \begin{itemize}
+    \item automatically translate C/C++ to efficient dataflow designs
+    \end{itemize}
 
   \end{itemize}
 \end{frame}
 
 
 \begin{frame}{Summary}
-
-  \begin{beamerboxesrounded}{Aspect-driven Approach}
+  \begin{beamerboxesrounded}{Novel Contributions}
     \begin{itemize}
-    \item improve productivity by decoupling optimisations
-    \item improve efficiency by effective design space exploration
+    \item  Aspect-driven approach
+    \item  FAST language
+    \item  Classes of aspect descriptions
     \end{itemize}
   \end{beamerboxesrounded}
-
-  \begin{beamerboxesrounded}{FAST Dataflow Language}
+  \vspace{0.3cm}
+  \begin{beamerboxesrounded}{Results}
     \begin{itemize}
-    \item simple, intuitive specification of dataflow designs
-    \item integrate AOP techniques with dataflow compilation tools
-    \end{itemize}
-  \end{beamerboxesrounded}
-
-  \begin{beamerboxesrounded}{Aspect Descriptions}
-    \begin{itemize}
-    \item improve performance, productivity \& automate exploration
-    \item support for run-time reconfiguration
-    \end{itemize}
-  \end{beamerboxesrounded}
-
-  \begin{beamerboxesrounded}{Demonstrate Automated Design Flow}
-    \begin{itemize}
-    \item produce fastest and most energy efficient RTM design
+    \item fastest and most energy efficient RTM design
     \item up to 80\% code reduction, 4 -- 16 times less API calls
-    \item best paper candidate at ASAP 2013 (4 of 125 submissions)
     \end{itemize}
   \end{beamerboxesrounded}
-
-\end{frame}
-
-\begin{frame}
-  \begin{beamerboxesrounded}{fastc}
+  \vspace{0.3cm}
+  \begin{beamerboxesrounded}{Importance}
     \begin{itemize}
-    \item Experimental compiler
-    \item Architecture - multiple passes, created DFG, create MaxJ
-    \item A bit of background - lines of code, classes etc
-    \item ROSE framework
+    \item Practical: techniques deployed in FP7 HARNESS
+    \item Theoretical: best paper candidate at ASAP'13
     \end{itemize}
   \end{beamerboxesrounded}
-\end{frame}
-
-\begin{frame}
-  \begin{itemize}
-  \item Show Black Scholes kernel, user input
-    \begin{itemize}
-    \item Written in FAST
-    \item Simple description
-    \item No optimisations
-    \end{itemize}
-  \item Show lara aspects used, user input
-    \begin{itemize}
-    \item design space exploration
-    \item parameterisable descriptions
-    \item vary word length, design parameters
-    \end{itemize}
-  \item Show aspect weaving
-    \begin{itemize}
-    \item Multiple configurations generated automatically
-    \item Varying design parameters: compute width and parallelism
-    \item Debug build logs values
-    \end{itemize}
-  \item Show maxcompiler code generation
-    \begin{itemize}
-    \item casts inferred from pragma, remove manual casts, optimise resource usage
-    \item inputs infered from kernel headers and assignment
-    \item kernel replicated based on pragma parallel, reduced
-      complexity, improve performance
-    \end{itemize}
-  \end{itemize}
 \end{frame}

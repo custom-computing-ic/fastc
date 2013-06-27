@@ -1,3 +1,4 @@
+\begin{comment}
 \begin{frame}{4. Evaluation}
 
   \begin{table}
@@ -12,7 +13,9 @@
   \item \textbf{Ad Prediction} for Bing's sponsored search
   \end{itemize}
 \end{frame}
+\end{comment}
 
+\begin{comment}
 \begin{frame}{4. Evaluation}
   \frametitle{Reverse Time Migration}
   \begin{itemize}
@@ -24,19 +27,19 @@
     \item CmdRead -- memory read command generator
     \end{itemize}
   \item computationally demanding
-  \item use run-time reconfiguration to improve performance and efficiency
+  \item improved performance via run-time reconfiguration
   \end{itemize}
 \end{frame}
-
+\end{comment}
 
 \begin{frame}{4. Evaluation}
-  \frametitle{RTM Design Space Exploration}
+  \frametitle{4. Evaluation: RTM Design Space Exploration}
   \begin{itemize}
   \item timing closure, build time vs parallelism
   \end{itemize}
   \begin{figure}[!h]
     \centering
-    \begin{tikzpicture}[scale=0.8]
+    \begin{tikzpicture}[scale=0.9]
       \begin{axis}[
         cycle list name=exotic,
         xmin=0,
@@ -98,12 +101,11 @@
 \begin{frame}{4. Evaluation}
   \frametitle{RTM Word Length Exploration}
   \begin{itemize}
-  \item   accuracy vs resource usage
-  \item  2X parallelism, reduced accuracy
+  \item accuracy vs resource usage: double parallelism
   \end{itemize}
   \begin{figure}
     \centering
-    \begin{tikzpicture}[scale=0.8]
+    \begin{tikzpicture}[scale=0.85]
       \begin{axis}[
         cycle list name=exotic,
         ymin=0,
@@ -174,12 +176,11 @@
 \begin{frame}{4. Evaluation}
   \frametitle{RTM Parallelism}
   \begin{itemize}
-  \item performance vs build time
-  \item identify resource bottlenecks
+  \item performance vs build time, identify resource bottlenecks
   \end{itemize}
   \begin{figure}
     \centering
-    \begin{tikzpicture}[scale=0.8]
+    \begin{tikzpicture}[scale=0.85]
       \begin{axis}[
         cycle list name=exotic,
         xmin=1,
@@ -249,10 +250,10 @@
   {\scriptsize
 
     \begin{table}
-      \renewcommand{\arraystretch}{1.4}
+      \renewcommand{\arraystretch}{1.5}
       \hspace*{-8pt}\makebox[\linewidth][c]{
         \begin{tabular}{c|p{0.55cm}|p{0.5cm}|p{0.6cm}|p{0.6cm}|p{0.65cm}|p{0.65cm}|p{0.65cm}|p{0.75cm}|p{0.65cm}}
-          & \textbf{CPU} & \textbf{GPU} \cite{himeno} & \textbf{GPU} \cite{datta} & \textbf{GPU} \cite{cirque} & \textbf{FPGA} \cite{arraya}& \textbf{FPGA} \cite{xinyu}\ & \textbf{FPGA} & \textbf{FPGA D\footnote{D = Dynamic (i.e. using run-time reconfiguration)}} \cite{xinyu} & \textbf{FPGA D} \\
+          & \textbf{CPU} & \textbf{GPU} [1] & \textbf{GPU} [2] & \textbf{GPU} [3] & \textbf{FPGA} [4]& \textbf{FPGA} [5] \ & \textbf{FPGA} & \textbf{FPGA D\footnote{D = Dynamic (i.e. using run-time reconfiguration)}} [5] & \textbf{FPGA D} \\
           \hline \hline
           Freq.(GHz) & 2.7          & 1.15         &    1.15          &   1.15           &    0.1           & 0.1                 & 0.1                 & 0.1                 & 0.1                 \\
           Time (s)   & 1458         & 52           &    --          &     --         &    --           & 18                  & 18.3                & 13.4                & 13.6                \\
@@ -267,15 +268,28 @@
 
   }
 
-  \begin{itemize}
-  \item can generate functionally identical dataflow design
-  \item > 97\% performance of manual FPGA design
-  \item > 99\% energy efficiency of manual FPGA design
-  \end{itemize}
+  {\footnotesize
+  \begin{columns}[t]
+    \begin{column}{.5\textwidth}
+      \begin{itemize}
+      \item [1] Phillips, Everett, IPDPS, 2010
+      \item [2] Datta, Kaushik, ICS, 2008
+      \item [3] Yang, Yang, JCST, 2008
+      \end{itemize}
+    \end{column}
+    \begin{column}{.6\textwidth}
+    \begin{itemize}
+    \item [4] Arraya-Polo, Mauricio, TPDS, 2011
+    \item [5] Niu, Xinyu, FPL, 2012
+    \end{itemize}
+    \end{column}
+  \end{columns}
+}
+
 \end{frame}
 
 \begin{frame}{4. Evaluation}
-  \frametitle{Benchmark Results: LOC, Performance, Resource}
+  \frametitle{Wider Benchmark Results}
   Comparing manual MaxCompiler designs to FAST designs:
   {\footnotesize
     \begin{table}

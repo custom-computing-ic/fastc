@@ -22,71 +22,57 @@
   \end{enumerate}
 \end{frame}
 
-\begin{comment}
-  \begin{frame}
-    \frametitle{System Aspect Descriptions}
-    Hardware/Software Partitioning:
-    \begin{enumerate}
-      \setlength{\itemsep}{10pt}
-    \item detect hotspots
-    \item detect code patterns suitable for acceleration
-    \item perform outlining transformation
-    \item derive dataflow \texttt{fast\_f()} from \texttt{f()}
-    \item place FAST pragma to link \texttt{fast\_f()} with \texttt{f()}
-    \end{enumerate}
-  \end{frame}
-\end{comment}
-
-
-\begin{comment}
-  \begin{frame}[fragile]
-    \frametitle{System Aspect Descriptions: Monitoring}
-    For all innermost loops:
-    \begin{itemize}
-    \item Monitor every loop iteration
-    \item Monitor every loop entry and exit
-    \end{itemize}
-    \begin{lstlisting}[label=lst:label, style=lara]
-      aspectdef LoopMonitor
-      function.loop{is_innermost}:
-      entry:   prepend(mon_iterationIn())
-      exit :   append (mon_iterationOut())
-      default: prepend(mon_instanceIn())
-      append(mon_instanceOut())
-      end
-    \end{lstlisting}
-  \end{frame}
-\end{comment}
-
-\begin{frame}{Run-time Reconfiguration}
-  Include a nice background picture explaining the problem with
-  idle-functions, dependencies and how RTR can be used to improve the
-  situation
-\end{frame}
-\begin{frame}[fragile]{3. Aspect Descriptions}
-  \frametitle{System Aspects: Run-time Reconfiguration}
+\begin{frame}{System Aspects: Run-time Reconfiguration}
   \begin{itemize}
-  \item Run-time reconfiguration can be used to remove idle
-    functions. Optimal partitions are generated statically.
-  \item FAST pragmas can specify configurations, grouping one
-    or more functions.
+  \item idle functions may appear in large designs
+  \item use run-time reconfiguration to remove idle functions
     \begin{columns}
       \begin{column}{.55\textwidth}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/rtm-desc.pdf_tex}
+  \end{figure}
+      \end{column}
+      \begin{column}{.45\textwidth}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/rtm-idle.pdf_tex}
+  \end{figure}
+      \end{column}
+    \end{columns}
+
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{System Aspects: Run-time Reconfiguration}
+  \begin{itemize}
+    \setlength{\itemsep}{8pt}
+  \item pragmas specify configuration parameters
+  \item \texttt{fastc} determines required configurations
+  \item static schedule determined by order of pragmas
+  \item additional memory transfer required to save data
+\end{itemize}
+    \begin{columns}
+      \begin{column}{.7\textwidth}
         \begin{center}
           \begin{lstlisting}[style=MaxC]
-            x = f(0);
-            #pragma fast hw:f1 cfg:c1
-            y = f(x);
-            #pragma fast hw:g1 cfg:c1
-            z = g(x);
+#pragma fast hw:f1 cfg:c0(Par=2)
+x = f(0);
+#pragma fast hw:f1 cfg:c1(Par=1)
+y = f(x);
+#pragma fast hw:g1 cfg:c1(Par=1)
+z = g(x, y);
           \end{lstlisting}
         \end{center}
       \end{column}
-      \begin{column}{.45\textwidth}
+      \begin{column}{.3\textwidth}
         {\footnotesize
           \begin{table}[!h]
-            \renewcommand{\arraystretch}{1.1}
-            \hspace{-1cm}
+            \renewcommand{\arraystretch}{1.3}
+            \hspace{-2cm}
             \begin{tabular}{c|c|c}
               \multicolumn{3}{c}{\bf{partition}} \\
               \hline
@@ -100,10 +86,7 @@
         }
       \end{column}
     \end{columns}
-  \item Due to data-dependency one function may be idle => load a
-    different configuration for the useful functions in its place,
-    reducing overall computation time
-  \end{itemize}
+
 \end{frame}
 
 \begin{frame}[fragile]{3. Aspect Descriptions}
@@ -116,17 +99,19 @@
   \end{itemize}
 
   \begin{lstlisting}[style=lara]
-    aspectdef AspReconfig
-    input: partition
-    function.call:
+aspectdef AspReconfig
+  input: partition
+  function.call:
     if (call.key in partition) {
-      config = partition[call.key].cfg;
-      kernel = partition[call.key].hw;
-      call.prepend('#pragma fast hw:'kernel' cfg:'config)
+     p = partition[call.key]
+     config = p.cfg + '(Par = ' + p.par + ')'
+     kernel = p.par
+     call.prepend('#pragma fast hw:'kernel' cfg:'config)
     }
-    end
+end
   \end{lstlisting}
 \end{frame}
+
 
 \begin{frame}[fragile]{3. Aspect Descriptions}
   \frametitle{Implementation Aspects: Operator Optimisation}
@@ -138,15 +123,24 @@
     space exploration
   \end{itemize}
   \begin{lstlisting}[label=lst:label, style=lara]
-    aspectdef DspBalancing
-    input: opMapping
-    function.stmt:
-    opUsage = countOperatorUsage(stmt)
-    factor  = opMapping[opUsage]
-    if (factor != '')
-    stmt.prepend('#pragma fast balanceDSP:' + factor);
-    end
+aspectdef DspBalancing
+input: opMapping
+ function.stmt:
+   opUsage = countOperatorUsage(stmt)
+   factor  = opMapping[opUsage]
+   if (factor != '')
+     stmt.prepend('#pragma fast balanceDSP:' + factor);
+end
   \end{lstlisting}
+\end{frame}
+
+\begin{frame}{3. Implementation Aspects: Operator Optimisation}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/opt-split.pdf_tex}
+  \end{figure}
+
 \end{frame}
 
 \begin{frame}[fragile]{3. Aspect Descriptions}
@@ -159,31 +153,56 @@
   \item stop when a resource usage limit is reached
   \end{itemize}
   \begin{lstlisting}[label=lst:label, style=lara]
-    aspectdef DesignExploration
-    input: attribute, start, step, res, res_limit, config
-    config[attribute] = start
-    do {
-      var designName = genName(config)
-      generateFASTDesign(designName, config)
-      buildFASTDesign(designName)
-      config[attribute] += step
-    } while (@hw[designName].res < res_limit)
-    end
+aspectdef DesignExploration
+input: attribute, start, step, res, res_limit, config
+  config[attribute] = start
+  do {
+    var designName = genName(config)
+    generateFASTDesign(designName, config)
+    buildFASTDesign(designName)
+    config[attribute] += step
+  } while (@hw[designName].res < res_limit)
+end
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{3. Aspect Descriptions}
-  \frametitle{Development Aspect Descriptions: Variable Watching}
-  For all variable references:
+\begin{frame}[fragile]{Monitoring and Logging}
   \begin{itemize}
-  \item Automatically log variables on assignment
-  \item Useful since no run-time is debugger available
+  \item Logging: useful for debugging (no run-time support)
   \end{itemize}
   \begin{lstlisting}[label=lst:label, style=lara]
-    aspectdef WatchVar
-    function.vref{is_written}:
-    vref.parent.prepend('log("vref.name", vref.name)')
-    vref.parent.append('log("vref.name", vref.name)')
-    end
+aspectdef WatchVar
+function.vref{is_written}:
+  vref.parent.prepend('log("vref.name", vref.name)')
+  vref.parent.append('log("vref.name", vref.name)')
+end
   \end{lstlisting}
+
+  \begin{itemize}
+  \item Monitoring: useful for profiling
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
+aspectdef LoopMonitor
+function.loop{is_innermost}:
+  entry:   prepend(mon_iterationIn())
+  exit :   append (mon_iterationOut())
+  default: prepend(mon_instanceIn())
+           append(mon_instanceOut())
+end
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Demo -- \texttt{fastc}}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/comp-flow.pdf_tex}
+  \end{figure}
+  \begin{itemize}
+    \setlength{\itemsep}{10pt}
+  \item experimental compiler for FAST ( $\approx$ 3.5 KLOC)
+  \item supports all dataflow features
+  \item portability: aspects, high level pragmas
+  \item optimisations: low-level pragmas, inference
+  \end{itemize}
 \end{frame}

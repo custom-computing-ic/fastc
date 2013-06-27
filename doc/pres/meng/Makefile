@@ -15,6 +15,8 @@ IMGS := $(SVGS:.svg=.pdf_tex)
 
 $(TARGET).pdf: $(TARGET).tex $(SRCS) $(IMGS)
 	$(COMPILE) $(TARGET).tex || rm -rf $(TARGET).pdf
+#	$(COMPILE) $(TARGET).tex || rm -rf $(TARGET).pdf
+
 
 clean:
 	rm -rf $(TRASH) $(TARGET).pdf
