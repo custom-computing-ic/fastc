@@ -11,21 +11,21 @@ extern char *device_name;
 
 //real* S1tbl, real* S2tbl, real* S3tbl are only useful for American options
 real kernel(real* coef_arr, int* exe_params, real* grid, TOptionData* od, real* S1tbl, real* S2tbl, real* S3tbl, int type){
-	real a_0_0_0  = coef_arr[0];
-	real a_p1_0_0 = coef_arr[1];
-	real a_m1_0_0 = coef_arr[2];
+  real a_0_0_0  = coef_arr[0];
+  real a_p1_0_0 = coef_arr[1];
+  real a_m1_0_0 = coef_arr[2];
 
-	int N_t  = exe_params[0];
-	int M_Z1 = exe_params[1];
+  int N_t  = exe_params[0];
+  int M_Z1 = exe_params[1];
 
-	real* grid1 = (real*)malloc(M_Z1*sizeof(real));
-	real* grid2 = (real*)malloc(M_Z1*sizeof(real));
+  real* grid1 = (real*)malloc(M_Z1*sizeof(real));
+  real* grid2 = (real*)malloc(M_Z1*sizeof(real));
 
-	real* source = grid;
-	real* target = grid1;
+  real* source = grid;
+  real* target = grid1;
 
-	int i,j,k,l;
-	for(i=0;i<N_t;i++){
+  int i,j,k,l;
+  for(i=0;i<N_t;i++){
     for(j=1; j<M_Z1-1; j++){
       //node_j_k_l
       real node_0_0_0  = source[j];
@@ -35,34 +35,34 @@ real kernel(real* coef_arr, int* exe_params, real* grid, TOptionData* od, real* 
       real node_m1_0_0 = source[(j-1)];
 
       real v_jkl= node_0_0_0  * a_0_0_0
-                + node_p1_0_0 * a_p1_0_0
-                + node_m1_0_0 * a_m1_0_0;
+        + node_p1_0_0 * a_p1_0_0
+        + node_m1_0_0 * a_m1_0_0;
       real payoff = v_jkl;
       target[j]=payoff;
-		}
-		if(i!=0){
-			real* tmpgrid = source;
-			source = target;
-			target = tmpgrid;
-		}else{
-			source = grid1;
-			target=grid2;
-		}
-	}
-
-	real res= target[(M_Z1/2)];
-	delete grid1, grid2;
-	return res;
+    }
+    if(i!=0){
+      real* tmpgrid = source;
+      source = target;
+      target = tmpgrid;
+    }else{
+      source = grid1;
+      target=grid2;
+    }
+  }
+g
+  real res= target[(M_Z1/2)];
+  delete grid1, grid2;
+  return res;
 
 }
 
 real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, real* S1tbl, real* S2tbl, real* S3tbl, int type){
-	real a_0_0_0  = coef_arr[0];
-	real a_p1_0_0 = coef_arr[1];
-	real a_m1_0_0 = coef_arr[2];
+  real a_0_0_0  = coef_arr[0];
+  real a_p1_0_0 = coef_arr[1];
+  real a_m1_0_0 = coef_arr[2];
 
-	int N_t  = exe_params[0];
-	int M_Z1 = exe_params[1];
+  int N_t  = exe_params[0];
+  int M_Z1 = exe_params[1];
 
 
   //fpga initialisation
@@ -120,13 +120,13 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
   max_set_scalar_input(device,"Cmdwrite0.wordsPerBurst", stream_cycles * Burst_inc,    FPGA_A);
 
 
-	real* grid1 = (real*)malloc(M_Z1 * sizeof(real));
-	real* grid2 = (real*)malloc(M_Z1 * sizeof(real));
-	real* comb  = (real*)malloc(M_Z1 * sizeof(real));
-	real* result= (real*)malloc(M_Z1 * sizeof(real));
+  real* grid1 = (real*)malloc(M_Z1 * sizeof(real));
+  real* grid2 = (real*)malloc(M_Z1 * sizeof(real));
+  real* comb  = (real*)malloc(M_Z1 * sizeof(real));
+  real* result= (real*)malloc(M_Z1 * sizeof(real));
 
-	real* source = grid;
-	real* target = grid1;
+  real* source = grid;
+  real* target = grid1;
 
   //transfer data to FPGA
   max_kernel_set_cycles(device,"Cmdhostwrite",         total_bursts * cycle_PCI,  FPGA_A);
@@ -138,10 +138,10 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
 
   int count =0;
   for(int j=0; j<M_Z1; j++)
-  {
-    comb[count] = source[j];
-    count++;
-  }
+    {
+      comb[count] = source[j];
+      count++;
+    }
 
   cout << "Writing data to memory..." << endl;
   max_set_scalar_input( device,"Cmdhostwrite.Enable",       1,            FPGA_A);
@@ -180,41 +180,41 @@ real kernel_fpga(real* coef_arr, int* exe_params, real* grid, TOptionData* od, r
   for(int j=0; j<M_Z1; j++)
     target[j] = source[j];
 
-   for(int i=0;i<N_t;i++){
-     		for(int j=1; j<M_Z1-1; j++){
-     			//node_j_k_l
-     			real node_0_0_0  = source[j];
-          //node_j_k_l
-          real node_p1_0_0 = source[(j+1)];
-          real node_m1_0_0 = source[(j-1)];
+  for(int i=0;i<N_t;i++){
+    for(int j=1; j<M_Z1-1; j++){
+      //node_j_k_l
+      real node_0_0_0  = source[j];
+      //node_j_k_l
+      real node_p1_0_0 = source[(j+1)];
+      real node_m1_0_0 = source[(j-1)];
 
-     			real v_jkl= node_0_0_0  * a_0_0_0
-                    + node_p1_0_0 * a_p1_0_0
-                    + node_m1_0_0 * a_m1_0_0;
-          real payoff = v_jkl;
-     			target[j]=payoff;
-     }
-//   if(i!=0){
-  		real* tmpgrid = source;
-  		source = target;
-  		target = tmpgrid;
-//	}else{
-//		source = grid1;
-//		target=grid2;
-//	}
+      real v_jkl= node_0_0_0  * a_0_0_0
+        + node_p1_0_0 * a_p1_0_0
+        + node_m1_0_0 * a_m1_0_0;
+      real payoff = v_jkl;
+      target[j]=payoff;
+    }
+    //   if(i!=0){
+    real* tmpgrid = source;
+    source = target;
+    target = tmpgrid;
+    //  }else{
+    //          source = grid1;
+    //          target=grid2;
+    //  }
   }
 
-   for(int j=1; j<M_Z1-1; j++)
-     if(result[j] != source[j])
-     {
-       cout<<"Error: j: "<<j<<endl;
-       cout<<"should:"<<setprecision(24)<<source[j]
-         <<setprecision(24) <<"get"<<result[j];
-     }
+  for(int j=1; j<M_Z1-1; j++)
+    if(result[j] != source[j])
+      {
+        cout<<"Error: j: "<<j<<endl;
+        cout<<"should:"<<setprecision(24)<<source[j]
+            <<setprecision(24) <<"get"<<result[j];
+      }
   cout<<endl;
 
   real res= source[(M_Z1/2)];
-	delete grid1, grid2;
-	return res;
+  delete grid1, grid2;
+  return res;
 
 }

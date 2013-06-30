@@ -56,10 +56,10 @@ void kernel_RTM(
     float pp_i[Par], dvv[Par], source[Par], cur[Mul][11+Par+1][11][11], result[Par][Mul];
 
     for (int i=0; i <Par; i++) {
-      p[i] = burst_p[i];
-      pp_i[i] = burst_pp[i][0];
-      dvv[i] = burst_dvv[i][0];
-      source[i] =  burst_source[i][0];
+      p[i]      = burst_p[i];
+      pp_i[i]   = burst_pp[i][0];
+      dvv[i]    = burst_dvv[i][0];
+      source[i] = burst_source[i][0];
     }
 
 #pragma class:kernelopt name:pushDSP factor:DspFactor
@@ -133,8 +133,7 @@ void kernel_RTM(
               +(cur[j][6+i][5][3] + cur[j][6+i][5][7]) * c_3_1
               +(cur[j][6+i][5][2] + cur[j][6+i][5][8]) * c_3_2
               +(cur[j][6+i][5][1] + cur[j][6+i][5][9]) * c_3_3
-              +(cur[j][6+i][5][0] + cur[j][6+i][5][10])* c_3_4 ))
-               + source[i];
+              +(cur[j][6+i][5][0] + cur[j][6+i][5][10])* c_3_4 )) + source[i];
 
          inter[i][j][0] = up[i] == 0 ? cur[j-1][6+i][5][5] : result[i][j];
        }
