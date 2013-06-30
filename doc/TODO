@@ -36,24 +36,6 @@ will eed one implementation for each design.
 ** Matrix Multiply
 
 
-* Demo
-** DONE aspect dir to store aspects
-** DONE script to run the deom
-** DONE any binaries?
-** DONE may want to improve output formatting to make it look more interesting
-** also run it in simulation  == REQUIRES Fixing Offsets, maybe postpone ?
-
-* Code Wrap-up
-** make submission target
-** update readme
-** add aspects from asap paper, presentation, report etc
-
-* Presentation
-** phone things
-** rehearse it + time it once
-** consider when to do demo (probably best at the end?)
-
-
 * Demo Plan:
 ** Demo the generation of dataflow kernels
 ** Use two examples: RTM and AdPrediction
@@ -64,3 +46,113 @@ will eed one implementation for each design.
 ** Run in Simulation? may take long to get it to work, but it does show we're serious about it working
 ** Show some metrics for the generated/original/manual designs -> API calls, LOC,
 ** try to fetch build data from maxfile directories? Show performance ?
+
+* Show how the compiler works
+
+* Explain pragmas a bit better - pragams that are OK vs pragmas that are not OK (i.e. not portable)
+
+* How to support portable specifications e.g. Altera vs Xilinx differences
+
+* Insist on reconfiguration
+
+* Show a simple example of how aspect can be used
+
+
+
+
+* Prize Demo
+** Just a simple kernel, to show I have something working:
+** Would no
+
+* Prize Presentation
+** Link to Xinyu's approach
+
+** p.16 is too brief to show the novelty and difficulty of supporting
+   aspects for reconfiguration; I think you should consider adding a
+   slide one of the block diagrams adapted from Xinyu's presentation that
+   contains more detail.
+
+** Only include Implementation aspects and exploration aspects if you have a
+   detailed block diagram or pseudo code that include more details and you could
+   explain what are the challenging parts.
+
+** I think you should include the references on this slide rather than on
+   a separate slide. Just have the first author and the conference name with
+   the year, no need to include the title, to keep them short.
+
+** replace LOC by lines of code, also also the code sie for the benchmarks
+
+** time your presentation and demo to make sure you are comfortably within
+   the given time.
+
+
+Lighten up the talk:
+1. Start with a slide with a big HPC, many processors, a lot of power,
+we DON't want that.
+
+2. Put a chart of my sleep times / productivity etc.
+
+3. Would be interesting to have a productivity slide: a plot showing
+hours slept per night; this plot should say - I want my cluster to do
+the work for me, not me; problems with manual - have to wake up every
+6 hours, have to tweak,
+
+4. Add a slide with commit messages
+
+5. Show why dataflow engines. Show why FPGAs, compare 70MB of
+   customisable cache vs 30MB of L3 cache shared 20 ways on Intel Xeon
+http://ark.intel.com/products/53580/Intel-Xeon-Processor-E7-8870-30M-Cache-2_40-GHz-6_40-GTs-Intel-QPI
+3TB/s I/O bandwidth vs
+Price check: $4616, around $50K
+
+
+Two scenarios:
+1. Run-time reconfiguration:
++ Challenging
++ Links with evaluation
+- Have to think it through
+- Have to write aspects
+- Have to implement
+
+2. Design space exploration
+- Have to think of something challenging
++ Have aspects
++ Have demo
++ Have evaluation
+
+Challenge
+ - balance the DSP mapping
+   - not sufficient flexibility in back-end tools (only three levels, NONE, BALANCED, FULL)
+   - not aware of global resource usage
+   - can very easily over-map DSPs or affect timing and performance
+
+ - getting the mapping portable
+   - portability is a big issue since there are many types of DSPs,
+     and many types of boards (with various number of DSPs)
+     - there are also many types of FPGA vendors, so
+
+ - challenge how to get across the right information? "I want my
+   floating point ops to be fast. I may be interested to sacrifice
+   this much accuracy. My values are in this range.  I want this
+   operation to have this much latency. " Last thing should really not
+   be shown to the user.
+
+ - stream type, if no pragma given, check for types already in the
+   design, propagate types forwards and backwards, add cast nodes at
+   input and outputs
+
+DEMO
+
+Evaluation
+1. Benchmark results
+2. RTM, speedup and exploration -- need to show that the DSE can make
+   a difference for larger pipe values.
+3. DSLs on top of FAST
+ - simple stencil DSL:
+ - code reduction for RTM, perforamnce impact 0
+ - but need to break this up somehow to allow aspects
+ - update design flow
+ - call fastc to inline all DSLs, call Harmonic to apply aspects
+   (these should work readily),
+
+Conclusions:
