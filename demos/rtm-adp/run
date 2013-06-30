@@ -17,21 +17,19 @@ rm -rf designs-ADP
 # --- RTM Code generation p
 cp src/RTMKernel.c .
 echo "[RTM] 1. Running Harmonic Weaver"
-larai $ASP_REP/main.lara -a "{csources:'RTMKernel.c', cflags: '-I../../include/', cparams:[ { Par: 1, Mul: 1}, { Par: 2, Mul: 1 } ], exps:'[20, 22, 24]'}" #&> /dev/null
-#harmonic -csources="$src" -cflags="-I../../include/" -aspLARA=$ASP_REP/harmonic.lara -aspArgv="{cparams:{'Par':2, 'Mul':3}, exp:15, debug:true}"
+larai $ASP_REP/main.lara -a "{csources:'RTMKernel.c', cflags: '-I../../include/', cparams:[ { Par: 1, Mul: 1}, { Par: 2, Mul: 1 } ], exps:[22, 24]}" &> /dev/null
 echo "[RTM] 2. Compiling FAST ==> MaxJ"
-find designs/ -name "*.c" -exec fastcc -I../../include {} \; -exec bash -c   'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \;
-echo "[RTM] 4. Save and Clean-up"
+find designs/ -name "*.c" -exec fastcc -I../../include {} \; -exec bash -c   'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \; &> /dev/null
+echo "[RTM] 3. Save and Clean-up"
 mv designs designs-RTM
 rm -fr ADPKernel.c RTMKernel.c build rose_*
 
 cp src/ADPKernel.c .
 # --- ADP Code Generation
 echo "[APD] 1. Running Harmonic weaver"
-larai $ASP_REP/main.lara -a "{csources:'ADPKernel.c', cflags: '-I../../include/', cparams:[ { N: 8 }, { N: 9}, {N: 10}], exps:'[10, 11]'}" &> /dev/null
+larai $ASP_REP/main.lara -a "{csources:'ADPKernel.c', cflags: '-I../../include/', cparams:[ { N: 8 }, { N: 9}], exps:[10, 11]}" &> /dev/null
 echo "[ADP] 2. Compiling FAST ==> MaxJ"
-find designs/ -name "*.c" -exec fastcc -I../../include {} \; -exec bash -c  'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \;
-
-echo "[RTM] 4. Save and Clean-up"
+find designs/ -name "*.c" -exec fastcc -I../../include {} \; -exec bash -c  'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \; &> /dev/null
+echo "[ADP] 3. Save and Clean-up"
 mv designs designs-ADP
 rm -rf ADPKernel.c RTMKernel.c build rose_*

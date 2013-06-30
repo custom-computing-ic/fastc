@@ -48,7 +48,7 @@ float CDF(float z) {
 }
 
 float V(float t) {
-   float cdf = CDF(t);
+  float cdf = CDF(t);
   return (cdf == 0) ? 0 : PDF(t) / cdf;
 }
 
@@ -57,6 +57,7 @@ float W(float t) {
   return v * (v + t);
 }
 
+/** Design parametrised by number of features **/
 const int N = 10;
 
 void kernel_Adp(
@@ -77,7 +78,6 @@ void kernel_Adp(
   float S = sqrt(scalar_beta * scalar_beta + s);
   float t = (scalar_y * m) / S;
 
-
   for (int i = 0; i < N; i++) {
     float pr_m = prior_m[i][0];
     float pr_v = prior_v[i][0];
@@ -90,5 +90,4 @@ void kernel_Adp(
   }
 }
 
-int main() {
-}
+int main() {}
