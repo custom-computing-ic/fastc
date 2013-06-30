@@ -42,7 +42,7 @@ this chapter:
   description. Additionally by adapting operator bit-width to run-time
   inputs the network input width can be increased
   substantially,leading to improved throughput;
-\item \textbf{Add Prediction} is an application for click-through rate
+\item \textbf{Ad Prediction} is an application for click-through rate
   prediction used in Microsoft's Bing search engine for Sponsored
   Search. This is an arithmetic intensive kernel, and requires the
   ability to effectively tune operator bit width and design parameters
@@ -792,9 +792,9 @@ design overmaps or fails to meet timing at the next iteration (columns
 \end{table}
 
 
-\section{Add Prediction}
+\section{Ad Prediction}
 
-The Add prediction kernel implemented for this benchmark application
+The Ad prediction kernel implemented for this benchmark application
 was proposed for predicting click-through rate for sponsored search on
 the Bing search engine \cite{graepel2010web}. Given as input the prior
 probability for a number of features, Bayesian inference is used to
@@ -815,7 +815,7 @@ our pragma for specifying stream I/O and compute type.
 
 The \FAST{} dataflow implementation is shown in
 \Cref{app:add-prediction}.  The total number of lines of code for the
-Add Prediction kernel is 67 and the kernel requires 3 API calls. The
+Ad Prediction kernel is 67 and the kernel requires 3 API calls. The
 original MaxCompiler design has 90 lines of code and 49 API calls.
 
 
@@ -851,7 +851,7 @@ achieve timing closure.
  2         & Full       & float(8, 24)   & Yes          \\
 
 \end{tabularx}
-\caption{Design exploration space for the Add Prediction kernel.}
+\caption{Design exploration space for the Ad Prediction kernel.}
 \label{table:adp-dse}
 \end{table}
 
@@ -876,7 +876,7 @@ RTM             & 1.17                              & 10                        
 SGSmooth        & 1.85                              & 14                                       &                            &                            \\
 SGDifff         & 1.75                              & 14                                       &                            &                            \\
 Black-Scholes   & 2.5                               & 5.5                                      &                            &                            \\
-Add Prediction  & 67                                & 16                                       &                            &                            \\
+Ad Prediction  & 67                                & 16                                       &                            &                            \\
 \end{tabularx}
 \caption{Lines of code, API calls performance and resource usage ratio of original manual MaxCompiler design and \FAST{} design.}
 \label{conc:summary}
