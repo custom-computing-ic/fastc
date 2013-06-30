@@ -1,0 +1,7 @@
+#!/bin/bash
+meld src/ADPKernel.c "designs-ADP/({N:9})_exp10_dtrue/ADPKernel.c" #"designs-ADP/({N:8})_exp11_dfalse/ADPKernel.c"
+meld src/ADPKernel.c "designs-ADP/({N:8})_exp10_dtrue/Adp.java" #"designs-ADP/({N:8})_exp11_dfalse/Adp.java"
+
+meld src/RTMKernel.c "designs-RTM/({Par:2, Mul:1})_exp22_dfalse/RTMKernel.c" #"designs-RTM/({Par:1, Mul:1})_exp24_dtrue/RTMKernel.c"
+meld src/RTMKernel.c "designs-RTM/({Par:2, Mul:1})_exp22_dfalse/RTM.java" #"designs-RTM/({Par:1, Mul:1})_exp24_dtrue/RTM.java"
+
