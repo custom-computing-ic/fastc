@@ -294,20 +294,20 @@
   {\footnotesize
     \begin{table}
       \renewcommand{\arraystretch}{1.5}
-      \begin{tabular}{l|c|c|c|c}
-        \textbf{Kernel} & \textbf{LOC\footnote{LOC = Lines of Code}} & \textbf{API Calls} & \textbf{Performance}              & \textbf{Resource}
+      \begin{tabular}{l|c|c|c|c|c}
+        \textbf{Kernel} & \textbf{Size} & \textbf{Reduction} & \textbf{API Calls} & \textbf{Performance}              & \textbf{Resource}
         \\
         \hline\hline
-        CmdRead         & 1.76               & 4.33                     & \multirow{2}{1.5cm}{$ > 75\%$}        & \multirow{6}{1.5cm}{$\approx 100\%$} \\
-        CmdWrite        & 1.45               & 4.13                     &                                   &                              \\
+        CmdRead       & 48 & 43 \%               & 4.33                     & \multirow{2}{1.5cm}{$ > 75\%$}        & \multirow{6}{1.5cm}{$\approx 100\%$} \\
+        CmdWrite      & 54  & 31 \%              & 4.13                     &                                   &                              \\
         \cline{1-4}
-        RTM             & 1.17               & 10                       & \multirow{5}{1.5cm}{$ \approx 100\%$} &                              \\
-        SGSmooth        & 1.85               & 14                       &                                   &                              \\
-        SGDiff         & 1.75               & 14                       &                                   &                              \\
-        Black-Scholes   & 2.51               & 5.5                      &                                   &                              \\
+        RTM            & 231 & 27 \%              & 10                       & \multirow{5}{1.5cm}{$ \approx 100\%$} &                              \\
+        SGSmooth      & 60 & 45 \%              & 14                       &                                   &                              \\
+        SGDiff       & 58 & 42 \%              & 14                       &                                   &                              \\
+        Black-Scholes & 56  & 60 \%               & 5.5                      &                                   &                              \\
         \cline{5-5}
-        Ad Prediction  & 1.67               & 16                       &                                   &    $ \approx 117 \% $                          \\
-        Bitonic Sort & 1.62             & 12                    &                                   &    $ \approx 100 \% $                          \\
+        Ad Prediction & 94 & 40 \%             & 16                       &                                   &    $ \approx 117 \% $                          \\
+        Bitonic Sort & 102 & 38 \%             & 12                    &                                   &    $ \approx 100 \% $                          \\
       \end{tabular}
     \end{table}}
 

@@ -1,5 +1,28 @@
 \section{Introduction}
 
+\begin{frame}{...Dataflow Engines}
+\begin{itemize}
+  \item FPGA based dataflow engines:
+\begin{itemize}
+  \item energy efficient High Performance Computing
+\end{itemize}
+\hspace{1cm}
+\pause
+  \item Yes, somebody uses them!
+    \begin{itemize}
+    \item JP Morgan: Fixed Income Risk
+    \item Chevron: Oil and Gas Exploration
+    \end{itemize}
+\hspace{1cm}
+\pause
+\item \emph{The RTM porting to FPGA is the one that requires most
+    effort.} Issues: development, debugging, portability. \footnote{Arraya-Polo, \emph{Assessing Accelerator-Based
+HPC RTM, 2011}
+}
+\end{itemize}
+\end{frame}
+
+\begin{comment}
 \begin{frame}{High Performance Computing}
   \vspace{0.5cm}
   \begin{beamerboxesrounded}{Applications}
@@ -54,6 +77,7 @@
     \end{columns}
   \end{beamerboxesrounded}
 \end{frame}
+\end{comment}
 
 \begin{frame}{This Project}
   \begin{beamerboxesrounded}{Objectives}
@@ -67,7 +91,7 @@
     \begin{itemize}
     \item first aspect-oriented compilation flow for dataflow HPC
     \item produce fastest, most energy efficient RTM dataflow design
-    \item up to 80\% code reduction, 4 -- 16 times less API calls
+    \item up to 60\% code reduction, 4 -- 16 times less API calls
     \item techniques deployed in FP7 HARNESS project
     \item best paper candidate at ASAP 2013 (4 of 125 submissions)
     \end{itemize}
