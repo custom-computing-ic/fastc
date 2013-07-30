@@ -1,4 +1,4 @@
-\documentclass[a4paper, 11]{report}
+\documentclass[a4paper, 11]{article}
 \usepackage{amssymb,amsmath}
 \usepackage{url}
 \usepackage[final]{listings}
@@ -40,19 +40,21 @@
 \graphicspath{{figs/}}
 \setlength{\headheight}{15pt}
 
-\pagestyle{fancy}
+\definecolor{UniBlue}{RGB}{83,121,190}
+
+%\pagestyle{fancy}
 %\renewcommand{\chaptermark}[1]{ \markboth{#1}{} }
 %\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
 
-\fancyhf{}
-\fancyhead[LE,RO]{\thepage}
-\fancyhead[RE]{\nouppercase{\leftmark} }
-\fancyhead[LO]{\nouppercase{\rightmark} }
+%\fancyhf{}
+\fancyhead[LE,RO]{\color{UniBlue}\thepage}
+\fancyhead[RE]{\color{UniBlue}\nouppercase{\leftmark} }
+\fancyhead[LO]{\color{UniBlue}\nouppercase{\rightmark} }
 
 \fancypagestyle{plain}{ %
-  \fancyhf{} % remove everything
-  \renewcommand{\headrulewidth}{0pt} % remove lines as well
-  \renewcommand{\footrulewidth}{0pt}
+%  \fancyhf{} % remove everything
+%  \renewcommand{\headrulewidth}{0pt} % remove lines as well
+%  \renewcommand{\footrulewidth}{0pt}
 }
 
 % --- Commands ---
@@ -82,13 +84,12 @@
       \vfil\vfil\null
 }
 
-%\titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
-%\titlespacing*{\chapter}{0pt}{0pt}{10pt}
+\titleformat{\chapter}{\normalfont\Huge\bfseries\color{UniBlue}}{\thechapter}{1em}{}
+\titleformat{\section}{\normalfont\Large\bfseries\color{UniBlue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{UniBlue}}{\thesubsection}{1em}{}
 
-%\usepackage{caption}
-%\DeclareCaptionFont{white}{\color{white}}
-%\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
-%\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+%\titlespacing*{\chapter}{0pt}{0pt}{10pt}
 
 \newcounter{nodemarkers}
 \newcommand\marktext[1]{%
@@ -102,10 +103,12 @@
   \stepcounter{nodemarkers}%
 }
 
+% --- S ---
 
 \usetikzlibrary{shapes,arrows,fit}
 \usetikzlibrary{positioning}
 
+% ---- Listings ----
 \lstdefinestyle{lara}{ language=C++,
   morekeywords={aspectdef, var, apply, select, condition, begin, end, input}}
 
@@ -118,14 +121,13 @@
   morekeywords={HWVar, io, hwFloat, stream}
 }
 
-\definecolor{UniBlue}{RGB}{83,121,190}
 
 \lstset{aboveskip=20pt,
   belowskip=20pt,
+  basicstyle=\scriptsize\sffamily,
   rulecolor=\color{lightgray},
   frame=single,
-  frameround=tttt
-  basicstyle=\footnotesize\sffamily,
+  frameround=tttt,
   keywordstyle=\color{black}\bfseries,
   numbers=left,
   numberstyle={\color{UniBlue}\scriptsize},
@@ -135,13 +137,25 @@
   escapeinside={(*@}{@*)}
 }
 
+\pgfplotsset{
+  width=0.9\textwidth,
+  enlargelimits=0.1,
+  compat=1.8,
+  tick label style={font=\tiny},
+  label style={font=\footnotesize},
+  legend style={font=\scriptsize},
+  axis line style={lightgray},
+}
+
+
+
 \begin{document}
 
 \input{sections/titlepage.tex}
 
-\renewcommand{\thepage}{\roman{page}}
+%\renewcommand{\thepage}{\roman{page}}
 
-
+\begin{comment}
 \begin{abstract}
   \vspace{1em} Dataflow designs implemented on custom streaming
   architectures can be orders of magnitudes more efficient than
@@ -165,8 +179,9 @@
   equivalent software only implementations can be derived with
   improved productivity.
 \end{abstract}
+\end{comment}
 
-
+\begin{comment}
 \acknowledgements{
 
   I would like to thank:
@@ -188,33 +203,21 @@
     suggestions regarding future work
   \item my family and friends for their continuous support
 \end{itemize}
-
 }
+\end{comment}
 
 \clearpage
-
-\tableofcontents
-\listoffigures
-\listoftables
-\lstlistoflistings
-
-%\begin{figure}
-%\centering
-%\def\svgwidth{15em}
-%\input{figs/drawing.pdf_tex}
-%\end{figure}
 
 \pgfplotsset{width=0.7\textwidth, enlargelimits=0.15}
 
 \renewcommand{\arraystretch}{1.5}
 
-%\input{sections/intro.tex}
+\input{sections/intro.tex}
 %\input{sections/background.tex}
-%\input{sections/design_flow.tex}
-%\input{sections/fast.tex}
-\input{sections/aspects.tex}
-%\input{sections/eval.tex}
-%\input{sections/conclusion.tex}
+\input{sections/design_flow.tex}
+\input{sections/implementation.tex}
+\input{sections/eval.tex}
+\input{sections/conclusion.tex}
 
 
 % some spacing
@@ -222,16 +225,5 @@
 
 \bibliographystyle{IEEEtran}
 \bibliography{../../refdb/bibliography.bib}
-
-\clearpage
-\appendix
-
-%\input{sections/installation.tex}
-%\input{sections/RTM-original.tex}
-%\input{sections/MEM-original.tex}
-%\input{sections/SG-fast.tex}
-%\input{sections/bsort.tex}
-
-
 
 \end{document}

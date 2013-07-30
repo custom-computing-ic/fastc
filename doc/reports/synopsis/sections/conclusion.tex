@@ -1,0 +1,159 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have tackled the challenge of improving developer productivity with
+minimal impact on efficiency for custom dataflow designs implemented
+on FPGAs and shown how this can be achieved by adopting a novel design
+flow based on the Aspect-oriented philosophy of encapsulating
+cross-cutting concerns in highly cohesive aspect descriptions. The
+project has been included in the FP7\footnote{European Union Seventh
+  Framework Programme} funded HARNESS Project where it is to be used
+for generating efficient dataflow implementations for key cloud
+applications based on user requirements. A full paper based on this
+project was accepted for publication at the 24th IEEE International
+Conference on Application-specific Systems, Architectures and
+Processors, ASAP 2013 \cite{pgrig}.
+
+\begin{comment}
+
+
+\section{Summary of Achievements}
+We introduced a novel development approach for dataflow designs,
+required to integrate, for the first time the Aspect-oriented approach
+with dataflow design development for FPGAs. By decoupling
+optimisations from design specification the proposed design flow both
+simplifies the development and maintenance of dataflow applications
+and highlights opportunities for platform specific optimisations.
+
+To support the proposed design flow we introduced \FAST{} a novel
+language for specifying dataflow designs which facilitates integration
+with existing aspect weaving tools by adopting a standard C99
+syntax. Other important features of \FAST{} include support for
+hardware/software co-design, which allows embedding of dataflow
+kernels in regular C style applications and support for variable bit
+width operand representation via a pragma based mechanism. We
+implemented a compiler for the \FAST{} language that translates
+\FAST{} dataflow designs to MaxCompiler 2012.1 designs based on the
+MaxCompilerRT interface. To complement the \FAST{} dataflow designs we
+introduced a number of novel aspect descriptions that enable effective
+design space exploration with minimal user input.
+
+We evaluated our approach on a number of applications and showed that
+significant improvements can be achieved in terms of productivity at
+minimal cost to performance. We have shown \FAST{} dataflow designs
+require significantly less API calls and lines of code, while matching
+the performance of manually created MaxCompiler designs and improving
+flexibility which simplifies the design space exploration process. Th
+proposed flow can be used to support design space exploration that
+highlights interesting trade-off opportunities for increasing design
+parallelism or overall throughput subject to required accuracy.
+
+A full paper based on this project was accepted for publication at the
+24th IEEE International Conference on Application-specific Systems,
+Architectures and Processors, ASAP 2013. Finally, the project has been
+included in the FP7\footnote{European Union Seventh Framework
+  Programme} funded HARNESS Project where it is to be used for
+generating efficient dataflow implementations for key cloud
+applications based on user requirements.
+
+\section{Future Work}
+
+Although we have met our original objectives set out in
+\Cref{sec:intro-challenges}, we would like to highlight that
+substantial work remains to be done both to improve the quality of
+existing work (by improving for example error handling, documentation
+and extensibility of our compiler prototype) and to investigate the
+applicability of our approach to exciting classes of problems. Current
+and future work possibilities include:
+
+\begin{itemize}
+\item \emph{Extending the approach to cover other classes of parallel
+    computation}.  Based on the positive evaluation results, we
+  believe that the approach can be extended to support the generation
+  of efficient dataflow designs for additional classes of parallel
+  computation such as Sparse or Dense Linear Algebra, MapReduce or
+  N-Body Simulation which are quintessential examples of parallel
+  kernels
+  \cite{Asanovic:Bodik:Catanzaro:Gebis:Husbands:Keutzer:Patterson:Plishker:Shalf:Williams:Yelick:2006}. This
+  could also provide valuable feedback which can be used to refine and
+  validate the proposed approach.
+
+
+\item \emph{Extension to cover heterogeneous systems}. With the
+  increasing demand in cloud computing solutions, it is believed that
+  heterogeneous computing platforms can provide a better mix of
+  performance, energy and cost efficiency than traditional CPU only
+  based platforms. From the onset of this project we have kept the
+  approach as platform agnostic as possible, to enable the support for
+  reconfiguration our approach is intentionally platform agnostic to
+  allow extension to other platforms for dataflow computing (such as
+  CPU and GPGPUs).
+
+\item \emph{Support a standardised set of pragams}. In the context of
+  heterogeneous computing platforms, to facilitate the adoption of the
+  \FAST{} language a standardised set of pragmas such as OpenACC could
+  be supported. We have not started with this idea in order to
+  maximise the flexibility of our approach, but we believe that a
+  standardised set of pragmas can help to improve portability and
+  interoperability of C + \FAST{} applications.
+
+\item \emph{Support MaxCompiler 2013.1}. MaxCompiler 2013.1 introduces
+  a new interface and interesting opportunities for optimisations,
+  which are highly relevant to the cloud model of shared compute
+  resources. For example, it introduces the possibility to control
+  groups of dataflow engines and it provides improved support for
+  remote operation via Remote DMA over high speed Ininiband
+  connection. These features make it interesting, if not mandatory, to
+  support the more recent version of MaxCompiler.
+
+
+\item The proposed design flow can be extended \emph{to support
+    additional languages}. This does require a better separation in
+  the \fastc{} between the dataflow specific components, which would
+  serve as common backend representation for interfacing with
+  MaxCompiler and the language specific front-end passes.
+
+\item \emph{Extension to cover other applications domains}.  Based on
+  the previous extension, domain specific languages for application
+  domains ranging from Monte-Carlo simulations in
+  finance~\cite{Jin:2012} to genetic sequence
+  matching~\cite{Arram:2013} could be supported.
+
+\item Current \emph{support for run-time facilities} is limited and more work
+  is required to implement the run-time inter-facing between the CPU
+  application and the dataflow designs. One of the reasons for
+  postponing the implementation of run-time support was the imminent
+  move to the MaxCompiler 2013.1 interface, which as mentioned
+  previously introduces a heavily revised CPU -- DFE interface.
+
+\item An interesting side-effect of our approach is that maintaining
+  strict compatibility with the C99 syntax simplifies
+  \emph{translation from regular C / C++} applications to \FAST{}
+  dataflow designs. Hence \FAST{} itself could be used as an
+  intermediate language, a target for the translation process.
+
+\item Although based on theoretical improvements and results observed
+  from our evaluation suite, we have all the reasons to believe that
+  our approach can improve developer productivity and portability of
+  dataflow designs a thorough study should must be carried out to
+  \emph{validate our claim of improved productivity and
+    portability}. This was beyond the scope of this project since it
+  required a level of effort which could not have been achieved within the
+  limited time span;
+
+\item Aspect descriptions can be used to \emph{support verification}
+  of designs, thus simplifying what is often a more elaborate process
+  than design development itself. For example, the proposed approach
+  is compatible with verification by symbolic simulation and
+  equivalence checking as explained in \cite{todman2012verification};
+
+\item Finally, the implementation presented in this report is a
+  prototype and, although functional, it requires \emph{further
+    engineering} work before being available for release to the
+  public. In particular, error handling is not very robust and the
+  extensibility of the compiler could be improved, to allow open
+  programmatic access to the dataflow graph representation generated
+  by the \fastc{} compiler.
+
+\end{itemize}
+\end{comment}

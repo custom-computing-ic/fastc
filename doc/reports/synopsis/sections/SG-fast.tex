@@ -1,0 +1,122 @@
+\chapter{FAST Dataflow Kernels}
+
+\section{Numerical Differentiation}
+
+\label{app:numdiff}
+
+The \FAST{} dataflow kernel that implements the differentiation
+operation is shown in the Listing below. It uses no API (non-user
+defined) function calls and a total of 20 lines of code.
+
+\begin{lstlisting}
+#include ``fastc/fast.h''
+
+const int Par;
+
+int stream_diff(float *value[Par], int offset, int pipe) {
+  int cycle_offset = (pipe + offset) / Par;
+  int pipe_offset  = (pipe + offset) % Par;
+  int cycle_offset_neg = (Par - 1 - pipe + offset) / Par;
+  int pipe_offset_neg  = Par - 1 - (Par - 1 - pipe + offset) % Par;
+  return value[pipe_offset][cycle_offset] -
+         value[pipe_offset_neg][cycle_offset_neg];
+}
+
+int diff(float *value[Par], float h, int pipe) {
+  return (-2 * stream_diff(value, 2, pipe)
+          -1 * stream_diff(value, 1, pipe)) / (10 * h);
+}
+
+void kernel_SGDiff( float* value[Par], int width, int size, double step){
+  int cycle = Par * CYCLE_COUNT + pipe;
+  bool compute = (cycle >= width) & (cycle < size - width);
+
+  for (int pipe = 0; pipe < Par; pipe++) {
+    result[pipe] = compute ? diff(value, h, pipe) : value[pipe]
+  }
+}
+\end{lstlisting}
+
+\section{Add Prediction}
+
+\label{app:add-prediction}
+\begin{lstlisting}
+#include "../../../include/maxcc.h"
+
+float PDF(float z) {
+  float root2pi = 2.50662827463100050242;
+  return exp(-z * z / 2) / root2pi;
+}
+
+float CDF(float z) {
+
+ // constants p0..p6 and q0..q6 are omitted
+ (...)
+
+  float cutoff = 7.071;
+
+  float root2pi = 2.50662827463100050242;
+
+  float zabs = sqrt(z);
+  float expntl = exp(-0.5 * zabs * zabs);
+  float pdf = expntl / root2pi;
+
+  bool c1 = z > 37.0;
+  bool c2 = z < -37.0;
+  bool c3 = zabs < cutoff;
+
+  float pA = expntl *
+    ((((((p6 * zabs + p5) * zabs + p4) * zabs + p3)* zabs + p2) * zabs + p1) * zabs + p0) /
+    (((((((q7 * zabs + q6) * zabs + q5)*zabs + q4) * zabs + q3) * zabs + q2)*zabs + q1 * zabs) + q0 * zabs);
+
+  float pB = pdf / (zabs + 1.0/(zabs + 2.0/(zabs + 3.0/(zabs + 4.0/(zabs + 0.65)))));
+
+  float pX = c3 == 0 ? pB : pA;
+  float p = (z < 0.0) ? pX : 1 - pX;
+  return c1 == 0? (c2 == 0 ? p : 0.0) : 1.0;
+}
+
+float V(float t) {
+   float cdf = CDF(t);
+  return (cdf == 0) ? 0 : PDF(t) / cdf;
+}
+
+float W(float t) {
+  float v = V(t);
+  return v * (v + t);
+}
+
+const int N = 10;
+#pragma fast var:y ioType:float(8, 24) computeType:float(8,12) func:kernel_Adp
+void kernel_Adp(
+                float y, float beta,
+                float* prior_m[10],
+                float* prior_v[10],
+                float* post_m[10],
+                float* post_s[10])
+{
+  float m, s;
+  m = 0;
+  s = 0;
+  for (int i = 0; i < N ; i++) {
+    m = m + prior_m[i][0];
+    s = s + prior_v[i][0];
+  }
+
+  float S = sqrt(beta * beta + s);
+  float t = (y * m) / S;
+
+  for (int i = 0; i < N; i++) {
+    float pr_m = prior_m[i][0];
+    float pr_v = prior_v[i][0];
+    float ps_m = pr_m + y * (pr_v / S) * V(t);
+    float a = abs(pr_v * 1 - ( (pr_v / (S * S)) * W(t)));
+    float sq = sqrt(a);
+    float ps_s = pr_v + sq;
+    post_m[i][0] = ps_m;
+    post_s[i][0] = ps_s;
+  }
+
+}
+
+\end{lstlisting}

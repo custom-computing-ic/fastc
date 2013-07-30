@@ -1,0 +1,27 @@
+\chapter{User Guide}
+
+\fastc{} is an experimental compiler for the \FAST{} language and is
+available at \url{https://github.com/paul-g/maxcc}.
+
+\section*{Installation}
+
+The project requires \footnote{Please check the documentation of these
+  tools for other dependencies.}: \emph{1)} GNU AutoTools
+\cite{Autotools}, \emph{2)} Boost 1.47\cite{boost1.47} and \emph{3)}
+ROSE 0.9.5 \cite{ROSE}. To extract and compile the project please run
+the following commands:
+
+\begin{lstlisting}
+tar xvzf fastc-${version}.tar.gz && cd fastc-${version}
+configure --with-boost=/path/to/boost --with-rose=/path/to/rose
+make && make install
+\end{lstlisting}
+
+\section*{Testing}
+
+To test your installation run \texttt{make test}.
+
+\section*{Where To Start}
+
+Please visit the \FAST{} wiki at https://github.com/paul-g/maxcc/wiki
+to get started.
