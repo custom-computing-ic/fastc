@@ -1,30 +1,31 @@
 \section{FAST}
 
-\begin{frame}[fragile]
-  \frametitle{2. FAST -- Facile Aspect-driven Source Transformation}
+\begin{frame}[fragile]{FAST -- Facile Aspect-driven Source Transformation}
+  \begin{beamerboxesrounded}{FAST}
   \begin{itemize}
-  \item C \emph{syntax} facilitates integration and translation
   \item simple, intuitive implementation for dataflow designs
-  \end{itemize}
-  \begin{lstlisting}[style=MaxC,   basicstyle=\scriptsize]
-  void kernel_Sum(float* in, float* sum) {
-    float prev = CURRENT_CYCLE > 0 ? in[-1] : 0;
-    float next = CURRENT_CYCLE < MAX_CYCLE ? in[1] : 0;
-    sum[0]  = prev + in[0] + next;
-  }
-  \end{lstlisting}
-
-  \begin{itemize}
   \item portability: aspects, high level pragmas
   \item optimisations: low-level pragmas, inference
   \end{itemize}
 
-  \vspace{-0.5cm}
+  \begin{lstlisting}[style=MaxC,   basicstyle=\scriptsize]
+  void kernel_Sum(float* in, float* sum) {
+    float prev = CURRENT_CYCLE > 0 ? sum[-1] : 0;
+    sum[0]  = in[0] + prev;
+  }
+  \end{lstlisting}
+  \end{beamerboxesrounded}
 
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/comp-flow.pdf_tex}
-    \label{fastcc}
-  \end{figure}
+  \begin{beamerboxesrounded}{fastc}
+    \begin{itemize}
+      \item experimental compiler for FAST
+    \end{itemize}
+    \vspace{-0.5cm}
+    \begin{figure}[!ht]
+      \centering
+      \def\svgwidth{\linewidth}
+      \input{figs/comp-flow.pdf_tex}
+      \label{fastcc}
+    \end{figure}
+   \end{beamerboxesrounded}
 \end{frame}

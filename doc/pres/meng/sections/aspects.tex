@@ -1,6 +1,5 @@
 \section{Aspect Descriptions}
-\begin{frame}
-  \frametitle{3. Aspect Descriptions}
+\begin{frame}{Aspect Descriptions}
   \begin{enumerate}
     \setlength{\itemsep}{15pt}
   \item \textbf{System Aspect Descriptions}
@@ -22,95 +21,7 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{System Aspects: Run-time Reconfiguration}
-  \begin{itemize}
-  \item idle functions may appear in large designs
-  \item use run-time reconfiguration to remove idle functions
-    \begin{columns}
-      \begin{column}{.55\textwidth}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/rtm-desc.pdf_tex}
-  \end{figure}
-      \end{column}
-      \begin{column}{.45\textwidth}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/rtm-idle.pdf_tex}
-  \end{figure}
-      \end{column}
-    \end{columns}
-
-
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{System Aspects: Run-time Reconfiguration}
-  \begin{itemize}
-    \setlength{\itemsep}{8pt}
-  \item pragmas specify configuration parameters
-\end{itemize}
-    \begin{columns}
-      \begin{column}{.7\textwidth}
-        \begin{center}
-          \begin{lstlisting}[style=MaxC]
-#pragma fast hw:f1 cfg:c0(Par=2)
-x = f(0);
-#pragma fast hw:f1 cfg:c1(Par=1)
-y = f(x);
-#pragma fast hw:g1 cfg:c1(Par=1)
-z = g(x, y);
-          \end{lstlisting}
-        \end{center}
-      \end{column}
-      \begin{column}{.3\textwidth}
-        {\footnotesize
-          \begin{table}[!h]
-            \renewcommand{\arraystretch}{1.3}
-            \hspace{-2cm}
-            \begin{tabular}{c|c|c}
-              \multicolumn{3}{c}{\bf{partition}} \\
-              \hline
-              \bf{call.key} & \bf{hw} & \bf{cfg}  \\
-              \hline
-              main:f:1 & fast\_f0 & c0 \\
-              main:f:2 & fast\_f1 & c1 \\
-              main:g:3 & fast\_g & c1 \\
-            \end{tabular}
-          \end{table}
-        }
-      \end{column}
-    \end{columns}
-
-\end{frame}
-
-\begin{frame}[fragile]{3. Aspect Descriptions}
-  \frametitle{ System Aspects: Run-time Reconfiguration}
-  Map function calls (on the CPU side) to configurations:
-  \begin{itemize}
-  \item inspect each function call
-  \item if part of a partition, add corresponding FAST pragma
-  \item $ \text{partition} : \text{funcCall} \rightarrow (\text{kernel}, \text{config}) $
-  \end{itemize}
-
-  \begin{lstlisting}[style=lara]
-aspectdef AspReconfig
-  input: partition
-  function.call:
-    if (call.key in partition) {
-     p = partition[call.key]
-     config = p.cfg + '(Par = ' + p.par + ')'
-     kernel = p.par
-     call.prepend('#pragma fast hw:'kernel' cfg:'config)
-    }
-end
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Exploration Aspect Descriptions}
+\begin{frame}[fragile]{Example: Exploration Aspect Descriptions}
   Automate design space exploration
   \begin{itemize}
   \item vary an attribute of a dataflow configuration

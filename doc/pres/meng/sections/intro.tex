@@ -1,16 +1,12 @@
 \section{Introduction}
 
-\begin{frame}{Trivia}
-
-\end{frame}
-
 \begin{frame}{Finding Oil -- Reverse Time Migration}
  \begin{figure}[!ht]
    \includegraphics[scale=0.22, clip=true, trim=300 50 300 120]{figs/rtm-picture.png}
   \end{figure}
 \end{frame}
 
-\begin{frame}{High Performance Computing}
+\begin{frame}{High-Performance Computing}
   \begin{columns}
     \column{.33\textwidth}
     \begin{figure}[ht]
@@ -78,53 +74,17 @@ HPC RTM, 2011}
   \end{figure}
 \end{frame}
 
-\begin{comment}
-  \begin{frame}
-    \frametitle{CPU vs Dataflow}
-    \begin{columns}
-      \begin{column}{.5\linewidth}
-        \vspace{-1cm}
-        \begin{figure}[!ht]
-          \centering
-          \def\svgwidth{\linewidth}
-          \input{figs/compute-cpu.pdf_tex}
-        \end{figure}
-        \vspace{-0.5cm}
-        \begin{itemize}
-        \item Fast to develop
-        \item Inefficient
-        \end{itemize}
-      \end{column}
-      \begin{column}{.5\linewidth}
-        \vspace{-1cm}
-        \begin{figure}[!ht]
-          \centering
-          \def\svgwidth{\linewidth}
-          \input{figs/compute-dfe.pdf_tex}
-        \end{figure}
-        \vspace{-0.5cm}
-        \begin{itemize}
-        \item Slow to develop
-        \item Efficient
-        \end{itemize}
-      \end{column}
-    \end{columns}
-  \end{frame}
-\end{comment}
+\begin{frame}[fragile]
+  \frametitle{Kernel Optimisation Space}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/dfg-opt-all.pdf_tex}
+  \end{figure}
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Dataflow High-Performance Computing}
-  \begin{comment}
-    Developers must manually transform the original design to:
-    \begin{enumerate}
-    \item ensure I/O interface compatibility with host
-    \item optimise resource usage by minimising operand width
-    \item ensure result correctness by casting
-    \item apply FPGA and dataflow specific optimisations
-    \item replicate computational pipelines
-    \end{enumerate}
-    \vspace{0.5cm}
-  \end{comment}
   \begin{beamerboxesrounded}{The Problem}
     Mixing optimisations with functional code makes it:
     \begin{itemize}
@@ -136,31 +96,6 @@ HPC RTM, 2011}
   \end{beamerboxesrounded}
 \end{frame}
 
-\begin{comment}
-  \begin{frame}[fragile]
-    \frametitle{Decoupling Optimisations}
-    \framesubtitle{Aspect-Oriented Design}
-    \begin{beamerboxesrounded}{Aspect-Oriented Programming (AOP)}
-      \begin{itemize}
-      \item encapsulate cross-cutting concerns in aspect descriptions
-      \item apply them at run-time to alter behaviour
-      \item apply them at specified points (pointcut model)
-      \end{itemize}
-    \end{beamerboxesrounded}
-    \vspace{0.75cm}
-    \begin{beamerboxesrounded}{Aspect-Oriented Programming for Dataflow Engines}
-      \begin{itemize}
-      \item capture aspects of quality and their realisation
-        \begin{itemize}
-        \item speed, area, power, energy
-        \item numerical accuracy, parallel computation
-        \item optimisation, monitoring, debugging
-        \end{itemize}
-      \item use aspects to generate multiple variants of a design
-      \end{itemize}
-    \end{beamerboxesrounded}
-  \end{frame}
-\end{comment}
 
 \begin{frame}[fragile]
   \frametitle{More Productive HPC -- Decoupling Optimisations}

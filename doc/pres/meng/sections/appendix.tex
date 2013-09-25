@@ -1,16 +1,7 @@
 \section{Appendix}
-\begin{frame}[fragile]
-  \frametitle{Appendix 1: Kernel Optimisations Space}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/dfg-opt-all.pdf_tex}
-  \end{figure}
-\end{frame}
-
 
 \begin{frame}[fragile]
-  \frametitle{Appendix 2: FAST Example}
+  \frametitle{Appendix 1: FAST Example}
 
   \begin{lstlisting}[style=MaxC,   basicstyle=\scriptsize]
     // kernel defines input, output streams and scalars
@@ -38,7 +29,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Appendix 3: FAST Features}
+  \frametitle{Appendix 2: FAST Features}
 
   {\footnotesize
     \begin{table}[!h]
@@ -71,9 +62,96 @@
     \end{table}
   }
 \end{frame}
+\begin{frame}{Appendix 3: Run-time Reconfiguration}
+  \begin{itemize}
+  \item idle functions may appear in large designs
+  \item use run-time reconfiguration to remove idle functions
+    \begin{columns}
+      \begin{column}{.55\textwidth}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/rtm-desc.pdf_tex}
+  \end{figure}
+      \end{column}
+      \begin{column}{.45\textwidth}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/rtm-idle.pdf_tex}
+  \end{figure}
+      \end{column}
+    \end{columns}
+
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Appendix 3: Run-time Reconfiguration}
+  \begin{itemize}
+    \setlength{\itemsep}{8pt}
+  \item pragmas specify configuration parameters
+\end{itemize}
+    \begin{columns}
+      \begin{column}{.7\textwidth}
+        \begin{center}
+          \begin{lstlisting}[style=laranobox]
+#pragma fast hw:f1 cfg:c0(Par=2)
+x = f(0);
+#pragma fast hw:f1 cfg:c1(Par=1)
+y = f(x);
+#pragma fast hw:g1 cfg:c1(Par=1)
+z = g(x, y);
+          \end{lstlisting}
+        \end{center}
+      \end{column}
+      \begin{column}{.3\textwidth}
+        {\footnotesize
+          \begin{table}[!h]
+            \renewcommand{\arraystretch}{1.3}
+            \hspace{-2cm}
+            \begin{tabular}{c|c|c}
+              \multicolumn{3}{c}{\bf{partition}} \\
+              \hline
+              \bf{call.key} & \bf{hw} & \bf{cfg}  \\
+              \hline
+              main:f:1 & fast\_f0 & c0 \\
+              main:f:2 & fast\_f1 & c1 \\
+              main:g:3 & fast\_g & c1 \\
+            \end{tabular}
+          \end{table}
+        }
+      \end{column}
+    \end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]{Appendix 3: Run-time Reconfiguration}
+  Map function calls (on the CPU side) to configurations:
+  \begin{itemize}
+  \item inspect each function call
+  \item if part of a partition, add corresponding FAST pragma
+  \item $ \text{partition} : \text{funcCall} \rightarrow (\text{kernel}, \text{config}) $
+  \end{itemize}
+
+  \begin{lstlisting}[style=lara]
+  aspectdef AspReconfig
+  input: partition
+  function.call:
+    if (call.key in partition) {
+     p = partition[call.key]
+     config = p.cfg + '(Par = ' + p.par + ')'
+     kernel = p.par
+     call.prepend('#pragma fast hw:'kernel' cfg:'config)
+    }
+  end
+  \end{lstlisting}
+\end{frame}
+
 
 \begin{frame}[fragile]
-  \frametitle{Appendix 4: Implementation Aspects: Operator Optimisation}
+  \frametitle{Appendix 4: Operator Optimisation}
   Map computation to Digital Signal Processors:
   \begin{itemize}
   \item $ \text{opMapping} : \overrightarrow{\text{opOccurence}} \rightarrow \text{factor}$
