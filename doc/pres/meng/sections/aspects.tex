@@ -109,39 +109,8 @@ end
   \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[fragile]{3. Aspect Descriptions}
-  \frametitle{Implementation Aspects: Operator Optimisation}
-  Map computation to Digital Signal Processors:
-  \begin{itemize}
-  \item $ \text{opMapping} : \overrightarrow{\text{opOccurence}} \rightarrow \text{factor}$
-  \item $\text{factor} \in \{\text{none}, \text{balanced}, \text{full}\} $
-  \item mapping can be varied by different aspect to support design
-    space exploration
-  \end{itemize}
-  \begin{lstlisting}[label=lst:label, style=lara]
-aspectdef DspBalancing
-input: opMapping
- function.stmt:
-   opUsage = countOperatorUsage(stmt)
-   factor  = opMapping[opUsage]
-   if (factor != '')
-     stmt.prepend('#pragma fast balanceDSP:' + factor);
-end
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}{3. Implementation Aspects: Operator Optimisation}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/opt-split.pdf_tex}
-  \end{figure}
-
-\end{frame}
-
-\begin{frame}[fragile]{3. Aspect Descriptions}
-  \frametitle{Exploration Aspect Descriptions: Iterative Exploration}
+\begin{frame}[fragile]
+  \frametitle{Exploration Aspect Descriptions}
   Automate design space exploration
   \begin{itemize}
   \item vary an attribute of a dataflow configuration
@@ -161,45 +130,4 @@ input: attribute, start, step, res, res_limit, config
   } while (@hw[designName].res < res_limit)
 end
   \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Monitoring and Logging}
-  \begin{itemize}
-  \item Logging: useful for debugging (no run-time support)
-  \end{itemize}
-  \begin{lstlisting}[label=lst:label, style=lara]
-aspectdef WatchVar
-function.vref{is_written}:
-  vref.parent.prepend('log("vref.name", vref.name)')
-  vref.parent.append('log("vref.name", vref.name)')
-end
-  \end{lstlisting}
-
-  \begin{itemize}
-  \item Monitoring: useful for profiling
-  \end{itemize}
-  \begin{lstlisting}[label=lst:label, style=lara]
-aspectdef LoopMonitor
-function.loop{is_innermost}:
-  entry:   prepend(mon_iterationIn())
-  exit :   append (mon_iterationOut())
-  default: prepend(mon_instanceIn())
-           append(mon_instanceOut())
-end
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}{\texttt{fastc}}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/comp-flow.pdf_tex}
-  \end{figure}
-  \begin{itemize}
-    \setlength{\itemsep}{10pt}
-  \item experimental compiler for FAST
-  \item supports all dataflow features
-  \item portability: aspects, high level pragmas
-  \item optimisations: low-level pragmas, inference
-  \end{itemize}
 \end{frame}

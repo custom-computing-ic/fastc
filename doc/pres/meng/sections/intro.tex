@@ -1,101 +1,72 @@
 \section{Introduction}
 
-\begin{frame}{...Dataflow Engines}
-\begin{itemize}
-  \item FPGA based dataflow engines:
-\begin{itemize}
-  \item energy efficient High Performance Computing
-\end{itemize}
-\hspace{1cm}
-\pause
-  \item Yes, somebody uses them!
+\begin{frame}{Trivia}
+
+\end{frame}
+
+\begin{frame}{Finding Oil -- Reverse Time Migration}
+ \begin{figure}[!ht]
+   \includegraphics[scale=0.22, clip=true, trim=300 50 300 120]{figs/rtm-picture.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{High Performance Computing}
+  \begin{columns}
+    \column{.33\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[scale=0.4, clip=true, trim=50 50 50 0]{figs/weather-forecasting.jpg}\\
+    \end{figure}
+    \column{.33\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[scale=0.29, clip=true, trim=0 20 0 20]{figs/finance.jpg}\\
+    \end{figure}
+    \column{.33\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[scale=0.25]{figs/ads.jpg}\\
+    \end{figure}
+  \end{columns}
+  \vspace{0.5cm}
+
+  \begin{beamerboxesrounded}{Requirements}
     \begin{itemize}
-    \item JP Morgan: Fixed Income Risk
-    \item Chevron: Oil and Gas Exploration
+    \item Speed, Energy Efficiency, Productivity
     \end{itemize}
-\hspace{1cm}
-\pause
+  \end{beamerboxesrounded}
+  \vspace{0.5cm}
+
+  \begin{beamerboxesrounded}{This Project}
+    \begin{itemize}
+    \item more \textbf{efficient} and more \textbf{productive} HPC
+    \item first aspect-oriented compilation flow for dataflow HPC
+    \item reproduce fastest, most efficient RTM dataflow design
+    \item significant code reduction and less API calls
+    \end{itemize}
+  \end{beamerboxesrounded}
+\end{frame}
+
+
+\begin{frame}{More Efficient HPC -- Dataflow Engines}
+\begin{itemize}
+  \item FPGA based dataflow engines -- energy efficient HPC
+ \begin{figure}[!ht]
+   \includegraphics[scale=0.3, clip=true, trim=0 270 295 110]{figs/fpga-block-structure.png}
+  \end{figure}
+\hspace{0.25cm}
+\item customisable hardware
+  \begin{itemize}
+  \item better performance and efficiency
+  \item large design space
+  \end{itemize}
+\hspace{0.25cm}
+
 \item \emph{The RTM porting to FPGA is the one that requires most
     effort.} Issues: development, debugging, portability. \footnote{Arraya-Polo, \emph{Assessing Accelerator-Based
 HPC RTM, 2011}
 }
 \end{itemize}
-\end{frame}
-
-\begin{comment}
-\begin{frame}{High Performance Computing}
-  \vspace{0.5cm}
-  \begin{beamerboxesrounded}{Applications}
-    \begin{columns}[c]
-      \column{.3\textwidth}
-      \vspace{-1.2cm}
-      \begin{itemize}
-      \item Oil and Gas
-      \item Finance
-      \item Online Ads
-      \end{itemize}
-      \column{.6\textwidth}
-      \vspace{-1.2cm}
-      \begin{columns}
-        \column{.5\textwidth}
-        \begin{figure}[ht]
-          \centering
-          \includegraphics[scale=0.18]{figs/oil-gas-industry.jpg}\\
-        \end{figure}
-        \column{.5\textwidth}
-        \begin{figure}[ht]
-          \centering
-          \includegraphics[scale=0.29, clip=true, trim=0 0 0 0]{figs/finance.jpg}\\
-        \end{figure}
-      \end{columns}
-      \vspace{-0.45cm}
-      \begin{figure}[ht]
-        \centering
-        \includegraphics[scale=0.25]{figs/ads.jpg}\\
-      \end{figure}
-    \end{columns}
-  \end{beamerboxesrounded}
-  \vspace{0.2cm}
-  \begin{beamerboxesrounded}{Requirements}
-    \begin{columns}
-      \column{.3\textwidth}
-      \begin{itemize}
-        \centering
-      \item Speed
-      \end{itemize}
-      \column{.35\textwidth}
-      \centering
-      \begin{itemize}
-        \centering
-      \item Energy Efficiency
-      \end{itemize}
-      \column{.3\textwidth}
-      \begin{itemize}
-      \centering
-      \item Productivity
-      \end{itemize}
-    \end{columns}
-  \end{beamerboxesrounded}
-\end{frame}
-\end{comment}
-
-\begin{frame}{This Project}
-  \begin{beamerboxesrounded}{Objectives}
-    \begin{itemize}
-    \item more efficient HPC -- using dataflow computing
-    \item more productive HPC -- using aspect-oriented design
-    \end{itemize}
-  \end{beamerboxesrounded}
-  \vspace{0.3cm}
-  \begin{beamerboxesrounded}{Impact}
-    \begin{itemize}
-    \item first aspect-oriented compilation flow for dataflow HPC
-    \item produce fastest, most energy efficient RTM dataflow design
-    \item up to 60\% code reduction, 4 -- 16 times less API calls
-    \item techniques deployed in FP7 HARNESS project
-    \item best paper candidate at ASAP 2013 (4 of 125 submissions)
-    \end{itemize}
-  \end{beamerboxesrounded}
 \end{frame}
 
 \begin{frame}
@@ -140,28 +111,6 @@ HPC RTM, 2011}
     \end{columns}
   \end{frame}
 \end{comment}
-
-\begin{frame}{Field-Programmable Gate Arrays}
- \begin{figure}[!ht]
-   \includegraphics[scale=0.3]{figs/fpga-block-structure.png}
-  \end{figure}
-  \begin{itemize}
-    \item customisable hardware
-      \begin{itemize}
-        \item better performance and efficiency
-        \item large design space
-      \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Kernel Optimisations Space}
-  \begin{figure}[!ht]
-    \centering
-    \def\svgwidth{\linewidth}
-    \input{figs/dfg-opt-all.pdf_tex}
-  \end{figure}
-\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Dataflow High-Performance Computing}
@@ -214,7 +163,7 @@ HPC RTM, 2011}
 \end{comment}
 
 \begin{frame}[fragile]
-  \frametitle{Decoupling Optimisations: Aspect-Oriented Design}
+  \frametitle{More Productive HPC -- Decoupling Optimisations}
   \begin{figure}[!ht]
     \centering
     \def\svgwidth{\textwidth}

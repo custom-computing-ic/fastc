@@ -2,88 +2,29 @@
 
 \begin{frame}[fragile]
   \frametitle{2. FAST -- Facile Aspect-driven Source Transformation}
-
-  \begin{lstlisting}[style=MaxC,   basicstyle=\scriptsize]
-    // kernel defines input, output streams and scalars
-    void kernel_MovingAvg(float* in, float* avg, int bound)
-    {
-      // special macros implemented as counters
-      bool hasPrev = CURRENT_CYCLE >=bound;
-      bool hasNext = CURRENT_CYCLE < MAX_CYCLE - bound;
-      bool hasBoth = hasPrevious & hasNext;
-
-      // ternary operator, stream offsets, arithmetic
-      float prev = hasPrev ? in[-1] : 0.0;
-      float next = hasNext ? in[ 1] : 0.0;
-      float sum  = prev + in[0] + next;
-
-      // output assignment
-      avg[0] = hasBoth? sum / 3 : sum / 2;
-    }
-
-    int main() {
-      #pragma fast hw:MovingAvg  // maps to dataflow kernel
-      MovingAvg_CPU(...);        // call regular C function
-    }
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}
-  \frametitle{FAST Features}
-
-  {\footnotesize
-    \begin{table}[!h]
-      \centering
-      \renewcommand{\arraystretch}{1.5}
-      \hspace*{-2pt}\makebox[\linewidth][c]{
-      \begin{tabular}{p{3cm}|p{3cm}|p{1.1cm}|p{3cm}}
-        \hline
-        \bf{Feature}                        & \bf{Implementation}              & \bf{Method}   & \textbf{Compared to C}      \\
-        \hline\hline
-        Dataflow Kernels & Function definition & C99 & Cyclic execution \\
-        \hline
-        I/O                               & Kernel arguments              & Inferred        &  Only params, =  \\
-        \hline
-        Control                           & Ternary op. (?:), \texttt{if} & C99             &     \\
-        \hline
-        \multirow{2}{*}{Computation}        & log, exp, sqrt, sin etc.                     & math.h           & Pragmas for range      \\
-        &  +, *, /, -     & C99         \\
-        \hline
-        \multirow{2}{*}{Streams}          & Declared as pointers          & \multirow{2}{*}{C99} &  \multirow{2}{3cm}{Cyclic update; negative offsets } \\
-        & Array index access     &                      \\
-        \hline
-        Optimisation                      & \multirow{2}{*}{C pragmas}    & \multirow{2}{*}{C99} & \multirow{2}{*}{Run-time values}\\
-        Hardware \  Mapping               &                               &                      & \\
-        \hline
-        \multirow{2}{*}{Parameterization} & Constants, variables,         & \multirow{2}{*}{C99}  & \multirow{2}{*}{Compile-time bounds} \\
-        & \texttt{for}, \texttt{while}  &                     &  \\
-      \end{tabular}
-      }
-    \end{table}
-  }
-\end{frame}
-
-\begin{comment}
-\begin{frame}{2. FAST}
-  \frametitle{FAST vs C}
   \begin{itemize}
-  \item FAST only uses C \emph{syntax}
-    \begin{itemize}
-      \setlength{\itemsep}{5pt}
-    \item to facilitate integration
-    \item to express dataflow designs in a simple, intuitive fashion
-    \end{itemize}
-    \vspace{0.5cm}
-  \item  Differences include:
-    \begin{itemize}
-      \setlength{\itemsep}{5pt}
-    \item execution model only supports kernels
-    \item pointers are regarded as   streams
-    \item negative offsets are allowed
-    \item only compile time loop bounds are allowed
-    \item direct interoperability with C code is not possible, but
-      simulated via pragmas
-    \end{itemize}
+  \item C \emph{syntax} facilitates integration and translation
+  \item simple, intuitive implementation for dataflow designs
   \end{itemize}
+  \begin{lstlisting}[style=MaxC,   basicstyle=\scriptsize]
+  void kernel_Sum(float* in, float* sum) {
+    float prev = CURRENT_CYCLE > 0 ? in[-1] : 0;
+    float next = CURRENT_CYCLE < MAX_CYCLE ? in[1] : 0;
+    sum[0]  = prev + in[0] + next;
+  }
+  \end{lstlisting}
+
+  \begin{itemize}
+  \item portability: aspects, high level pragmas
+  \item optimisations: low-level pragmas, inference
+  \end{itemize}
+
+  \vspace{-0.5cm}
+
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/comp-flow.pdf_tex}
+    \label{fastcc}
+  \end{figure}
 \end{frame}
-\end{comment}

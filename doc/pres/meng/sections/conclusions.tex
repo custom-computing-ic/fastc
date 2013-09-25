@@ -1,37 +1,12 @@
 \section{Conclusions}
 
-\begin{frame}{Current and Future Work}
-
-  \begin{itemize}
-    \setlength{\itemsep}{10pt}
-
-  \item Cover heterogeneous systems (HARNESS)
-    \begin{itemize}
-    \item support portable mapping of dataflow kernels to various FPGA
-      architectures, GPUs and CPUs
-    \end{itemize}
-
-  \item Support domain specific languages
-    \begin{itemize}
-    \item investigate DSLs based on our approach (e.g. for stencil
-      computation)
-    \end{itemize}
-
-  \item Generate dataflow designs from high-level descriptions
-    \begin{itemize}
-    \item automatically translate C/C++ to efficient dataflow designs
-    \end{itemize}
-
-  \end{itemize}
-\end{frame}
 
 
 \begin{frame}{Summary}
-  \begin{beamerboxesrounded}{Novel Contributions}
+  \begin{beamerboxesrounded}{Contributions}
     \begin{itemize}
-    \item  Aspect-driven approach
-    \item  FAST language
-    \item  Classes of aspect descriptions
+    \item  Aspect-driven approach and classes of aspect descriptions
+    \item  FAST language and compiler
     \end{itemize}
   \end{beamerboxesrounded}
   \vspace{0.3cm}
@@ -39,13 +14,18 @@
     \begin{itemize}
     \item fastest and most energy efficient RTM design
     \item up to 60\% code reduction, 4 -- 16 times less API calls
+    \item techniques deployed in FP7 HARNESS
+    \item best paper candidate at ASAP'13
     \end{itemize}
   \end{beamerboxesrounded}
   \vspace{0.3cm}
-  \begin{beamerboxesrounded}{Importance}
+
+  \begin{beamerboxesrounded}{Further Work}
     \begin{itemize}
-    \item Practical: techniques deployed in FP7 HARNESS
-    \item Theoretical: best paper candidate at ASAP'13
+    \item Intelligent design space exploration
+    \item Automated partitioning of applications
+    \item Automated compilation of high-level descriptions
+    \item Cover heterogeneous systems (FPGAs, GPUs, CPUs)
     \end{itemize}
   \end{beamerboxesrounded}
 \end{frame}

@@ -1,0 +1,120 @@
+\section{Appendix}
+\begin{frame}[fragile]
+  \frametitle{Appendix 1: Kernel Optimisations Space}
+  \begin{figure}[!ht]
+    \centering
+    \def\svgwidth{\linewidth}
+    \input{figs/dfg-opt-all.pdf_tex}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Appendix 2: FAST Example}
+
+  \begin{lstlisting}[style=MaxC,   basicstyle=\scriptsize]
+    // kernel defines input, output streams and scalars
+    void kernel_MovingAvg(float* in, float* avg, int bound)
+    {
+      // special macros implemented as counters
+      bool hasPrev = CURRENT_CYCLE >=bound;
+      bool hasNext = CURRENT_CYCLE < MAX_CYCLE - bound;
+      bool hasBoth = hasPrevious & hasNext;
+
+      // ternary operator, stream offsets, arithmetic
+      float prev = hasPrev ? in[-1] : 0.0;
+      float next = hasNext ? in[ 1] : 0.0;
+      float sum  = prev + in[0] + next;
+
+      // output assignment
+      avg[0] = hasBoth? sum / 3 : sum / 2;
+    }
+
+    int main() {
+      #pragma fast hw:MovingAvg  // maps to dataflow kernel
+      MovingAvg_CPU(...);        // call regular C function
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Appendix 3: FAST Features}
+
+  {\footnotesize
+    \begin{table}[!h]
+      \centering
+      \renewcommand{\arraystretch}{1.5}
+      \hspace*{-2pt}\makebox[\linewidth][c]{
+      \begin{tabular}{p{3cm}|p{3cm}|p{1.1cm}|p{3cm}}
+        \hline
+        \bf{Feature}                        & \bf{Implementation}              & \bf{Method}   & \textbf{Compared to C}      \\
+        \hline\hline
+        Dataflow Kernels & Function definition & C99 & Cyclic execution \\
+        \hline
+        I/O                               & Kernel arguments              & Inferred        &  Only params, =  \\
+        \hline
+        Control                           & Ternary op. (?:), \texttt{if} & C99             &     \\
+        \hline
+        \multirow{2}{*}{Computation}        & log, exp, sqrt, sin etc.                     & math.h           & Pragmas for range      \\
+        &  +, *, /, -     & C99         \\
+        \hline
+        \multirow{2}{*}{Streams}          & Declared as pointers          & \multirow{2}{*}{C99} &  \multirow{2}{3cm}{Cyclic update; negative offsets } \\
+        & Array index access     &                      \\
+        \hline
+        Optimisation                      & \multirow{2}{*}{C pragmas}    & \multirow{2}{*}{C99} & \multirow{2}{*}{Run-time values}\\
+        Hardware \  Mapping               &                               &                      & \\
+        \hline
+        \multirow{2}{*}{Parameterization} & Constants, variables,         & \multirow{2}{*}{C99}  & \multirow{2}{*}{Compile-time bounds} \\
+        & \texttt{for}, \texttt{while}  &                     &  \\
+      \end{tabular}
+      }
+    \end{table}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Appendix 4: Implementation Aspects: Operator Optimisation}
+  Map computation to Digital Signal Processors:
+  \begin{itemize}
+  \item $ \text{opMapping} : \overrightarrow{\text{opOccurence}} \rightarrow \text{factor}$
+  \item $\text{factor} \in \{\text{none}, \text{balanced}, \text{full}\} $
+  \item mapping can be varied by different aspect to support design
+    space exploration
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
+aspectdef DspBalancing
+input: opMapping
+ function.stmt:
+   opUsage = countOperatorUsage(stmt)
+   factor  = opMapping[opUsage]
+   if (factor != '')
+     stmt.prepend('#pragma fast balanceDSP:' + factor);
+end
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Appendix 5: Monitoring and Logging}
+  \begin{itemize}
+  \item Logging: useful for debugging (no run-time support)
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
+aspectdef WatchVar
+function.vref{is_written}:
+  vref.parent.prepend('log("vref.name", vref.name)')
+  vref.parent.append('log("vref.name", vref.name)')
+end
+  \end{lstlisting}
+
+  \begin{itemize}
+  \item Monitoring: useful for profiling
+  \end{itemize}
+  \begin{lstlisting}[label=lst:label, style=lara]
+aspectdef LoopMonitor
+function.loop{is_innermost}:
+  entry:   prepend(mon_iterationIn())
+  exit :   append (mon_iterationOut())
+  default: prepend(mon_instanceIn())
+           append(mon_instanceOut())
+end
+  \end{lstlisting}
+\end{frame}
