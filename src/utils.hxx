@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "precompiled.hxx"
+
 //#define DEBUG
 
 #ifdef DEBUG
@@ -15,7 +17,9 @@
 
 std::string* get_pragma_param(std::string pragma, std::string param);
 
+SgProject* load_rose_project(int argc, char** argv);
 
+void setupBuild();
 /*
 namespace FASTAnalysis {
   std::set<std::string> findModset(SgNode *sgNode) {

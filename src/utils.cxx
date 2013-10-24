@@ -1,5 +1,7 @@
-#include "precompiled.hxx"
 #include "utils.hxx"
+
+#include <boost/filesystem.hpp>
+
 std::string* get_pragma_param(std::string pragma, std::string param) {
   using namespace std;
   int pos = pragma.find(param);
@@ -19,4 +21,24 @@ std::string* get_pragma_param(std::string pragma, std::string param) {
   }
   boost::algorithm::trim(param_value);
   return new string(param_value);
+}
+
+SgProject* load_rose_project(int argc, char** argv) {
+  SgProject* project = frontend(argc, argv);
+  //  AstTests :: runAllTests(project);
+  if (project == NULL) {
+    std::cerr << "Could not run compiler frontend! Shutting down! " << std::endl;
+    exit(0);
+  }
+
+return project;
+}
+
+
+void setupBuild() {
+  using namespace boost::filesystem;
+  path dir("build"), cpu("build/cpu"), engine("build/engine");
+  create_directory(dir);
+  create_directory(cpu);
+  create_directory(engine);
 }
