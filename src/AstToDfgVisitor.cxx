@@ -201,7 +201,7 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
         }
 
     } else if (isSgPragma(n))  {
-        SgPragma* pragma = (SgPragma *);
+        SgPragma* pragma = (SgPragma *)n;
         string s = pragma->get_pragma();
         cmatch sm;
         if ( regex_match(s.c_str(), sm, *PRAGMA_IN) ) {

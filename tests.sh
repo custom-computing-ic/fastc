@@ -2,7 +2,9 @@
 
 ############ Configuration ##############
 
-EXE=maxcc
+MY_PATH=`pwd`
+EXE=$MY_PATH/fastc
+INC=-I/$MY_PATH/include
 
 
 ############ Test Functions #############
@@ -10,7 +12,7 @@ EXE=maxcc
 runTest() {
     base=`basename $1`
     dir=`dirname $1`
-    cd test/$dir && ${EXE} $base.c
+    cd test/$dir && $EXE $INC $base.c
     echo $base
     echo $dir
     runOut=build/engine/$base.java
@@ -42,19 +44,19 @@ runLocalTestSuite() {
 
         runTest "testRTMStatic/maxc/RTM"
 
-        runTest "testArrays/maxc/Arrays"
+#        runTest "testArrays/maxc/Arrays"
 
-        runTest "testCommon/maxc/testCmdRead"
+#        runTest "testCommon/maxc/testCmdRead"
 
-        runTest "testCommon/maxc/testCmdWrite"
+#        runTest "testCommon/maxc/testCmdWrite"
 
-        runTest "testTypes/maxc/testTypes"
+#        runTest "testTypes/maxc/testTypes"
 
-        runTest "test1dConvolution/maxc/test1dConvolutionKernel"
+#        runTest "test1dConvolution/maxc/test1dConvolutionKernel"
 
-        runTest "testPassThrough/maxc/testPassThroughKernel"
+#        runTest "testPassThrough/maxc/testPassThroughKernel"
 
-        runTest "testCounter/maxc/testCounter"
+#        runTest "testCounter/maxc/testCounter"
 
         #    runTest "maxc/testRTMManager"
 
