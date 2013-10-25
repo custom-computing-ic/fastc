@@ -2,9 +2,18 @@
 
 ############ Configuration ##############
 
+# path of this script
 MY_PATH=`pwd`
+
+# the fastc executable to use
 EXE=$MY_PATH/fastc
+
+# compilation includes
 INC=-I/$MY_PATH/include
+
+# the directory in which tests are run. This directory is cleaned
+# before each test run to ensure
+TEST_DIR=test_run
 
 
 ############ Test Functions #############
