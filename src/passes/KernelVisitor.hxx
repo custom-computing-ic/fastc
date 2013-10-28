@@ -9,16 +9,18 @@
 
 using namespace boost;
 
-class KernelVisitor: public AstSimpleProcessing {
 
-	regex* KERNEL_FUNC;
-	list<Kernel *> kernels;
-	Design* design;
+/** Traverses the C + FAST project, extracts the FAST dataflow kernels
+    and adds them to the design.*/
+class KernelVisitor: public AstSimpleProcessing {
+  regex* KERNEL_FUNC;
+  list<Kernel *> kernels;
+  Design* design;
 
 public:
-	KernelVisitor(Design* design);
-	virtual void visit(SgNode*);
-	void writeKernels(ostream&);
+  KernelVisitor(Design* design);
+  virtual void visit(SgNode*);
+  void writeKernels(ostream&);
 };
 
 #endif /* KERNELVISITOR_HXX_ */

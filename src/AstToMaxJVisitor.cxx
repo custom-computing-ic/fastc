@@ -33,7 +33,6 @@ void ASTtoMaxJVisitor::preOrderVisit(SgNode *n) {
 
   if (isSgVariableDeclaration(n)) {
     visitVarDecl(isSgVariableDeclaration(n));
-    ignoreChildren(n);
   }  else if (isSgFunctionCallExp(n)) {
     visitFcall(isSgFunctionCallExp(n));
   } else if (isSgForStatement(n)) {
@@ -47,6 +46,7 @@ void ASTtoMaxJVisitor::preOrderVisit(SgNode *n) {
     string *e = toExpr(isSgExpression(n));
     if (e != NULL)
       source += *e;
+    ignoreChildren(n);
   }
 }
 
@@ -184,7 +184,6 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
   } else if (fname == "printf") {
     string *s = toExpr(*itt);
     int size = fsymbol->get_declaration()->get_args().size();
-    cout << "Size args " << size << endl;
   }
 
   if ( s->size() == 0 ) {

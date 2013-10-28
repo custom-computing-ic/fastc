@@ -12,6 +12,7 @@ ASTtoDFGVisitor :: ASTtoDFGVisitor() {
     PRAGMA_OUT    = new regex("out (\\w*) (\\w*) (\\w*)");
     PRAGMA_SCALAR_IN = new regex("scalar in (\\w*)");
     KERNEL_FUNC = new regex("kernel_.*");
+    this->dfg = new DataFlowGraph();
 }
 
 void ASTtoDFGVisitor :: function_call_initializer(string& variableName, SgFunctionCallExp *fcall) {
@@ -35,7 +36,7 @@ void ASTtoDFGVisitor :: function_call_initializer(string& variableName, SgFuncti
         if (fname.compare("count") == 0) {
             CounterNode *counterNode = new CounterNode(variableName, d, i);
             //      cout << "Added simple counter: " << *counterNode << endl;
-            dfg.addSource(counterNode);
+            dfg->addSource(counterNode);
         } else if (fname.compare("countChain") == 0) {
 
             string p = "";
@@ -45,22 +46,22 @@ void ASTtoDFGVisitor :: function_call_initializer(string& variableName, SgFuncti
 
             CounterNode *counterNode = new CounterNode(variableName, d, i, p);
 
-            Node *childNode = dfg.findNode(p);
+            Node *childNode = dfg->findNode(p);
             if ( childNode != NULL ) {
                 counterNode->addNeighbour(childNode);
-                dfg.removeSource(childNode);
+                dfg->removeSource(childNode);
             }
 
-            dfg.addSource(counterNode);
+            dfg->addSource(counterNode);
         }
     } else if (fname.compare("fselect") == 0) {
 
         MUXNode *muxNode = new MUXNode(variableName);
-        dfg.addNode(muxNode);
+        dfg->addNode(muxNode);
 
         SgExpression *condExp = isSgExpression(*itt);
         Node *exp = toExprNode(*itt);
-        //dfg.addSource(exp);
+        //dfg->addSource(exp);
         if (exp != NULL)
             exp->addNeighbour(muxNode);
 
@@ -83,13 +84,13 @@ Node* ASTtoDFGVisitor :: toNode(SgExpression *ex) {
         stringstream out;
         out << intVal->get_value();
         Node *n = new ConstantNode(out.str());
-        dfg.addSource(n);
+        dfg->addSource(n);
         return n;
     }
 
     SgVarRefExp *var = isSgVarRefExp(ex);
     if (var != NULL)
-        return dfg.findNode(var->get_symbol()->get_name());
+        return dfg->findNode(var->get_symbol()->get_name());
 
     return NULL;
 }
@@ -102,16 +103,16 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
     if ( isSgVarRefExp(ex) ) {
         SgVarRefExp *e = isSgVarRefExp(ex);
         string name = e->get_symbol()->get_name();
-        return dfg.findNode(name);
+        return dfg->findNode(name);
     } else if (isSgIntVal(ex) )  {
         SgIntVal *e = isSgIntVal(ex);
         stringstream out;
         out << e->get_value();
         string val = out.str();
-        Node *n = dfg.findNode(val);
+        Node *n = dfg->findNode(val);
         if (n == NULL) {
             n = new ConstantNode(val);
-            dfg.addSource(n);
+            dfg->addSource(n);
         }
         return n;
     } else if (isSgBinaryOp(ex)) {
@@ -138,7 +139,7 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
         else
             node = new OpNode(op);
 
-        dfg.addNode(node);
+        dfg->addNode(node);
         if (right != NULL)
             right->addNeighbour(node);
         if (left != NULL)
@@ -154,7 +155,7 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
             op = "-";
         OpNode *node = new OpNode(op);
         n->addNeighbour(node);
-        dfg.addNode(node);
+        dfg->addNode(node);
         return node;
     }
 
@@ -191,8 +192,8 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
             Node* n = toExprNode(exp);
             if ( n != NULL ) {
                 Node* varNode = new VarNode(variableName);
-                dfg.addNode(n);
-                dfg.addNode(varNode);
+                dfg->addNode(n);
+                dfg->addNode(varNode);
                 n->addNeighbour(varNode);
             }
 
@@ -207,18 +208,18 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
         if ( regex_match(s.c_str(), sm, *PRAGMA_IN) ) {
             InputNode *inputNode = new InputNode(sm[1]);
             inputs.push_front(*inputNode);
-            dfg.addInputNode(inputNode);
+            dfg->addInputNode(inputNode);
             //      cout << "Added input node: " << *inputNode << endl;
         } else if (regex_match(s.c_str(), sm, *PRAGMA_OUT)) {
           /// XXX: handle output nodes
           //OutputNode *outputNode = new OutputNode(sm[1], );
           //            outputs.push_front(*outputNode);
-          // dfg.addOutputNode(outputNode);
+          // dfg->addOutputNode(outputNode);
             //      cout << "Added output node: " << *outputNode << endl;
         } else if (regex_match(s.c_str(), sm, *PRAGMA_SCALAR_IN)) {
             InputNode *inputNode = new InputNode(sm[1]);
             inputs.push_front(*inputNode);
-            dfg.addInputNode(inputNode);
+            dfg->addInputNode(inputNode);
             //      cout << "Added scalar input node: " << *inputNode << endl;
         }
     } else if (isSgFunctionCallExp(n)) {
@@ -241,7 +242,11 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
 }
 
 void ASTtoDFGVisitor :: atTraversalEnd() {
-    DotDFSVisitor dfsVisitor(&dfg);
+    DotDFSVisitor dfsVisitor(dfg);
     dfsVisitor.traverse();
     //  cout << dfsVisitor.getDot();
+}
+
+DataFlowGraph* ASTtoDFGVisitor::getDataFlowGraph() {
+  return this->dfg;
 }

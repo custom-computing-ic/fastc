@@ -18,8 +18,8 @@ class ASTtoDFGVisitor : public AstSimpleProcessing {
   list<InputNode> inputs;
   list<OutputNode> outputs;
   regex *PRAGMA_IN, *KERNEL_FUNC, *PRAGMA_OUT, *PRAGMA_SCALAR_IN;
-  
-  DataFlowGraph dfg; 
+
+  DataFlowGraph *dfg;
 
   void function_call_initializer(string&, SgFunctionCallExp*);
   Node* toExprNodeRec(SgExpression*);
@@ -30,6 +30,7 @@ public:
   virtual void atTraversalEnd();
   Node* toNode(SgExpression*);
   Node* toExprNode(SgExpression *);
+  DataFlowGraph* getDataFlowGraph();
 };
 
 #endif

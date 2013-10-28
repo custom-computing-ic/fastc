@@ -30,6 +30,8 @@ void kernel_Arrays(
 
     //    array_out_1 = p;
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 2; i++) {
+      array_out_1[i][0] = pp[0][i][0];
       array_out_2[i][0] = pp[0][i][0];
+    }
 }

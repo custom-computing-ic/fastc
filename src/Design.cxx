@@ -6,7 +6,7 @@
 
 void Design::generateCode(ostream& out) {
     foreach_ (Kernel* k, kernels) {
-        out << k->getSource();
+        out << k->generateSourceCode();
         out << "\n\n";
     }
     int i = 0; i++;
@@ -16,7 +16,7 @@ void Design::writeEngineFiles(string path) {
   foreach_ (Kernel* k, kernels) {
     string name = path + "/" + k->getName() + ".java";
     ofstream fout(name.c_str());
-    fout << k->getSource();
+    fout << k->generateSourceCode();
   }
 }
 
@@ -27,7 +27,7 @@ void Design::writeCodeFiles() {
     foreach_ (Kernel* k, kernels) {
         string name = k->getName() + ".java";
         ofstream fout(name.c_str());
-        fout << k->getSource();
+        fout << k->generateSourceCode();
     }
 }
 

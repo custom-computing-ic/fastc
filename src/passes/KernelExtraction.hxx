@@ -5,6 +5,7 @@
 #include "KernelVisitor.hxx"
 #include "Pass.hxx"
 
+/** Extracts FAST dataflow kernels from the given design. */
 class KernelExtraction : public Pass
 {
 public:

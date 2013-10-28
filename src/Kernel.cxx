@@ -45,15 +45,6 @@ Kernel::Kernel(string name, SgFunctionDeclaration* decl) {
   this->decl = decl;
 }
 
-string Kernel::getName() {
-  return name;
-}
-
-string Kernel::getFunctionName() {
-  // XXX for now assume kernels are kernel_<KernelName>
-  return "kernel_" + name;
-}
-
 
 bool Kernel::isStreamArrayType(string identifier) {
   SgInitializedNamePtrList args = decl->get_args();
@@ -69,7 +60,7 @@ bool Kernel::isStreamArrayType(string identifier) {
   return false;
 }
 
-string Kernel::getSource() {
+string Kernel::generateSourceCode() {
   extractIO();
   generateIO();
   ASTtoMaxJVisitor visitor(this);
@@ -110,6 +101,7 @@ void Kernel::addInput(string varName, string inputName, string ioType, string co
   }
 }
 
+
 void Kernel::addOutput(string varName, string outputName, string ioType, string computeType, string width) {
   string type = computeType;
   if (width != "1") {
@@ -120,6 +112,7 @@ void Kernel::addOutput(string varName, string outputName, string ioType, string 
   outputs.push_back(new OutputNode(this, varName, outputName, ioType, computeType, width));
 }
 
+
 void Kernel::addScalarInput(string varName, string inputName, string ioType, string computeType) {
   scalars.push_back(inputName);
   declarations += "HWVar " + varName + " =  io.scalarInput(\"" + inputName
@@ -129,11 +122,13 @@ void Kernel::addScalarInput(string varName, string inputName, string ioType, str
   declarations+= ";\n";
 }
 
+
 void Kernel::generateIO() {
   foreach_ (OutputNode* outputNode, outputs) {
     output += outputNode->toMaxJ();
   }
 }
+
 
 // XXX: this should account for type width
 string Kernel::convertType(string type) {
@@ -149,6 +144,7 @@ string Kernel::convertType(string type) {
   return "hwFloat(8, 24)";
 }
 
+
 string Kernel::convertHwType(string type) {
   string hwType = type;
   regex floatType("float \\( (\\d*), (\\d*) \\)");
@@ -162,6 +158,7 @@ string Kernel::convertHwType(string type) {
   return hwType;
 
 }
+
 
 string Kernel::convertWidth(SgType *type) {
   using namespace SageInterface;
@@ -180,6 +177,7 @@ string Kernel::convertWidth(SgType *type) {
   }
   return "1";
 }
+
 
 set<string> Kernel::findModset(SgNode* sgNode) {
   Rose_STL_Container<SgNode* > assigns;
@@ -205,9 +203,8 @@ void Kernel::extractIO() {
 
   set<string> modSet = findModset(decl->get_definition());
   int paramNumber = 0;
-  for ( ; it != args.end(); it++) {
+  foreach_(SgInitializedName* param, decl->get_args()) {
 
-    SgInitializedName* param = *it;
     SgType* param_type = param->get_type();
     string varName = param->get_name().getString();
     string inputName = originalParams[paramNumber];
@@ -239,7 +236,8 @@ void Kernel::extractIO() {
   removeOutputAssignments();
 }
 
-void Kernel::saveIO() {
+
+void Kernel::saveOriginalInputOutputNodes() {
   SgInitializedNamePtrList args = decl->get_args();
   set<string> modSet = findModset(decl->get_definition());
   foreach_(SgInitializedName* param, decl->get_args()) {
@@ -258,20 +256,34 @@ void Kernel::saveIO() {
   }
 }
 
+
 void Kernel::addOffsetExpression(string var, string max, string min) {
   offsets.push_back(var);
   declarations+= "OffsetExpr " + var + " = stream.makeOffsetParam(" +
     "\"" + var + "\", " + min + ", " + max + ");\n";
 }
 
+
 void Kernel::updateTypeInfo(string identifier, string ioType, string computeType) {
   ioTypeMap[identifier] = convertHwType(ioType);
   computeTypeMap[identifier] = convertHwType(computeType);
 }
+
 
 void Kernel::addDesignConstant(string name, string value) {
   if ( designConstants.find(name) == designConstants.end()) {
     designConstants.insert(name);
     constants += "final int " + name + " = " + value + ";\n";
   }
+}
+
+
+string Kernel::getName() {
+  return name;
+}
+
+
+string Kernel::getFunctionName() {
+  // XXX for now assume kernels are kernel_<KernelName>
+  return "kernel_" + name;
 }

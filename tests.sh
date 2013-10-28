@@ -18,27 +18,38 @@ TEST_DIR=test_run
 
 ############ Test Functions #############
 
+# runs a single local test, printing success or fail status and diff
+# from expected result. The expected directory structure is:
+# testDirectory/TestKernel.c -- the file to test
+# testDirectory/TestKernel.exp -- the MaxJ design to compare the result against
+# usage: runTest <testDirectory>
 runTest() {
+    # make sure we're in root directory
+    cd $MY_PATH
     base=`basename $1`
     dir=`dirname $1`
+
+    # change to test directory
     cd test/$dir && $EXE $INC $base.c
-    echo $base
-    echo $dir
     runOut=build/engine/$base.java
     echo $runOut
     output=`diff -wbB $runOut $base.exp`
     res=$?
-    if [ "$res" = "1" ]; then
-        printf "[FAIL!] $1.c\n"
+    if [ "$res" = "0" ]; then
+        printf "\033[0;32m[OK!]\033[0m   $1.c\n"
+    else
+        printf "\033[0;31m[FAIL!]\033[0m $1.c\n"
         printf " ---- Diff (meld test/$dir/$runOut test/$dir/$base.exp) ---- \n"
         printf "$output\n"
         printf " ---------------------\n"
-    else
-        printf "[OK!]   $1.c\n"
+
+        # start meld if available
+        difftool=`which meld`
+        if [ "$difftool" != "" ]; then
+            meld $MY_PATH/test/$dir/$runOut $MY_PATH/test/$dir/$base.exp &
+        fi
     fi
 }
-
-
 
 
 runRemote() {
@@ -47,15 +58,23 @@ runRemote() {
 
 
 # --- Local Test Suite ---
+
+# Runs the local test suite.
+#
+# usage: runLocalTestSuite [testName]
+#   The optional testName argument can be passed to run a single test.
+#   The test name correspond to the test directory structure.
 runLocalTestSuite() {
     test=$1
     if [ "$test" = "" ]; then
 
+        runTest "testDFG/maxc/DFG"
+
         runTest "testRTMStatic/maxc/RTM"
 
-#        runTest "testArrays/maxc/Arrays"
+        runTest "testArrays/maxc/Arrays"
 
-#        runTest "testCommon/maxc/testCmdRead"
+        runTest "testCommon/maxc/CmdRead"
 
 #        runTest "testCommon/maxc/testCmdWrite"
 
