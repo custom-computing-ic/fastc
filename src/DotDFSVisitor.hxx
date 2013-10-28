@@ -1,6 +1,7 @@
 #ifndef DOTDFSVISITOR_HXX
 #define DOTDFSVISITOR_HXX
 
+#include "precompiled.hxx"
 #include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DataFlowGraph/DFSVisitor.hxx"
 

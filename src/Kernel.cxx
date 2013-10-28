@@ -3,6 +3,18 @@
 #include "AstToMaxJVisitor.hxx"
 #include "utils.hxx"
 
+#include "DataFlowGraph/Node.hxx"
+#include "DataFlowGraph/InputNode.hxx"
+
+Kernel::Kernel(string name, SgFunctionDeclaration* decl) {
+  this->name = name;
+  preamble = declaration() + "\n";
+  declarations = "";
+  this->decl = decl;
+
+  this->dfg = new DataFlowGraph();
+}
+
 string Kernel::declaration() {
   return "package engine;\n\n" + imports() + "\n"
     "public class " + name + " extends Kernel {\n\n";
@@ -36,13 +48,6 @@ string Kernel::import(list<string> imports) {
     import += "import com.maxeler.maxcompiler.v1.kernelcompiler." + (*it)
       + ";\n";
   return import;
-}
-
-Kernel::Kernel(string name, SgFunctionDeclaration* decl) {
-  this->name = name;
-  preamble = declaration() + "\n";
-  declarations = "";
-  this->decl = decl;
 }
 
 
@@ -187,8 +192,13 @@ set<string> Kernel::findModset(SgNode* sgNode) {
     SgAssignOp* op = isSgAssignOp(node);
     string name = op->get_lhs_operand()->unparseToString();
     SgExpression* nameExp;
-    if (SageInterface::isArrayReference(op->get_lhs_operand(), &nameExp))
+    if (SageInterface::isArrayReference(op->get_lhs_operand(), &nameExp)) {
       name = nameExp->unparseToString();
+    } else if (isSgPointerDerefExp(op->get_lhs_operand())) {
+      // XXX this is a hack since it assumes only one pointer dereference
+      // TODO should check for multiple dereferences
+      name = isSgPointerDerefExp(op->get_lhs_operand())->get_operand_i()->unparseToString();
+    }
     modSet.insert(name);
   }
   return modSet;
@@ -240,6 +250,7 @@ void Kernel::extractIO() {
 void Kernel::saveOriginalInputOutputNodes() {
   SgInitializedNamePtrList args = decl->get_args();
   set<string> modSet = findModset(decl->get_definition());
+
   foreach_(SgInitializedName* param, decl->get_args()) {
     SgType* paramType = param->get_type();
     string paramName = param->get_name().getString();
@@ -247,8 +258,14 @@ void Kernel::saveOriginalInputOutputNodes() {
     if (isSgPointerType(paramType) || isSgArrayType(paramType)) {
       if (modSet.find(paramName) != modSet.end()) {
         streamOutputParams.push_back(paramName);
+
+	// add output node to DFG
+	dfg->addOutputNode(new OutputNode(paramName));
       } else {
         streamInputParams.push_back(paramName);
+
+	// add input node to DFG
+	dfg->addInputNode(new InputNode(paramName));
       }
     } else {
       scalarInputs.push_back(paramName);

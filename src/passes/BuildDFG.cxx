@@ -3,9 +3,11 @@
 
 void BuildDFG::runPass(Design *design) {
   cout << "Running build dfg " << endl;
-  ASTtoDFGVisitor visitor;
-  visitor.traverse(design->getProject(), preorder);
-  design->setDataFlowGraph(visitor.getDataFlowGraph());
+
+  foreach_(Kernel *k, design->getKernels()) {
+    ASTtoDFGVisitor visitor(k);
+    visitor.traverse(design->getProject(), preorder);
+  }
 }
 
 string BuildDFG::logPass() {

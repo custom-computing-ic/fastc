@@ -1,10 +1,9 @@
 #include "DotDFSVisitor.hxx"
 
-void DotDFSVisitor::visit(Node *n) {
-	list<Node *>::iterator it;
-	list<Node *> neighbours = n->getNeighbours();
-	for (it = neighbours.begin(); it != neighbours.end(); it++)
-		dot += n->toDot() + " -> " + (*it)->toDot() + ";\n";
+void DotDFSVisitor::visit(Node *node) {
+  foreach_ (Node* child, node->getNeighbours()) {
+    dot += node->toDot() + " -> " + child->toDot() + ";\n";
+  }
 }
 
 void DotDFSVisitor::beforeVisit() {

@@ -5,6 +5,8 @@
 #include <string>
 #include <list>
 #include <assert.h>
+
+#include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DataFlowGraph/OutputNode.hxx"
 
 
@@ -25,6 +27,9 @@ class Kernel {
 
   map<string, string> ioTypeMap;
   map<string, string> computeTypeMap;
+
+  // The dataflow graph for this kernel
+  DataFlowGraph* dfg;
 
   string convertType(string type);
   string convertWidth(SgType *type);
@@ -83,9 +88,34 @@ public:
   /** Returns the name of the FAST function corresponding to this kernel. */
   string getFunctionName();
 
+
+  list<string> getInputNames() {
+    return streamInputParams;
+  }
+
+  list<string> getOutputNames() {
+    return streamOutputParams;
+  }
+
+  list<string> getScalarInputNames() {
+    return scalarInputs;
+  }
+
   /** Returns the list of output nodes for this kernel. */
   list<OutputNode*> getOutputs() {
     return outputs;
+  }
+
+  /*  list<InputNode*> getInputs() {
+    return inputs;
+    } */
+
+  DataFlowGraph* getDataFlowGraph() {
+    return this->dfg;
+  }
+
+  string printDotDFG() {
+    return dfg->getDotRepresentation();
   }
 };
 

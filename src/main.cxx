@@ -12,18 +12,7 @@
 #include "PragmaVisitor.hxx"
 #include "Compiler.hxx"
 
-#include "passes/ManagerExtraction.hxx"
-#include "passes/RemoveFast.hxx"
-#include "passes/KernelExtraction.hxx"
-#include "passes/CodeGeneration.hxx"
-#include "passes/HostCodeGeneration.hxx"
-#include "passes/TaskExtraction.hxx"
-#include "passes/PragmaExtraction.hxx"
-#include "passes/ExtractDesignConstants.hxx"
-#include "passes/InlineKernels.hxx"
-#include "passes/InputOutputExtraction.hxx"
-#include "passes/BuildDFG.hxx"
-
+#include "passes/Passes.hxx"
 
 int main(int argc, char** argv) {
     SgProject* project = frontend(argc, argv);
@@ -36,10 +25,12 @@ int main(int argc, char** argv) {
     setupBuild();
 
     Compiler* c = new Compiler(project);
-    //    c->addPass(new BuildDFG());
     c->addPass(new KernelExtraction());
     c->addPass(new ExtractDesignConstants());
     c->addPass(new PragmaExtraction());
+    //    c->addPass(new BuildDFG());
+    //    c->addPass(new PrintDotDFG());
+
     //    c->addPass(new InputOutputExtraction());
     //    c->addPass(new InlineKernels());
     c->addPass(new CodeGeneration());

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
+#include <typeinfo>
 
 using namespace std;
 
@@ -38,7 +39,7 @@ void Node::addNeighbour(Node *node) {
 }
 
 string Node::toDot() {
-  return "\"" + name + "[id: " + getId() + "]\"";
+  return "\"" + name + "[id: " + getId() + "]" + classname() + "\"";
 }
 
 string Node::getId() {

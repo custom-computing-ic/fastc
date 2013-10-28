@@ -32,7 +32,8 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
 		src/passes/InlineKernels.hxx \
 		src/passes/ExtractDesignConstants.hxx \
 		src/passes/InputOutputExtraction.hxx \
-		src/passes/BuildDFG.hxx src/passes/BuildDFG.cxx
+		src/passes/BuildDFG.hxx src/passes/BuildDFG.cxx \
+		src/passes/PrintDotDFG.hxx src/passes/PrintDotDFG.cxx
 
 
 #BUILT_SOURCES = src/precompiled.hxx.gch

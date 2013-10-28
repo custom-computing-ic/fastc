@@ -30,7 +30,7 @@ public:
   string getId();
   virtual string toMaxJ()=0;
   virtual string getType() {return "hwFloat(8, 24)";};
-
+  virtual string classname() {return "Node";}
 };
 
 class StreamOffsetNode : public Node {
@@ -46,6 +46,7 @@ class OpNode : public Node {
 public:
   OpNode(string op) : Node(op) {};
   string toMaxJ() {return "OpNode\n";}
+  string classname() {return "OpNode";}
 };
 
 class ExpressionNode : public Node {
@@ -55,6 +56,7 @@ public:
     return &name;
   }
   string toMaxJ() {return "ExpressionNode";}
+  string classname() {return "ExpressionNode";}
 };
 
 class MUXNode : public Node {
@@ -71,7 +73,7 @@ public:
     n->addNeighbour(this);
   }
   string toMaxJ() {return "MUXNode\n";}
-
+  string classname() {return "MUXNode";}
 };
 
 class ConstantNode : public Node {
@@ -79,6 +81,7 @@ class ConstantNode : public Node {
 public:
   ConstantNode(string val) : Node(val) {}
   string toMaxJ() {return "constant.var(" + getType() + "," + getName() +")";}
+  string classname() {return "ConstantNode";}
 };
 
 class VarNode : public Node {
@@ -86,6 +89,7 @@ class VarNode : public Node {
 public:
   VarNode(string val) : Node(val) {}
   string toMaxJ() {return "VarNode\n";}
+  string classname() {return "VarNode";}
 };
 
 class CounterNode : public Node {
@@ -107,6 +111,7 @@ public:
     this->parent = parent;
   }
   string toMaxJ() {return "CounterNode\n";}
+  string classname() {return "CounterNode";}
 };
 
 #endif
