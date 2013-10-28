@@ -80,7 +80,7 @@ runLocalTestSuite() {
 
         runTest "testTypes/maxc/Types"
 
-#        runTest "test1dConvolution/maxc/test1dConvolutionKernel"
+        runTest "test1dConvolution/maxc/Convolution1d"
 
 #        runTest "testPassThrough/maxc/testPassThroughKernel"
 

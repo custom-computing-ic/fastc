@@ -28,9 +28,9 @@ public class Convolution1d extends Kernel {
         HWVar up = ((i1 >= ORDER) & (i1 < (n1 - ORDER)));
 
         optimization.pushDSPFactor(1);
-		HWVar result = (((p * c_0_0_0) + (stream.offset(p, 1) * c_p_0_0)) + (stream.offset(p, -1) * c_n_0_0));
-        HWVar inter = control.mux(up, p, result);
+HWVar result;
+result = (((p * c_0_0_0) + (stream.offset(p, 1) * c_p_0_0)) + (stream.offset(p, -1) * c_n_0_0));
+HWVar inter = up.neq(0)?result:p;
         optimization.popDSPFactor();
         io.output("output", inter, hwFloat(8, 24));
-    }
-}
+}}
