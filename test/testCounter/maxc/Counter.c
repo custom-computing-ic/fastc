@@ -1,6 +1,6 @@
 #include "../../../include/maxcc.h"
 
-void kernel_CounterKernel() {
+void kernel_Counter() {
 
     // simple counter chain
     int32 count1 = count(1000, 1);

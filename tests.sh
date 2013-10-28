@@ -84,7 +84,7 @@ runLocalTestSuite() {
 
         runTest "testPassThrough/maxc/PassThroughKernel"
 
-#        runTest "testCounter/maxc/testCounter"
+        runTest "testCounter/maxc/Counter"
 
         #    runTest "maxc/testRTMManager"
 

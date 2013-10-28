@@ -10,9 +10,10 @@ import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
 import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
 import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
 
-public class CounterKernel extends Kernel {
+public class Counter extends Kernel {
 
-    public CounterKernel(KernelParameters parameters) {
+
+public Counter(KernelParameters parameters) {
         super(parameters);
 
         CounterChain chain_count1 = control.count.makeCounterChain();
@@ -35,5 +36,4 @@ public class CounterKernel extends Kernel {
         HWVar count31 = chain_count31.addCounter(1000, 1);
         HWVar count32 = chain_count31.addCounter(10, 1);
         HWVar count322 = chain_count31.addCounter(20, 2);
-    }
-}
+}}
