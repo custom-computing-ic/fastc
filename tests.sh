@@ -78,7 +78,7 @@ runLocalTestSuite() {
 
         runTest "testCommon/maxc/CmdWrite"
 
-#        runTest "testTypes/maxc/testTypes"
+        runTest "testTypes/maxc/Types"
 
 #        runTest "test1dConvolution/maxc/test1dConvolutionKernel"
 
