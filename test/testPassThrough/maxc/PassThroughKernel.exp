@@ -15,5 +15,4 @@ public class PassThroughKernel extends Kernel {
         super(parameters);
 		HWVar x =  io.input("x", hwInt(32));
         io.output("y", x, hwInt(32));
-    }
-}
+}}
