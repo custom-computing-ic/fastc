@@ -4,6 +4,7 @@
 using namespace std;
 
 #include "DataFlowGraph.hxx"
+#include "../precompiled.hxx"
 #include <list>
 
 class DFSVisitor {

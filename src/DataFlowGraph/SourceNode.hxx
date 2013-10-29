@@ -7,15 +7,13 @@
 using namespace std;
 
 class SourceNode: public Node {
-	string imports();
-	string kernelName();
+  string imports();
+  string kernelName();
 
 public:
-	SourceNode(string name) :
-			Node(name) {
-	}
-	;
-	string toMaxJ();
+  SourceNode(string name) : Node(name) {};
+  string toMaxJ();
+  string classname() {return "SourceNode";}
 };
 
 #endif

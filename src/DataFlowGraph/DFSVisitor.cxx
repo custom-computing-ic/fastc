@@ -1,9 +1,8 @@
 #include "DFSVisitor.hxx"
 
 bool DFSVisitor::seenNode(Node* n) {
-  list<Node *>::iterator it;
-  for (it = seenNodes.begin(); it != seenNodes.end(); it++) {
-    if (n->getId().compare((*it)->getId()) == 0)
+  foreach_ (Node* child, seenNodes) {
+    if (n->getId().compare(child->getId()) == 0)
       return true;
   }
   return false;
@@ -18,24 +17,21 @@ DFSVisitor::DFSVisitor(DataFlowGraph *dfg) {
 void DFSVisitor::traverse() {
   beforeVisit();
 
-  list<Node *>::iterator it;
-  for (it = nodes.begin(); it != nodes.end(); it++) {
-    queue.push_front(*it);
+  foreach_ (Node* node, nodes) {
+    queue.push_front(node);
   }
 
   // TODO does not handle cycles
   // TODO does not handle multiple connected comps
   while (!queue.empty()) {
-    Node* n = queue.front();
-    queue.pop_front();
+    Node* n = queue.front(); queue.pop_front();
     if (!seenNode(n)) {
       seen++;
       visit(n);
-      list<Node *> neighbours = n->getNeighbours();
-      for (it = neighbours.begin(); it != neighbours.end(); it++)
-        queue.push_front(*it);
+      foreach_ (Node* node, n->getNeighbours()) {
+        queue.push_front(node);
+      }
     }
-
     seenNodes.push_front(n);
   }
 
