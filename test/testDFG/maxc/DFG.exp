@@ -20,5 +20,5 @@ HWVar a =  io.input("a", hwInt(32));
 HWVar c;
 c = ((a + 2) + (2 * stream.offset(a, 1)));
 
-io.output("b", (a + 2), hwInt(32));
+io.output("b", (c + (a + 2)), hwInt(32));
 }}

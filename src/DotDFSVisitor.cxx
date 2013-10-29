@@ -2,18 +2,20 @@
 
 void DotDFSVisitor::visit(Node *node) {
   foreach_ (Node* child, node->getNeighbours()) {
-    dot += node->toDot() + " -> " + child->toDot() + ";\n";
+    dot += node->toDot() + " -> ";
+    if (child != NULL)
+      dot += child->toDot() + ";\n";
   }
 }
 
 void DotDFSVisitor::beforeVisit() {
-	dot += "digraph {\n";
+  dot += "digraph {\n";
 }
 
 void DotDFSVisitor::afterVisit() {
-	dot += "}";
+  dot += "}";
 }
 
 string DotDFSVisitor::getDot() {
-	return dot;
+  return dot;
 }

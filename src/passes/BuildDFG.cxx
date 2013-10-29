@@ -2,8 +2,6 @@
 #include "../AstToDfgVisitor.hxx"
 
 void BuildDFG::runPass(Design *design) {
-  cout << "Running build dfg " << endl;
-
   foreach_(Kernel *k, design->getKernels()) {
     ASTtoDFGVisitor visitor(k);
     visitor.traverse(design->getProject(), preorder);

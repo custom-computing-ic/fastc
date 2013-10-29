@@ -1,4 +1,6 @@
+#include "../precompiled.hxx"
 #include "Node.hxx"
+
 
 #include <iostream>
 #include <iterator>
@@ -6,6 +8,7 @@
 #include <typeinfo>
 
 using namespace std;
+using namespace boost;
 
 Node::Node(string name) {
   this->id = s_idCount++;
@@ -18,10 +21,10 @@ ostream& Node::operator<< (ostream &out) {
   list<Node *>::iterator it;
   string dot;
   for (it = neighbours.begin(); it != neighbours.end(); it++) {
-    cout << (*it)->getName() << " ";
-    }
+    out << (*it)->getName() << " ";
+  }
 
-  cout << "]";
+  out << "]";
   return out;
 }
 
@@ -43,9 +46,7 @@ string Node::toDot() {
 }
 
 string Node::getId() {
-  stringstream out;
-  out << id;
-  return out.str();
+  return lexical_cast<string>(id);
 }
 
 int Node::s_idCount = 0;
