@@ -176,8 +176,19 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
         string name = ee->get_lhs_operand()->unparseToString();
 
         //serach if the current input has been bufferred
-        if() 
-
+        Offset* offset = dfg->findOffset(name);
+        if(offset==NULL)//no such buffer
+        {
+          offset = new Offset(name);
+          offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+          dfg->addOffset(offset); 
+        }
+        else 
+          offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+        cout<<"buffer "<<offset->getName()<<endl;
+        for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
+           cout<<" "<< *it;
+        cout<<endl;
 
 
         // construct DFG for the offset expression, which should
@@ -200,7 +211,9 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
         }
 
         return stream_node;
-      } else if (isSgVarRefExp(e->get_lhs_operand())) {
+      } 
+      
+      else if (isSgVarRefExp(e->get_lhs_operand())) {
         // handles: y = expression
         string name = e->get_lhs_operand()->unparseToString();
         Node* var_node = dfg->findNode(name);
@@ -230,7 +243,26 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
     Node *left = toExprNodeRec(e->get_lhs_operand());
     Node *node;
     if ( isSgPntrArrRefExp(ex))
+    {
       node = new StreamOffsetNode("Offset");
+      
+      //serach if the current input has been bufferred
+      SgPntrArrRefExp *ee = isSgPntrArrRefExp(ex);
+      string name = ee->get_lhs_operand()->unparseToString();
+      Offset* offset = dfg->findOffset(name);
+      if(offset==NULL)//no such buffer
+      {
+        offset = new Offset(name);
+        offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+        dfg->addOffset(offset); 
+      }
+      else 
+        offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+      cout<<"buffer "<<offset->getName()<<endl;
+      for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
+        cout<<" "<< *it;
+      cout<<endl;
+    }
     else
       node = new OpNode(op);
 

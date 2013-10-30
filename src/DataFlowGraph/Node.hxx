@@ -37,14 +37,17 @@ public:
   virtual string classname() {return "Node";}
 };
 
-class Offset: public Node{
-  
+class Offset : public Node{
+ 
+  public: 
   list<string> offsets; 
   
   public:
   Offset(string name) : Node(name) {};
   void addoffset(string offset);
   int memory();
+  string toMaxJ() {return "Offset\n";}
+  string classname() {return "Offset";}
 };
 
 

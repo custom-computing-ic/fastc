@@ -41,6 +41,20 @@ Node* DataFlowGraph::findNode(string name) {
   return NULL;
 }
 
+Offset* DataFlowGraph::findOffset(string name) {
+  list<Offset *>::iterator it;
+  for (it = offsets.begin(); it != offsets.end(); it++) {
+    if ((*it)->getName().compare(name) == 0)
+      return *it;
+  }
+  return NULL;
+}
+
+Offset* DataFlowGraph::addOffset(Offset *offset) {
+  offsets.push_front(offset);
+  return offset;
+}
+
 Node* DataFlowGraph::addNode(Node *n) {
   nodes.push_front(n);
   return n;
