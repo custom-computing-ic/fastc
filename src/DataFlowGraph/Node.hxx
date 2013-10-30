@@ -14,6 +14,9 @@ protected:
   int id;
   string name;
   list<Node *> neighbours;
+  list<Node *> inputs;
+  bool floating;
+  int precision[2];
 
 public:
   Node(string name);
@@ -23,6 +26,7 @@ public:
   //  friend ostream& operator<< (ostream &out, const Node& node);
   ostream& operator<<(ostream&);
   void addNeighbour(Node* node);
+  void addInput(Node* node);
   string toDot();
   list<Node *> getNeighbours(){
     return neighbours;
@@ -33,6 +37,17 @@ public:
   virtual string classname() {return "Node";}
 };
 
+class Offset: public Node{
+  
+  list<string> offsets; 
+  
+  public:
+  Offset(string name) : Node(name) {};
+  void addoffset(string offset);
+  int memory();
+};
+
+
 class StreamOffsetNode : public Node {
 public:
   StreamOffsetNode(string name) : Node(name) {};
@@ -41,10 +56,12 @@ public:
   }
 };
 
-class OpNode : public Node {
+class OpNode : public Node {//arithme node
 
 public:
   OpNode(string op) : Node(op) {};
+  int resource(int transformation);
+  
   string toMaxJ() {return "OpNode\n";}
   string classname() {return "OpNode";}
 };

@@ -41,6 +41,10 @@ void Node::addNeighbour(Node *node) {
   neighbours.push_front(node);
 }
 
+void Node::addInput(Node *node) {
+  inputs.push_front(node);
+}
+
 string Node::toDot() {
   return "\"" + name + "[id: " + getId() + "]" + classname() + "\"";
 }
