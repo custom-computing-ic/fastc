@@ -8,15 +8,15 @@ using namespace std;
 
 class DataFlowGraph {
 
-  Node *source, *sink;
-  list<Node *>  nodes;
-  list<Node *>  sources;
-  list<Offset*> offsets;
-  list<OpNode*> arithmetics;
   //if would be more general if multiple sinks can also be supported
   //list<Node *> sinks; 
 
 public:
+  Node *source, *sink;
+  list<Node *>  nodes;
+  list<Node *>  sources;
+  list<Offset*> streams;
+  list<Node*>   arithmetics;
 
   DataFlowGraph();
   void   addInputNode(Node*);
@@ -30,6 +30,8 @@ public:
 
   Offset* findOffset(string name);
   Offset* addOffset(Offset* offset);
+  
+  Node* addArith(Node* opnode);
   
   string getDotRepresentation();
   

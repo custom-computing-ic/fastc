@@ -43,7 +43,7 @@ Node* DataFlowGraph::findNode(string name) {
 
 Offset* DataFlowGraph::findOffset(string name) {
   list<Offset *>::iterator it;
-  for (it = offsets.begin(); it != offsets.end(); it++) {
+  for (it = streams.begin(); it != streams.end(); it++) {
     if ((*it)->getName().compare(name) == 0)
       return *it;
   }
@@ -51,8 +51,13 @@ Offset* DataFlowGraph::findOffset(string name) {
 }
 
 Offset* DataFlowGraph::addOffset(Offset *offset) {
-  offsets.push_front(offset);
+  streams.push_front(offset);
   return offset;
+}
+
+Node* DataFlowGraph::addArith(Node *opnode) {
+  arithmetics.push_front(opnode);
+  return opnode;
 }
 
 Node* DataFlowGraph::addNode(Node *n) {

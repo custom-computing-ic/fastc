@@ -264,8 +264,10 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
       cout<<endl;
     }
     else
+    {
       node = new OpNode(op);
-
+      dfg->addArith(node);
+    }
     dfg->addNode(node);
     if (right != NULL)
     {
@@ -277,6 +279,7 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
       left->addNeighbour(node);
       node->addInput(left);
     }
+    //add to the arithmetics group
     return node;
   }
 
@@ -290,6 +293,8 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
     n->addNeighbour(node);
     node->addInput(n);
     dfg->addNode(node);
+    //add to the arithmetics group
+    dfg->addArith(node);
     return node;
   }
 
