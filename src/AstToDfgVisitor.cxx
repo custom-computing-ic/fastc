@@ -175,6 +175,11 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
         SgPntrArrRefExp *ee = isSgPntrArrRefExp(e->get_lhs_operand());
         string name = ee->get_lhs_operand()->unparseToString();
 
+        //serach if the current input has been bufferred
+        if() 
+
+
+
         // construct DFG for the offset expression, which should
         // feed into the offset node
         Node *offset_expr = toExprNodeRec(ee->get_rhs_operand());
@@ -231,10 +236,15 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
 
     dfg->addNode(node);
     if (right != NULL)
+    {
       right->addNeighbour(node);
+      node->addInput(right);
+    }
     if (left != NULL)
+    {
       left->addNeighbour(node);
-
+      node->addInput(left);
+    }
     return node;
   }
 
@@ -246,6 +256,7 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
       op = "-";
     OpNode *node = new OpNode(op);
     n->addNeighbour(node);
+    node->addInput(n);
     dfg->addNode(node);
     return node;
   }
