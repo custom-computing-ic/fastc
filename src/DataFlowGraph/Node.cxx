@@ -13,6 +13,12 @@ using namespace boost;
 Node::Node(string name) {
   this->id = s_idCount++;
   this->name = name;
+  this->floating = true;
+
+  //TODO: precision analysis
+  //currently the precision is fixed to be 8-10 floating
+  this->precision[0] = 8;
+  this->precision[1] = 10;
 }
 
 ostream& Node::operator<< (ostream &out) {

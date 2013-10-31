@@ -15,10 +15,10 @@ protected:
   string name;
   list<Node *> neighbours;
   list<Node *> inputs;
-  bool floating;
-  int precision[2];
 
 public:
+  bool floating;
+  int precision[2];
   Node(string name);
   string getName() const {return name;};
   bool operator<(Node& node) const;
