@@ -11,10 +11,15 @@ class HLAVisitor {
   Kernel *kernel;
   DataFlowGraph *dfg;
   list<int> OnchipMemory;
+  int precision;
+  double frequency;
+  double offchipdata;
+  double bandwidth;
 
   public:
   HLAVisitor(Kernel *k);
-  void MemoryAnalysis();
-  bool findoffset( int offset);
-
+  void OnchipMemoryAnalysis();
+  void OffchipCommunicationAnalysis();
+  double gap(Offset* node);
+  bool findoffset( int offset, Offset* node);
 };

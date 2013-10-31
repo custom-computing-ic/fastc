@@ -40,7 +40,8 @@ public:
 class Offset : public Node{
  
   public: 
-  list<string> offsets; 
+  list<string> offsets;
+  list<int> OnchipMemory; 
   
   public:
   Offset(string name) : Node(name) {};
