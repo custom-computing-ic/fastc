@@ -6,6 +6,7 @@ void HighlevelAnalysis::runPass(Design* design){
     HLAVisitor hlaVisitor(k);
     hlaVisitor.OnchipMemoryAnalysis();
     hlaVisitor.OffchipCommunicationAnalysis();
+    hlaVisitor.ArithmeticAnalysis();
   }
 }
 

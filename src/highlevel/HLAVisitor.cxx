@@ -50,7 +50,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
       max = max > *jt ? max : *jt;
       min = min > *jt ? *jt : min;
     } 
-    double Bs = (double) ((max - min) * precision) / (36.0 * 1024.0);
+    Bs = (double) ((max - min) * precision) / (36.0 * 1024.0);
     
     double width = (double)((int)((*it)->OnchipMemory.size()) * precision) / 36.0;
     if(Bs ==0) width = 0;
@@ -98,4 +98,155 @@ void HLAVisitor::OffchipCommunicationAnalysis(){
 
     cout<<"bandwidth: "<<bandwidth<<" MB/s"<<endl;
   } 
+}
+
+//void HLAVisitor::TransFactor(){
+  
+//}
+
+void HLAVisitor::ArithmeticResource(Node* node, int* width){
+  Ls=0;
+  Fs=0;
+  Ds=0;
+  if(node->floating)
+  {
+    switch(node->transformation) {
+      case 0:
+        if(node->getName() == "+" || node->getName() == "-")
+        {
+          Ls = 209;
+          Fs = 100;
+          Ds = 0; 
+        } 
+        else if (node->getName()=="*")
+        {
+          Ls = 673;
+          Fs = 143;
+          Ds = 0;
+        }
+        break;
+      case 1:
+        if(node->getName() == "+" || node->getName() == "-")
+        {
+          Ls = 209;
+          Fs = 100;
+          Ds = 2; 
+        } 
+        else if (node->getName()=="*")
+        {
+          Ls = 100;
+          Fs = 51;
+          Ds = 2;
+        }
+        break;
+      case 2:
+        if(node->getName() == "+" || node->getName() == "-")
+        {
+          Ls = 209;
+          Fs = 100;
+          Ds = 2; 
+        } 
+        else if (node->getName()=="*")
+        {
+          Ls = 114;
+          Fs = 50;
+          Ds = 3;
+        }
+      default: cout<<"invalid transformation ratio"<<endl;
+    }
+  }
+  else
+  {
+    switch(node->transformation) {
+      case 0:
+        if(node->getName() == "+" || node->getName() == "-")
+        {
+          Ls = width[0] + width[1];
+          Fs = width[0] + width[1];
+        } 
+        else if (node->getName()=="*")
+        {
+          Ls = (width[0] + width[1]) * (width[0] + width[1]);
+          Fs =  width[0] + width[1];
+        }
+        break; 
+      case 1:
+        if(node->getName() == "+" || node->getName() == "-")
+        {
+          Ls = width[0] + width[1];
+          Fs = width[0] + width[1];
+        }
+        else if (node->getName()=="*")
+        {
+          int widths = width[0] + width[1];
+          if(widths<=18)
+            Ds=1;
+          else if(widths<=25)
+            Ds=2;
+          else if(widths<=35)
+            Ds=4;
+          else if(widths<=42)
+            Ds=5;
+          else if(widths<=52)
+            Ds=9;
+          else if(widths<=59)
+            Ds=10;
+          else if(widths<=64)
+            Ds=16;
+        }
+        break;
+      case 2:
+        if(node->getName() == "+" || node->getName() == "-")
+          Ds += (int) ((width[0]+width[1]) / 18) + 1;
+        else if (node->getName()=="*")
+        {
+          int widths = width[0] + width[1];
+          if(widths<=18)
+            Ds=1;
+          else if(widths<=25)
+            Ds=2;
+          else if(widths<=35)
+            Ds=4;
+          else if(widths<=42)
+            Ds=5;
+          else if(widths<=52)
+            Ds=9;
+          else if(widths<=59)
+            Ds=10;
+          else if(widths<=64)
+            Ds=16;
+        }
+        break;
+      default: cout<<"invalid transformation ratio"<<endl;
+    }
+    cout<<"Ls: "<<Ls<<" Fs: "<<Fs<<" Ds: "<<Ds<<endl;
+  }
+}
+
+
+void HLAVisitor::ArithmeticAnalysis(){
+
+  LUTs=0;
+  FFs =0;
+  DSPs=0;
+
+  for(list<Node*>::iterator it = dfg->arithmetics.begin(); it!=dfg->arithmetics.end(); it++)
+  {
+    cout<<"arith node "<<(*it)->getName()<<endl;
+    cout<<"input: ";
+    
+    int width[2] ={0,0};
+    for(list<Node*>::iterator jt = (*it)->inputs.begin(); jt!=(*it)->inputs.end(); jt++)
+    {
+      cout<<" "<<(*jt)->getName();
+      width[0] = width[0] > (*jt)->precision[0] ? width[0] : (*jt)->precision[0];
+      width[1] = width[1] > (*jt)->precision[1] ? width[1] : (*jt)->precision[1];
+    }
+    ArithmeticResource((*it), width);
+    cout<<endl;
+    LUTs += Ls;
+    FFs  += Fs;
+    DSPs += Ds;
+  }
+  cout<<"LUTs: "<<LUTs<<" FFs: "<<FFs<<" DSPs: "<<DSPs<<endl;
 }

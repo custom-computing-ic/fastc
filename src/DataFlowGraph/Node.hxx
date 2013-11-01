@@ -14,10 +14,11 @@ protected:
   int id;
   string name;
   list<Node *> neighbours;
-  list<Node *> inputs;
 
 public:
+  list<Node *> inputs;
   bool floating;
+  int transformation;
   int precision[2];
   Node(string name);
   string getName() const {return name;};
