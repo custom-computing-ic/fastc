@@ -30,9 +30,9 @@ int main(int argc, char** argv) {
     c->addPass(new KernelExtraction());
     c->addPass(new ExtractDesignConstants());
     c->addPass(new PragmaExtraction());
-    c->addPass(new BuildDFG());
-    c->addPass(new PrintDotDFG());
-    c->addPass(new HighlevelAnalysis());
+    //    c->addPass(new BuildDFG());
+    //    c->addPass(new PrintDotDFG());
+    //    c->addPass(new HighlevelAnalysis());
 
     //    c->addPass(new InputOutputExtraction());
     //    c->addPass(new InlineKernels());

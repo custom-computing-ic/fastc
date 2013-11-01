@@ -94,41 +94,40 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
   string fname = fsymbol->get_name();
 
   if (fname == "count") {
-    string *wrap = toExpr(*itt);
-    string *inc  = toExpr(*(++itt));
-    string name = "chain_" + variableName;
-    declarations += "CounterChain " + name
-      + " = control.count.makeCounterChain();\n";
-    *s += "HWVar " + variableName + " = " + name + ".addCounter("
-      + *wrap + ", " + *inc + ");\n";
-    counterMap[variableName] = name;
-  } else if (fname == "count_chain" ) {
-    string *wrap = toExpr(*itt);
-    string *inc  = toExpr(*(++itt));
-    string p = "";
-    SgVarRefExp *parent = isSgVarRefExp(*(++itt));
-    if (parent != NULL)
-      p = parent->get_symbol()->get_name();
-    string chainDeclaration = counterMap[p];
-    *s += "HWVar " + variableName + " = " + chainDeclaration
-      + ".addCounter(" + *wrap + ", " + *inc + ");\n";
-    counterMap[variableName] = chainDeclaration;
-  } else if (fname == "count_p") {
+    string *width = toExpr(*itt);
+    string *max = toExpr(*(++itt));
+    string *inc = toExpr(*(++itt));
+    string *parent_name = toExpr(*(++itt));
+    counterMap[variableName] = variableName;
+
+    // create params
     string param = "param" + lexical_cast<string>(paramCount);
-    string *width = toExpr(*(itt));
-    string *max   = toExpr(*(++itt));
-    string *inc   = toExpr(*(++itt));
-    string *enable = toExpr(*(++itt));
-    *s += "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
+    string params =
+      "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
       + ".withMax(" + *max + ")"
       + ".withInc(" + *inc + ")";
-    if (enable != NULL)
-      *s += ".withEnable(" + *enable + ")";
-    *s += ";\n";
-    string counter = "counter" + lexical_cast<string>(paramCount);
-    *s += "Counter " + counter + " = control.count.makeCounter(" + param + ");\n";
-    *s += "HWVar " + variableName + " = " + counter + ".getCount();\n";
     paramCount++;
+
+    string enableParam;
+    if (parent_name != NULL) {
+      // has a parent or enable stream
+      if (counterMap.find(*parent_name) != counterMap.end()) {
+	// TODO use a symbol table to find if this is a counter
+	enableParam = ".withEnable(" + *parent_name + ".getWrap())";
+      } else {
+	// XXX check that this is indeed a boolean stream
+	// XXX use a proper check to verify that the parent_name != NULL
+	if (*parent_name != "0")
+	  enableParam = ".withEnable(" + *parent_name + ")"; 
+      }
+    }
+
+    // create counter
+    string counter = "HWVar " + variableName + " = control.count.makeCounter(" +
+      param + ")";
+
+    *s += params + enableParam + ";\n" + counter + ";\n";
+
   } else if (fname == "fselect" || fname == "fselect_sf_f" ) {
     string *exp = toExpr(*itt);
     string *ifTrue = toExpr(*(++itt));

@@ -1,10 +1,7 @@
 #include "../precompiled.hxx"
 #include "Node.hxx"
 
-
 #include <iostream>
-#include <iterator>
-#include <sstream>
 #include <typeinfo>
 
 using namespace std;
@@ -17,13 +14,9 @@ Node::Node(string name) {
 
 ostream& Node::operator<< (ostream &out) {
   out << name << "[ " ;
-
-  list<Node *>::iterator it;
-  string dot;
-  for (it = neighbours.begin(); it != neighbours.end(); it++) {
-    out << (*it)->getName() << " ";
+  foreach_ (Node* n, neighbours) {
+    out << n->getName() << " ";
   }
-
   out << "]";
   return out;
 }

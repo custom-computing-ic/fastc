@@ -25,11 +25,11 @@ void kernel_RTM(
                 int nx, int nxy
                 )
 {
+  int i1 = count(32, n1, Par, NULL);
+  int i2 = count(32, n2, 1, i1);
+  int i3 = count(32, n3, 1, i2);
+  int i4 = count(10, 1000, 1, i3);
 
-    int i4 = count(1000, 1);
-    int i3 = count_chain(n3, 1, i4);
-    int i2 = count_chain(n2, 1, i3);
-    int i1 = count_chain(n1, Par, i2);
 
     float c_0   = -0.000000056202665632554272;
     float c_1_0 =  0.000000010666666661052204;

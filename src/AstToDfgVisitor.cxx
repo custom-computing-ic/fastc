@@ -3,6 +3,7 @@
 #include "AstToDfgVisitor.hxx"
 
 #include "DataFlowGraph/Node.hxx"
+#include "DataFlowGraph/CounterNode.hxx"
 
 using namespace std;
 using namespace boost;
@@ -65,43 +66,38 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
 
 void ASTtoDFGVisitor :: function_call_initializer(string& variableName, SgFunctionCallExp *fcall) {
   SgExpressionPtrList args = fcall->get_args()->get_expressions();
-  SgExpressionPtrList::iterator itt;
-  itt=args.begin();
+  SgExpressionPtrList::iterator itt = args.begin();
   SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
   string fname = fsymbol->get_name();
-  if (fname.compare("count") == 0 || fname.compare("countChain") == 0) {
-    SgVarRefExp *dim = isSgVarRefExp(*itt);
-    string d = "128";
-    if (dim != NULL)
-      d = dim->get_symbol()->get_name();
 
-    SgIntVal *inc = isSgIntVal(*(++itt));
-    int i;
-    if (inc != NULL) {
-      i = inc->get_value();
+  if (fname == "count") {
+
+    // extract width
+    // TODO this can be an arbirary expression of compile time values
+    Node* width = toExprNode(*itt);
+
+    // extract maximum
+    // TODO this can be an arbitrary expression of compile time values
+    Node* max = toExprNode(*(++itt));
+
+    // extract increment
+    // TODO this can be an arbitrary expression of compile time values
+    Node* inc = toExprNode(*(++itt));
+
+    // extract parent name
+    // TODO throw error if this is not a variable reference
+    SgVarRefExp *parent = isSgVarRefExp(*(++itt));
+    string enableName = parent == NULL ? NULL : parent->get_symbol()->get_name();
+    Node *enable = dfg->findNode(enableName);
+    CounterNode *counter = new CounterNode(variableName, max, inc, enable);
+
+    if ( enable != NULL ) {
+      enable->addNeighbour(counter);
     }
 
-    if (fname.compare("count") == 0) {
-      CounterNode *counterNode = new CounterNode(variableName, d, i);
-      dfg->addSource(counterNode);
-    } else if (fname.compare("countChain") == 0) {
+    dfg->addSource(counter);
 
-      string p = "";
-      SgVarRefExp *parent = isSgVarRefExp(*(++itt));
-      if (parent != NULL)
-        p = parent->get_symbol()->get_name();
-
-      CounterNode *counterNode = new CounterNode(variableName, d, i, p);
-
-      Node *childNode = dfg->findNode(p);
-      if ( childNode != NULL ) {
-        counterNode->addNeighbour(childNode);
-        dfg->removeSource(childNode);
-      }
-
-      dfg->addSource(counterNode);
-    }
-  } else if (fname.compare("fselect") == 0) {
+  } else if (fname == "fselect") {
 
     MUXNode *muxNode = new MUXNode(variableName);
     dfg->addNode(muxNode);

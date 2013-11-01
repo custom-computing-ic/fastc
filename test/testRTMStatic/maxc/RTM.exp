@@ -31,12 +31,16 @@ OffsetExpr nxy = stream.makeOffsetParam("nxy", dim_y * nx, dim_y * nx);
     KArray<HWVar> output_pp = (new KArrayType<HWVar>(hwFloat(8, 12),Par)).newInstance(this);
     KArray<HWVar> ker_p = (new KArrayType<HWVar>(hwFloat(8, 24),Par)).newInstance(this);
 
-    CounterChain chain_i4 = control.count.makeCounterChain();
+Count.Params param0 = control.count.makeParams(32).withMax(n1).withInc(Par);
+HWVar i1 = control.count.makeCounter(param0);
+Count.Params param1 = control.count.makeParams(32).withMax(n2).withInc(1).withEnable(i1.getWrap());
+HWVar i2 = control.count.makeCounter(param1);
+Count.Params param2 = control.count.makeParams(32).withMax(n3).withInc(1).withEnable(i2.getWrap());
+HWVar i3 = control.count.makeCounter(param2);
+Count.Params param3 = control.count.makeParams(10).withMax(1000).withInc(1).withEnable(i3.getWrap());
+HWVar i4 = control.count.makeCounter(param3);
 
-    HWVar i4 = chain_i4.addCounter(1000,1);
-    HWVar i3 = chain_i4.addCounter(n3,  1);
-    HWVar i2 = chain_i4.addCounter(n2,  1);
-HWVar i1 = chain_i4.addCounter(n1, Par);
+
     HWVar c_0   = constant.var(-0.000000056202665632554272);
     HWVar c_1_0 = constant.var( 0.000000010666666661052204);
     HWVar c_1_1 = constant.var(-0.000000001523809300962853);

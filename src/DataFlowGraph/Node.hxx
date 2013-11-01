@@ -23,7 +23,6 @@ public:
   string getName() const {return name;};
   bool operator<(Node& node) const;
   Node& operator=(const Node& node);
-  //  friend ostream& operator<< (ostream &out, const Node& node);
   ostream& operator<<(ostream&);
   void addNeighbour(Node* node);
   void addInput(Node* node);
@@ -110,28 +109,6 @@ public:
   VarNode(string val) : Node(val) {}
   string toMaxJ() {return "VarNode\n";}
   string classname() {return "VarNode";}
-};
-
-class CounterNode : public Node {
-  string limit, parent;
-  int inc;
-public:
-  ostream& operator<<(ostream& out) {
-	  out << "(" << name << ", wrap: " << limit;
-	  out << ", inc: " << inc << ",parent: " << parent << ")";
-	  return out;
-  }
-  CounterNode(string name, string limit, int inc) : Node(name) {
-    this->limit = limit;
-    this->inc   = inc;
-  }
-  CounterNode(string name, string limit, int inc, string parent) : Node(name) {
-    this->limit = limit;
-    this->inc   = inc;
-    this->parent = parent;
-  }
-  string toMaxJ() {return "CounterNode\n";}
-  string classname() {return "CounterNode";}
 };
 
 #endif
