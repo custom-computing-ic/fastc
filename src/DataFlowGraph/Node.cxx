@@ -10,6 +10,15 @@ using namespace boost;
 Node::Node(string name) {
   this->id = s_idCount++;
   this->name = name;
+  //TODO: support for fixed point
+  this->floating = true;
+  //TODO: dynamic transformation ratio
+  this->transformation = 0;
+
+  //TODO: precision analysis
+  //currently the precision is fixed to be 8-10 floating
+  this->precision[0] = 8;
+  this->precision[1] = 24;
 }
 
 ostream& Node::operator<< (ostream &out) {

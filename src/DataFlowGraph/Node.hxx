@@ -14,11 +14,12 @@ protected:
   int id;
   string name;
   list<Node *> neighbours;
-  list<Node *> inputs;
-  bool floating;
-  int precision[2];
 
 public:
+  list<Node *> inputs;
+  bool floating;
+  int transformation;
+  int precision[2];
   Node(string name);
   string getName() const {return name;};
   bool operator<(Node& node) const;
@@ -39,7 +40,8 @@ public:
 class Offset : public Node{
  
   public: 
-  list<string> offsets; 
+  list<string> offsets;
+  list<int> OnchipMemory; 
   
   public:
   Offset(string name) : Node(name) {};

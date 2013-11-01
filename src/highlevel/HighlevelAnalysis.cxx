@@ -4,7 +4,9 @@
 void HighlevelAnalysis::runPass(Design* design){
   foreach_(Kernel* k, design->getKernels()) {
     HLAVisitor hlaVisitor(k);
-    hlaVisitor.MemoryAnalysis();
+    hlaVisitor.OnchipMemoryAnalysis();
+    hlaVisitor.OffchipCommunicationAnalysis();
+    hlaVisitor.ArithmeticAnalysis();
   }
 }
 
