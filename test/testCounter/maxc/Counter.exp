@@ -13,17 +13,19 @@ import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
 public class Counter extends Kernel {
 
 
-public Counter(KernelParameters parameters) {
+    public Counter(KernelParameters parameters) {
         super(parameters);
 
-Count.Params param0 = control.count.makeParams(7).withMax(100).withInc(1);
-HWVar z_counter = control.count.makeCounter(param0);
-Count.Params param1 = control.count.makeParams(7).withMax(100).withInc(1).withEnable(z_counter.getWrap());
-HWVar y_counter = control.count.makeCounter(param1);
-HWVar enable = z_counter.eq(y_counter);
-Count.Params param2 = control.count.makeParams(7).withMax(100).withInc(1).withEnable(enable);
-HWVar equals_counter = control.count.makeCounter(param2);
+	Count.Params param0 = control.count.makeParams(7).withMax(100).withInc(1);
+	Counter z_counter = control.count.makeCounter(param0);
+	HWVar z = z_counter.getCount();
+	Count.Params param1 = control.count.makeParams(7).withMax(100).withInc(1).withEnable(z_counter.getWrap());
+	Counter y_counter = control.count.makeCounter(param1);
+	HWVar y = y_counter.getCount();
+	HWVar enable = z.eq(y);
+	Count.Params param2 = control.count.makeParams(7).withMax(100).withInc(1).withEnable(enable);
+	Counter equals_counter = control.count.makeCounter(param2);
+	HWVar equals = equals_counter.getCount();
 
-io.output("out", (equals_counter + 1), hwInt(32));
-
+	io.output("out", (equals + 1), hwInt(32));
 }}

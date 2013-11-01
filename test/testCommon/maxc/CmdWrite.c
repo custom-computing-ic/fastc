@@ -10,15 +10,11 @@ void kernel_CmdWrite(unsigned int iniBursts,
                      unsigned int wordsPerBurst,
                      bool Enable) {
 
-  int32 wordCount  = count_p(32, wordsPerBurst, 1, Enable);
+  int wordCount  = count(32, wordsPerBurst, 1, Enable);
+  int burstCount = count(32, totalBursts, Burst_inc, wordCount);
+  int iterCount = count(32, iterations, 1, burstCount);
 
-  int32 wrap = (wordCount == wordsPerBurst - 1) & Enable;
-  int32 burstCount = count_p(32, totalBursts, Burst_inc, wrap);
-
-  int32 wrap2 = (burstCount == totalBursts - Burst_inc) & wrap;
-  int32 iterCount = count_p(32, iterations, 1, wrap2);
-
-  int32 Control = (wordCount == 0) & Enable;
+  bool Control = (wordCount == 0) & Enable;
   DRAMOutput("dram_write",
              Control,
              burstCount + iniBursts,

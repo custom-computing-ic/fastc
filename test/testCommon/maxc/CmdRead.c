@@ -10,12 +10,10 @@ void kernel_CmdRead(
                     unsigned int wordsPerBurst,
                     bool Enable)
 {
-  int32 wordCount = count_p(32, wordsPerBurst, 1, Enable);
+  int wordCount = count(32, wordsPerBurst, 1, Enable);
+  int burstCount = count(32, totalBursts, Burst_inc, wordCount);
 
-  int32 wrap = (wordCount == wordsPerBurst - 1) & Enable;
-  int32 burstCount = count_p(32, totalBursts, Burst_inc, wrap);
-
-  int32 Control = (wordCount == 0) & Enable;
+  bool Control = (wordCount == 0) & Enable;
 
   DRAMOutput("dram_read",
              Control,

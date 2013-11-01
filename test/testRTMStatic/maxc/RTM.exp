@@ -32,14 +32,17 @@ OffsetExpr nxy = stream.makeOffsetParam("nxy", dim_y * nx, dim_y * nx);
     KArray<HWVar> ker_p = (new KArrayType<HWVar>(hwFloat(8, 24),Par)).newInstance(this);
 
 Count.Params param0 = control.count.makeParams(32).withMax(n1).withInc(Par);
-HWVar i1 = control.count.makeCounter(param0);
-Count.Params param1 = control.count.makeParams(32).withMax(n2).withInc(1).withEnable(i1.getWrap());
-HWVar i2 = control.count.makeCounter(param1);
-Count.Params param2 = control.count.makeParams(32).withMax(n3).withInc(1).withEnable(i2.getWrap());
-HWVar i3 = control.count.makeCounter(param2);
-Count.Params param3 = control.count.makeParams(10).withMax(1000).withInc(1).withEnable(i3.getWrap());
-HWVar i4 = control.count.makeCounter(param3);
-
+Counter i1_counter = control.count.makeCounter(param0);
+HWVar i1 = i1_counter.getCount();
+Count.Params param1 = control.count.makeParams(32).withMax(n2).withInc(1).withEnable(i1_counter.getWrap());
+Counter i2_counter = control.count.makeCounter(param1);
+HWVar i2 = i2_counter.getCount();
+Count.Params param2 = control.count.makeParams(32).withMax(n3).withInc(1).withEnable(i2_counter.getWrap());
+Counter i3_counter = control.count.makeCounter(param2);
+HWVar i3 = i3_counter.getCount();
+Count.Params param3 = control.count.makeParams(10).withMax(1000).withInc(1).withEnable(i3_counter.getWrap());
+Counter i4_counter = control.count.makeCounter(param3);
+HWVar i4 = i4_counter.getCount();
 
     HWVar c_0   = constant.var(-0.000000056202665632554272);
     HWVar c_1_0 = constant.var( 0.000000010666666661052204);

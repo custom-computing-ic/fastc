@@ -100,6 +100,8 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
     string *parent_name = toExpr(*(++itt));
     counterMap[variableName] = variableName;
 
+    string counterName = variableName + "_counter";
+
     // create params
     string param = "param" + lexical_cast<string>(paramCount);
     string params =
@@ -113,7 +115,8 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
       // has a parent or enable stream
       if (counterMap.find(*parent_name) != counterMap.end()) {
 	// TODO use a symbol table to find if this is a counter
-	enableParam = ".withEnable(" + *parent_name + ".getWrap())";
+	string parentCounterName = *parent_name + "_counter";
+	enableParam = ".withEnable(" + parentCounterName + ".getWrap())";
       } else {
 	// XXX check that this is indeed a boolean stream
 	// XXX use a proper check to verify that the parent_name != NULL
@@ -123,10 +126,13 @@ string* ASTtoMaxJVisitor::function_call_initializer(string& variableName,
     }
 
     // create counter
-    string counter = "HWVar " + variableName + " = control.count.makeCounter(" +
+    string counter = "Counter " + counterName + " = control.count.makeCounter(" +
       param + ")";
 
-    *s += params + enableParam + ";\n" + counter + ";\n";
+    // create HWVar corresponding to counter
+    string hwvar = "HWVar " + variableName + " = " + counterName + ".getCount()";
+
+    *s += params + enableParam + ";\n" + counter + ";\n" + hwvar + ";\n";
 
   } else if (fname == "fselect" || fname == "fselect_sf_f" ) {
     string *exp = toExpr(*itt);
