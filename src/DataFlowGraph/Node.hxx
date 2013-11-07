@@ -20,8 +20,8 @@ public:
   bool floating;
   int transformation;
   int precision[2];
-  Node(string name);
-  string getName() const {return name;};
+  Node(string name="");
+  virtual string getName() const {return name;};
   bool operator<(Node& node) const;
   Node& operator=(const Node& node);
   ostream& operator<<(ostream&);
@@ -80,30 +80,6 @@ public:
   string classname() {return "ExpressionNode";}
 };
 
-class MUXNode : public Node {
-  Node *falseNode;
-  Node *trueNode;
-public:
-  MUXNode(string name) : Node(name) {}
-  void setIfTrueNode(Node *n) {
-    falseNode = n;
-    n->addNeighbour(this);
-  }
-  void setIfFalseNode(Node *n) {
-    trueNode = n;
-    n->addNeighbour(this);
-  }
-  string toMaxJ() {return "MUXNode\n";}
-  string classname() {return "MUXNode";}
-};
-
-class ConstantNode : public Node {
-  string val;
-public:
-  ConstantNode(string val) : Node(val) {}
-  string toMaxJ() {return "constant.var(" + getType() + "," + getName() +")";}
-  string classname() {return "ConstantNode";}
-};
 
 class VarNode : public Node {
   string val;
@@ -111,6 +87,15 @@ public:
   VarNode(string val) : Node(val) {}
   string toMaxJ() {return "VarNode\n";}
   string classname() {return "VarNode";}
+};
+
+
+class ConstantNode : public Node {
+  string val;
+public:
+  ConstantNode(string val) : Node(val) {}
+  string toMaxJ() {return "constant.var(" + getType() + "," + getName() +")";}
+  string classname() {return "ConstantNode";}
 };
 
 #endif

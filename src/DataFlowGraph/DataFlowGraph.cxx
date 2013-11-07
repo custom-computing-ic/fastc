@@ -26,7 +26,7 @@ Node* DataFlowGraph::addSource(Node *n) {
 void DataFlowGraph::removeSource(Node *n) {
   list<Node *>::iterator it;
   for (it = sources.begin(); it != sources.end(); it++)
-    if ((*it)->getName().compare(n->getName()) == 0) {
+    if ((*it)->getName() ==n->getName()) {
       sources.erase(it);
       break;
     }
@@ -35,7 +35,7 @@ void DataFlowGraph::removeSource(Node *n) {
 Node* DataFlowGraph::findNode(string name) {
   list<Node *>::iterator it;
   for (it = nodes.begin(); it != nodes.end(); it++) {
-    if ((*it)->getName().compare(name) == 0)
+    if ((*it)->getName() == name)
       return *it;
   }
   return NULL;
@@ -44,7 +44,7 @@ Node* DataFlowGraph::findNode(string name) {
 Offset* DataFlowGraph::findOffset(string name) {
   list<Offset *>::iterator it;
   for (it = streams.begin(); it != streams.end(); it++) {
-    if ((*it)->getName().compare(name) == 0)
+    if ((*it)->getName() == name)
       return *it;
   }
   return NULL;

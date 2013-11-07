@@ -19,6 +19,7 @@ Node::Node(string name) {
   //currently the precision is fixed to be 8-10 floating
   this->precision[0] = 8;
   this->precision[1] = 24;
+
 }
 
 ostream& Node::operator<< (ostream &out) {
@@ -40,6 +41,7 @@ Node& Node::operator=(const Node& node){
 }
 
 void Node::addNeighbour(Node *node) {
+  cout << "Adding node " << node << endl;
   neighbours.push_front(node);
 }
 

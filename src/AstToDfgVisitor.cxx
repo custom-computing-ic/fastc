@@ -3,6 +3,7 @@
 #include "AstToDfgVisitor.hxx"
 
 #include "DataFlowGraph/Node.hxx"
+#include "DataFlowGraph/MuxNode.hxx"
 #include "DataFlowGraph/CounterNode.hxx"
 
 using namespace std;
@@ -16,8 +17,8 @@ ASTtoDFGVisitor :: ASTtoDFGVisitor(Kernel *k) {
 void ASTtoDFGVisitor :: visit(SgNode *n) {
 
   if (isSgVariableDeclaration(n)) {
-    SgVariableDeclaration *varDecl = isSgVariableDeclaration(n);
 
+    SgVariableDeclaration *varDecl = isSgVariableDeclaration(n);
     foreach_(SgInitializedName *v, varDecl->get_variables()) {
       string variableName = v->get_qualified_name();
 
@@ -43,6 +44,7 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
       }
     }
 
+
   } else if (isSgFunctionCallExp(n)) {
     SgFunctionCallExp *fcall = isSgFunctionCallExp(n);
     SgExpressionPtrList args = fcall->get_args()->get_expressions();
@@ -60,7 +62,6 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
   } else if (isSgExprStatement(n)) {
     toExprNode(isSgExprStatement(n)->get_expression());
   }
-
 }
 
 
@@ -99,22 +100,7 @@ void ASTtoDFGVisitor :: function_call_initializer(string& variableName, SgFuncti
 
   } else if (fname == "fselect") {
 
-    MUXNode *muxNode = new MUXNode(variableName);
-    dfg->addNode(muxNode);
 
-    SgExpression *condExp = isSgExpression(*itt);
-    Node *exp = toExprNode(*itt);
-    //dfg->addSource(exp);
-    if (exp != NULL)
-      exp->addNeighbour(muxNode);
-
-    Node *n = toNode(*(++itt));
-    if (n != NULL)
-      muxNode->setIfTrueNode(n);
-
-    Node *n2 = toNode(*(++itt));
-    if (n2 != NULL)
-      muxNode->setIfFalseNode(n2);
   }
 
 }
@@ -282,19 +268,42 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
   if (isSgUnaryOp(ex)) {
     SgUnaryOp *unOp = isSgUnaryOp(ex);
     Node *n = toExprNodeRec(unOp->get_operand());
-    string op;
-    if (isSgMinusOp(ex))
-      op = "-";
-    OpNode *node = new OpNode(op);
-    n->addNeighbour(node);
-    node->addInput(n);
-    dfg->addNode(node);
-    //add to the arithmetics group
-    dfg->addArith(node);
-    return node;
+    if (n != NULL) {
+      cout << "Node " << n;
+      string op;
+      if (isSgMinusOp(ex))
+	op = "-";
+      OpNode *node = new OpNode(op);
+      n->addNeighbour(node);
+      node->addInput(n);
+      dfg->addNode(node);
+      //add to the arithmetics group
+      dfg->addArith(node);
+      return node;
+    }
+  }
+
+  if (isSgConditionalExp(ex)) {
+    SgConditionalExp* cex = isSgConditionalExp(ex);
+    Node* cond = toExprNode(cex->get_conditional_exp());
+    Node* ifTrue = toExprNode(cex->get_true_exp());
+    Node* ifFalse = toExprNode(cex->get_false_exp());
+
+    MuxNode* muxNode = new MuxNode();
+
+    if (cond != NULL)
+      cond->addNeighbour(muxNode);
+
+    if (ifTrue != NULL)
+      muxNode->setIfTrueNode(ifTrue);
+
+    if (ifFalse != NULL)
+      muxNode->setIfFalseNode(ifFalse);
+    return muxNode;
   }
 
   D(cerr << "Couldn't create node for: " + ex->unparseToString() << endl);
+  cout << "Couldn't create node for: " + ex->unparseToString() << endl;
   return NULL;
 }
 

@@ -1,6 +1,9 @@
 #include "utils.hxx"
 
 #include <boost/filesystem.hpp>
+#include <iostream>
+#include <iterator>
+#include <algorithm>
 
 std::string* get_pragma_param(std::string pragma, std::string param) {
   using namespace std;
@@ -41,4 +44,23 @@ void setupBuild() {
   create_directory(dir);
   create_directory(cpu);
   create_directory(engine);
+}
+
+
+std::vector<std::string> getFunctionArgNames(SgFunctionDeclaration* fdecl) {
+  std::vector<std::string> args;
+  foreach_(SgInitializedName* arg, fdecl->get_args()) {
+    args.push_back(arg->unparseToString());
+  }
+  return args;
+}
+
+
+std::vector<std::string> getFunctionCallArgNames(SgFunctionCallExp* exp) {
+  std::vector<std::string> args;
+  foreach_(SgExpression* arg, exp->get_args()->get_expressions()) {
+    args.push_back(arg->unparseToString());
+  }
+  return args;
+
 }

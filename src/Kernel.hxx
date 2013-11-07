@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <assert.h>
+#include "utils.hxx"
 
 #include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DataFlowGraph/OutputNode.hxx"
@@ -44,6 +45,12 @@ class Kernel {
       is required to ensure that output assignment expressions are not
       interpreted twice. */
   void removeOutputAssignments();
+
+  vector<string> getParamOffsets(vector<string> dfeTaskArguments,
+				 list<string> param_names);
+
+  vector<int> getKernelParamOffsets(list<string> param_name_vector);
+
 
 public:
   /** Create a kernel with the given name and the corresponding FAST
@@ -106,10 +113,6 @@ public:
     return outputs;
   }
 
-  /*  list<InputNode*> getInputs() {
-    return inputs;
-    } */
-
   DataFlowGraph* getDataFlowGraph() {
     return this->dfg;
   }
@@ -117,6 +120,16 @@ public:
   string printDotDFG() {
     return dfg->getDotRepresentation();
   }
+
+  vector<string> getDfeTaskInputs(vector<string> dfeTaskArguments) {
+    return getParamOffsets(dfeTaskArguments, streamInputParams);
+  }
+
+  vector<string> getDfeTaskOutputs(vector<string> dfeTaskArguments) {
+    return getParamOffsets(dfeTaskArguments, streamOutputParams);
+  }
+
+  void print(ostream&);
 };
 
 #endif /* KERNEL_HXX_ */

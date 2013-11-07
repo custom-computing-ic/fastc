@@ -5,6 +5,7 @@
 
 #include "DataFlowGraph/Node.hxx"
 #include "DataFlowGraph/InputNode.hxx"
+#include <iostream>
 
 Kernel::Kernel(string name, SgFunctionDeclaration* decl) {
   this->name = name;
@@ -34,6 +35,7 @@ string Kernel::imports() {
   return import(imports);
 
 }
+
 
 void Kernel::removeOutputAssignments() {
   ExtractOutputs extractOutputs(getOutputs());
@@ -303,4 +305,47 @@ string Kernel::getName() {
 string Kernel::getFunctionName() {
   // XXX for now assume kernels are kernel_<KernelName>
   return "kernel_" + name;
+}
+
+
+void Kernel::print(ostream& out) {
+  out << this->getName() << "[Outputs: ";
+  foreach_(string s, streamOutputParams) {
+    out << s << " ";
+  }
+  out << ", Inputs: ";
+  foreach_(string s, streamInputParams) {
+    out << s << " ";
+  }
+  out << "]";
+}
+
+
+vector<string> Kernel::getParamOffsets(
+			       vector<string> dfeTaskArguments,
+			       list<string> param_names) {
+  vector<string> task_inputs;
+  foreach_(int o, getKernelParamOffsets(param_names)) {
+    task_inputs.push_back(dfeTaskArguments[o]);
+  }
+  return task_inputs;
+}
+
+
+vector<int> Kernel::getKernelParamOffsets(list<string> param_name_vector) {
+  int pos = 0;
+  vector<int> arg_offsets;
+  foreach_(SgInitializedName* arg, decl->get_args()) {
+    string arg_name = arg->unparseToString();
+    list<string>::iterator it = find(
+				     param_name_vector.begin(),
+				     param_name_vector.end(),
+				     arg_name);
+    if (it != param_name_vector.end())
+      arg_offsets.push_back(pos);
+
+    pos++;
+  }
+
+  return arg_offsets;
 }

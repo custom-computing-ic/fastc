@@ -2,10 +2,14 @@
 #define UTILS_HXX
 
 #include <string>
+#include <vector>
+#include <iostream>
 
 #include "precompiled.hxx"
 
 //#define DEBUG
+
+#define DBG(x) //std::cout << #x << ": " << x << std::endl;
 
 #ifdef DEBUG
 #define D(x) x
@@ -28,5 +32,12 @@ namespace FASTAnalysis {
   }
 }
 */
+
+template<class T> void printVect(std::vector<T> v) {
+  std::copy(v.begin(), v.end(), std::ostream_iterator<T>(std::cout, " "));
+}
+
+std::vector<std::string> getFunctionDeclArgNames(SgFunctionDeclaration* f);
+std::vector<std::string> getFunctionCallArgNames(SgFunctionCallExp* exp);
 
 #endif

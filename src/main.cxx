@@ -11,6 +11,8 @@
 #include "AstToMaxJVisitor.hxx"
 #include "PragmaVisitor.hxx"
 #include "Compiler.hxx"
+#include "DotDFSVisitor.hxx"
+#include "DotPrint.hxx"
 
 #include "passes/Passes.hxx"
 #include "highlevel/HighlevelAnalysis.hxx"
@@ -30,16 +32,27 @@ int main(int argc, char** argv) {
     c->addPass(new KernelExtraction());
     c->addPass(new ExtractDesignConstants());
     c->addPass(new PragmaExtraction());
-    //    c->addPass(new BuildDFG());
-    //    c->addPass(new PrintDotDFG());
-    //    c->addPass(new HighlevelAnalysis());
+    c->addPass(new BuildDFG());
+    c->addPass(new PrintDotDFG());
+    c->addPass(new HighlevelAnalysis());
 
     //    c->addPass(new InputOutputExtraction());
     //    c->addPass(new InlineKernels());
+
+    c->addPass(new TaskExtraction());
     c->addPass(new CodeGeneration());
-    //    c->addPass(new RemoveFast());
-    //    c->addPass(new TaskExtraction());
-    //    c->addPass(new HostCodeGeneration());
+
+
+
+    /*
+    c->addPass(new RemoveFast());
+    c->addPass(new HostCodeGeneration());
+    */
     c->runPasses();
+
+    DataFlowGraph *dfg = c->getDesign()->getDataFlowGraph();
+    if (dfg != NULL)
+      DotPrint::writeDotForDfg("main_flow.dot", c->getDesign()->getDataFlowGraph());
+
     return 0;
 }

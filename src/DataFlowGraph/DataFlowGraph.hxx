@@ -4,7 +4,6 @@
 #include <list>
 #include "Node.hxx"
 
-using namespace std;
 
 class DataFlowGraph {
 
@@ -13,10 +12,10 @@ class DataFlowGraph {
 
 public:
   Node *source, *sink;
-  list<Node *>  nodes;
-  list<Node *>  sources;
-  list<Offset*> streams;
-  list<Node*>   arithmetics;
+  std::list<Node *>  nodes;
+  std::list<Node *>  sources;
+  std::list<Offset*> streams;
+  std::list<Node*>   arithmetics;
 
   DataFlowGraph();
   void   addInputNode(Node*);
@@ -36,8 +35,8 @@ public:
   string getDotRepresentation();
   
   Node*        getSource();
-  list<Node *> getSources();
-  list<Node *> getNodes();
+  std::list<Node *> getSources();
+  std::list<Node *> getNodes();
 
 };
 

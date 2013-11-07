@@ -7,17 +7,20 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/Kernel.hxx src/Kernel.cxx \
   src/Design.hxx src/Design.cxx \
   src/Compiler.hxx \
+  src/DfeTask.hxx src/DfeTask.cxx \
   src/precompiled.hxx src/utils.hxx src/utils.cxx \
   src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
   src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
   src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
   src/PragmaVisitor.hxx src/PragmaVisitor.cxx \
+  src/DotPrint.hxx src/DotPrint.cxx\
   src/DataFlowGraph/DataFlowGraph.hxx src/DataFlowGraph/DataFlowGraph.cxx \
   src/DataFlowGraph/InputNode.hxx src/DataFlowGraph/InputNode.cxx  \
   src/DataFlowGraph/OutputNode.hxx src/DataFlowGraph/OutputNode.cxx \
   src/DataFlowGraph/Node.hxx src/DataFlowGraph/Node.cxx \
   src/DataFlowGraph/SinkNode.hxx src/DataFlowGraph/SinkNode.cxx \
   src/DataFlowGraph/SourceNode.hxx src/DataFlowGraph/SourceNode.cxx \
+  src/DataFlowGraph/MuxNode.hxx src/DataFlowGraph/MuxNode.cxx\
   src/DataFlowGraph/DFSVisitor.hxx src/DataFlowGraph/DFSVisitor.cxx \
   src/DataFlowGraph/BFSVisitor.hxx src/DataFlowGraph/BFSVisitor.cxx \
   src/DataFlowGraph/CounterNode.hxx src/DataFlowGraph/CounterNode.cxx\

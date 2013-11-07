@@ -1,5 +1,7 @@
 #include "DotDFSVisitor.hxx"
 
+#include <fstream>
+
 void DotDFSVisitor::visit(Node *node) {
   foreach_ (Node* child, node->getNeighbours()) {
     dot += node->toDot() + " -> ";
@@ -18,4 +20,10 @@ void DotDFSVisitor::afterVisit() {
 
 string DotDFSVisitor::getDot() {
   return dot;
+}
+
+void DotDFSVisitor::writeDotToFile(string fname) {
+  ofstream f(fname.c_str());
+  f << dot;
+  f.close();
 }

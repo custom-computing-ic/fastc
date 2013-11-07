@@ -41,6 +41,8 @@ public:
     log("Dataflow Implementation Generated Succesfully in build/");
   }
 
+  Design* getDesign() { return design; }
+
 };
 
 #endif
