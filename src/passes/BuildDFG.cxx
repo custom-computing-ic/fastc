@@ -5,7 +5,7 @@ void BuildDFG::runPass(Design *design) {
   foreach_(Kernel *k, design->getKernels()) {
     cout << "Here" << endl;
     ASTtoDFGVisitor visitor(k);
-    visitor.traverse(design->getProject(), preorder);
+    visitor.traverse(k->getDeclaration(), preorder);
   }
 }
 
