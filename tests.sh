@@ -21,13 +21,13 @@ TEST_RUN_DIR=test_run
 runDiffTool() {
     file1=$1
     file2=$2
-    
+
     # run meld if available
-    difftool=`which meld > /dev/null 2>/dev/null` 
+    difftool=`which meld > /dev/null 2>/dev/null`
     res=$?
     if [ "$res" = "0" ]; then
-	meld $file1 $file2
-	return
+        meld $file1 $file2
+        return
     fi
 
     diff $file1 $file2
@@ -80,16 +80,16 @@ runTest() {
     res=$?
     if [ "$res" = "0" ]; then
         printf "\033[0;32m[OK!]\033[0m   $1.c\n\n"
-	if [ "$show_output" = "true" ]; then
-	    showOutput $test_log_file
-	fi
+        if [ "$show_output" = "true" ]; then
+            showOutput $test_log_file
+        fi
     else
         print_error "[FAIL!]"
-	printf " $1.c\n"
+        printf " $1.c\n"
         print_info "Diff (meld $test_rel_path/$runOut $test_rel_path/$base.exp)\n"
-	runDiffTool $test_abs_path/$runOut $test_abs_path/$base.exp
+        runDiffTool $test_abs_path/$runOut $test_abs_path/$base.exp
 
-	showOutput $test_log_file
+        showOutput $test_log_file
     fi
 }
 
@@ -111,12 +111,13 @@ runLocalTestSuite() {
     runTest "testCommon/maxc/CmdRead" $1
     runTest "testCommon/maxc/CmdWrite" $1
     runTest "testCommon/maxc/Mux" $1
+    runTest "testApplications/maxc/MovingAverage" $1
     runTest "testTypes/maxc/Types" $1
     runTest "test1dConvolution/maxc/Convolution1d" $1
     runTest "testPassThrough/maxc/PassThroughKernel" $1
     runTest "testCounter/maxc/Counter" $
     runTest "testFASTCIntegrated/maxc/main" $
-#    runTest "maxc/testRTMManager"
+    #    runTest "maxc/testRTMManager"
 }
 
 # runs a single test.
@@ -154,10 +155,10 @@ if [ "$REMOTE" = "true" ]; then
 else
     setupTestDirectory
     if [ "$TEST" = "" ]; then
-	runLocalTestSuite $OUTPUT
+        runLocalTestSuite $OUTPUT
     else
-	runLocalTest $TEST $OUTPUT
-   fi
+        runLocalTest $TEST $OUTPUT
+    fi
 fi
 
 ############# Test Summary ###############
