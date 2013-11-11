@@ -15,6 +15,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/DotPrint.hxx src/DotPrint.cxx\
   src/DfeTask.hxx src/DfeTask.cxx \
   src/DfeGraph.hxx src/DfeGraph.cxx \
+  src/Stencil.h src/Stencil.cc \
   src/DataFlowGraph/DataFlowGraph.hxx src/DataFlowGraph/DataFlowGraph.cxx \
   src/DataFlowGraph/InputNode.hxx src/DataFlowGraph/InputNode.cxx  \
   src/DataFlowGraph/OutputNode.hxx src/DataFlowGraph/OutputNode.cxx \
@@ -39,6 +40,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/passes/InputOutputExtraction.hxx \
   src/passes/BuildDFG.hxx src/passes/BuildDFG.cxx \
   src/passes/PrintDotDFG.hxx src/passes/PrintDotDFG.cxx \
+  src/passes/ExtractStencil.h src/passes/ExtractStencil.cc \
   src/highlevel/HLAVisitor.hxx src/highlevel/HLAVisitor.cxx \
   src/highlevel/HighlevelAnalysis.hxx src/highlevel/HighlevelAnalysis.cxx \
   src/ife/IFEVisitor.hxx src/ife/IFEVisitor.cxx \

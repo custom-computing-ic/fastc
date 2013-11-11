@@ -9,7 +9,7 @@
 
 //#define DEBUG
 
-#define DBG(x) //std::cout << #x << ": " << x << std::endl;
+#define DBG(x) std::cout << #x << ": " << x << std::endl;
 
 #ifdef DEBUG
 #define D(x) x

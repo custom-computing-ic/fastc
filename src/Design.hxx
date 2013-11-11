@@ -7,6 +7,7 @@
 #include "precompiled.hxx"
 #include "DfeGraph.hxx"
 #include "DfeTask.hxx"
+#include "Stencil.h"
 #include "utils.hxx"
 
 #include <map>
@@ -26,6 +27,7 @@ class Design {
   list<Kernel*> kernels;
   DfeGraph* dfe;
   map<string, set<string> > inputs_to_fname, outputs_to_fname;
+  vector<Stencil*> stencils;
 
 public:
   Design(SgProject* project) {
@@ -64,6 +66,9 @@ public:
 
   DfeGraph* getDfeGraph() { return dfe; }
 
+
+  void addStencil(Stencil* s) { stencils.push_back(s); }
+  vector<Stencil*> getStencils() { return stencils; }
 };
 
 #endif /* DESIGN_HXX_ */

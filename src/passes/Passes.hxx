@@ -13,5 +13,6 @@
 #include "InputOutputExtraction.hxx"
 #include "BuildDFG.hxx"
 #include "PrintDotDFG.hxx"
+#include "ExtractStencil.h"
 
 #endif
