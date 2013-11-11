@@ -176,7 +176,7 @@ string Kernel::convertWidth(SgType *type) {
       string s;
       if (isSgValueExp(dims[1]))
         s = boost::lexical_cast<string>(getIntegerConstantValue(isSgValueExp(dims[1])));
-        else
+      else
         s = dims[1]->unparseToString();
       return s;
     } else
@@ -261,13 +261,13 @@ void Kernel::saveOriginalInputOutputNodes() {
       if (modSet.find(paramName) != modSet.end()) {
         streamOutputParams.push_back(paramName);
 
-	// add output node to DFG
-	dfg->addOutputNode(new OutputNode(paramName));
+        // add output node to DFG
+        dfg->addOutputNode(new OutputNode(paramName));
       } else {
         streamInputParams.push_back(paramName);
 
-	// add input node to DFG
-	dfg->addInputNode(new InputNode(paramName));
+        // add input node to DFG
+        dfg->addInputNode(new InputNode(paramName));
       }
     } else {
       scalarInputs.push_back(paramName);
@@ -322,8 +322,8 @@ void Kernel::print(ostream& out) {
 
 
 vector<string> Kernel::getParamOffsets(
-			       vector<string> dfeTaskArguments,
-			       list<string> param_names) {
+                                       vector<string> dfeTaskArguments,
+                                       list<string> param_names) {
   vector<string> task_inputs;
   foreach_(int o, getKernelParamOffsets(param_names)) {
     task_inputs.push_back(dfeTaskArguments[o]);
@@ -338,9 +338,9 @@ vector<int> Kernel::getKernelParamOffsets(list<string> param_name_vector) {
   foreach_(SgInitializedName* arg, decl->get_args()) {
     string arg_name = arg->unparseToString();
     list<string>::iterator it = find(
-				     param_name_vector.begin(),
-				     param_name_vector.end(),
-				     arg_name);
+                                     param_name_vector.begin(),
+                                     param_name_vector.end(),
+                                     arg_name);
     if (it != param_name_vector.end())
       arg_offsets.push_back(pos);
 
@@ -348,4 +348,9 @@ vector<int> Kernel::getKernelParamOffsets(list<string> param_name_vector) {
   }
 
   return arg_offsets;
+}
+
+
+string Kernel::getParamName(int index) {
+  return decl->get_args()[index]->unparseToString();
 }

@@ -34,7 +34,9 @@ void TaskExtraction::runPass(Design* design) {
       // check if this a function call statement
       SgExprStatement *expr_st = isSgExprStatement(st);
       SgFunctionCallExp* fcall;
-      if (expr_st != NULL && ((fcall = isSgFunctionCallExp(expr_st->get_expression())) != NULL)) {
+
+      if (expr_st != NULL &&
+          ((fcall = isSgFunctionCallExp(expr_st->get_expression())) != NULL)) {
         Kernel *k = design->getKernelMatchingFunctionCall(fcall);
         vector<string> dfe_args = getFunctionCallArgNames(fcall);
         DfeTask* task = new DfeTask(k->getName(), k, dfe_args);

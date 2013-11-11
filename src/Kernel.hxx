@@ -130,6 +130,11 @@ public:
   }
 
   void print(ostream&);
+
+  /** Returns the name of the parameter at position 'index' in the
+      kernel definition. Example: for the definition kernel_f(p0, ...)
+      getParamName(0) returns p1. */
+  string getParamName(int index);
 };
 
 #endif /* KERNEL_HXX_ */
