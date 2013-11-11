@@ -17,7 +17,8 @@ class DfeTask : public Node {
 public:
   double BRAMs, LUTs, FFs, DSPs;
   double bandwidth;
-  list<Offset*> streams; 
+  list<Offset*> streams;
+  int idle; 
 
   std::vector<Offset*> sinks;
   std::vector<Offset*> sources;

@@ -32,17 +32,18 @@ int main() {
   int *out3 = (int *)malloc(sizeof(int) * size);
   int *out4 = (int *)malloc(sizeof(int) * size);
 
+  //the output must be declared before input!
 #pragma fast hw:kernel_f1
   kernel_f1(in, out1);
-  
-#pragma fast hw:kernel_f2
-  kernel_f2(out1, out2);
 
 #pragma fast hw:kernel_f3
   kernel_f3(out1, out2, out3);
 
 #pragma fast hw:kernel_f3
   kernel_f3(out1, out3, out4);
+
+#pragma fast hw:kernel_f2
+  kernel_f2(out3, out4);
 
   for (int i = 0; i < 10; i++)
     if (out3[i] != 6) {

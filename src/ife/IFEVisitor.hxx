@@ -1,25 +1,28 @@
 #ifndef IFEVISITOR_HXX_
 #define IFEVISITOR_HXX_
 
-#include "../DfeGraph.hxx"
+#include "../DataFlowGraph/DataFlowGraph.hxx"
+#include "../DfeTask.hxx"
 
 #include <string>
 #include <vector>
 
 class IFEVisitor {
 
-  DfeGraph *dfe;
+  DataFlowGraph *dfg;
 
   public:
-  IFEVisitor(DfeGraph *dfe);
+  IFEVisitor(DataFlowGraph *dfg);
   void ExtractProperties();
   void ATAPLevel();
   void CombineTasks();
   void CombineSegments();
   void OptimiseConfigurations();
-  void GenerateSolutions(); 
+  void GenerateSolutions();
+  void AssignLevel(DfeTask* task); 
   Offset* FindSink(DfeTask* task, string name);
   void FindSource(DfeTask* task);
+  string MatchName(DfeTask* root, DfeTask* branch);
 
 };
 

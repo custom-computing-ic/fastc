@@ -25,6 +25,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/DataFlowGraph/MuxNode.hxx src/DataFlowGraph/MuxNode.cxx\
   src/DataFlowGraph/DFSVisitor.hxx src/DataFlowGraph/DFSVisitor.cxx \
   src/DataFlowGraph/BFSVisitor.hxx src/DataFlowGraph/BFSVisitor.cxx \
+  src/DataFlowGraph/TopSortVisitor.hxx src/DataFlowGraph/TopSortVisitor.cxx \
   src/DataFlowGraph/CounterNode.hxx src/DataFlowGraph/CounterNode.cxx\
   src/passes/ExtractOutputs.hxx \
   src/passes/ManagerExtraction.hxx \
@@ -44,6 +45,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/highlevel/HLAVisitor.hxx src/highlevel/HLAVisitor.cxx \
   src/highlevel/HighlevelAnalysis.hxx src/highlevel/HighlevelAnalysis.cxx \
   src/ife/IFEVisitor.hxx src/ife/IFEVisitor.cxx \
+  src/DfeTopSortVisitor.hxx src/DfeTopSortVisitor.cxx \
   src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx 
 
 

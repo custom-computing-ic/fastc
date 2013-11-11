@@ -31,6 +31,9 @@ public:
   list<Node *> getNeighbours(){
     return neighbours;
   }
+  list<Node *> getInputs(){
+    return inputs;
+  }
   string getId();
   virtual string toMaxJ()=0;
   virtual string getType() {return "hwFloat(8, 24)";};
@@ -42,11 +45,14 @@ class Offset : public Node{
   public:
   list<string> offsets;
   list<int> OnchipMemory;
-  int delay;
+  int delay;//calculated in HLAVisitor
+  int inputdelay;//updated in DfeTopSortVisitor
 
   public:
-  Offset(string name) : Node(name) {};
+  Offset(string name) : Node(name) {delay =0; inputdelay=0;};
   void addoffset(string offset);
+  void setDelay(int inputdelay) {this->inputdelay = inputdelay;}
+   int getDelay() {return this->inputdelay;}
   int memory();
   string toMaxJ() {return "Offset\n";}
   string classname() {return "Offset";}
