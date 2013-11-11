@@ -5,7 +5,7 @@
 #include <ostream>
 #include "Kernel.hxx"
 #include "precompiled.hxx"
-#include "DfeGraph.hxx"
+#include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DfeTask.hxx"
 #include "utils.hxx"
 
@@ -15,7 +15,6 @@
 
 using namespace std;
 
-
 /** Stores information about a design including the original ROSE
     project, its kernels and corresponding dataflow graph. This is
     used throughout the compilation process to store and transmit
@@ -24,13 +23,13 @@ class Design {
 
   SgProject* project;
   list<Kernel*> kernels;
-  DfeGraph* dfe;
+  DataFlowGraph* dfg;
   map<string, set<string> > inputs_to_fname, outputs_to_fname;
 
 public:
   Design(SgProject* project) {
     this->project = project;
-    this->dfe = new DfeGraph();
+    this->dfg = new DataFlowGraph();
   }
 
   void generateCode(ostream& out);
@@ -62,7 +61,7 @@ public:
     return project;
   }
 
-  DfeGraph* getDfeGraph() { return dfe; }
+  DataFlowGraph* getDataFlowGraph() { return dfg; }
 
 };
 

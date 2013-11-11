@@ -1,0 +1,58 @@
+package numericaldifferentiation;
+
+import com.maxeler.maxcompiler.v2.kernelcompiler.Kernel;
+import com.maxeler.maxcompiler.v2.kernelcompiler.KernelParameters;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEFix.SignMode;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEType;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEVar;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.composite.DFEArray;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.composite.DFEArrayType;
+
+public class GSDifferentiationKernel extends Kernel {
+
+  private final int Par;
+  private int pipe;
+
+  protected GSDifferentiationKernel(KernelParameters parameters,
+      int Par, double dspFactor, int mantissa, int exponent,
+      boolean fixed, double max, int bits_accuracy) {
+    super(parameters);
+    this.Par = Par;
+    DFEType real = dfeFloat(11, 53);
+
+    DFEArrayType<DFEVar> outputType = new DFEArrayType<DFEVar>(real, Par);
+    DFEArrayType<DFEVar> computeArrType  = new DFEArrayType<DFEVar>(computeType, Par);
+
+    DFEVar cycle_count = control.count.simpleCounter(64).cast(dfeInt(64));
+
+    DFEVar width = io.scalarInput("width", dfeInt(32)).cast(dfeInt(64));
+    DFEVar size  = io.scalarInput("size", dfeInt(32)).cast(dfeInt(64));
+    DFEVar h     = io.scalarInput("h", dfeFloat(11, 53)).cast(computeType);
+
+    DFEArray<DFEVar> value  = io.input("value", inputType).cast(computeArrType);
+
+    DFEArray<DFEVar> result = computeArrType.newInstance(this);
+
+    for (pipe = 0; pipe < Par; pipe++) {
+      DFEVar compute = ((Par * cycle_count + pipe) >= width) & ((Par * cycle_count + pipe) < size - wid
+     result[pipe] <== compute ? ...
+                                                          }
+
+    io.output("diff_value", result.cast(outputType), outputType);
+  }
+
+  private DFEVar diff(DFEArray<DFEVar> value, int offset, int pipe) {
+     int cycle_offset = (pipe + offset) / Par;
+     int pipe_offset  = (pipe + offset) % Par;
+
+     int cycle_offset_neg = (Par - 1 - pipe + offset) / Par;
+     int pipe_offset_neg  = Par - 1 - (Par - 1 - pipe + offset) % Par;
+     DFEVar arr2 = stream.offset(value[pipe_offset_neg], -cycle_offset_neg);
+     return arr2 - arr1;
+  }
+
+  private DFEVar diff2(DFEArray<DFEVar> value, DFEVar h, int pipe) {
+    return (-2 * diff(value, 2, pipe)
+        -1 * diff(value, 1, pipe)) / (10 * h);
+  }
+}

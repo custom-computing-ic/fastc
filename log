@@ -1,0 +1,51 @@
+Starting Dataflow Compilation
+[ 0] Kernel Extraction Pass
+Adding node 0xde13a0
+Adding node 0xddf9c0
+Adding node 0xde1340
+Adding node 0xde0d50
+Adding node 0xdb9c40
+Adding node 0xde1590
+Adding node 0xde12f0
+[ 1] Extract Design Constants Pass
+[ 2] Pragma Extraction Pass
+[ 3] Building DFG Pass
+Here
+Node 0xde13a0Adding node 0xde1830
+Adding node 0xde18c0
+Adding node 0xde18c0
+buffer b
+ 0
+Adding node 0xde1ab0
+Adding node 0xde1ab0
+Adding node 0xde13f0
+Here
+Node 0xde1340Adding node 0xde1e70
+Adding node 0xde1ec0
+Adding node 0xde1ec0
+buffer b
+ 0
+Adding node 0xde1f30
+Adding node 0xde1f30
+Adding node 0xde14d0
+Here
+Node 0xde1590Adding node 0xde21f0
+Node 0xdb9c40Adding node 0xde2240
+Adding node 0xde22d0
+Adding node 0xde22d0
+buffer c
+ 0
+Adding node 0xde23e0
+Adding node 0xde23e0
+Adding node 0xde1670
+[ 4] Printing DOT DFG. Pass
+[ 5] Analysing kernel properties Pass
+arrive here!
+[ 6] DFE Task Extraction Pass
+Adding node 0xde2aa0
+Adding node 0xde2c70
+Adding node 0xde2c70
+Adding node 0xde2e00
+Adding node 0xde2e00
+[ 7] MaxJ Code Generation Pass
+Dataflow Implementation Generated Succesfully in build/

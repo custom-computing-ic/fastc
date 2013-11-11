@@ -54,9 +54,11 @@ int main(int argc, char** argv) {
     */
     c->runPasses();
 
-//  DfeGraph *dfe = c->getDesign()->getDfeGraph();
-//  if (dfe != NULL)
-//    DotPrint::writeDotForDfg("main_flow.dot", c->getDesign()->getDfeGraph());
+    //To check: somehow the dot file is not written now? 
+    DataFlowGraph *dfg = c->getDesign()->getDataFlowGraph();
+    cout<<dfg<<endl;
+    if (dfg != NULL)
+      DotPrint::writeDotForDfg("main_flow.dot", c->getDesign()->getDataFlowGraph());
 
     return 0;
 }

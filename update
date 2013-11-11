@@ -1,0 +1,47 @@
+Fast-forward
+ Makefile.am                                   |   68 ++++++++-------
+ include/maxcc.h                               |    8 +--
+ src/AstToDfgVisitor.cxx                       |  113
++++++++++++++------------
+ src/AstToMaxJVisitor.cxx                      |   67 ++++++++-------
+ src/Compiler.hxx                              |    2 +
+ src/DataFlowGraph/CounterNode.cxx             |    7 ++
+ src/DataFlowGraph/CounterNode.hxx             |   27 ++++++
+ src/DataFlowGraph/DFSVisitor.hxx              |    6 +-
+ src/DataFlowGraph/DataFlowGraph.cxx           |    6 +-
+ src/DataFlowGraph/DataFlowGraph.hxx           |   13 ++--
+ src/DataFlowGraph/MuxNode.cxx                 |    1 +
+ src/DataFlowGraph/MuxNode.hxx                 |   26 ++++++
+ src/DataFlowGraph/Node.cxx                    |   13 +--
+ src/DataFlowGraph/Node.hxx                    |   54 ++----------
+ src/Design.cxx                                |   65 +++++++++++++--
+ src/Design.hxx                                |   30 ++++++-
+ src/DfeTask.cxx                               |   15 ++++
+ src/DfeTask.hxx                               |   34 ++++++++
+ src/DotDFSVisitor.cxx                         |    8 ++
+ src/DotDFSVisitor.hxx                         |    4 +-
+ src/DotPrint.cxx                              |    7 ++
+ src/DotPrint.hxx                              |   13 +++
+ src/Kernel.cxx                                |   45 ++++++++++
+ src/Kernel.hxx                                |   21 ++++-
+ src/main.cxx                                  |   19 ++++-
+ src/passes/BuildDFG.cxx                       |    3 +-
+ src/passes/PrintDotDFG.cxx                    |    8 +--
+ src/passes/TaskExtraction.cxx                 |   21 ++++-
+ src/utils.cxx                                 |   22 +++++
+ src/utils.hxx                                 |   11 +++
+ test/test1dConvolution/maxc/Convolution1d.c   |   27 +++----
+ test/test1dConvolution/maxc/Convolution1d.exp |   38 +++++----
+ test/testCommon/maxc/CmdRead.c                |    8 +-
+ test/testCommon/maxc/CmdRead.exp              |   50 +++++------
+ test/testCommon/maxc/CmdWrite.c               |   12 +--
+ test/testCommon/maxc/CmdWrite.exp             |   58 ++++++-------
+ test/testCommon/maxc/Mux.c                    |    3 +
+ test/testCommon/maxc/Mux.exp                  |   23 +++++
+ test/testCounter/maxc/Counter.c               |   22 ++---
+ test/testCounter/maxc/Counter.exp             |   36 +++-----
+ test/testFASTCIntegrated/maxc/main.c          |   54 ++++++++++++
+ test/testRTMStatic/maxc/RTM.c                 |    8 +-
+ test/testRTMStatic/maxc/RTM.exp               |   19 +++--
+ tests.sh                                      |    2 +
+

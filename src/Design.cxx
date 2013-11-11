@@ -66,17 +66,17 @@ void Design::addDfeTask(DfeTask* task) {
     it = outputs_to_fname.find(s);
     if (it != outputs_to_fname.end()) {
       foreach_(string f, it->second) {
-	in_deps.push_back(f);
+        in_deps.push_back(f);
       }
     }
   }
 
   if (in_deps.size() == 0) {
-    dfe->addSource(task);
+    dfg->addSource(task);
   } else {
-    dfe->addTask(task);
+    dfg->addNode(task);
     foreach_(string s, in_deps) {
-      DfeTask *n = dfe->findTask(s);
+      Node *n = dfg->findNode(s);
       if (n != NULL)
         n->addNeighbour(task);
     }

@@ -4,9 +4,9 @@
 void IdlefunctionElimination::runPass(Design* design){
 
   //get the function-level DFG
-  DfeGraph* dfe = design->getDfeGraph();
+  DataFlowGraph* dfg = design->getDataFlowGraph();
 
-  IFEVisitor ifeVisitor(dfe);
+  IFEVisitor ifeVisitor(dfg);
   //each function node goes through HLA to extract function properties
   ifeVisitor.ExtractProperties();
 
