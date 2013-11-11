@@ -72,13 +72,13 @@ void Design::addDfeTask(DfeTask* task) {
   }
 
   if (in_deps.size() == 0) {
-    dfg->addSource(task);
+    dfe->addSource(task);
   } else {
-    dfg->addNode(task);
+    dfe->addTask(task);
     foreach_(string s, in_deps) {
-      Node *n = dfg->findNode(s);
+      DfeTask *n = dfe->findTask(s);
       if (n != NULL)
-	n->addNeighbour(task);
+        n->addNeighbour(task);
     }
   }
 

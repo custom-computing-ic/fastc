@@ -23,8 +23,8 @@ void TaskExtraction::runPass(Design* design) {
   SgProject* project = design->getProject();
   Rose_STL_Container<SgNode*> dfePragmas;
   dfePragmas = NodeQuery::queryNodeList(
-                                        NodeQuery::querySubTree(project, V_SgPragmaDeclaration),
-                                        &findDFETasks);
+      NodeQuery::querySubTree(project, V_SgPragmaDeclaration),
+      &findDFETasks);
 
   foreach_ (SgNode* node, dfePragmas) {
     SgPragmaDeclaration *pragma = isSgPragmaDeclaration(node);
@@ -34,6 +34,7 @@ void TaskExtraction::runPass(Design* design) {
       // check if this a function call statement
       SgExprStatement *expr_st = isSgExprStatement(st);
       SgFunctionCallExp* fcall;
+
       if (expr_st != NULL &&
           ((fcall = isSgFunctionCallExp(expr_st->get_expression())) != NULL)) {
         Kernel *k = design->getKernelMatchingFunctionCall(fcall);

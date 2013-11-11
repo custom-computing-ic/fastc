@@ -8,15 +8,15 @@
 
 
 void kernel_f1(int *a, int *b) {
-  b[0] = *a + 1;
+  b[0] = a[1] + 1;
 }
 
 void kernel_f2(int *a, int *b) {
-  b[0] = *a * 5;
+  b[0] = a[1] * 5;
 }
 
 void kernel_f3(int * a, int *b, int *c) {
-  c[0] = *a  + *b;
+  c[0] = a[1]  + b[2];
 }
 
 int main() {

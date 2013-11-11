@@ -42,6 +42,7 @@ class Offset : public Node{
   public:
   list<string> offsets;
   list<int> OnchipMemory;
+  int delay;
 
   public:
   Offset(string name) : Node(name) {};

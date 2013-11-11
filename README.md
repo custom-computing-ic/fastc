@@ -18,6 +18,7 @@ To install fastc run:
 ~~~~
 tar xvzf fastc-${version}.tar.gz && cd fastc-${version}
 configure --with-boost=/path/to/boost --with-rose=/path/to/rose
+--with-boost=/mnt/data/cccad3/nx210/tools/boost --with-rose=/mnt/data/cccad3/nx210/tools/rose
 make && make install
 ~~~~
 

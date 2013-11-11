@@ -17,6 +17,9 @@
 #include "passes/Passes.hxx"
 #include "highlevel/HighlevelAnalysis.hxx"
 
+#include "ife/IdlefunctionElimination.hxx"
+
+
 int main(int argc, char** argv) {
     SgProject* project = frontend(argc, argv);
     //  AstTests :: runAllTests(project);
@@ -34,12 +37,13 @@ int main(int argc, char** argv) {
     c->addPass(new PragmaExtraction());
     c->addPass(new BuildDFG());
     c->addPass(new PrintDotDFG());
-    c->addPass(new HighlevelAnalysis());
 
-    //    c->addPass(new InputOutputExtraction());
-    //    c->addPass(new InlineKernels());
+    //c->addPass(new InputOutputExtraction());
+    //c->addPass(new InlineKernels());
 
     c->addPass(new TaskExtraction());
+    
+    c->addPass(new IdlefunctionElimination());
     c->addPass(new CodeGeneration());
 
 
@@ -50,9 +54,9 @@ int main(int argc, char** argv) {
     */
     c->runPasses();
 
-    DataFlowGraph *dfg = c->getDesign()->getDataFlowGraph();
-    if (dfg != NULL)
-      DotPrint::writeDotForDfg("main_flow.dot", c->getDesign()->getDataFlowGraph());
+//  DfeGraph *dfe = c->getDesign()->getDfeGraph();
+//  if (dfe != NULL)
+//    DotPrint::writeDotForDfg("main_flow.dot", c->getDesign()->getDfeGraph());
 
     return 0;
 }
