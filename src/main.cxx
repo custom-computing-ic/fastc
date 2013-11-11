@@ -32,8 +32,6 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    
-    
     bool stencil_compiler_flag = false;
 
     DBG(stencil_compiler_flag);

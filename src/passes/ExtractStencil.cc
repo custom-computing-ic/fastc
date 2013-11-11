@@ -40,14 +40,34 @@ vector<string> ExtractStencil::getLoopVariables(SgStatement *st) {
  return vars;
 }
 
+SgStatement* ExtractStencil::getStencilUpdateAssignment(SgStatement *st) {
+  SgBasicBlock *bb = isSgBasicBlock(getStencilUpdateStatement(st));
+  if (bb != NULL && !bb->get_statements().empty()) {
+    // assume stencil update assignment is the first statement
+    SgExprStatement* expr = isSgExprStatement(bb->get_statements()[0]);
+    if (expr != NULL && isSgAssignOp(expr->get_expression())) {
+      return expr;
+    }
+  }
+
+  return NULL;
+}
+
 SgStatement* ExtractStencil::getStencilUpdateStatement(SgStatement *st) {
-  while (isSgForStatement(st)) {
-    st = isSgBasicBlock(isSgForStatement(st)->get_loop_body());
-    if (st == NULL)
-      break;
-    int st_count = isSgBasicBlock(st)->get_statements().size();
-    if (st_count == 1 )
-      st = isSgBasicBlock(st)->get_statements()[0];
+  SgForStatement* for_stmt;
+  while ( (for_stmt = isSgForStatement(st)) != NULL) {
+    SgBasicBlock* bb = isSgBasicBlock(for_stmt->get_loop_body());
+
+    if (bb == NULL)
+      return st;
+
+    st = bb;
+
+    if (bb->get_statements().size() == 1) {
+      SgForStatement* f = isSgForStatement(bb->get_statements()[0]);
+      if (f)
+	st = f;
+    }
   }
 
   return st;
@@ -99,7 +119,9 @@ void ExtractStencil::runPass(Design* design) {
       vector<string> inputs = getStencilInputs(st);
       vector<string> outputs = getStencilOutputs(st);
       vector<string> loopVars = getLoopVariables(st);
-      
+
+      cout << "Update assignment " << getStencilUpdateAssignment(st)->unparseToString() << endl;
+
       Stencil *s = new Stencil(dim, inputs, outputs);
       s->setLoopVariables(loopVars);
 
