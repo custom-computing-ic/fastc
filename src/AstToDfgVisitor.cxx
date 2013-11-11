@@ -272,7 +272,7 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
       cout << "Node " << n;
       string op;
       if (isSgMinusOp(ex))
-	op = "-";
+	    op = "-";
       OpNode *node = new OpNode(op);
       n->addNeighbour(node);
       node->addInput(n);

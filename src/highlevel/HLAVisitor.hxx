@@ -3,6 +3,7 @@
 #include "../DataFlowGraph/DataFlowGraph.hxx"
 #include "../DataFlowGraph/Node.hxx"
 #include "../DataFlowGraph/DFSVisitor.hxx"
+#include <list>
 
 #include <string>
 
@@ -27,4 +28,11 @@ class HLAVisitor {
   void ArithmeticResource(Node *node, int* width);
   double gap(Offset* node);
   bool findoffset( int offset, Offset* node);
+
+  double getBRAMs(){ return BRAMs;}
+  double getLUTs() { return LUTs; }
+  double getFFs()  { return FFs;  }
+  double getDSPs() { return DSPs; }
+  double getbandwidth() { return bandwidth; }
+  list<Offset*> getstreams() { return dfg->streams;}
 };

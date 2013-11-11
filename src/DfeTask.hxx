@@ -12,8 +12,15 @@ class DfeTask : public Node {
   static int s_idCount;
   std::vector<std::string> inputs, outputs;
   Kernel* kernel;
-
+  
 public:
+  double BRAMs, LUTs, FFs, DSPs;
+  double bandwidth;
+  list<Offset*> streams; 
+
+  std::vector<Offset*> sinks;
+  std::vector<Offset*> sources;
+
   DfeTask(string name, Kernel *k, std::vector<std::string> call_args);
 
   Kernel* getKernel() { return kernel; }

@@ -50,6 +50,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
       max = max > *jt ? max : *jt;
       min = min > *jt ? *jt : min;
     } 
+    (*it)->delay = max - min;
     Bs = (double) ((max - min) * precision) / (36.0 * 1024.0);
     
     double width = (double)((int)((*it)->OnchipMemory.size()) * precision) / 36.0;

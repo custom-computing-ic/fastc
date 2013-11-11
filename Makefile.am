@@ -7,13 +7,14 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/Kernel.hxx src/Kernel.cxx \
   src/Design.hxx src/Design.cxx \
   src/Compiler.hxx \
-  src/DfeTask.hxx src/DfeTask.cxx \
   src/precompiled.hxx src/utils.hxx src/utils.cxx \
   src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
   src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
   src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
   src/PragmaVisitor.hxx src/PragmaVisitor.cxx \
   src/DotPrint.hxx src/DotPrint.cxx\
+  src/DfeTask.hxx src/DfeTask.cxx \
+  src/DfeGraph.hxx src/DfeGraph.cxx \
   src/DataFlowGraph/DataFlowGraph.hxx src/DataFlowGraph/DataFlowGraph.cxx \
   src/DataFlowGraph/InputNode.hxx src/DataFlowGraph/InputNode.cxx  \
   src/DataFlowGraph/OutputNode.hxx src/DataFlowGraph/OutputNode.cxx \
@@ -39,7 +40,9 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/passes/BuildDFG.hxx src/passes/BuildDFG.cxx \
   src/passes/PrintDotDFG.hxx src/passes/PrintDotDFG.cxx \
   src/highlevel/HLAVisitor.hxx src/highlevel/HLAVisitor.cxx \
-  src/highlevel/HighlevelAnalysis.hxx src/highlevel/HighlevelAnalysis.cxx 
+  src/highlevel/HighlevelAnalysis.hxx src/highlevel/HighlevelAnalysis.cxx \
+  src/ife/IFEVisitor.hxx src/ife/IFEVisitor.cxx \
+  src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx 
 
 
 #BUILT_SOURCES = src/precompiled.hxx.gch

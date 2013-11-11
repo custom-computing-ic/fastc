@@ -5,7 +5,7 @@
 #include <ostream>
 #include "Kernel.hxx"
 #include "precompiled.hxx"
-#include "DataFlowGraph/DataFlowGraph.hxx"
+#include "DfeGraph.hxx"
 #include "DfeTask.hxx"
 #include "utils.hxx"
 
@@ -24,13 +24,13 @@ class Design {
 
   SgProject* project;
   list<Kernel*> kernels;
-  DataFlowGraph* dfg;
+  DfeGraph* dfe;
   map<string, set<string> > inputs_to_fname, outputs_to_fname;
 
 public:
   Design(SgProject* project) {
     this->project = project;
-    this->dfg = new DataFlowGraph();
+    this->dfe = new DfeGraph();
   }
 
   void generateCode(ostream& out);
@@ -62,7 +62,7 @@ public:
     return project;
   }
 
-  DataFlowGraph* getDataFlowGraph() { return dfg; }
+  DfeGraph* getDfeGraph() { return dfe; }
 
 };
 

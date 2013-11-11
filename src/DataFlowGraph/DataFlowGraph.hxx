@@ -4,7 +4,6 @@
 #include <list>
 #include "Node.hxx"
 
-
 class DataFlowGraph {
 
   //if would be more general if multiple sinks can also be supported
