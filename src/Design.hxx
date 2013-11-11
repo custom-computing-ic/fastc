@@ -7,6 +7,7 @@
 #include "precompiled.hxx"
 #include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DfeTask.hxx"
+#include "Stencil.h"
 #include "utils.hxx"
 
 #include <map>
@@ -25,6 +26,7 @@ class Design {
   list<Kernel*> kernels;
   DataFlowGraph* dfg;
   map<string, set<string> > inputs_to_fname, outputs_to_fname;
+  vector<Stencil*> stencils;
 
 public:
   Design(SgProject* project) {
@@ -63,6 +65,9 @@ public:
 
   DataFlowGraph* getDataFlowGraph() { return dfg; }
 
+
+  void addStencil(Stencil* s) { stencils.push_back(s); }
+  vector<Stencil*> getStencils() { return stencils; }
 };
 
 #endif /* DESIGN_HXX_ */
