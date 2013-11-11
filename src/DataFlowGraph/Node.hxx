@@ -27,7 +27,7 @@ public:
   ostream& operator<<(ostream&);
   void addNeighbour(Node* node);
   void addInput(Node* node);
-  string toDot();
+  virtual string toDot();
   list<Node *> getNeighbours(){
     return neighbours;
   }
@@ -38,11 +38,11 @@ public:
 };
 
 class Offset : public Node{
- 
-  public: 
+
+  public:
   list<string> offsets;
-  list<int> OnchipMemory; 
-  
+  list<int> OnchipMemory;
+
   public:
   Offset(string name) : Node(name) {};
   void addoffset(string offset);
@@ -65,7 +65,7 @@ class OpNode : public Node {//arithme node
 public:
   OpNode(string op) : Node(op) {};
   int resource(int transformation);
-  
+
   string toMaxJ() {return "OpNode\n";}
   string classname() {return "OpNode";}
 };
