@@ -23,7 +23,10 @@ class ExtractStencil : public Pass {
   std::vector<StencilOffset*> getOffsetsByDimension(std::vector<SgExpression*>,
 							       Stencil* );
   std::string getDimensionForOffset(SgExpression* expr, std::vector<std::string> loopVars);
-  
+
+
+  StencilOffset* extractSingleOffset(SgExpression* e, Stencil* stencil);
+
 public:
   ExtractStencil() {}
 

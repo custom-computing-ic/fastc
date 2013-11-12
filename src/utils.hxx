@@ -1,6 +1,7 @@
 #ifndef UTILS_HXX
 #define UTILS_HXX
 
+#include "Stencil.h"
 #include "StencilOffset.h"
 
 #include <string>
@@ -44,8 +45,13 @@ std::vector<std::string> getFunctionDeclArgNames(SgFunctionDeclaration* f);
 std::vector<std::string> getFunctionCallArgNames(SgFunctionCallExp* exp);
 
 
-namespace Utils {
-  StencilOffset* getStencilOffset(int value, std::string var, std::string bound);
+namespace StencilUtils {
+  StencilOffset* extractSingleOffset(SgExpression* e, Stencil* stencil);
+  std::string getDimensionForOffset(SgExpression* expr);
+  std::pair<std::string, int> getStencilOffset(SgBinaryOp* binOp,
+					       SgExpression *other,
+					       std::vector<std::string> loopVars,
+					       std::string var);
 }
 
 #endif

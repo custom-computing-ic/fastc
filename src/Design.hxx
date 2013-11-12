@@ -64,9 +64,7 @@ public:
   }
 
   DataFlowGraph* getDataFlowGraph() { return dfg; }
-
-
-  void addStencil(Stencil* s) { stencils.push_back(s); }
+  void addStencil(SgFunctionDeclaration* f, Stencil* s);
   vector<Stencil*> getStencils() { return stencils; }
 };
 

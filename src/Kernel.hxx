@@ -10,6 +10,7 @@
 #include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DataFlowGraph/OutputNode.hxx"
 
+#include "Stencil.h"
 
 using namespace std;
 
@@ -25,6 +26,7 @@ class Kernel {
   set<string> designConstants;
   list<string> streamOutputParams, streamInputParams, scalarInputs, offsets;
   vector<string> originalParams;
+  vector<Stencil*> stencils;
 
   map<string, string> ioTypeMap;
   map<string, string> computeTypeMap;
@@ -135,6 +137,12 @@ public:
       kernel definition. Example: for the definition kernel_f(p0, ...)
       getParamName(0) returns p1. */
   string getParamName(int index);
+
+  bool isStencilKernel() { return !stencils.empty(); }
+
+  void addStencil(Stencil *s) { stencils.push_back(s); }
+
+  Stencil* getFirstStencil() { return stencils[0]; }
 };
 
 #endif /* KERNEL_HXX_ */

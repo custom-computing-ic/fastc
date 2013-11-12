@@ -9,6 +9,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/Compiler.hxx \
   src/precompiled.hxx src/utils.hxx src/utils.cxx \
   src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
+  src/StencilAstToDfgVisitor.h src/StencilAstToDfgVisitor.cc \
   src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
   src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
   src/PragmaVisitor.hxx src/PragmaVisitor.cxx \

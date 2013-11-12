@@ -31,10 +31,10 @@ public:
     this->loopVars = loopVars; 
   }
   std::vector<std::string> getLoopVariables() { return loopVars; }
-  void setSource(string source) { convolutionSource = source; }
+  void setSource(std::string source) { convolutionSource = source; }
   std::string getSource() { return convolutionSource; }
 
-  void setDestination(string dest) { convolutionDestination = dest; }
+  void setDestination(std::string dest) { convolutionDestination = dest; }
   std::string getDestination() { return convolutionDestination; }
 
   void setOffsets(std::vector<StencilOffset*> offsets) { this->offsets = offsets; }

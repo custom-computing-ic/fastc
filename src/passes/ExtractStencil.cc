@@ -120,122 +120,15 @@ int ExtractStencil::getStencilShape(SgStatement *st) {
   return 1;
 }
 
-pair<string, int> getStencilOffset(SgBinaryOp* binOp,
-		     SgExpression *other, vector<string> loopVars, string var) {
-
-  vector<string>::iterator it = find(loopVars.begin(), loopVars.end(), var);
-
-  if (it != loopVars.end())  {
-    cout << "Found potential offset " << *it << endl;
-    // found a potential stencil offset
-    int sign = isSgSubtractOp(binOp) ? -1 : 1;
-
-    if (isSgSubtractOp(binOp) || isSgAddOp(binOp)) {
-      SgValueExp *valExp;
-      if ((valExp = isSgValueExp(other)) != NULL) {
-	int dim = SageInterface::getIntegerConstantValue(valExp)  * sign;
-	return make_pair(*it, dim);
-      }
-    }
-    
-    return make_pair(*it, 0);
-  }
-
-  return make_pair("", 0);
-}
-
-
-string ExtractStencil::getDimensionForOffset(SgExpression* expr, vector<string> loopVars) {
-  SgBinaryOp* parent = isSgBinaryOp(expr->get_parent());
-  if (parent == NULL)
-    return "";
-  SgVarRefExp* varRef = isSgVarRefExp(parent->get_lhs_operand());
-  if (varRef == NULL)
-    varRef = isSgVarRefExp(parent->get_rhs_operand());
-  if (varRef == NULL)
-    return "";
-  return varRef->unparseToString();
-}
-
 vector<StencilOffset* > ExtractStencil::getOffsetsByDimension(vector<SgExpression* > offsets,
 							      Stencil *stencil) {
-
-  vector<string> loopVars = stencil->getLoopVariables();
 
   map<string, vector<int> > offset_map;
 
   vector<StencilOffset *> ret_offsets;
 
   foreach_(SgExpression *e, offsets) {
-
-    queue<SgExpression*> q;
-    q.push(e);
-
-    StencilOffset* s = new StencilOffset();
-    while (!q.empty()) {
-      SgExpression* exp = q.front(); q.pop();
-      SgBinaryOp* binOp = isSgBinaryOp(exp);
-
-      if ( binOp != NULL ) {
-	cout << binOp->unparseToString() << endl;
-	SgVarRefExp* varRef;
-	SgVarRefExp* varRef2;
-	if (isSgMultiplyOp(binOp) &&
-	    (varRef = isSgVarRefExp(binOp->get_lhs_operand())) != NULL &&
-	    (varRef2 = isSgVarRefExp(binOp->get_rhs_operand())) != NULL ) {
-	  string varname1 = varRef->unparseToString();
-	  string varname2 = varRef2->unparseToString();
-	  vector<string>::iterator it = find(loopVars.begin(), loopVars.end(), varname1);
-	  if (it != loopVars.end()) {
-	    s->var_offset[varname1] = s->dim_offset[varname2] = 0;
-	  } else {
-	    it = find(loopVars.begin(), loopVars.end(), varname2);
-	    if (it != loopVars.end()) {
-	      s->var_offset[varname2] = s->dim_offset[varname1] = 0;
-	    }
-	  }
-	} else if ((varRef = isSgVarRefExp(binOp->get_lhs_operand())) != NULL) {
-	  
-	  pair<string, int> offset = getStencilOffset(binOp, binOp->get_rhs_operand(),
-						      loopVars, varRef->unparseToString());
-	  if (offset.first != "") {
-	    s->var_offset[offset.first] = offset.second;
-	    // found an offset look for the dimension
-	    string dim = getDimensionForOffset(binOp, loopVars);
-	    s->dim_offset[dim] = offset.second;
-	  }
-	  q.push(binOp->get_rhs_operand());
-	} else if ((varRef = isSgVarRefExp(binOp->get_rhs_operand())) != NULL) {
-	  pair<string, int> offset = getStencilOffset(binOp, binOp->get_lhs_operand(),
-						      loopVars, varRef->unparseToString());
-	  if (offset.first != "") {
-	    s->var_offset[offset.first] = offset.second;
-	    	    string dim = getDimensionForOffset(binOp, loopVars);
-	    s->dim_offset[dim] = offset.second;
-	  }
-	  q.push(binOp->get_lhs_operand());
-	} else {
-	  q.push(binOp->get_lhs_operand());
-	  q.push(binOp->get_rhs_operand());
-	}
-      }
-    }
-
-    ret_offsets.push_back(s);
-  }
-
-  cout << "Found offsets " << endl;
-  foreach_(StencilOffset* of, ret_offsets) {
-    map<string, int>::iterator it;
-    cout << "vars: ";
-    for (it = of->var_offset.begin(); it != of->var_offset.end(); it++) {
-      cout << it->first << " " << it->second << ",";
-    }
-    cout << " dims: ";
-    for (it = of->dim_offset.begin(); it != of->dim_offset.end(); it++) {
-      cout << it->first << " " << it->second << ",";
-    }
-    cout << endl;
+    ret_offsets.push_back(StencilUtils::extractSingleOffset(e, stencil));
   }
 
   return ret_offsets;
@@ -332,7 +225,11 @@ void ExtractStencil::runPass(Design* design) {
 
       vector<StencilOffset*> offsets = getStencilOffsets(st, s);
       s->setOffsets(offsets);
-      design->addStencil(s);
+
+
+      SgFunctionDeclaration* f_decl = SageInterface::getEnclosingFunctionDeclaration(node);
+      design->addStencil(f_decl, s);
+
     }
   }
 }

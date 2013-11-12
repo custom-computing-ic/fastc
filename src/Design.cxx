@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 
+#include <boost/regex.hpp>
+
 void Design::generateCode(ostream& out) {
     foreach_ (Kernel* k, kernels) {
         out << k->generateSourceCode();
@@ -94,4 +96,13 @@ void Design::addDfeTask(DfeTask* task) {
     }
   }
 
+}
+
+void Design::addStencil(SgFunctionDeclaration* f_decl, Stencil *s) {
+  Kernel* k = getKernel(f_decl->get_name().str());
+  // FIXME this is storing the stencils twice
+  stencils.push_back(s);
+  if (k != NULL) {
+    k->addStencil(s);
+  }
 }

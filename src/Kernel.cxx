@@ -68,11 +68,17 @@ bool Kernel::isStreamArrayType(string identifier) {
 }
 
 string Kernel::generateSourceCode() {
-  extractIO();
-  generateIO();
-  ASTtoMaxJVisitor visitor(this);
-  visitor.traverse(decl->get_definition());
-  addSource(visitor.getSource());
+  if (!isStencilKernel()) {
+    cout << "Generating code for kernel " << getName() << endl;
+    extractIO();
+    generateIO();
+
+    ASTtoMaxJVisitor visitor(this);
+    visitor.traverse(decl->get_definition());
+    addSource(visitor.getSource());
+  } else {
+    // TODO Run stencil code generator...
+  }
 
   preamble += constants +
     "public " + name + "(KernelParameters parameters) {\n"
@@ -354,3 +360,4 @@ vector<int> Kernel::getKernelParamOffsets(list<string> param_name_vector) {
 string Kernel::getParamName(int index) {
   return decl->get_args()[index]->unparseToString();
 }
+
