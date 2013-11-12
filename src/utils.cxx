@@ -64,3 +64,8 @@ std::vector<std::string> getFunctionCallArgNames(SgFunctionCallExp* exp) {
   return args;
 
 }
+
+StencilOffset* Utils::getStencilOffset(int value, std::string var, std::string bound) {
+  return new StencilOffset();
+}
+

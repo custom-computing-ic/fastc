@@ -16,6 +16,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/DfeTask.hxx src/DfeTask.cxx \
   src/DfeGraph.hxx src/DfeGraph.cxx \
   src/Stencil.h src/Stencil.cc \
+  src/StencilOffset.h \
   src/DataFlowGraph/DataFlowGraph.hxx src/DataFlowGraph/DataFlowGraph.cxx \
   src/DataFlowGraph/InputNode.hxx src/DataFlowGraph/InputNode.cxx  \
   src/DataFlowGraph/OutputNode.hxx src/DataFlowGraph/OutputNode.cxx \

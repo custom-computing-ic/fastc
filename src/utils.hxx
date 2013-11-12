@@ -1,9 +1,12 @@
 #ifndef UTILS_HXX
 #define UTILS_HXX
 
+#include "StencilOffset.h"
+
 #include <string>
 #include <vector>
 #include <iostream>
+
 
 #include "precompiled.hxx"
 
@@ -39,5 +42,10 @@ template<class T> void printVect(std::vector<T> v) {
 
 std::vector<std::string> getFunctionDeclArgNames(SgFunctionDeclaration* f);
 std::vector<std::string> getFunctionCallArgNames(SgFunctionCallExp* exp);
+
+
+namespace Utils {
+  StencilOffset* getStencilOffset(int value, std::string var, std::string bound);
+}
 
 #endif

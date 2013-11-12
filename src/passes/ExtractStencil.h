@@ -2,26 +2,34 @@
 #define _EXTRACTSTENCIL_H_
 
 #include "Pass.hxx"
+#include "../StencilOffset.h"
+
+#include <vector>
+#include <string>
 
 class ExtractStencil : public Pass {
 
   int getStencilDimension(SgStatement *);
   int getStencilShape(SgStatement *);
-  vector<string> getLoopVariables(SgStatement *);
+  std::vector<std::string> getLoopVariables(SgStatement *);
 
   SgStatement* getStencilUpdateStatement(SgStatement *);
-  SgStatement* getStencilUpdateAssignment(SgStatement *st);
+  SgAssignOp* getStencilUpdateAssignment(SgStatement *st);
 
-  vector<string> getStencilInputs(SgStatement *st);
-  vector<string> getStencilOutputs(SgStatement *st);
-
-
+  std::vector<std::string> getStencilInputs(SgStatement *st);
+  std::vector<std::string> getStencilOutputs(SgStatement *st);
+  std::vector<StencilOffset*> getStencilOffsets(SgStatement *st, 
+								 Stencil* stencil);
+  std::vector<StencilOffset*> getOffsetsByDimension(std::vector<SgExpression*>,
+							       Stencil* );
+  std::string getDimensionForOffset(SgExpression* expr, std::vector<std::string> loopVars);
+  
 public:
   ExtractStencil() {}
 
   
   void runPass(Design* design);
-  string logPass();
+  std::string logPass();
 };
 
 

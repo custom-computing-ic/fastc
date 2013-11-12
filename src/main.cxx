@@ -78,9 +78,10 @@ int main(int argc, char** argv) {
     if (stencil_compiler_flag) {
       cout << "Stencil summary:" << endl;
     
-      int num = 0;
+      int num = 1;
       foreach_(Stencil* s, c->getDesign()->getStencils()) {
 	cout << "Stencil " << num << endl;
+	cout << "\tUpdate: " << s->getDestination() << " <-- " << s->getSource() << endl;
 	cout << "\tDimension: " << s->getDimension() << endl;
 	cout << "\tInputs: ";
 	foreach_(string i, s->getInputs()) {
@@ -100,6 +101,19 @@ int main(int argc, char** argv) {
 	}
 	cout << endl;
 
+	cout << "\tOffsets " << endl;
+	foreach_(StencilOffset* of, s->getOffsets()) {
+	  map<string, int>::iterator it;
+	  cout << "\t\tvars: ";
+	  for (it = of->var_offset.begin(); it != of->var_offset.end(); it++) {
+	    cout << it->first << " " << it->second << ",";
+	  }
+	  cout << " dims: ";
+	  for (it = of->dim_offset.begin(); it != of->dim_offset.end(); it++) {
+	    cout << it->first << " " << it->second << ",";
+	  }
+	  cout << endl;
+	}
 	num++;
       }
     }

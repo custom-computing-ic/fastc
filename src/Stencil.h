@@ -1,13 +1,18 @@
 #ifndef _STENCIL_H_
 #define _STENCIL_H_
 
+#include "StencilOffset.h"
+
 #include <vector>
 #include <string>
+
 
 class Stencil
 {
   int dim;
   std::vector<std::string> inputs, outputs, loopVars;
+  std::string convolutionSource, convolutionDestination;
+  std::vector<StencilOffset*> offsets;
 
 public:
   Stencil(int dim, 
@@ -26,7 +31,14 @@ public:
     this->loopVars = loopVars; 
   }
   std::vector<std::string> getLoopVariables() { return loopVars; }
+  void setSource(string source) { convolutionSource = source; }
+  std::string getSource() { return convolutionSource; }
 
+  void setDestination(string dest) { convolutionDestination = dest; }
+  std::string getDestination() { return convolutionDestination; }
+
+  void setOffsets(std::vector<StencilOffset*> offsets) { this->offsets = offsets; }
+  std::vector<StencilOffset*> getOffsets() { return offsets; }
 };
 
 
