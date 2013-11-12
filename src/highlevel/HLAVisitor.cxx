@@ -57,7 +57,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
     if(Bs ==0) width = 0;
 
     Bs = Bs > width ? Bs : width;
-    int BRAMs = ceil(Bs);
+    BRAMs =(double) ceil(Bs);
     cout<<"memory resource consumption: "<< BRAMs<<" BRAMs"<<endl; 
     //OnchipMemory.clear(); 
   }

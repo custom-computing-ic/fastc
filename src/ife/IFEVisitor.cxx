@@ -139,35 +139,42 @@ void IFEVisitor::CombineTasks(){
     cout<<"node: "<<task->getName()<<" idle cycles: "<< task->idle<<endl;
 
   //check the number of levels in the graph
-  int curLevel=-1;
-  int level   = 0;
-  foreach_(DfeTask* task, atapTasks)
-    if(curLevel != task->idle) {
-      curLevel = task->idle;
-      level++; 
-    }
-  setLevelNum(level);
+//int curLevel=-1;
+//int level   = 0;
+//foreach_(DfeTask* task, atapTasks)
+//  if(curLevel != task->idle) {
+//    curLevel = task->idle;
+//    level++; 
+//  }
+//setLevelNum(level);
 
-
-
-
-  //how to store the information
-  std::vector<Segment*> levels;//to sotre segments at different levels
-  //Segment* levels = new Segment[4];
-
-  levels.resize(getLevelNum());
+  //resize the levels based on levelNum;
+  //levels.resize(getLevelNum());
+  //levels.reserve(100);
   vector<Segment*>::iterator it = levels.begin();
 
-  curLevel=-1;
+  int curLevel=-1;
+  int cap, offset;
+  offset = it - levels.begin();
+  cap    = 0;
+  //RULE1: functions same idle cycles are compressed into the same level
   foreach_(DfeTask* task, atapTasks)
   {
      if(curLevel == task->idle)
       (*it)->addTask(task);//combine nodes at the same level
      else 
      {
-       if(curLevel != -1)
+       levels.push_back(new Segment());
+       if(cap != levels.capacity()) //expanding
+       {
+         it = levels.begin() + offset;
+         cap= levels.capacity();
+       }
+       if(cap != 1)
+       {
          it++;
-       (*it) = new Segment();
+         offset++;
+       }
        (*it)->addTask(task);
        curLevel = task->idle;
      } 
@@ -183,11 +190,212 @@ void IFEVisitor::CombineTasks(){
 }
 
 void IFEVisitor::CombineSegments(){
+ 
+
+  int levelnum =0;
+  //RULE2: segments are combined in this order to protect data dependency
+  Configuration* conbuf = new Configuration("0-0");
+  Configuration* prebuf = new Configuration("0-0");
+  for(vector<Segment*>::iterator it = levels.begin(); it!=levels.end(); it++)
+  {
+    //level name
+    stringstream sslevel;
+    sslevel<< (levelnum+1);
+    string level = sslevel.str();
+
+    int consize =1;
+    for(vector<Segment*>::iterator jt = it; jt!=levels.end(); jt++)
+    {
+      //size name
+      stringstream sssize;
+      sssize<< (consize);
+      string size = sssize.str();
+
+      conbuf = new Configuration(level+"-"+size);
+      if(jt!=it)
+        *conbuf = *prebuf; 
+      else 
+        conbuf->level = levelnum;
+      conbuf->setName(level+"-"+size);
+      prebuf = conbuf;
+      conbuf->addSegment(*jt);
+      configurations.push_back(conbuf);
+
+      consize++;
+    }
+
+    levelNums.push_back(levelnum);
+    levelnum++;
+  }
+
+#if DEBUG
+  foreach_(Configuration* con, configurations)
+  {
+    cout<<"configuration "<<" level:"<<con->level<<" size:"<<con->getConfiguration().size()<<endl;
+    foreach_(Segment* seg, con->getConfiguration())
+      foreach_(DfeTask* task, seg->getTasks())
+        cout<<" Task "<<task->getName()<<endl;
+  }
+#endif
+}
+
+bool IFEVisitor::FindOutput(DfeTask* task, Configuration* con)
+{
+  foreach_(Offset* output, task->sinks)
+    foreach_(Segment* seg, con->getConfiguration())
+      foreach_(DfeTask* task, seg->getTasks())
+        foreach_(Offset* input, task->sources)
+        if(output->getName() == input->getName()) 
+        {
+          //cout<<"matched name "<<input->getName()<<endl;
+          return true;
+        }
+  return false;
 }
 
 void IFEVisitor::OptimiseConfigurations(){
+  //aggregrate the function properties, LUTs, FFs, BRAMs, DSPs
+  foreach_(Configuration* con, configurations)
+  {
+    foreach_(Segment* seg, con->getConfiguration())
+      foreach_(DfeTask* task, seg->getTasks())
+      {
+         con->LUTs += task->LUTs;
+         con->FFs  += task->FFs;
+         con->DSPs += task->DSPs;
+         con->BRAMs+= task->BRAMs; 
+      }
+  }
+
+  //aggregrate the bandwidth 
+  foreach_(Configuration* con, configurations)
+  {
+    foreach_(Segment* seg, con->getConfiguration())
+      foreach_(DfeTask* task, seg->getTasks())
+      {
+         if(!FindOutput(task, con))//outputs are not internally connected
+           con->bandwidth += task->bandwidth;
+      }
+  }
+ 
+  //TODO: the offchip memory bandwidth needs to be aggregrated at
+  //configuration level 
+  foreach_(Configuration* con, configurations)
+  {
+    cout<<"configuration "<<con->getName()<<endl;
+    cout<<"banwidth: "<<con->bandwidth<<endl;
+    cout<<"LUTs  "<<con->LUTs<<endl;
+    cout<<"FFs   "<<con->FFs<<endl;
+    cout<<"DSPs  "<<con->DSPs<<endl;
+    cout<<"BRAMs "<<con->BRAMs<<endl;
+  }
+
+  //TODO: calculate the parallelism
+  //TODO: iterate the pass to find the optimal DSP factor and precision
+  //TODO: data blocking for multi-dimenion offsets
 }
 
 void IFEVisitor::GenerateSolutions(){
+
+  //RULE3: combine configurations based on levels and configuration size
+  Partition* parbuf;
+  foreach_(int level, levelNums)
+  {
+    parbuf = new Partition();
+    foreach_(Configuration* con, configurations)
+    if(level == con->level) 
+      parbuf->addConfiguration(con);
+    configurationGraph.push_back(parbuf);
+  }
+
+#if DEBUG 
+  int i=0; 
+  foreach_(Partition* par, configurationGraph)
+  {
+    cout<<"levels: "<<i++<<endl;
+    foreach_(Configuration* con, par->getPartition())
+      cout<<"configuration "<<" level:"<<con->level<<" size:"<<con->getConfiguration().size()<<endl;
+  }
+#endif
+
+//std::vector<int>::iterator it = levelNums.begin(); 
+//std::vector<Configuration*> seenConfigurations;
+
+  std::vector<Partition*>::iterator it = configurationGraph.begin();
+  foreach_(Configuration* con, (*it)->getPartition())
+  {
+    parbuf = new Partition();
+    parbuf->addConfiguration(con);
+    int nextlevel = con->getConfiguration().size();
+
+    if(nextlevel == levelNums.size())
+      partitions.push_back(parbuf);
+    else 
+      FindPartition(nextlevel, parbuf);
+  }
+
+  foreach_(Partition* par, partitions)
+  {
+    cout<<"partition: "<<endl;
+    foreach_(Configuration* con, par->getPartition())
+      cout<<" "<<con->getName()<<endl;
+  }
+}
+
+void IFEVisitor::FindPartition(int start, Partition* par){
+
+  Partition* parbuf; 
+  std::vector<Partition*>::iterator it = configurationGraph.begin();
+
+  foreach_(Configuration* con, ((*(it+start))->getPartition()))
+  {
+    parbuf = new Partition();
+    *parbuf = * par;
+    parbuf->addConfiguration(con);  
+    int nextlevel = (start + con->getConfiguration().size());
+
+    if(nextlevel == levelNums.size())
+      partitions.push_back(parbuf);
+    else
+      FindPartition(nextlevel, parbuf);
+  }
+  return;
+}
+
+
+
+//    par->addConfiguration(con);
+//    seenConfigurations.push_back(con);
+//    cout<<"added: "<<con->getName()<<endl;
+
+//    std::vector<int>::iterator it = levelNums.begin();
+//    int offset = start + con->getConfiguration().size();
+
+//    if(offset >= levelNums.size())//reach the end point 
+//    {
+//      cout<<"arrive here, return!"<<endl;
+//      seenConfigurations.pop_back();
+//      return true;
+//    }
+
+//    int targetlevel = *(it + offset);
+//    if(FindConfiguration(targetlevel, par))//find a valid partition 
+//    {
+//      seenConfigurations.push_back(con);
+//      return true;
+//    }
+//    else 
+//    {
+//      seenConfigurations.push_back(con);
+//      return false;
+//    }
+
+bool IFEVisitor::seenConfiguration(Configuration* con) {
+  
+  foreach_ (Configuration* seen, seenConfigurations) {
+    if (seen->getName() == con->getName())
+      return true;
+  }
+  return false;
 }
 

@@ -16,14 +16,14 @@ void IdlefunctionElimination::runPass(Design* design){
   //combine tasks into segments
   ifeVisitor.CombineTasks(); 
 
-
   //combine segments into configurations
-
+  ifeVisitor.CombineSegments();
 
   //optimise configuration 
-  
+  ifeVisitor.OptimiseConfigurations(); 
 
   //link configurations
+  ifeVisitor.GenerateSolutions(); 
 }
 
 string IdlefunctionElimination::logPass() {
