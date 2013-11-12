@@ -20,7 +20,7 @@ public:
   string MatchName(DfeTask* root, DfeTask* branch);
   Offset* FindSink(DfeTask* task, string name);
   void FindSource(DfeTask* task);
-  list<Node*> getSorted(){ return seenNodes;}
+  std::vector<Node*> getSorted(){ return seenNodes;}
 
 };
 

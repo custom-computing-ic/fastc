@@ -32,11 +32,11 @@ void TopSortVisitor::traverse() {
   beforeVisit();
 
   foreach_ (Node* node, nodes) {
-    queue.push_front(node);
+    queue.push_back(node);
   }
 
   while (!queue.empty()) {
-    Node* n = queue.front(); queue.pop_front();
+    Node* n = queue.back(); queue.pop_back();
     sort(n);
   }
 

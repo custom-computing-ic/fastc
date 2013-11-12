@@ -3,6 +3,7 @@
 #include <math.h>     
 #include <vector>
 #include <list>
+#include <algorithm>    // std::sort
 #include "../highlevel/HLAVisitor.hxx"
 #include "../DfeTopSortVisitor.hxx"
 
@@ -111,22 +112,74 @@ void IFEVisitor::AssignLevel(DfeTask* task)
   }
 }
 
-
 void IFEVisitor::ATAPLevel(){
 
   //traverse the graph with topological sort
   DfeTopSortVisitor topsortVisitor(dfg);
   topsortVisitor.traverse();
 
+
   foreach_(Node* node, topsortVisitor.getSorted())
   {
     DfeTask *dfeNode = dynamic_cast<DfeTask*>(node);
-    cout<<"node: "<<node->getName()<<" idle cycles: "<< dfeNode->idle<<endl; 
+    cout<<"node: "<<node->getName()<<" idle cycles: "<< dfeNode->idle<<endl;
+    atapTasks.push_back(dfeNode); 
   }
-
 }
 
+struct myclass {
+    bool operator() (DfeTask* t1, DfeTask* t2) { return (t1->idle < t2->idle);}
+} mysort;
+
 void IFEVisitor::CombineTasks(){
+
+  //first sort the tasks in dfg based on idle cycles
+  std::sort(atapTasks.begin(), atapTasks.end(), mysort);
+  foreach_(DfeTask* task, atapTasks)
+    cout<<"node: "<<task->getName()<<" idle cycles: "<< task->idle<<endl;
+
+  //check the number of levels in the graph
+  int curLevel=-1;
+  int level   = 0;
+  foreach_(DfeTask* task, atapTasks)
+    if(curLevel != task->idle) {
+      curLevel = task->idle;
+      level++; 
+    }
+  setLevelNum(level);
+
+
+
+
+  //how to store the information
+  std::vector<Segment*> levels;//to sotre segments at different levels
+  //Segment* levels = new Segment[4];
+
+  levels.resize(getLevelNum());
+  vector<Segment*>::iterator it = levels.begin();
+
+  curLevel=-1;
+  foreach_(DfeTask* task, atapTasks)
+  {
+     if(curLevel == task->idle)
+      (*it)->addTask(task);//combine nodes at the same level
+     else 
+     {
+       if(curLevel != -1)
+         it++;
+       (*it) = new Segment();
+       (*it)->addTask(task);
+       curLevel = task->idle;
+     } 
+  }
+
+  int i=0;
+  foreach_(Segment* seg, levels)
+  {
+    cout<<"level "<<i++<<endl;
+    foreach_(DfeTask* task, seg->getTasks())
+      cout<<" node "<<task->getName()<<endl;
+  }
 }
 
 void IFEVisitor::CombineSegments(){

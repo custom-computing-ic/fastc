@@ -13,8 +13,8 @@ void IdlefunctionElimination::runPass(Design* design){
   //assign dependency level based on data dependency and interconnections
   ifeVisitor.ATAPLevel();
   
-
-  //combine tasks into segments 
+  //combine tasks into segments
+  ifeVisitor.CombineTasks(); 
 
 
   //combine segments into configurations

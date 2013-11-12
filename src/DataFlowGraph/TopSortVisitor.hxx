@@ -4,12 +4,13 @@
 #include "DataFlowGraph.hxx"
 #include "../precompiled.hxx"
 #include <list>
+#include <vector>
 
 class TopSortVisitor {
 public:
   DataFlowGraph *dfg;
-  std::list<Node*> queue, seenNodes;
-  std::list<Node*> nodes;
+  std::vector<Node*> queue, seenNodes;
+  std::vector<Node*> nodes;
   int seen;
 
   bool seenNode(Node* n);
