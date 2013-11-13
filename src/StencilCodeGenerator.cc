@@ -76,7 +76,7 @@ void StencilCodeGenerator::generateOutputs() {
   foreach_ (string out, this->kernel->getOutputNames()) {
     // FIXME obviously, the type shouldn't be hardcoded...
     //    string type = "hwFloat(8, 24)";
-    string type = this->kernel->getInputType(in);
+    string type = this->kernel->getInputType(out);
 
     if (out == stencil->getDestination()) {
       // if this is a stencil output, make it conditional on the control block
