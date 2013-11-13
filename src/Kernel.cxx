@@ -1,6 +1,7 @@
 #include "Kernel.hxx"
 #include "passes/ExtractOutputs.hxx"
 #include "AstToMaxJVisitor.hxx"
+#include "StencilAstToMaxJVisitor.h"
 #include "utils.hxx"
 
 #include "DataFlowGraph/Node.hxx"
@@ -78,6 +79,13 @@ string Kernel::generateSourceCode() {
     addSource(visitor.getSource());
   } else {
     // TODO Run stencil code generator...
+
+    /*extractIO();
+    generateIO();
+
+    StencilAstToMaxJVisitor visitor(this);
+    visitor.traverse(decl->get_definition());
+    addSource(visitor.getSource()); */
   }
 
   preamble += constants +
@@ -360,4 +368,3 @@ vector<int> Kernel::getKernelParamOffsets(list<string> param_name_vector) {
 string Kernel::getParamName(int index) {
   return decl->get_args()[index]->unparseToString();
 }
-

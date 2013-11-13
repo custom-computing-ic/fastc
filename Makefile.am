@@ -11,6 +11,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
   src/StencilAstToDfgVisitor.h src/StencilAstToDfgVisitor.cc \
   src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
+  src/StencilAstToMaxJVisitor.hxx src/StencilAstToMaxJVisitor.cxx \
   src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
   src/PragmaVisitor.hxx src/PragmaVisitor.cxx \
   src/DotPrint.hxx src/DotPrint.cxx\
@@ -48,7 +49,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/highlevel/HighlevelAnalysis.hxx src/highlevel/HighlevelAnalysis.cxx \
   src/ife/IFEVisitor.hxx src/ife/IFEVisitor.cxx \
   src/DfeTopSortVisitor.hxx src/DfeTopSortVisitor.cxx \
-  src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx 
+  src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx
 
 
 #BUILT_SOURCES = src/precompiled.hxx.gch
