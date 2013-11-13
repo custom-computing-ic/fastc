@@ -240,19 +240,20 @@ void IFEVisitor::CombineSegments(){
 #endif
 }
 
-bool IFEVisitor::FindOutput(DfeTask* task, Configuration* con)
+int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
 {
-//!!!!match the input with sinks, inside the configuration
-  foreach_(Offset* output, task->sinks)
-    foreach_(Segment* seg, con->getConfiguration())
-      foreach_(DfeTask* task, seg->getTasks())
-        foreach_(Offset* input, task->sources)
-        if(output->getName() == input->getName())
-        {
-          //cout<<"matched name "<<input->getName()<<endl;
-          return true;
-        }
-  return false;
+  int find =0;
+  foreach_(string outputname, task->getOutputs())
+    if(task->getCorrespondingKernelParam(outputname) == name) //matching the searched streamed
+      foreach_(Segment* seg, con->getConfiguration())
+        foreach_(DfeTask* branch, seg->getTasks())
+          foreach_(string inputname, branch->getInputs())
+            if(outputname == inputname)
+            {
+              cout<<"mathed name: "<<outputname<<endl;
+              find++;
+            }
+  return find;
 }
 
 void IFEVisitor::OptimiseConfigurations(){
@@ -270,8 +271,8 @@ void IFEVisitor::OptimiseConfigurations(){
   }
 
   //aggregrate the bandwidth
-  //TODO: the offchip memory bandwidth needs to be aggregrated at
-  //configuration level
+  //TODO: there are kernels sharing the same input data, need to process that
+  //TODO: for that case, also need to think how to merge the onchipmemory 
   foreach_(Configuration* con, configurations)
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
@@ -280,10 +281,15 @@ void IFEVisitor::OptimiseConfigurations(){
         DataFlowGraph* dbuf = kbuf->getDataFlowGraph(); 
         foreach_(Offset* stream, dbuf->streams)
         {
-          cout<<"stream "<<stream->getName()<<" "<<"band: "<<stream->bandwidth<<endl;
-
-//        if(!FindOutput(kbuf, stream->getName()))//outputs are not internally connected
-//          con->bandwidth += task->bandwidth;
+          cout<<"con "<<con->getName()<<"stream "<<stream->getName()<<" "<<endl;
+          con->bandwidth += stream->bandwidth;
+          int find = FindOutput(task, con, stream->getName());
+          if(find>0)
+          {
+            cout<<"find "<<find<<" connected for con "<<con->getName()<<" with stream "<<stream->getName()<<endl;
+            con->bandwidth -= (((double) find) +1)*stream->bandwidth;
+          }
+          cout<<"band: "<<con->bandwidth<<endl;
         }
       }
 

@@ -71,7 +71,7 @@ class IFEVisitor {
   Offset* FindSink(DfeTask* task, string name);
   void FindSource(DfeTask* task);
   string MatchName(DfeTask* root, DfeTask* branch);
-  bool FindOutput(DfeTask* task, Configuration* con);
+  int FindOutput(DfeTask* task, Configuration* con, string name);
   void FindPartition(int start, Partition* par);
   bool seenConfiguration(Configuration* con);
 };
