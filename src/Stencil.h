@@ -1,11 +1,10 @@
 #ifndef _STENCIL_H_
 #define _STENCIL_H_
 
-#include "StencilOffset.h"
-
 #include <vector>
 #include <string>
 
+class StencilOffset;
 
 class Stencil
 {
