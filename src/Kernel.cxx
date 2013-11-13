@@ -224,9 +224,6 @@ set<string> Kernel::findModset(SgNode* sgNode) {
 void Kernel::extractIO() {
 
   // extract kernel inputs and outputs
-  SgInitializedNamePtrList args = decl->get_args();
-  SgInitializedNamePtrList::iterator it = args.begin();
-
   set<string> modSet = findModset(decl->get_definition());
   int paramNumber = 0;
   foreach_(SgInitializedName* param, decl->get_args()) {

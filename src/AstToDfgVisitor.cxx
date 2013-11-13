@@ -54,11 +54,11 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
 
     // TODO handle counter functions
     /* if (fname.compare("output") == 0) {
-      Node *outputNode = toNode(*it);
-      Node *result     = toNode(*(++it));
-      if (result != NULL)
-        result->addNeighbour(outputNode);
-        } */
+       Node *outputNode = toNode(*it);
+       Node *result     = toNode(*(++it));
+       if (result != NULL)
+       result->addNeighbour(outputNode);
+       } */
   } else if (isSgExprStatement(n)) {
     toExprNode(isSgExprStatement(n)->get_expression());
   }
@@ -141,6 +141,36 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
       dfg->addSource(n);
     }
     return n;
+  } if (isSgPntrArrRefExp(ex)) {
+
+    SgPntrArrRefExp *ee = isSgPntrArrRefExp(ex);
+
+    Node* left = toExprNodeRec(ee->get_lhs_operand());
+
+    Node* node = new StreamOffsetNode("Offset");
+
+    //serach if the current input has been bufferred
+
+    string name = ee->get_lhs_operand()->unparseToString();
+    Offset* offset = dfg->findOffset(name);
+    if(offset==NULL)//no such buffer
+      {
+        offset = new Offset(name);
+        offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+        dfg->addOffset(offset);
+      }
+    else
+      offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+    cout<<"buffer "<<offset->getName()<<endl;
+    for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
+      cout<<" "<< *it;
+    cout<<endl;
+
+    if (left != NULL)
+      left->addNeighbour(node);
+
+    return node;
+
   } else if (isSgBinaryOp(ex)) {
 
     SgBinaryOp *e = isSgBinaryOp(ex);
@@ -160,16 +190,16 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
         //serach if the current input has been bufferred
         Offset* offset = dfg->findOffset(name);
         if(offset==NULL)//no such buffer
-        {
-          offset = new Offset(name);
-          offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-          dfg->addOffset(offset); 
-        }
-        else 
+          {
+            offset = new Offset(name);
+            offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+            dfg->addOffset(offset);
+          }
+        else
           offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
         cout<<"buffer "<<offset->getName()<<endl;
         for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
-           cout<<" "<< *it;
+          cout<<" "<< *it;
         cout<<endl;
 
 
@@ -193,8 +223,8 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
         }
 
         return stream_node;
-      } 
-      
+      }
+
       else if (isSgVarRefExp(e->get_lhs_operand())) {
         // handles: y = expression
         string name = e->get_lhs_operand()->unparseToString();
@@ -225,42 +255,44 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
     Node *left = toExprNodeRec(e->get_lhs_operand());
     Node *node;
     if ( isSgPntrArrRefExp(ex))
-    {
-      node = new StreamOffsetNode("Offset");
-      
-      //serach if the current input has been bufferred
-      SgPntrArrRefExp *ee = isSgPntrArrRefExp(ex);
-      string name = ee->get_lhs_operand()->unparseToString();
-      Offset* offset = dfg->findOffset(name);
-      if(offset==NULL)//no such buffer
       {
-        offset = new Offset(name);
-        offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-        dfg->addOffset(offset); 
+        node = new StreamOffsetNode("Offset");
+
+        //serach if the current input has been bufferred
+        SgPntrArrRefExp *ee = isSgPntrArrRefExp(ex);
+        string name = ee->get_lhs_operand()->unparseToString();
+        Offset* offset = dfg->findOffset(name);
+        if(offset==NULL)//no such buffer
+          {
+            offset = new Offset(name);
+            offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+            dfg->addOffset(offset);
+          }
+        else
+          offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+        cout<<"buffer "<<offset->getName()<<endl;
+        for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
+          cout<<" "<< *it;
+        cout<<endl;
+
+        cout << "Just created node with id " << node->getId() << endl;
       }
-      else 
-        offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-      cout<<"buffer "<<offset->getName()<<endl;
-      for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
-        cout<<" "<< *it;
-      cout<<endl;
-    }
     else
-    {
-      node = new OpNode(op);
-      dfg->addArith(node);
-    }
+      {
+        node = new OpNode(op);
+        dfg->addArith(node);
+      }
     dfg->addNode(node);
     if (right != NULL)
-    {
-      right->addNeighbour(node);
-      node->addInput(right);
-    }
+      {
+        right->addNeighbour(node);
+        node->addInput(right);
+      }
     if (left != NULL)
-    {
-      left->addNeighbour(node);
-      node->addInput(left);
-    }
+      {
+        left->addNeighbour(node);
+        node->addInput(left);
+      }
     //add to the arithmetics group
     return node;
   }
@@ -272,7 +304,7 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
       cout << "Node " << n;
       string op;
       if (isSgMinusOp(ex))
-	    op = "-";
+        op = "-";
       OpNode *node = new OpNode(op);
       n->addNeighbour(node);
       node->addInput(n);
