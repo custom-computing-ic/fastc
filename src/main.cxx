@@ -90,6 +90,14 @@ int main(int argc, char** argv) {
         cout << it->first << " " << it->second << ",";
       }
       cout << endl;
+
+    map<string, string>::iterator itt;
+    cout << " var_dims: ";
+      for (itt = of->var_dim.begin(); itt != of->var_dim.end(); itt++) {
+        cout << itt->first << " " << itt->second << ",";
+      }
+      cout << endl;
+   
     }
     num++;
   }

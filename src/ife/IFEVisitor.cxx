@@ -21,6 +21,7 @@ void IFEVisitor::ExtractProperties(){
       continue;
 
     Kernel* k = task->getKernel();
+    cout<<"visiting kernel: "<<k->getName()<<endl;
     HLAVisitor hlaVisitor(k);
     hlaVisitor.OnchipMemoryAnalysis();
     hlaVisitor.OffchipCommunicationAnalysis();
@@ -75,17 +76,17 @@ void IFEVisitor::AssignLevel(DfeTask* task)
   int sourceD=0;
   foreach_(Offset* stream, task->sources)
   {
-    cout<<"source node: "<<stream->getName()<<" delay: "<<stream->delay<<endl;
-    sourceD = sourceD > stream->delay ? sourceD : stream->delay;
+    cout<<"source node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;
+    sourceD = sourceD > stream->internaldelay ? sourceD : stream->internaldelay;
   }
   foreach_(Offset* stream, task->sinks)
-    cout<<"sink node: "<<stream->getName()<<" delay: "<<stream->delay<<endl;
+    cout<<"sink node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;
 
   //TODO: we hack here since we assume each function only has 1 output
   //calculte delay for the sink node
   foreach_(Offset* stream, task->sinks)
   {
-    int Delay = sourceD - stream->delay;
+    int Delay = sourceD - stream->internaldelay;
     cout<<"output delay: "<< Delay <<endl;
     string outputname = stream->getName();
     list<Node*> outputs = task->getNeighbours();
@@ -241,6 +242,7 @@ void IFEVisitor::CombineSegments(){
 
 bool IFEVisitor::FindOutput(DfeTask* task, Configuration* con)
 {
+//!!!!match the input with sinks, inside the configuration
   foreach_(Offset* output, task->sinks)
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
@@ -268,18 +270,23 @@ void IFEVisitor::OptimiseConfigurations(){
   }
 
   //aggregrate the bandwidth
+  //TODO: the offchip memory bandwidth needs to be aggregrated at
+  //configuration level
   foreach_(Configuration* con, configurations)
-  {
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
       {
-         if(!FindOutput(task, con))//outputs are not internally connected
-           con->bandwidth += task->bandwidth;
-      }
-  }
+        Kernel* kbuf = task->getKernel();
+        DataFlowGraph* dbuf = kbuf->getDataFlowGraph(); 
+        foreach_(Offset* stream, dbuf->streams)
+        {
+          cout<<"stream "<<stream->getName()<<" "<<"band: "<<stream->bandwidth<<endl;
 
-  //TODO: the offchip memory bandwidth needs to be aggregrated at
-  //configuration level
+//        if(!FindOutput(kbuf, stream->getName()))//outputs are not internally connected
+//          con->bandwidth += task->bandwidth;
+        }
+      }
+
   foreach_(Configuration* con, configurations)
   {
     cout<<"configuration "<<con->getName()<<endl;
@@ -317,9 +324,6 @@ void IFEVisitor::GenerateSolutions(){
       cout<<"configuration "<<" level:"<<con->level<<" size:"<<con->getConfiguration().size()<<endl;
   }
 #endif
-
-//std::vector<int>::iterator it = levelNums.begin();
-//std::vector<Configuration*> seenConfigurations;
 
   std::vector<Partition*>::iterator it = configurationGraph.begin();
 

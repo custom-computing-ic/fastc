@@ -79,7 +79,7 @@ StencilOffset* StencilUtils::extractSingleOffset(SgExpression* e, Stencil* stenc
   q.push(e);
   vector<string> loopVars = stencil->getLoopVariables();
 
-  StencilOffset* s = new StencilOffset();
+  StencilOffset* s = new StencilOffset(stencil);
   while (!q.empty()) {
     SgExpression* exp = q.front(); q.pop();
     SgBinaryOp* binOp = isSgBinaryOp(exp);
@@ -99,10 +99,12 @@ StencilOffset* StencilUtils::extractSingleOffset(SgExpression* e, Stencil* stenc
 	vector<string>::iterator it = find(loopVars.begin(), loopVars.end(), varname1);
 	if (it != loopVars.end()) {
 	  s->var_offset[varname1] = s->dim_offset[varname2] = 0;
+    s->var_dim[varname1] = varname2;
 	} else {
 	  it = find(loopVars.begin(), loopVars.end(), varname2);
 	  if (it != loopVars.end()) {
 	    s->var_offset[varname2] = s->dim_offset[varname1] = 0;
+      s->var_dim[varname2] = varname1;
 	  }
 	}
       } else if ((varRef = isSgVarRefExp(binOp->get_lhs_operand())) != NULL) {
@@ -113,6 +115,7 @@ StencilOffset* StencilUtils::extractSingleOffset(SgExpression* e, Stencil* stenc
 	  // found an offset look for the dimension
 	  string dim = getDimensionForOffset(binOp);
 	  s->dim_offset[dim] = offset.second;
+    s->var_dim[offset.first] = dim;
 	}
 	q.push(binOp->get_rhs_operand());
       } else if ((varRef = isSgVarRefExp(binOp->get_rhs_operand())) != NULL) {
@@ -122,6 +125,7 @@ StencilOffset* StencilUtils::extractSingleOffset(SgExpression* e, Stencil* stenc
 	  s->var_offset[offset.first] = offset.second;
 	  string dim = getDimensionForOffset(binOp);
 	  s->dim_offset[dim] = offset.second;
+    s->var_dim[offset.first] = dim;
 	}
 	q.push(binOp->get_lhs_operand());
       } else {

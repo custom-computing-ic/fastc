@@ -8,6 +8,11 @@ HLAVisitor::HLAVisitor(Kernel *k){
   //operating frequency is fixed for now
   this->frequency = 100;
   this->offchipdata = 0;
+
+  this->BRAMs =0;
+  this->LUTs=0;
+  this->FFs =0;
+  this->DSPs=0;
 }
 
 bool HLAVisitor::findoffset( int offset, Offset* node){
@@ -19,47 +24,155 @@ bool HLAVisitor::findoffset( int offset, Offset* node){
   return false;
 }
 void HLAVisitor::OnchipMemoryAnalysis(){
-  
-  
   //calculating the distance between offsets for each strea
-  //TODO: multi-dimension offsets
   //TODO: offsets are variable, in that case, consider parse
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
   {
     cout<<"stream "<<(*it)->getName()<<endl;
-    cout<<"offset:";
-    precision = (*it)->precision[0] + (*it)->precision[1];
-
-    for(list<string>::iterator jt = (*it)->offsets.begin(); jt!=(*it)->offsets.end(); jt++)
+    cout<<"offset:"<<endl;
+    precision = (*it)->precision[0] + (*it)->precision[1]; //mantisa + significant
+    
+    if(((*it)->getStencilOffsets()).size()!=0)//if there is a stencil
     {
-      cout<<" "<< *jt;
-      int offset;
-      istringstream ( *jt ) >> offset;
-      if(!findoffset(offset, *it))
-        (*it)->OnchipMemory.push_back(offset); 
+      //TODO: check why the iterator doesn't work 
+      foreach_(StencilOffset* soff, ((*it)->getStencilOffsets()))
+      {
+        vector<string> loopVars = soff->stencil->getLoopVariables();
+        Pair* pair = new Pair();
+        foreach_(string key, loopVars)
+        {
+          vector<int>::iterator front; 
+          front = pair->offsets.begin();
+          pair->offsets.insert(front, soff->var_offset[key]);
+          //some hacking here: assume " " stands for 0
+          if(soff->var_dim[key] == "") soff->var_dim[key] ="0";
+          int offsetbuf;
+          istringstream (soff->var_dim[key]) >> offsetbuf;
+          front = pair->dimensions.begin();
+          pair->dimensions.insert(front,offsetbuf);
+        }
+
+        //invert if to fastest dimension -> lowest dimension (begin -> end)
+        //extract the dimension size for each dimension
+        //some hacking here: assume the thrid dimension size is the same as second
+        for(vector<int>::iterator dims = pair->dimensions.begin(); dims != pair->dimensions.end(); dims++)
+        {
+          if(dims == pair->dimensions.begin())
+            *dims = *(dims+1);
+          else if(dims == (pair->dimensions.begin() + pair->dimensions.size() -1 ))
+            *dims = *(dims-1);
+          else
+            *dims =(*(dims+1)) / (*dims);
+        }
+        (*it)->pairs.push_back(pair); 
+
+#if DEBUG
+        foreach_(string key, loopVars)
+          cout<<key<<" ";
+        for(vector<int>::iterator debug = pair->dimensions.begin(); debug != pair->dimensions.end(); debug++)
+          cout<<*debug<<" ";
+        for(vector<int>::iterator debug = pair->offsets.begin();    debug != pair->offsets.end(); debug++)
+          cout<<*debug<<" ";
+        cout<<endl;
+#endif
+      }
+
+
+      //extract the maximum and minimum offset for each dimension
+      //for each dimension, we need to go through all the dimensions
+      //as offset value are for the same data (stream), the dimension size is the same
+      int size = ((*it)->pairs.front())->dimensions.size();
+      (*it)->max.resize(size); 
+      (*it)->min.resize(size); 
+      cout<<"size "<<size<<endl;
+
+      foreach_(Pair* pair,(*it)->pairs)
+      {
+        vector<int>::iterator jt_max = (*it)->max.begin(); 
+        vector<int>::iterator jt_min = (*it)->min.begin();
+        for(vector<int>::iterator jt = pair->offsets.begin(); jt != pair->offsets.end(); jt++)
+        {
+          *jt_max = (*jt_max) > (*jt) ? (*jt_max) : (*jt);
+          *jt_min = (*jt_min) < (*jt) ? (*jt_min) : (*jt);
+          jt_max++;
+          jt_min++;
+        }
+      }
+
+#if DEBUG
+      foreach_(int value, (*it)->max)
+        cout<<"max "<<value<<" ";
+      cout<<endl;
+      foreach_(int value, (*it)->min)
+        cout<<"min "<<value<<" ";
+      cout<<endl;
+#endif
+
+      //TODO: data blocking
+      for(vector<int>::iterator jt_max = (*it)->max.begin(); jt_max != (*it)->max.end(); jt_max++)
+      {
+        vector<int>::iterator jt_min = (*it)->min.begin();
+
+        int gap=1;//distance for 1 neighbouring data in this dimension
+        int dimGap = jt_max - (*it)->max.begin();//the 1 account for that first dimenion gap is 1
+        for(vector<int>::iterator jt_dim =((*it)->pairs.front())->dimensions.begin(); 
+                                  jt_dim!=((*it)->pairs.front())->dimensions.begin()+dimGap; jt_dim++)
+          gap = gap * (*jt_dim);
+
+        (*it)->internaldelay += ((*jt_max) - (*jt_min)) * gap;
+        jt_min++;
+      }
+      cout<<"internal delay: "<<(*it)->internaldelay<<endl;
+        
+      (*it)->BRAMs = (double) (((*it)->internaldelay) * precision) / (36.0 * 1024.0);
+      double width = (double)((int)((*it)->OnchipMemory.size()) * precision) / 36.0;
+      if((*it)->BRAMs ==0) width = 0;
+
+      (*it)->BRAMs = (*it)->BRAMs > width ? (*it)->BRAMs : width;
+      (*it)->BRAMs =(double) ceil((*it)->BRAMs);
     }
-    cout<<endl;
-
-    int max, min;
-    max=0;
-    min=0;
-    
-    //TODO: current data access pattern is at the same dimension
-    for(list<int>::iterator jt = (*it)->OnchipMemory.begin(); jt!=(*it)->OnchipMemory.end(); jt++)
+    else//for kernel with only 1 dimension 
     {
-      max = max > *jt ? max : *jt;
-      min = min > *jt ? *jt : min;
-    } 
-    (*it)->delay = max - min;
-    Bs = (double) ((max - min) * precision) / (36.0 * 1024.0);
-    
-    double width = (double)((int)((*it)->OnchipMemory.size()) * precision) / 36.0;
-    if(Bs ==0) width = 0;
+      for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
+      {
+        cout<<"stream "<<(*it)->getName()<<endl;
+        cout<<"offset:";
+        precision = (*it)->precision[0] + (*it)->precision[1];
 
-    Bs = Bs > width ? Bs : width;
-    BRAMs =(double) ceil(Bs);
-    cout<<"memory resource consumption: "<< BRAMs<<" BRAMs"<<endl; 
-    //OnchipMemory.clear(); 
+        for(list<string>::iterator jt = (*it)->offsets.begin(); jt!=(*it)->offsets.end(); jt++)
+        {
+          cout<<" "<< *jt;
+          int offset;
+          istringstream ( *jt ) >> offset;
+          if(!findoffset(offset, *it))
+            (*it)->OnchipMemory.push_back(offset); 
+        }
+        cout<<endl;
+
+        int Max, Min;
+        Max=0;
+        Min=0;
+        for(list<int>::iterator jt = (*it)->OnchipMemory.begin(); jt!=(*it)->OnchipMemory.end(); jt++)
+        {
+          Max = Max > *jt ? Max : *jt;
+          Min = Min > *jt ? *jt : Min;
+        } 
+        (*it)->internaldelay = Max - Min;
+        (*it)->BRAMs = (double) ((Max - Min) * precision) / (36.0 * 1024.0);
+
+        double width = (double)((int)((*it)->OnchipMemory.size()) * precision) / 36.0;
+        if((*it)->BRAMs ==0) width = 0;
+
+        (*it)->BRAMs = (*it)->BRAMs > width ? (*it)->BRAMs : width;
+        (*it)->BRAMs =(double) ceil((*it)->BRAMs);
+      }
+    }
+
+
+
+  for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
+    BRAMs += (*it)->BRAMs;
+  cout<<"memory resource consumption: "<< BRAMs<<" BRAMs"<<endl; 
   }
 }
 
@@ -87,23 +200,23 @@ double HLAVisitor::gap(Offset* node)
 }
 
 void HLAVisitor::OffchipCommunicationAnalysis(){
-
-  //TODO: when there are multiple kernels (fucntions), communication
-  //patterns can overlap, need to be supproted
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
   {
     cout<<"stream "<<(*it)->getName()<<endl;
     precision = (*it)->precision[0] + (*it)->precision[1];
-    offchipdata += (double) precision * gap(*it);  
-    bandwidth = offchipdata * frequency / 8;
+   
+    //bandwidth calculation is now taken care at the configuration level
+    //bandwidth for each stream are recorded separately
+    //TODO: use gap(*it) to calculate the data required from onchipmemory, evey cycle 
+    (*it)->bandwidth = (double) precision * frequency / 8;
+#if DEBUG    
+    cout<<"bandwidth: "<<(*it)->bandwidth<<" MB/s"<<endl;
+#endif
 
-    cout<<"bandwidth: "<<bandwidth<<" MB/s"<<endl;
+    //offchipdata += (double) precision * gap(*it);  
+    //bandwidth = offchipdata * frequency / 8;
   } 
 }
-
-//void HLAVisitor::TransFactor(){
-  
-//}
 
 void HLAVisitor::ArithmeticResource(Node* node, int* width){
   Ls=0;
@@ -220,34 +333,42 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         break;
       default: cout<<"invalid transformation ratio"<<endl;
     }
+#if DEBUG    
     cout<<"Ls: "<<Ls<<" Fs: "<<Fs<<" Ds: "<<Ds<<endl;
+#endif
   }
 }
 
 
 void HLAVisitor::ArithmeticAnalysis(){
 
-  LUTs=0;
-  FFs =0;
-  DSPs=0;
 
   for(list<Node*>::iterator it = dfg->arithmetics.begin(); it!=dfg->arithmetics.end(); it++)
   {
+
+#if DEBUG    
     cout<<"arith node "<<(*it)->getName()<<endl;
     cout<<"input: ";
-    
+#endif    
+
     int width[2] ={0,0};
     for(list<Node*>::iterator jt = (*it)->inputs.begin(); jt!=(*it)->inputs.end(); jt++)
     {
+#if DEBUG      
       cout<<" "<<(*jt)->getName();
+#endif    
       width[0] = width[0] > (*jt)->precision[0] ? width[0] : (*jt)->precision[0];
       width[1] = width[1] > (*jt)->precision[1] ? width[1] : (*jt)->precision[1];
     }
     ArithmeticResource((*it), width);
+#if DEBUG      
     cout<<endl;
+#endif    
     LUTs += Ls;
     FFs  += Fs;
     DSPs += Ds;
   }
+#if DEBUG      
   cout<<"LUTs: "<<LUTs<<" FFs: "<<FFs<<" DSPs: "<<DSPs<<endl;
+#endif    
 }

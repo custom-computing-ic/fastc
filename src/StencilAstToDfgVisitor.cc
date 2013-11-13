@@ -178,8 +178,10 @@ Node* StencilAstToDfgVisitor :: toExprNodeRec(SgExpression *ex) {
         else 
           offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
 	
-	offset->setStencilOffset(stencilOffset);
-	offset_node->setStencilOffset(stencilOffset);
+        offset->addStencilOffset(stencilOffset);
+
+
+        offset_node->setStencilOffset(stencilOffset);
 	
         cout<<"buffer "<<offset->getName()<<endl;
         for (list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
@@ -256,6 +258,7 @@ Node* StencilAstToDfgVisitor :: toExprNodeRec(SgExpression *ex) {
       }
       else 
         offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+      offset->addStencilOffset(stencilOffset);
       cout<<"buffer "<<offset->getName()<<endl;
       for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
         cout<<" "<< *it;

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <vector>
 #include <iostream>
 
 #include "../StencilOffset.h"
@@ -43,28 +44,45 @@ public:
   virtual string classname() {return "Node";}
 };
 
-class Offset : public Node{
 
-  StencilOffset* stencilOffset;
+class Pair{
+  //for each pair 
+  //fastest dimension -> lowest dimension (begin -> end) 
+  public:
+  vector<int> dimensions;
+  vector<int> offsets;
+  Pair(){};
+};
+
+class Offset : public Node{
+  vector<StencilOffset*> stencilOffsets;
 
 public:
+  vector<Pair*> pairs;
+  vector<int> max;
+  vector<int> min;
+
+  double BRAMs;
+  double bandwidth;
+  
   list<string> offsets;
   list<int> OnchipMemory;
-  int delay;//calculated in HLAVisitor
+  int internaldelay;//calculated in HLAVisitor
   int inputdelay;//updated in DfeTopSortVisitor
 
-  public:
-  Offset(string name) : Node(name) {delay =0; inputdelay=0;};
+  Offset(string name) : Node(name) {internaldelay =0; inputdelay=0; BRAMs = 0; bandwidth=0;};
   void addoffset(string offset);
   void setDelay(int inputdelay) {this->inputdelay = inputdelay;}
   int getDelay() {return this->inputdelay;}
   int memory();
   string toMaxJ() {return "Offset\n";}
   string classname() {return "Offset";}
-  void setStencilOffset(StencilOffset* stencilOffset) {
+  void addStencilOffset(StencilOffset* stencilOffset) {
     // TODO do some useful calculation
-    this->stencilOffset = stencilOffset;
+    this->stencilOffsets.push_back(stencilOffset);
+    //this->stencilOffset = stencilOffset;
   }
+  vector<StencilOffset*> getStencilOffsets() { return stencilOffsets;}
 };
 
 
