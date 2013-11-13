@@ -2,7 +2,6 @@
 #define _STENCIL_H_
 
 #include "precompiled.hxx"
-#include "StencilOffset.h"
 #include <vector>
 #include <string>
 
