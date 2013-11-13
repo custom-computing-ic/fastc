@@ -29,12 +29,12 @@ SgProject* load_rose_project(int argc, char** argv);
 
 void setupBuild();
 /*
-namespace FASTAnalysis {
+  namespace FASTAnalysis {
   std::set<std::string> findModset(SgNode *sgNode) {
-    std::set<std::string> ret;
-    return ret;
+  std::set<std::string> ret;
+  return ret;
   }
-}
+  }
 */
 
 template<class T> void printVect(std::vector<T> v) {
@@ -49,9 +49,9 @@ namespace StencilUtils {
   StencilOffset* extractSingleOffset(SgExpression* e, Stencil* stencil);
   std::string getDimensionForOffset(SgExpression* expr);
   std::pair<std::string, int> getStencilOffset(SgBinaryOp* binOp,
-					       SgExpression *other,
-					       std::vector<std::string> loopVars,
-					       std::string var);
+                                               SgExpression *other,
+                                               std::vector<std::string> loopVars,
+                                               std::string var);
 }
 
 #endif

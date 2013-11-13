@@ -91,6 +91,25 @@ int main(int argc, char** argv) {
       }
       cout << endl;
     }
+
+    cout << "\tLoop increments: ";
+    foreach_(string i, s->getLoopIncrements()) {
+      cout << i << ", ";
+    }
+    cout << endl;
+
+    cout << "\tLower bounds: ";
+    foreach_(string i, s->getLowerBounds()) {
+      cout << i << " ";
+    }
+    cout << endl;
+
+    cout << "\tUpper bounds: ";
+    foreach_(string i, s->getUpperBounds()) {
+      cout << i << " ";
+    }
+
+    cout << endl;
     num++;
   }
 

@@ -6,14 +6,17 @@
 
 class StencilOffset {
 
-public:
+ public:
 
   std::map<std::string, int> var_offset;
   std::map<std::string, int> dim_offset;
-  
+
   StencilOffset()  {}
+
+  std::string getDataflowOffsetExpresion();
   
+
 };
 
 
-#endif // _STENCILOFFSET_H_ 
+#endif // _STENCILOFFSET_H_
