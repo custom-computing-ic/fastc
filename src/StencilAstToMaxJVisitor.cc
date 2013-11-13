@@ -1,6 +1,8 @@
 #include "precompiled.hxx"
 #include "StencilAstToMaxJVisitor.h"
 #include "utils.hxx"
+#include "Stencil.h"
+#include "StencilOffset.h"
 
 using namespace std;
 using namespace boost;
@@ -282,55 +284,17 @@ string* StencilAstToMaxJVisitor::toExpr(SgExpression *ex) {
 
     if (isSgPntrArrRefExp(ex)) {
       SgPntrArrRefExp *e = isSgPntrArrRefExp(ex);
-      // check for the type of lhs
-      string type =  e->get_type()->unparseToString();
-      D(cerr << "PTR REF: Found ptr ref type " << type);
-      D(cerr << "Expr: " << ex->unparseToString() << endl);
-      D(cerr << "PTR REF: Type of lhs: ");
-      D(cerr << e->get_lhs_operand()->get_type()->unparseToString() << endl);
-      string lhs_type = e->get_lhs_operand()->get_type()->unparseToString();
-      if (lhs_type.compare("float *") == 0 ||
-          lhs_type.compare("int *") == 0) {
-        // LHS is stream type so pointer access maps to stream.offset()
 
-        // XXX optimisation should be done in a separate pass
-        if ((*right).compare("0") == 0)
-          return left;
+      Stencil *s = this->kernel->getFirstStencil();
+      StencilOffset* so = StencilUtils::extractSingleOffset(e->get_rhs_operand(), s);
 
-        if (isConstant(*right)) {
-          // constant offset value
-          string* offset = new string();
-          *offset += "stream.offset("+*left+", ";
-          *offset += e->get_rhs_operand()->unparseToString() + ")";
-          return offset;
-        } else {
-          // offset expression / dynamic offset
-          // XXX limits for dynamic offsets should be inferred
-          // first argument to offset() is HWVar
-          // XXX for now, don't attempt to guess offset
-          // bounds; Users should use the prev / next / ;
-          // functions if they want to set limits
-          return new  string("stream.offset("+*left+", "+*right+")");
-          //+ ", -1024, 1024)");
-        }
-      }
+      string varRef = e->get_lhs_operand()->unparseToString();
+      string offsetDim = so->getDataflowOffsetExpresion();
 
-      SgArrayType *t  = isSgArrayType(e->get_type());
-      if (t != NULL) {
-        vector<SgExpression*> expressions = SageInterface::get_C_array_dimensions(t);
-        vector<SgExpression*>::iterator it;
-        int dim = expressions.size() - 1;
-        D(cerr << "Array type dim: " << dim << endl);
-
-        if (dim >= 1) {
-          return new string(ex->unparseToString());
-        }
-      } else {
-        return new string(ex->unparseToString());
-      }
-
-      D(cerr << "PTR REF: No type found for exp: " << e->unparseToString());
-
+      // FIXME this optimization should be moved to a separate pass
+      if (offsetDim == "0")
+        return new string(varRef);
+      return new string ("stream.offset(" + varRef + "," + offsetDim  + ")");
     } else {
       if (isSgAssignOp(ex))
         // can't bracket assign stmts

@@ -278,10 +278,11 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
         cout << "Just created node with id " << node->getId() << endl;
       }
     else
-      {
-        node = new OpNode(op);
-        dfg->addArith(node);
-      }
+    {
+      node = new OpNode(op);
+      //check whether its root is a SgPntrArrRefExp, if so, not an arithmetic node
+      dfg->addArith(node);
+    }
     dfg->addNode(node);
     if (right != NULL)
       {

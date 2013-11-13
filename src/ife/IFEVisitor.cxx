@@ -21,6 +21,7 @@ void IFEVisitor::ExtractProperties(){
       continue;
 
     Kernel* k = task->getKernel();
+    cout<<"visiting kernel: "<<k->getName()<<endl;
     HLAVisitor hlaVisitor(k);
     hlaVisitor.OnchipMemoryAnalysis();
     hlaVisitor.OffchipCommunicationAnalysis();
@@ -75,17 +76,17 @@ void IFEVisitor::AssignLevel(DfeTask* task)
   int sourceD=0;
   foreach_(Offset* stream, task->sources)
   {
-    cout<<"source node: "<<stream->getName()<<" delay: "<<stream->delay<<endl;
-    sourceD = sourceD > stream->delay ? sourceD : stream->delay;
+    cout<<"source node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;
+    sourceD = sourceD > stream->internaldelay ? sourceD : stream->internaldelay;
   }
   foreach_(Offset* stream, task->sinks)
-    cout<<"sink node: "<<stream->getName()<<" delay: "<<stream->delay<<endl;
+    cout<<"sink node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;
 
   //TODO: we hack here since we assume each function only has 1 output
   //calculte delay for the sink node
   foreach_(Offset* stream, task->sinks)
   {
-    int Delay = sourceD - stream->delay;
+    int Delay = sourceD - stream->internaldelay;
     cout<<"output delay: "<< Delay <<endl;
     string outputname = stream->getName();
     list<Node*> outputs = task->getNeighbours();
@@ -239,18 +240,20 @@ void IFEVisitor::CombineSegments(){
 #endif
 }
 
-bool IFEVisitor::FindOutput(DfeTask* task, Configuration* con)
+int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
 {
-  foreach_(Offset* output, task->sinks)
-    foreach_(Segment* seg, con->getConfiguration())
-      foreach_(DfeTask* task, seg->getTasks())
-        foreach_(Offset* input, task->sources)
-        if(output->getName() == input->getName())
-        {
-          //cout<<"matched name "<<input->getName()<<endl;
-          return true;
-        }
-  return false;
+  int find =0;
+  foreach_(string outputname, task->getOutputs())
+    if(task->getCorrespondingKernelParam(outputname) == name) //matching the searched streamed
+      foreach_(Segment* seg, con->getConfiguration())
+        foreach_(DfeTask* branch, seg->getTasks())
+          foreach_(string inputname, branch->getInputs())
+            if(outputname == inputname)
+            {
+              cout<<"mathed name: "<<outputname<<endl;
+              find++;
+            }
+  return find;
 }
 
 void IFEVisitor::OptimiseConfigurations(){
@@ -268,18 +271,28 @@ void IFEVisitor::OptimiseConfigurations(){
   }
 
   //aggregrate the bandwidth
+  //TODO: there are kernels sharing the same input data, need to process that
+  //TODO: for that case, also need to think how to merge the onchipmemory 
   foreach_(Configuration* con, configurations)
-  {
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
       {
-         if(!FindOutput(task, con))//outputs are not internally connected
-           con->bandwidth += task->bandwidth;
+        Kernel* kbuf = task->getKernel();
+        DataFlowGraph* dbuf = kbuf->getDataFlowGraph(); 
+        foreach_(Offset* stream, dbuf->streams)
+        {
+          cout<<"con "<<con->getName()<<"stream "<<stream->getName()<<" "<<endl;
+          con->bandwidth += stream->bandwidth;
+          int find = FindOutput(task, con, stream->getName());
+          if(find>0)
+          {
+            cout<<"find "<<find<<" connected for con "<<con->getName()<<" with stream "<<stream->getName()<<endl;
+            con->bandwidth -= (((double) find) +1)*stream->bandwidth;
+          }
+          cout<<"band: "<<con->bandwidth<<endl;
+        }
       }
-  }
 
-  //TODO: the offchip memory bandwidth needs to be aggregrated at
-  //configuration level
   foreach_(Configuration* con, configurations)
   {
     cout<<"configuration "<<con->getName()<<endl;
@@ -317,9 +330,6 @@ void IFEVisitor::GenerateSolutions(){
       cout<<"configuration "<<" level:"<<con->level<<" size:"<<con->getConfiguration().size()<<endl;
   }
 #endif
-
-//std::vector<int>::iterator it = levelNums.begin();
-//std::vector<Configuration*> seenConfigurations;
 
   std::vector<Partition*>::iterator it = configurationGraph.begin();
 

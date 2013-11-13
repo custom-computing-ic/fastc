@@ -26,14 +26,16 @@ void DfeTopSortVisitor::visit(Node *n) {
   int sourceD=0;
   foreach_(Offset* stream, task->sources)
   {
-    cout<<"source node: "<<stream->getName()<<" delay: "<<stream->delay<<" input delay: "<<stream->inputdelay<<endl;
-    sourceD = sourceD > (stream->delay + stream->inputdelay) ? sourceD : (stream->delay + stream->inputdelay);
+    cout<<"source node: " <<stream->getName()<<" internal delay: "<<stream->internaldelay;
+    cout<<" input delay: "<<stream->inputdelay<<endl;
+    sourceD = sourceD > (stream->internaldelay + stream->inputdelay) ? 
+                        sourceD : (stream->internaldelay + stream->inputdelay);
   }
 
   //now update the output delay
   foreach_(Offset* stream, task->sinks)
   {
-    int Delay = sourceD - stream->delay;
+    int Delay = sourceD - stream->internaldelay;
     //now scan all the output nodes
     foreach_(Node* node, task->getNeighbours())
     {
@@ -41,6 +43,8 @@ void DfeTopSortVisitor::visit(Node *n) {
       //get the matched input of the output node, and update delay
       string matchedname = MatchName(task, dfeNode);
       string paramName = dfeNode->getCorrespondingKernelParam(matchedname);
+      cout<<"matched name: "<<matchedname<<" corespond to "<<paramName<<endl;
+
       foreach_(Offset* stream, dfeNode->streams)
         if(stream->getName() == paramName) {
           stream->setDelay(Delay);         

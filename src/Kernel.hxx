@@ -49,7 +49,7 @@ class Kernel {
   void removeOutputAssignments();
 
   vector<string> getParamOffsets(vector<string> dfeTaskArguments,
-				 list<string> param_names);
+                                 list<string> param_names);
 
   vector<int> getKernelParamOffsets(list<string> param_name_vector);
 
@@ -100,6 +100,10 @@ public:
 
   list<string> getInputNames() {
     return streamInputParams;
+  }
+
+  string getInputType(string inputName) {
+    return ioTypeMap[inputName];
   }
 
   list<string> getOutputNames() {

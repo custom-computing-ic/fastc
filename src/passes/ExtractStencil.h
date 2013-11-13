@@ -9,28 +9,24 @@
 
 class ExtractStencil : public Pass {
 
-  int getStencilDimension(SgStatement *);
-  int getStencilShape(SgStatement *);
-  std::vector<std::string> getLoopVariables(SgStatement *);
-
   SgStatement* getStencilUpdateStatement(SgStatement *);
   SgAssignOp* getStencilUpdateAssignment(SgStatement *st);
 
   std::vector<std::string> getStencilInputs(SgStatement *st);
   std::vector<std::string> getStencilOutputs(SgStatement *st);
-  std::vector<StencilOffset*> getStencilOffsets(SgStatement *st, 
-								 Stencil* stencil);
+  std::vector<StencilOffset*> getStencilOffsets(SgStatement *st,
+                                                Stencil* stencil);
   std::vector<StencilOffset*> getOffsetsByDimension(std::vector<SgExpression*>,
-							       Stencil* );
+                                                    Stencil* );
   std::string getDimensionForOffset(SgExpression* expr, std::vector<std::string> loopVars);
 
 
   StencilOffset* extractSingleOffset(SgExpression* e, Stencil* stencil);
 
-public:
+ public:
   ExtractStencil() {}
 
-  
+
   void runPass(Design* design);
   std::string logPass();
 };

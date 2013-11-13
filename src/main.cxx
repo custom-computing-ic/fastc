@@ -90,7 +90,34 @@ int main(int argc, char** argv) {
         cout << it->first << " " << it->second << ",";
       }
       cout << endl;
+
+    map<string, string>::iterator itt;
+    cout << " var_dims: ";
+      for (itt = of->var_dim.begin(); itt != of->var_dim.end(); itt++) {
+        cout << itt->first << " " << itt->second << ",";
+      }
+      cout << endl;
+   
     }
+
+    cout << "\tLoop increments: ";
+    foreach_(string i, s->getLoopIncrements()) {
+      cout << i << ", ";
+    }
+    cout << endl;
+
+    cout << "\tLower bounds: ";
+    foreach_(string i, s->getLowerBounds()) {
+      cout << i << " ";
+    }
+    cout << endl;
+
+    cout << "\tUpper bounds: ";
+    foreach_(string i, s->getUpperBounds()) {
+      cout << i << " ";
+    }
+
+    cout << endl;
     num++;
   }
 

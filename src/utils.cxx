@@ -35,7 +35,7 @@ SgProject* load_rose_project(int argc, char** argv) {
     exit(0);
   }
 
-return project;
+  return project;
 }
 
 
@@ -79,7 +79,7 @@ StencilOffset* StencilUtils::extractSingleOffset(SgExpression* e, Stencil* stenc
   q.push(e);
   vector<string> loopVars = stencil->getLoopVariables();
 
-  StencilOffset* s = new StencilOffset();
+  StencilOffset* s = new StencilOffset(stencil);
   while (!q.empty()) {
     SgExpression* exp = q.front(); q.pop();
     SgBinaryOp* binOp = isSgBinaryOp(exp);
@@ -88,48 +88,53 @@ StencilOffset* StencilUtils::extractSingleOffset(SgExpression* e, Stencil* stenc
       SgExpression* varRef;
       SgExpression* varRef2;
       if (isSgMultiplyOp(binOp) &&
-	  isVarOrConstant(binOp->get_lhs_operand()) &&
-	  isVarOrConstant(binOp->get_rhs_operand())
-	/*	  (varRef = isSgVarRefExp(binOp->get_lhs_operand())) != NULL &&
-		  (varRef2 = isSgVarRefExp(binOp->get_rhs_operand())) != NULL */) {
-	varRef = binOp->get_lhs_operand();
-	varRef2 = binOp->get_rhs_operand();
-	string varname1 = varRef->unparseToString();
-	string varname2 = varRef2->unparseToString();
-	vector<string>::iterator it = find(loopVars.begin(), loopVars.end(), varname1);
-	if (it != loopVars.end()) {
-	  s->var_offset[varname1] = s->dim_offset[varname2] = 0;
-	} else {
-	  it = find(loopVars.begin(), loopVars.end(), varname2);
-	  if (it != loopVars.end()) {
-	    s->var_offset[varname2] = s->dim_offset[varname1] = 0;
-	  }
-	}
+          isVarOrConstant(binOp->get_lhs_operand()) &&
+          isVarOrConstant(binOp->get_rhs_operand())
+          /*	  (varRef = isSgVarRefExp(binOp->get_lhs_operand())) != NULL &&
+                (varRef2 = isSgVarRefExp(binOp->get_rhs_operand())) != NULL */) {
+        varRef = binOp->get_lhs_operand();
+        varRef2 = binOp->get_rhs_operand();
+        string varname1 = varRef->unparseToString();
+        string varname2 = varRef2->unparseToString();
+        vector<string>::iterator it = find(loopVars.begin(), loopVars.end(), varname1);
+        if (it != loopVars.end()) {
+          s->var_offset[varname1] = s->dim_offset[varname2] = 0;
+          s->var_dim[varname1] = varname2;
+        } else {
+          it = find(loopVars.begin(), loopVars.end(), varname2);
+          if (it != loopVars.end()) {
+            s->var_offset[varname2] = s->dim_offset[varname1] = 0;
+            s->var_dim[varname2] = varname1;
+          }
+        }
       } else if ((varRef = isSgVarRefExp(binOp->get_lhs_operand())) != NULL) {
-	pair<string, int> offset = getStencilOffset(binOp, binOp->get_rhs_operand(),
-						    loopVars, varRef->unparseToString());
-	if (offset.first != "") {
-	  s->var_offset[offset.first] = offset.second;
-	  // found an offset look for the dimension
-	  string dim = getDimensionForOffset(binOp);
-	  s->dim_offset[dim] = offset.second;
-	}
-	q.push(binOp->get_rhs_operand());
+        pair<string, int> offset = getStencilOffset(binOp, binOp->get_rhs_operand(),
+            loopVars, varRef->unparseToString());
+        if (offset.first != "") {
+          s->var_offset[offset.first] = offset.second;
+          // found an offset look for the dimension
+          string dim = getDimensionForOffset(binOp);
+          s->dim_offset[dim] = offset.second;
+          s->var_dim[offset.first] = dim;
+        }
+        q.push(binOp->get_rhs_operand());
       } else if ((varRef = isSgVarRefExp(binOp->get_rhs_operand())) != NULL) {
-	pair<string, int> offset = getStencilOffset(binOp, binOp->get_lhs_operand(),
-						    loopVars, varRef->unparseToString());
-	if (offset.first != "") {
-	  s->var_offset[offset.first] = offset.second;
-	  string dim = getDimensionForOffset(binOp);
-	  s->dim_offset[dim] = offset.second;
-	}
-	q.push(binOp->get_lhs_operand());
+        pair<string, int> offset = getStencilOffset(binOp, binOp->get_lhs_operand(),
+            loopVars, varRef->unparseToString());
+        if (offset.first != "") {
+          s->var_offset[offset.first] = offset.second;
+          string dim = getDimensionForOffset(binOp);
+          s->dim_offset[dim] = offset.second;
+          s->var_dim[offset.first] = dim;
+        }
+        q.push(binOp->get_lhs_operand());
       } else {
-	q.push(binOp->get_lhs_operand());
-	q.push(binOp->get_rhs_operand());
+        q.push(binOp->get_lhs_operand());
+        q.push(binOp->get_rhs_operand());
       }
     }
   }
+
   return s;
 }
 
@@ -156,9 +161,9 @@ std::string StencilUtils::getDimensionForOffset(SgExpression* expr) {
 
 
 std::pair<std::string, int> StencilUtils::getStencilOffset(SgBinaryOp* binOp,
-							   SgExpression *other,
-							   std::vector<std::string> loopVars,
-							   std::string var) {
+    SgExpression *other,
+    std::vector<std::string> loopVars,
+    std::string var) {
   using namespace std;
   vector<string>::iterator it = find(loopVars.begin(), loopVars.end(), var);
 
@@ -169,8 +174,8 @@ std::pair<std::string, int> StencilUtils::getStencilOffset(SgBinaryOp* binOp,
     if (isSgSubtractOp(binOp) || isSgAddOp(binOp)) {
       SgValueExp *valExp;
       if ((valExp = isSgValueExp(other)) != NULL) {
-	int dim = SageInterface::getIntegerConstantValue(valExp)  * sign;
-	return make_pair(*it, dim);
+        int dim = SageInterface::getIntegerConstantValue(valExp)  * sign;
+        return make_pair(*it, dim);
       }
     }
     return make_pair(*it, 0);
