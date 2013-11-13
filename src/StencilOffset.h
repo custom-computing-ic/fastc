@@ -14,8 +14,10 @@ public:
   std::map<std::string, std::string> var_dim; 
   
   StencilOffset(Stencil* stencil)  {this->stencil = stencil;}
+  std::string getDataflowOffsetExpresion();
   
+
 };
 
 
-#endif // _STENCILOFFSET_H_ 
+#endif // _STENCILOFFSET_H_

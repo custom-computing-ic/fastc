@@ -24,6 +24,9 @@ auto
 /config.log
 /config.status
 /configure
+/test_run
+/tools
+build
 
 # Tex things
 /doc/reports/interim/bib/auto/bibliography.el

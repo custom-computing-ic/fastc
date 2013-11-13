@@ -4,6 +4,8 @@
 #include "StencilAstToMaxJVisitor.h"
 #include "utils.hxx"
 
+#include "StencilCodeGenerator.h"
+
 #include "DataFlowGraph/Node.hxx"
 #include "DataFlowGraph/InputNode.hxx"
 #include <iostream>
@@ -70,7 +72,6 @@ bool Kernel::isStreamArrayType(string identifier) {
 
 string Kernel::generateSourceCode() {
   if (!isStencilKernel()) {
-    cout << "Generating code for kernel " << getName() << endl;
     extractIO();
     generateIO();
 
@@ -78,14 +79,8 @@ string Kernel::generateSourceCode() {
     visitor.traverse(decl->get_definition());
     addSource(visitor.getSource());
   } else {
-    // TODO Run stencil code generator...
-
-    /*extractIO();
-    generateIO();
-
-    StencilAstToMaxJVisitor visitor(this);
-    visitor.traverse(decl->get_definition());
-    addSource(visitor.getSource()); */
+    StencilCodeGenerator scg(this);
+    addSource(scg.generateStencilCode());
   }
 
   preamble += constants +
