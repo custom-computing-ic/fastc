@@ -277,6 +277,7 @@ void Kernel::saveOriginalInputOutputNodes() {
       }
     } else {
       scalarInputs.push_back(paramName);
+      dfg->addInputNode(new InputNode(paramName));
     }
   }
 }

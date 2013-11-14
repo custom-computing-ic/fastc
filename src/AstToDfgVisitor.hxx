@@ -28,6 +28,10 @@ class ASTtoDFGVisitor : public AstSimpleProcessing {
 
   void function_call_initializer(string&, SgFunctionCallExp*);
   Node* toExprNodeRec(SgExpression*);
+  Node* toNodePntrArrRef(SgPntrArrRefExp*);
+  void visitFor(SgForStatement*);
+  void ignoreChildren(SgNode *n);
+  void ignore(SgNode *n);
 
 public:
   ASTtoDFGVisitor(Kernel *k);

@@ -17,8 +17,8 @@ public class MovingAverage extends Kernel {
         super(parameters);
         HWVar x =  io.input("x", hwFloat(8, 24));
 
-        HWVar prev = stream.offset(x, -1);
-        HWVar next = stream.offset(x, 1);
+        HWVar prev = (0.03 * stream.offset(x, -1));
+        HWVar next = (2 * stream.offset(x, 1));
         HWVar sum = ((prev + x) + next);
         HWVar result = (sum / 3);
 

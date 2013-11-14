@@ -111,12 +111,13 @@ runLocalTestSuite() {
     runTest "testCommon/maxc/CmdRead" $1
     runTest "testCommon/maxc/CmdWrite" $1
     runTest "testCommon/maxc/Mux" $1
+    runTest "testCommon/maxc/Scalars" $1
     runTest "testApplications/maxc/MovingAverage" $1
     runTest "testTypes/maxc/Types" $1
     runTest "test1dConvolution/maxc/Convolution1d" $1
     runTest "testPassThrough/maxc/PassThroughKernel" $1
-    runTest "testCounter/maxc/Counter" $
-    runTest "testFASTCIntegrated/maxc/main" $
+    runTest "testCounter/maxc/Counter" $1
+    runTest "testFASTCIntegrated/maxc/main" $1
     #    runTest "maxc/testRTMManager"
 }
 

@@ -16,7 +16,12 @@ ASTtoDFGVisitor :: ASTtoDFGVisitor(Kernel *k) {
 
 void ASTtoDFGVisitor :: visit(SgNode *n) {
 
-  if (isSgVariableDeclaration(n)) {
+  if ( n == NULL || (n != NULL && n->getAttribute("ignore") != NULL) )
+    return;
+
+  if (isSgForStatement(n)) {
+    visitFor(isSgForStatement(n));
+  } else if (isSgVariableDeclaration(n)) {
 
     SgVariableDeclaration *varDecl = isSgVariableDeclaration(n);
     foreach_(SgInitializedName *v, varDecl->get_variables()) {
@@ -43,25 +48,42 @@ void ASTtoDFGVisitor :: visit(SgNode *n) {
         n->addNeighbour(varNode);
       }
     }
-
-
   } else if (isSgFunctionCallExp(n)) {
     SgFunctionCallExp *fcall = isSgFunctionCallExp(n);
-    SgExpressionPtrList args = fcall->get_args()->get_expressions();
-    SgExpressionPtrList::iterator it = args.begin();
     SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
     string fname = fsymbol->get_name();
-
-    // TODO handle counter functions
-    /* if (fname.compare("output") == 0) {
-       Node *outputNode = toNode(*it);
-       Node *result     = toNode(*(++it));
-       if (result != NULL)
-       result->addNeighbour(outputNode);
-       } */
   } else if (isSgExprStatement(n)) {
     toExprNode(isSgExprStatement(n)->get_expression());
   }
+}
+
+void ASTtoDFGVisitor::ignoreChildren(SgNode *n) {
+  vector<SgNode *> children = n->get_traversalSuccessorContainer();
+  ignore(n);
+  foreach_(SgNode *n, children) {
+    if (n != NULL)
+      ignoreChildren(n);
+  }
+}
+
+void ASTtoDFGVisitor::ignore(SgNode *n) {
+  AstAttribute *ignore = new AstTextAttribute("yes");
+  n->setAttribute("ignore", ignore);
+}
+
+void ASTtoDFGVisitor::visitFor(SgForStatement *forStmt) {
+
+  // ignore everything encountered in a loop stmt for the purpose of
+  // the DFG
+
+  SgStatementPtrList initList = forStmt->get_init_stmt();
+  SgStatement        *test = forStmt->get_test();
+  SgExpression       *incr = forStmt->get_increment();
+
+  foreach_(SgStatement* stmt, initList) {
+    ignoreChildren(stmt);
+  }
+  ignoreChildren(test); ignoreChildren(incr);
 }
 
 
@@ -128,118 +150,104 @@ Node* ASTtoDFGVisitor :: toExprNode(SgExpression *ex) {
   return toExprNodeRec(ex);
 }
 
+
+Node* ASTtoDFGVisitor::toNodePntrArrRef(SgPntrArrRefExp *ex) {
+  SgPntrArrRefExp *ee = isSgPntrArrRefExp(ex);
+  StreamOffsetNode* node = new StreamOffsetNode("Offset");
+
+  string name = ee->get_lhs_operand()->unparseToString();
+  Offset* offset = dfg->findOffset(name);
+  if (offset == NULL) {
+    offset = new Offset(name);
+    offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+    dfg->addOffset(offset);
+  }
+  else
+    offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
+  cout<<"buffer "<<offset->getName()<<endl;
+  for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
+    cout<<" "<< *it;
+  cout<<endl;
+
+  if (kernel->isStencilKernel()) {
+    // extract stencil offsets from this expression
+    StencilOffset* stencilOffset =
+      StencilUtils::extractSingleOffset(ee->get_rhs_operand(),
+                                        kernel->getFirstStencil());
+    offset->addStencilOffset(stencilOffset);
+    node->setStencilOffset(stencilOffset);
+  }
+
+  return node;
+}
+
 Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
   if (isSgVarRefExp(ex) ) {
     string name = isSgVarRefExp(ex)->get_symbol()->get_name();
     return dfg->findNode(name);
-  } else if (isSgIntVal(ex) )  {
-    SgIntVal *e = isSgIntVal(ex);
-    string val = e->unparseToString();
-    Node *n = dfg->findNode(val);
-    if (n == NULL) {
-      n = new ConstantNode(val);
-      dfg->addSource(n);
+    Node* var_node = dfg->findNode(name);
+    if (var_node == NULL) {
+      var_node = new VarNode(name);
+      dfg->addNode(var_node);
     }
+    return var_node;
+  }
+
+  if (isSgValueExp(ex)!= NULL) {
+    Node *n = new ConstantNode(isSgValueExp(ex)->get_constant_folded_value_as_string());
+    dfg->addSource(n);
     return n;
-  } if (isSgPntrArrRefExp(ex)) {
+  }
 
+  if (isSgPntrArrRefExp(ex)) {
     SgPntrArrRefExp *ee = isSgPntrArrRefExp(ex);
-
     Node* left = toExprNodeRec(ee->get_lhs_operand());
-
-    Node* node = new StreamOffsetNode("Offset");
-
-    //serach if the current input has been bufferred
-
-    string name = ee->get_lhs_operand()->unparseToString();
-    Offset* offset = dfg->findOffset(name);
-    if(offset==NULL)//no such buffer
-      {
-        offset = new Offset(name);
-        offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-        dfg->addOffset(offset);
-      }
-    else
-      offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-    cout<<"buffer "<<offset->getName()<<endl;
-    for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
-      cout<<" "<< *it;
-    cout<<endl;
-
+    Node* offset_node = toNodePntrArrRef(isSgPntrArrRefExp(ex));
     if (left != NULL)
-      left->addNeighbour(node);
+      left->addNeighbour(offset_node);
+    return offset_node;
+  }
 
-    return node;
-
-  } else if (isSgBinaryOp(ex)) {
-
+  if (isSgBinaryOp(ex)) {
     SgBinaryOp *e = isSgBinaryOp(ex);
-
     Node *right = toExprNodeRec(e->get_rhs_operand());
 
-    if (isSgAssignOp(e)) {
+    // assignments are a bit special since we need to add the
+    // buffering before the assignment to the lhs stream
+    if (isSgAssignOp(e) && isSgPntrArrRefExp(e->get_lhs_operand())) {
+      // handles: y[offset_expression] = expression
+      SgPntrArrRefExp *ee = isSgPntrArrRefExp(e->get_lhs_operand());
+      string name = ee->get_lhs_operand()->unparseToString();
+      Node* offset_node = toNodePntrArrRef(ee);
 
-      // assignments are a bit special
-      if (isSgPntrArrRefExp(e->get_lhs_operand())) {
-        // handles: y[offset_expression] = expression
-        Node* offset_node = new StreamOffsetNode("Offset");
-
-        SgPntrArrRefExp *ee = isSgPntrArrRefExp(e->get_lhs_operand());
-        string name = ee->get_lhs_operand()->unparseToString();
-
-        //serach if the current input has been bufferred
-        Offset* offset = dfg->findOffset(name);
-        if(offset==NULL)//no such buffer
-          {
-            offset = new Offset(name);
-            offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-            dfg->addOffset(offset);
-          }
-        else
-          offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-        cout<<"buffer "<<offset->getName()<<endl;
-        for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
-          cout<<" "<< *it;
-        cout<<endl;
-
-
-        // construct DFG for the offset expression, which should
-        // feed into the offset node
-        Node *offset_expr = toExprNodeRec(ee->get_rhs_operand());
-        offset_expr->addNeighbour(offset_node);
-
-        // node corresponding to y
-        Node* stream_node = dfg->findNode(name);
-
-        // RHS should feed into the offset node
-        right->addNeighbour(offset_node);
-
-        // the offset node should feed into the LHS stream
-        if (stream_node != NULL)
-          offset_node->addNeighbour(stream_node);
-        else {
-          cout << "Attempting to add a null node at line 196: ";
-          cout << "Could not find dfg node for name: " + name << endl;
-        }
-
-        return stream_node;
+      // node corresponding to y
+      Node* stream_node = dfg->findNode(name);
+      // RHS should feed into the offset node
+      right->addNeighbour(offset_node);
+      // the offset node should feed into the LHS stream
+      if (stream_node != NULL)
+        offset_node->addNeighbour(stream_node);
+      else {
+        cout << "Attempting to add a null node at line 196: ";
+        cout << "Could not find dfg node for name: " + name << endl;
       }
-
-      else if (isSgVarRefExp(e->get_lhs_operand())) {
-        // handles: y = expression
-        string name = e->get_lhs_operand()->unparseToString();
-        Node* var_node = dfg->findNode(name);
-        if (var_node == NULL) {
-          var_node = new VarNode(name);
-          dfg->addNode(var_node);
-        }
-        right->addNeighbour(var_node);
-        return var_node;
-      }
-
+      return stream_node;
     }
 
+    if (isSgAssignOp(e) && isSgVarRefExp(e->get_lhs_operand())) {
+      //right->addNeighbour(left);
+      // handles: y = expression
+      string name = e->get_lhs_operand()->unparseToString();
+      Node* var_node = dfg->findNode(name);
+      if (var_node == NULL) {
+        var_node = new VarNode(name);
+        dfg->addNode(var_node);
+      }
+      right->addNeighbour(var_node);
+      return var_node;
+    }
 
+    Node *left = toExprNodeRec(e->get_lhs_operand());
     string op;
     if (isSgAddOp(e))
       op = "+";
@@ -251,49 +259,22 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
       op = "<";
     else if (isSgGreaterThanOp(e))
       op = ">";
+    else if (isSgDivideOp(e))
+      op = "/";
 
-    Node *left = toExprNodeRec(e->get_lhs_operand());
-    Node *node;
-    if ( isSgPntrArrRefExp(ex))
-      {
-        node = new StreamOffsetNode("Offset");
-
-        //serach if the current input has been bufferred
-        SgPntrArrRefExp *ee = isSgPntrArrRefExp(ex);
-        string name = ee->get_lhs_operand()->unparseToString();
-        Offset* offset = dfg->findOffset(name);
-        if(offset==NULL)//no such buffer
-          {
-            offset = new Offset(name);
-            offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-            dfg->addOffset(offset);
-          }
-        else
-          offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-        cout<<"buffer "<<offset->getName()<<endl;
-        for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
-          cout<<" "<< *it;
-        cout<<endl;
-
-        cout << "Just created node with id " << node->getId() << endl;
-      }
-    else
-    {
-      node = new OpNode(op);
-      //check whether its root is a SgPntrArrRefExp, if so, not an arithmetic node
-      dfg->addArith(node);
-    }
+    //Node *left = toExprNodeRec(e->get_lhs_operand());
+    Node *node = new OpNode(op);
+    //check whether its root is a SgPntrArrRefExp, if so, not an arithmetic node
+    dfg->addArith(node);
     dfg->addNode(node);
-    if (right != NULL)
-      {
-        right->addNeighbour(node);
-        node->addInput(right);
-      }
-    if (left != NULL)
-      {
-        left->addNeighbour(node);
-        node->addInput(left);
-      }
+    if (right != NULL) {
+      right->addNeighbour(node);
+      node->addInput(right);
+    }
+    if (left != NULL) {
+      left->addNeighbour(node);
+      node->addInput(left);
+    }
     //add to the arithmetics group
     return node;
   }
