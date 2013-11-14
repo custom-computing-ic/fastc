@@ -78,7 +78,7 @@ public:
   /** Retrieves and stores IO nodes from the original FAST
       description. Removes these nodes from the original AST to
       prevent them from being interpreted twice */
-  void extractIO();
+  void extractIO(bool removeOutputAssignments);
 
   /** Saves the names of the input output nodes corresponding to the
       original FAST description. This is required to prevent kernel
@@ -117,6 +117,14 @@ public:
   /** Returns the list of output nodes for this kernel. */
   list<OutputNode*> getOutputs() {
     return outputs;
+  }
+
+  string getOutputType(string outputName) {
+    foreach_(OutputNode* n, outputs) {
+      if (n->getName() == outputName)
+        return n->getType();
+    }
+    return "";
   }
 
   DataFlowGraph* getDataFlowGraph() {

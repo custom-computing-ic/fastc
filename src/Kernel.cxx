@@ -72,13 +72,14 @@ bool Kernel::isStreamArrayType(string identifier) {
 
 string Kernel::generateSourceCode() {
   if (!isStencilKernel()) {
-    extractIO();
+    extractIO(true);
     generateIO();
 
     ASTtoMaxJVisitor visitor(this);
     visitor.traverse(decl->get_definition());
     addSource(visitor.getSource());
   } else {
+    extractIO(false);
     StencilCodeGenerator scg(this);
     addSource(scg.generateStencilCode());
   }
@@ -216,7 +217,7 @@ set<string> Kernel::findModset(SgNode* sgNode) {
 }
 
 
-void Kernel::extractIO() {
+void Kernel::extractIO(bool _removeOutputAssignments) {
 
   // extract kernel inputs and outputs
   set<string> modSet = findModset(decl->get_definition());
@@ -251,7 +252,8 @@ void Kernel::extractIO() {
     paramNumber++;
   }
 
-  removeOutputAssignments();
+  if (_removeOutputAssignments)
+    removeOutputAssignments();
 }
 
 

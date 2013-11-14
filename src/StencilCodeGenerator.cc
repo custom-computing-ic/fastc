@@ -10,8 +10,6 @@ void StencilCodeGenerator::generateInputs() {
   Stencil* stencil = this->kernel->getFirstStencil();
 
   foreach_ (string in, this->kernel->getInputNames()) {
-    // FIXME obviously, the type shouldn't be hardcoded...
-    //    string type = "hwFloat(8, 24)";
     string type = this->kernel->getInputType(in);
     source += "HWVar " + in + " = io.input( \"" + in + "\"";
     source += "," + type + ");\n";
@@ -74,9 +72,7 @@ void StencilCodeGenerator::generateOutputs() {
   Stencil* stencil = this->kernel->getFirstStencil();
 
   foreach_ (string out, this->kernel->getOutputNames()) {
-    // FIXME obviously, the type shouldn't be hardcoded...
-    //    string type = "hwFloat(8, 24)";
-    string type = this->kernel->getInputType(out);
+    string type = this->kernel->getOutputType(out);
 
     if (out == stencil->getDestination()) {
       // if this is a stencil output, make it conditional on the control block
@@ -99,13 +95,6 @@ void StencilCodeGenerator::addComment(string comment) {
 
 string StencilCodeGenerator::generateStencilCode() {
   cout << "Generating code for " << this->kernel->getName() << endl;
-
-  addComment("-----Offset Expressions------");
-  // TODO
-
-
-  addComment("-----Inputs------");
-  generateInputs();
 
   source += "\n\n";
   addComment("-----Output Control------");
