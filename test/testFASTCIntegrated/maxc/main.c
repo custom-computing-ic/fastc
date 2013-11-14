@@ -8,7 +8,7 @@
 
 
 void kernel_f1(int *a, int *b) {
-  b[0] = a[1*2] + 1;
+  b[0] = a[2] + 1;
 }
 
 void kernel_f2(int *a, int *b) {

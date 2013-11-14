@@ -17,11 +17,18 @@ class DfeTask : public Node {
 public:
   double BRAMs, LUTs, FFs, DSPs;
   double bandwidth;
+
+  int internaldelay;//calculated in HLAVisitor
+  int inputdelay;//updated in DfeTopSortVisitor
+
   list<Offset*> streams;
   int idle; 
 
   std::vector<Offset*> sinks;
   std::vector<Offset*> sources;
+
+  double ds;
+  double frequency;
 
   DfeTask(string name, Kernel *k, std::vector<std::string> call_args);
 

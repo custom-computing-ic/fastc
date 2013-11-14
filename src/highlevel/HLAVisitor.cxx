@@ -13,6 +13,9 @@ HLAVisitor::HLAVisitor(Kernel *k){
   this->LUTs=0;
   this->FFs =0;
   this->DSPs=0;
+  
+  this->internaldelay =0;
+  this->inputdelay =0;
 }
 
 bool HLAVisitor::findoffset( int offset, Offset* node){
@@ -28,6 +31,9 @@ void HLAVisitor::OnchipMemoryAnalysis(){
   //TODO: offsets are variable, in that case, consider parse
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
   {
+    //currently we clean the previous results for each DfeTask analysis
+    //as the offset nodes for DfeTask are shared
+    (*it)->internaldelay = 0;
     cout<<"stream "<<(*it)->getName()<<endl;
     cout<<"offset:"<<endl;
     precision = (*it)->precision[0] + (*it)->precision[1]; //mantisa + significant
@@ -167,13 +173,24 @@ void HLAVisitor::OnchipMemoryAnalysis(){
         (*it)->BRAMs =(double) ceil((*it)->BRAMs);
       }
     }
+  }
 
-
-
+  //aggregrate BRAMs
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
     BRAMs += (*it)->BRAMs;
   cout<<"memory resource consumption: "<< BRAMs<<" BRAMs"<<endl; 
-  }
+  
+  //aggregrate idle cycles
+  for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
+    this->internaldelay = this->internaldelay > (*it)->internaldelay ? this->internaldelay : (*it)->internaldelay;
+  cout<<"kernel internal delay: "<< this->internaldelay<<" cycles"<<endl;
+
+  //calculate data size 
+  this->ds = 1; 
+  foreach_(int size, (((dfg->streams.front())->pairs).front())->dimensions)
+    this->ds = this->ds * size;
+
+  cout<<"data size: "<<this->ds<<endl;
 }
 
 double HLAVisitor::gap(Offset* node)
@@ -229,13 +246,13 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         if(node->getName() == "+" || node->getName() == "-")
         {
           Ls = 209;
-          Fs = 100;
+          Fs = 100+Ls;
           Ds = 0; 
         } 
         else if (node->getName()=="*")
         {
           Ls = 673;
-          Fs = 143;
+          Fs = 143+Ls;
           Ds = 0;
         }
         break;
@@ -243,13 +260,13 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         if(node->getName() == "+" || node->getName() == "-")
         {
           Ls = 209;
-          Fs = 100;
+          Fs = 100+Ls;
           Ds = 2; 
         } 
         else if (node->getName()=="*")
         {
           Ls = 100;
-          Fs = 51;
+          Fs = 51+Ls;
           Ds = 2;
         }
         break;
@@ -257,13 +274,13 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         if(node->getName() == "+" || node->getName() == "-")
         {
           Ls = 209;
-          Fs = 100;
+          Fs = 100+Ls;
           Ds = 2; 
         } 
         else if (node->getName()=="*")
         {
           Ls = 114;
-          Fs = 50;
+          Fs = 50+Ls;
           Ds = 3;
         }
       default: cout<<"invalid transformation ratio"<<endl;

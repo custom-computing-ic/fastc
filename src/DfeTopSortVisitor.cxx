@@ -28,14 +28,14 @@ void DfeTopSortVisitor::visit(Node *n) {
   {
     cout<<"source node: " <<stream->getName()<<" internal delay: "<<stream->internaldelay;
     cout<<" input delay: "<<stream->inputdelay<<endl;
-    sourceD = sourceD > (stream->internaldelay + stream->inputdelay) ? 
-                        sourceD : (stream->internaldelay + stream->inputdelay);
+    sourceD = sourceD > (stream->internaldelay + stream->inputdelay) ? sourceD : 
+                                                                       stream->internaldelay + stream->inputdelay;
   }
 
   //now update the output delay
   foreach_(Offset* stream, task->sinks)
   {
-    int Delay = sourceD - stream->internaldelay;
+    int Delay = sourceD;// - stream->internaldelay;
     //now scan all the output nodes
     foreach_(Node* node, task->getNeighbours())
     {

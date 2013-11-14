@@ -33,8 +33,13 @@ void IFEVisitor::ExtractProperties(){
     task->FFs       = hlaVisitor.getFFs();
     task->DSPs      = hlaVisitor.getDSPs();
     task->bandwidth = hlaVisitor.getbandwidth();
-
     task->streams   = hlaVisitor.getstreams();
+    
+    task->internaldelay=hlaVisitor.getinternaldelay();
+    task->inputdelay   =hlaVisitor.getinputdelay();
+
+    task->ds        = hlaVisitor.getDataSize();
+    task->frequency = hlaVisitor.getfrequency();
   }
 }
 
@@ -165,7 +170,11 @@ void IFEVisitor::CombineTasks(){
       (*it)->addTask(task);//combine nodes at the same level
      else
      {
-       levels.push_back(new Segment());
+       stringstream ssidle;
+       ssidle<< (task->idle);
+       string sslevel = ssidle.str();
+
+       levels.push_back(new Segment(sslevel));
        if(cap != levels.capacity()) //expanding
        {
          it = levels.begin() + offset;
@@ -184,7 +193,7 @@ void IFEVisitor::CombineTasks(){
   int i=0;
   foreach_(Segment* seg, levels)
   {
-    cout<<"level "<<i++<<endl;
+    cout<<"level "<<seg->getName()<<endl;
     foreach_(DfeTask* task, seg->getTasks())
       cout<<" node "<<task->getName()<<endl;
   }
@@ -250,7 +259,9 @@ int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
           foreach_(string inputname, branch->getInputs())
             if(outputname == inputname)
             {
+#if DEBUG
               cout<<"mathed name: "<<outputname<<endl;
+#endif
               find++;
             }
   return find;
@@ -281,17 +292,43 @@ void IFEVisitor::OptimiseConfigurations(){
         DataFlowGraph* dbuf = kbuf->getDataFlowGraph(); 
         foreach_(Offset* stream, dbuf->streams)
         {
+#if DEBUG
           cout<<"con "<<con->getName()<<"stream "<<stream->getName()<<" "<<endl;
+#endif
           con->bandwidth += stream->bandwidth;
           int find = FindOutput(task, con, stream->getName());
           if(find>0)
           {
+#if DEBUG
             cout<<"find "<<find<<" connected for con "<<con->getName()<<" with stream "<<stream->getName()<<endl;
+#endif
             con->bandwidth -= (((double) find) +1)*stream->bandwidth;
           }
+#if DEBUG
           cout<<"band: "<<con->bandwidth<<endl;
+#endif
         }
       }
+
+  //aggregrate the resource consumption for infrasttructure
+  foreach_(Configuration* con, configurations)
+  {
+    con->LUTs  += con->Il;
+    con->FFs   += con->If;
+    con->DSPs  += con->Id;
+    con->BRAMs += con->Ib;
+  }
+
+  //calculate the parallelism 
+  //TODO: explore DSP factor and precision
+  foreach_(Configuration* con, configurations)
+  {
+    con->P = con->P < ceil((con->Abw) / (con->bandwidth)) ? con->P : ceil((con->Abw) / (con->bandwidth));
+    con->P = con->P < ceil((con->Al)  / (con->LUTs))      ? con->P : ceil((con->Abw) / (con->bandwidth));
+    con->P = con->P < ceil((con->Af)  / (con->FFs))       ? con->P : ceil((con->Abw) / (con->bandwidth));
+    con->P = con->P < ceil((con->Ad)  / (con->DSPs))      ? con->P : ceil((con->Abw) / (con->bandwidth));
+    con->P = con->P < ceil((con->Ab)  / (con->BRAMs))     ? con->P : ceil((con->Abw) / (con->bandwidth));
+  }
 
   foreach_(Configuration* con, configurations)
   {
@@ -301,9 +338,11 @@ void IFEVisitor::OptimiseConfigurations(){
     cout<<"FFs   "<<con->FFs<<endl;
     cout<<"DSPs  "<<con->DSPs<<endl;
     cout<<"BRAMs "<<con->BRAMs<<endl;
+    cout<<"Parallelism "<<con->P<<endl;
   }
+  
 
-  //TODO: calculate the parallelism
+
   //TODO: iterate the pass to find the optimal DSP factor and precision
   //TODO: data blocking for multi-dimenion offsets
 }
@@ -350,11 +389,49 @@ void IFEVisitor::GenerateSolutions(){
       FindPartition(nextlevel, parbuf);
   }
 
+}
+
+bool IFEVisitor::FindLevel(Segment* level, Configuration* con)
+{
+  foreach_(Segment* seg, con->getConfiguration())
+      if(seg->getName() == level->getName()) 
+        return true; 
+  return false;
+}
+
+
+void IFEVisitor::EvaluateSolutions(){
+  
   foreach_(Partition* par, partitions)
   {
-    cout<<"partition: "<<endl;
-    foreach_(Configuration* con, par->getPartition())
-      cout<<" "<<con->getName()<<endl;
+    cout<<"start evaluating partition: "<<endl;
+    double exeTime = 0;
+    double levTime = 0;
+
+    std::vector<Configuration*> configurations = par->getPartition();
+    std::vector<Configuration*>::iterator curCon = configurations.begin();///iterate
+    foreach_(Segment* seg,  levels)//evalaute level by level
+    {
+      levTime = 0;
+      //within each level, calculate the execution time for each task
+      cout<<"configuration: "<<(*curCon)->getName()<<endl;
+      cout<<"executing level: "<<seg->getName()<<" at "<<exeTime<<"s"<<endl;
+
+      double timebuf; 
+      foreach_(DfeTask* task, seg->getTasks())
+      {
+        timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
+        levTime = levTime > timebuf ? levTime : timebuf; 
+      }
+      if(!FindLevel(seg, *curCon))//cannot find level in this configuration
+      {
+        cout<<"reconfiguration triggerred"<<endl;
+        curCon++;
+        exeTime += (*curCon)->getReconfigurationTime(); 
+      }
+      exeTime += levTime;//accumulate execution time for each level, as they cannot run in parallel
+      cout<<"finish with "<<exeTime<<"s"<<endl; 
+    }
   }
 }
 
@@ -378,33 +455,6 @@ void IFEVisitor::FindPartition(int start, Partition* par){
   return;
 }
 
-
-
-//    par->addConfiguration(con);
-//    seenConfigurations.push_back(con);
-//    cout<<"added: "<<con->getName()<<endl;
-
-//    std::vector<int>::iterator it = levelNums.begin();
-//    int offset = start + con->getConfiguration().size();
-
-//    if(offset >= levelNums.size())//reach the end point
-//    {
-//      cout<<"arrive here, return!"<<endl;
-//      seenConfigurations.pop_back();
-//      return true;
-//    }
-
-//    int targetlevel = *(it + offset);
-//    if(FindConfiguration(targetlevel, par))//find a valid partition
-//    {
-//      seenConfigurations.push_back(con);
-//      return true;
-//    }
-//    else
-//    {
-//      seenConfigurations.push_back(con);
-//      return false;
-//    }
 
 bool IFEVisitor::seenConfiguration(Configuration* con) {
 

@@ -24,6 +24,9 @@ void IdlefunctionElimination::runPass(Design* design){
 
   //link configurations
   ifeVisitor.GenerateSolutions(); 
+ 
+  //evaluate generated partitions 
+  ifeVisitor.EvaluateSolutions(); 
 }
 
 string IdlefunctionElimination::logPass() {

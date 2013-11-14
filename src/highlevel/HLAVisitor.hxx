@@ -19,6 +19,9 @@ class HLAVisitor {
 
   double Bs, Ls, Fs, Ds;
   double BRAMs, LUTs, FFs, DSPs;
+  double internaldelay;
+  double inputdelay;
+  double ds;
 
   public:
   HLAVisitor(Kernel *k);
@@ -34,5 +37,9 @@ class HLAVisitor {
   double getFFs()  { return FFs;  }
   double getDSPs() { return DSPs; }
   double getbandwidth() { return bandwidth; }
+  double getinternaldelay() { return internaldelay; }
+  double getinputdelay() { return inputdelay; }
+  double getDataSize() { return ds; }
+  double getfrequency() { return frequency; }
   list<Offset*> getstreams() { return dfg->streams;}
 };
