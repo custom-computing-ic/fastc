@@ -19,9 +19,7 @@ void StencilCodeGenerator::generateInputs() {
   addComment("--------Scalar inputs -------");
 
   foreach_ (string in, this->kernel->getScalarInputNames()) {
-    // FIXME obviously, the type shouldn't be hardcoded...
     string type = this->kernel->getInputType(in);
-    //    string type = "hwFloat(8, 24)";
     source += "HWVar " + in + " = io.scalarinput( \"" + in + "\"";
     source += "," + type + ");\n";
   }
@@ -34,9 +32,13 @@ void StencilCodeGenerator::generateBoundaryCounters() {
 
   source += "CounterChain chain = control.count.makeCounterChain();\n";
 
+  vector<int> dims = stencil->getArrayDimensions();
+
+  int pos = 0;
   foreach_(string var, stencil->getLoopVariables()) {
     string inc = stencil->getLoopIncrement(var);
-    source += "HWVar " + var + " = chain.addCounter(TODO, " + inc + ").cast(hwUInt(32));\n";
+    string bound = boost::lexical_cast<string>(dims[0]);
+    source += "HWVar " + var + " = chain.addCounter(" + bound + ", " + inc + ").cast(hwUInt(32));\n";
   }
 
   source += "HWVar update = ";
@@ -61,6 +63,7 @@ void StencilCodeGenerator::generateCache() {
 void StencilCodeGenerator::generateDataPath() {
 
   Stencil* stencil = this->kernel->getFirstStencil();
+
 
   SgStatement* statement = stencil->getUpdateStatement();
   StencilAstToMaxJVisitor visitor(this->kernel);

@@ -66,6 +66,17 @@ class Stencil
   void computeLoopProperties(SgStatement* st);
 
   SgStatement* getUpdateStatement() { return updateStatement; }
+
+  /** returns the dimension of the array we are applying this stencil
+      to these are extracted from the offfset expressions used to
+      access the stencil elements (e.g. i1 + i2 * n1 + i3 * n1 * n2)
+      and assume that the last dimension of the stencil (that does not
+      occur in the offset expression) is equal to the one before it.
+      Assumes these offests are known at compile time (hence the 'int' return values)
+  */
+  std::vector<int> getArrayDimensions();
+
+  void print();
 };
 
 
