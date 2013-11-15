@@ -52,6 +52,7 @@ class Partition{
   
   std::vector<Configuration*> partition;
   string name;
+  double executionTime;
   public:
 
   Partition(string name){this->name = name;};
@@ -59,6 +60,8 @@ class Partition{
   void popConfiguration(){ partition.pop_back();}
   std::vector<Configuration*> getPartition(){ return partition;}
   string getName(){return name;}
+  void setexecutionTime(double time){this->executionTime = time;}
+  double getexecutionTime(){return this->executionTime;}
 };
 
 class IFEVisitor {

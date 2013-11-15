@@ -471,8 +471,13 @@ void IFEVisitor::EvaluateSolutions(){
       exeTime += levTime;//accumulate execution time for each level, as they cannot run in parallel
       cout<<"     finish with "<<exeTime<<"s"<<endl; 
     }
+    par->setexecutionTime(exeTime);
     cout<<endl;
   }
+#if DEBUG
+  foreach_(Partition* par, partitions)
+    cout<<par->getexecutionTime()<<endl;
+#endif
 }
 
 void IFEVisitor::FindPartition(int start, Partition* par){
