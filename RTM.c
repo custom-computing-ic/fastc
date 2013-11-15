@@ -1,6 +1,6 @@
 #define N1 128
 #define N12 16384
-void kernel_do_forward(float* dvv, float * p, float *pp, float *pp_out, float *conv,
+void kernel_do_forward(float* dvv, float * p, float *pp, float *pp_out, float *p_out,
                        float *source,
                        int n1, int n2, int n3, int n12, int ORDER,
                        float c_0, float c_1_0, float c_1_1, float c_1_2, float c_1_3,
@@ -34,12 +34,13 @@ void kernel_do_forward(float* dvv, float * p, float *pp, float *pp_out, float *c
             +c_3_2*(p[(i1  )+(i2  )*N1+(i3+3)*N12]+p[(i1  )+(i2  )*N1+(i3-3)*N12])
             +c_3_3*(p[(i1  )+(i2  )*N1+(i3+4)*N12]+p[(i1  )+(i2  )*N1+(i3-4)*N12])
             +c_3_4*(p[(i1  )+(i2  )*N1+(i3+5)*N12]+p[(i1  )+(i2  )*N1+(i3-5)*N12]));
+        p_out[i1+i2*N1+i3*N12] = pp[i1+i2*N1+i3*N12];
       }
     }
   }
 }
 
-void kernel_do_backward(float* dvv, float * p, float *pp, float *pp_out, float *conv,
+void kernel_do_backward(float* dvv, float * p, float *pp, float *pp_out, float *p_out,
                         float *source, float scale,
                         int n1, int n2, int n3, int n12, int ORDER,
                         float c_0, float c_1_0, float c_1_1, float c_1_2, float c_1_3,
@@ -74,6 +75,7 @@ void kernel_do_backward(float* dvv, float * p, float *pp, float *pp_out, float *
             +c_3_2*(p[(i1  )+(i2  )*N1+(i3+3)*N12]+p[(i1  )+(i2  )*N1+(i3-3)*N12])
             +c_3_3*(p[(i1  )+(i2  )*N1+(i3+4)*N12]+p[(i1  )+(i2  )*N1+(i3-4)*N12])
             +c_3_4*(p[(i1  )+(i2  )*N1+(i3+5)*N12]+p[(i1  )+(i2  )*N1+(i3-5)*N12]));
+        p_out[i1+i2*N1+i3*N12] = pp[i1+i2*N1+i3*N12];
       }
     }
   }
