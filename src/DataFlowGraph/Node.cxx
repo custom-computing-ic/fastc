@@ -41,7 +41,9 @@ Node& Node::operator=(const Node& node){
 }
 
 void Node::addNeighbour(Node *node) {
+#if DEBUG
   cout << "Adding node " << node << endl;
+#endif
   neighbours.push_front(node);
 }
 

@@ -132,9 +132,10 @@ vector<StencilOffset* > ExtractStencil::getStencilOffsets(SgStatement *st, Stenc
 
   map<string, vector<SgExpression* > > offset_map;
 
-  cout << "Found offset expressions" << endl;
+
+  D(cout << "Found offset expressions" << endl;)
   foreach_ (SgNode* node, offset_expressions) {
-    cout << node->unparseToString() << endl;
+    D(cout << node->unparseToString() << endl;)
     SgPntrArrRefExp* pntr_ref = isSgPntrArrRefExp(node);
     SgExpression* expr = pntr_ref->get_lhs_operand();
     if (expr != NULL && isSgVarRefExp(expr)) {
@@ -147,11 +148,11 @@ vector<StencilOffset* > ExtractStencil::getStencilOffsets(SgStatement *st, Stenc
 
   map<string, vector<SgExpression*> >::iterator it;
   for (it = offset_map.begin(); it != offset_map.end(); it++) {
-    cout << it->first << "\n\t";
+    D(cout << it->first << "\n\t";)
     foreach_(SgExpression *e, it->second) {
-      cout << e->unparseToString() << ", ";
+      D(cout << e->unparseToString() << ", ";)
     }
-    cout << endl;
+    D(cout << endl);
   }
 
   int max = 0;

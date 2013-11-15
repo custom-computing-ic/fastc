@@ -53,8 +53,9 @@ int main(int argc, char** argv) {
   if (dfg != NULL)
     DotPrint::writeDotForDfg("main_flow.dot", c->getDesign()->getDataFlowGraph());
 
-  cout << "Stencil summary:" << endl;
+//cout << "Stencil summary:" << endl;
 
+#if DEBUG
   int num = 1;
   foreach_(Stencil* s, c->getDesign()->getStencils()) {
     cout << "Stencil " << num << endl;
@@ -62,7 +63,7 @@ int main(int argc, char** argv) {
     cout << endl;
     num++;
   }
-
+#endif
 
   return 0;
 }

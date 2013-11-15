@@ -34,8 +34,8 @@ void HLAVisitor::OnchipMemoryAnalysis(){
     //currently we clean the previous results for each DfeTask analysis
     //as the offset nodes for DfeTask are shared
     (*it)->internaldelay = 0;
-    cout<<"stream "<<(*it)->getName()<<endl;
-    cout<<"offset:"<<endl;
+    D(cout<<"stream "<<(*it)->getName()<<endl;)
+    D(cout<<"offset:"<<endl;)
     precision = (*it)->precision[0] + (*it)->precision[1]; //mantisa + significant
     
     if(((*it)->getStencilOffsets()).size()!=0)//if there is a stencil
@@ -90,7 +90,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
       int size = ((*it)->pairs.front())->dimensions.size();
       (*it)->max.resize(size); 
       (*it)->min.resize(size); 
-      cout<<"size "<<size<<endl;
+      D(cout<<"size "<<size<<endl;)
 
       foreach_(Pair* pair,(*it)->pairs)
       {
@@ -128,7 +128,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
         (*it)->internaldelay += ((*jt_max) - (*jt_min)) * gap;
         jt_min++;
       }
-      cout<<"internal delay: "<<(*it)->internaldelay<<endl;
+      D(cout<<"internal delay: "<<(*it)->internaldelay<<endl;)
         
       (*it)->BRAMs = (double) (((*it)->internaldelay) * precision) / (36.0 * 1024.0);
       double width = (double)((int)((*it)->OnchipMemory.size()) * precision) / 36.0;
@@ -178,19 +178,18 @@ void HLAVisitor::OnchipMemoryAnalysis(){
   //aggregrate BRAMs
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
     BRAMs += (*it)->BRAMs;
-  cout<<"memory resource consumption: "<< BRAMs<<" BRAMs"<<endl; 
+  cout<<"     memory resource consumption: "<< BRAMs<<" BRAMs"<<endl; 
   
   //aggregrate idle cycles
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
     this->internaldelay = this->internaldelay > (*it)->internaldelay ? this->internaldelay : (*it)->internaldelay;
-  cout<<"kernel internal delay: "<< this->internaldelay<<" cycles"<<endl;
+  cout<<"     kernel internal delay: "<< this->internaldelay<<" cycles"<<endl;
 
   //calculate data size 
   this->ds = 1; 
   foreach_(int size, (((dfg->streams.front())->pairs).front())->dimensions)
     this->ds = this->ds * size;
-
-  cout<<"data size: "<<this->ds<<endl;
+  cout<<"     data size: "<<this->ds<<endl;
 }
 
 double HLAVisitor::gap(Offset* node)
@@ -219,7 +218,7 @@ double HLAVisitor::gap(Offset* node)
 void HLAVisitor::OffchipCommunicationAnalysis(){
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
   {
-    cout<<"stream "<<(*it)->getName()<<endl;
+    D(cout<<"stream "<<(*it)->getName()<<endl;)
     precision = (*it)->precision[0] + (*it)->precision[1];
    
     //bandwidth calculation is now taken care at the configuration level
@@ -350,9 +349,7 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         break;
       default: cout<<"invalid transformation ratio"<<endl;
     }
-#if DEBUG    
-    cout<<"Ls: "<<Ls<<" Fs: "<<Fs<<" Ds: "<<Ds<<endl;
-#endif
+    D(cout<<"Ls: "<<Ls<<" Fs: "<<Fs<<" Ds: "<<Ds<<endl;)
   }
 }
 
@@ -363,29 +360,21 @@ void HLAVisitor::ArithmeticAnalysis(){
   for(list<Node*>::iterator it = dfg->arithmetics.begin(); it!=dfg->arithmetics.end(); it++)
   {
 
-#if DEBUG    
-    cout<<"arith node "<<(*it)->getName()<<endl;
-    cout<<"input: ";
-#endif    
+    D(cout<<"arith node "<<(*it)->getName()<<endl;)
+    D(cout<<"input: ";)
 
     int width[2] ={0,0};
     for(list<Node*>::iterator jt = (*it)->inputs.begin(); jt!=(*it)->inputs.end(); jt++)
     {
-#if DEBUG      
-      cout<<" "<<(*jt)->getName();
-#endif    
+      D(cout<<" "<<(*jt)->getName();)
       width[0] = width[0] > (*jt)->precision[0] ? width[0] : (*jt)->precision[0];
       width[1] = width[1] > (*jt)->precision[1] ? width[1] : (*jt)->precision[1];
     }
     ArithmeticResource((*it), width);
-#if DEBUG      
-    cout<<endl;
-#endif    
+    D(cout<<endl;)
     LUTs += Ls;
     FFs  += Fs;
     DSPs += Ds;
   }
-#if DEBUG      
-  cout<<"LUTs: "<<LUTs<<" FFs: "<<FFs<<" DSPs: "<<DSPs<<endl;
-#endif    
+  cout<<"     LUTs: "<<LUTs<<" FFs: "<<FFs<<" DSPs: "<<DSPs<<endl;
 }

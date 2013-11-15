@@ -164,10 +164,10 @@ Node* ASTtoDFGVisitor::toNodePntrArrRef(SgPntrArrRefExp *ex) {
   }
   else
     offset->offsets.push_back(ee->get_rhs_operand()->unparseToString());
-  cout<<"buffer "<<offset->getName()<<endl;
+  D(cout<<"buffer "<<offset->getName()<<endl;)
   for(list<string>::iterator it = offset->offsets.begin(); it!=offset->offsets.end(); ++it)
-    cout<<" "<< *it;
-  cout<<endl;
+    D(cout<<" "<< *it;)
+  D(cout<<endl;)
 
   if (kernel->isStencilKernel()) {
     // extract stencil offsets from this expression
@@ -283,7 +283,7 @@ Node* ASTtoDFGVisitor :: toExprNodeRec(SgExpression *ex) {
     SgUnaryOp *unOp = isSgUnaryOp(ex);
     Node *n = toExprNodeRec(unOp->get_operand());
     if (n != NULL) {
-      cout << "Node " << n;
+      D(cout << "Node " << n;)
       string op;
       if (isSgMinusOp(ex))
         op = "-";
