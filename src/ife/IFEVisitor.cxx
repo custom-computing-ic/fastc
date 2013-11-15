@@ -7,8 +7,10 @@
 #include "../highlevel/HLAVisitor.hxx"
 #include "../DfeTopSortVisitor.hxx"
 
+
 IFEVisitor::IFEVisitor(DataFlowGraph *dfg){
   this->dfg = dfg;
+  this->parnum =0;
 }
 
 void IFEVisitor::ExtractProperties(){
@@ -21,7 +23,7 @@ void IFEVisitor::ExtractProperties(){
       continue;
 
     Kernel* k = task->getKernel();
-    cout<<"visiting kernel: "<<k->getName()<<endl;
+    cout<<"     visiting kernel: "<<k->getName()<<endl;
     HLAVisitor hlaVisitor(k);
     hlaVisitor.OnchipMemoryAnalysis();
     hlaVisitor.OffchipCommunicationAnalysis();
@@ -40,13 +42,19 @@ void IFEVisitor::ExtractProperties(){
 
     task->ds        = hlaVisitor.getDataSize();
     task->frequency = hlaVisitor.getfrequency();
+    sleep(2);
+    cout<<endl;
   }
 }
 
 Offset* IFEVisitor::FindSink(DfeTask* task, string name){
   foreach_(Offset* stream, task->streams)
   {
-    if(stream->getName() == name) return stream;
+    if(stream->getName() == name) 
+    {
+      cout<<"sink: "<<name<<endl;
+      return stream;
+    }
   }
   return NULL;
 }
@@ -57,7 +65,11 @@ void IFEVisitor::FindSource(DfeTask* task){
   {
     string name = sink->getName();
     foreach_(Offset* stream, task->streams)
-      if(stream->getName() != name ) task->sources.push_back(stream);
+      if(stream->getName() != name ) 
+      {
+        task->sources.push_back(stream);
+        cout<<"source: "<<name<<endl;
+      }
   }
 }
 
@@ -81,37 +93,38 @@ void IFEVisitor::AssignLevel(DfeTask* task)
   int sourceD=0;
   foreach_(Offset* stream, task->sources)
   {
-    cout<<"source node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;
+    D(cout<<"source node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;)
     sourceD = sourceD > stream->internaldelay ? sourceD : stream->internaldelay;
   }
   foreach_(Offset* stream, task->sinks)
-    cout<<"sink node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;
+    D(cout<<"sink node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;)
 
   //TODO: we hack here since we assume each function only has 1 output
   //calculte delay for the sink node
   foreach_(Offset* stream, task->sinks)
   {
     int Delay = sourceD - stream->internaldelay;
-    cout<<"output delay: "<< Delay <<endl;
+    D(cout<<"output delay: "<< Delay <<endl;)
     string outputname = stream->getName();
     list<Node*> outputs = task->getNeighbours();
     foreach_(Node* node, outputs)
     {
       //inside each following function
-      cout<<"output node: "<<node->getName()<<endl;
+      D(cout<<"output node: "<<node->getName()<<endl;)
       DfeTask *dfeNode = dynamic_cast<DfeTask*>(node);
       //check the matched input
       string matchedname = MatchName(task, dfeNode);
 
       //get the corresponding param in the function
       string paramName = dfeNode->getCorrespondingKernelParam(matchedname);
-      cout<<"matched name: "<<matchedname<<" corespond to "<<paramName<<endl;
+      D(cout<<"matched name: "<<matchedname<<" corespond to "<<paramName<<endl;)
       foreach_(Offset* stream, dfeNode->streams)
         if(stream->getName() == paramName) stream->setDelay(Delay);
 
+#if DEBUG
       foreach_(Offset* stream, dfeNode->streams)
         cout<<"stream "<<stream->getName()<<" delay "<<stream->getDelay()<<endl;
-
+#endif
       //check whether the neighbours are the same node?
       //clean the code!
     }
@@ -128,7 +141,7 @@ void IFEVisitor::ATAPLevel(){
   foreach_(Node* node, topsortVisitor.getSorted())
   {
     DfeTask *dfeNode = dynamic_cast<DfeTask*>(node);
-    cout<<"node: "<<node->getName()<<" idle cycles: "<< dfeNode->idle<<endl;
+    D(cout<<"node: "<<node->getName()<<" idle cycles: "<< dfeNode->idle<<endl;)
     atapTasks.push_back(dfeNode);
   }
 }
@@ -141,22 +154,12 @@ void IFEVisitor::CombineTasks(){
 
   //first sort the tasks in dfg based on idle cycles
   std::sort(atapTasks.begin(), atapTasks.end(), mysort);
+
+#if DEBUG
   foreach_(DfeTask* task, atapTasks)
-    cout<<"node: "<<task->getName()<<" idle cycles: "<< task->idle<<endl;
+    D(cout<<"node: "<<task->getName()<<" idle cycles: "<< task->idle<<endl;)
+#endif
 
-  //check the number of levels in the graph
-//int curLevel=-1;
-//int level   = 0;
-//foreach_(DfeTask* task, atapTasks)
-//  if(curLevel != task->idle) {
-//    curLevel = task->idle;
-//    level++;
-//  }
-//setLevelNum(level);
-
-  //resize the levels based on levelNum;
-  //levels.resize(getLevelNum());
-  //levels.reserve(100);
   vector<Segment*>::iterator it = levels.begin();
 
   int curLevel=-1;
@@ -193,9 +196,10 @@ void IFEVisitor::CombineTasks(){
   int i=0;
   foreach_(Segment* seg, levels)
   {
-    cout<<"level "<<seg->getName()<<endl;
+    cout<<"     level "<<seg->getName()<<endl;
     foreach_(DfeTask* task, seg->getTasks())
-      cout<<" node "<<task->getName()<<endl;
+      cout<<"     "<<task->getName()<<endl;
+    cout<<endl;
   }
 }
 
@@ -238,15 +242,17 @@ void IFEVisitor::CombineSegments(){
     levelnum++;
   }
 
-#if DEBUG
+
   foreach_(Configuration* con, configurations)
   {
-    cout<<"configuration "<<" level:"<<con->level<<" size:"<<con->getConfiguration().size()<<endl;
+    cout<<"     configuration "<<con->getName()<<endl;
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
-        cout<<" Task "<<task->getName()<<endl;
+      {
+        cout<<"     "<<task->getName()<<endl;
+      }
+    cout<<endl;
   }
-#endif
 }
 
 int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
@@ -259,31 +265,51 @@ int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
           foreach_(string inputname, branch->getInputs())
             if(outputname == inputname)
             {
-#if DEBUG
-              cout<<"mathed name: "<<outputname<<endl;
-#endif
+              D(cout<<"mathed name: "<<outputname<<endl;)
               find++;
             }
   return find;
 }
 
+bool IFEVisitor::FindOverlappedKernel(DfeTask* task){
+  foreach_(DfeTask* branch, seenTasks)
+    if(branch->getName() != task->getName() && 
+        (branch->getKernel())->getName() == (task->getKernel())->getName())
+    {
+      cout<<"     overlapped task: "<<task->getName()<<endl;
+      return true;
+    }
+  return false;
+}
+
+
 void IFEVisitor::OptimiseConfigurations(){
+  
   //aggregrate the function properties, LUTs, FFs, BRAMs, DSPs
+  cout<<"     accumulating extracted kernel properties, for non-overlapped kernels"<<endl;
   foreach_(Configuration* con, configurations)
   {
+    seenTasks.clear();
     foreach_(Segment* seg, con->getConfiguration())
+    {
       foreach_(DfeTask* task, seg->getTasks())
       {
-         con->LUTs += task->LUTs;
-         con->FFs  += task->FFs;
-         con->DSPs += task->DSPs;
-         con->BRAMs+= task->BRAMs;
+        if(!FindOverlappedKernel(task))
+        {
+          con->LUTs += task->LUTs;
+          con->FFs  += task->FFs;
+          con->DSPs += task->DSPs;
+          con->BRAMs+= task->BRAMs;
+        }
+        seenTasks.push_back(task);
       }
+    }
   }
-
+  
   //aggregrate the bandwidth
   //TODO: there are kernels sharing the same input data, need to process that
   //TODO: for that case, also need to think how to merge the onchipmemory 
+  cout<<"     aggregrating off-chip memory bandwidth for each configuration"<<endl;
   foreach_(Configuration* con, configurations)
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
@@ -292,57 +318,54 @@ void IFEVisitor::OptimiseConfigurations(){
         DataFlowGraph* dbuf = kbuf->getDataFlowGraph(); 
         foreach_(Offset* stream, dbuf->streams)
         {
-#if DEBUG
-          cout<<"con "<<con->getName()<<"stream "<<stream->getName()<<" "<<endl;
-#endif
+          D(cout<<"con "<<con->getName()<<"stream "<<stream->getName()<<" "<<endl;)
           con->bandwidth += stream->bandwidth;
           int find = FindOutput(task, con, stream->getName());
           if(find>0)
           {
-#if DEBUG
-            cout<<"find "<<find<<" connected for con "<<con->getName()<<" with stream "<<stream->getName()<<endl;
-#endif
+            D(cout<<"find "<<find<<" connected for con "<<con->getName()<<" with stream "<<stream->getName()<<endl;)
             con->bandwidth -= (((double) find) +1)*stream->bandwidth;
           }
-#if DEBUG
-          cout<<"band: "<<con->bandwidth<<endl;
-#endif
+          D(cout<<"band: "<<con->bandwidth<<endl;)
         }
       }
 
-  //aggregrate the resource consumption for infrasttructure
-  foreach_(Configuration* con, configurations)
-  {
-    con->LUTs  += con->Il;
-    con->FFs   += con->If;
-    con->DSPs  += con->Id;
-    con->BRAMs += con->Ib;
-  }
 
   //calculate the parallelism 
   //TODO: explore DSP factor and precision
+  cout<<"     optimising each configuration to achieve maximum configuration"<<endl;
   foreach_(Configuration* con, configurations)
   {
     con->P = con->P < ceil((con->Abw) / (con->bandwidth)) ? con->P : ceil((con->Abw) / (con->bandwidth));
-    con->P = con->P < ceil((con->Al)  / (con->LUTs))      ? con->P : ceil((con->Abw) / (con->bandwidth));
-    con->P = con->P < ceil((con->Af)  / (con->FFs))       ? con->P : ceil((con->Abw) / (con->bandwidth));
-    con->P = con->P < ceil((con->Ad)  / (con->DSPs))      ? con->P : ceil((con->Abw) / (con->bandwidth));
-    con->P = con->P < ceil((con->Ab)  / (con->BRAMs))     ? con->P : ceil((con->Abw) / (con->bandwidth));
+    con->P = con->P < ceil((con->Al-con->Il)/(con->LUTs)) ? con->P : ceil((con->Al-con->Il)/(con->LUTs));
+    con->P = con->P < ceil((con->Af-con->If)/(con->FFs))  ? con->P : ceil((con->Af-con->If)/(con->FFs));
+    con->P = con->P < ceil((con->Ad-con->Id)/(con->DSPs)) ? con->P : ceil((con->Ad-con->Id)/(con->DSPs));
+    //con->P = con->P < ceil((con->Ab-con->Ib)/(con->BRAMs))? con->P : ceil((con->Ab-con->Ib)/(con->BRAMs));
   }
+  
+  //aggregrate the resource consumption for infrasttructure
+  cout<<"     updating resource consumption based on infrastructure resource and optimised parallelism"<<endl;
+  foreach_(Configuration* con, configurations)
+  {
+    con->LUTs      = con->Il + con->LUTs *con->P  ;
+    con->FFs       = con->If + con->FFs  *con->P ;
+    con->DSPs      = con->Id + con->DSPs *con->P ;
+    //con->BRAMs     = con->Ib + con->BRAMs*con->P ;
+    con->bandwidth = con->bandwidth * con->P ;
+  }                                   
 
   foreach_(Configuration* con, configurations)
   {
-    cout<<"configuration "<<con->getName()<<endl;
-    cout<<"banwidth: "<<con->bandwidth<<endl;
-    cout<<"LUTs  "<<con->LUTs<<endl;
-    cout<<"FFs   "<<con->FFs<<endl;
-    cout<<"DSPs  "<<con->DSPs<<endl;
-    cout<<"BRAMs "<<con->BRAMs<<endl;
-    cout<<"Parallelism "<<con->P<<endl;
+    cout<<"     configuration "<<con->getName()<<endl;
+    cout<<"     banwidth: "<<con->bandwidth<<endl;
+    cout<<"     LUTs  "<<con->LUTs<<endl;
+    cout<<"     FFs   "<<con->FFs<<endl;
+    cout<<"     DSPs  "<<con->DSPs<<endl;
+    cout<<"     BRAMs "<<con->BRAMs<<endl;
+    cout<<"     Parallelism "<<con->P<<endl;
+    cout<<endl;
   }
   
-
-
   //TODO: iterate the pass to find the optimal DSP factor and precision
   //TODO: data blocking for multi-dimenion offsets
 }
@@ -353,7 +376,7 @@ void IFEVisitor::GenerateSolutions(){
   Partition* parbuf;
   foreach_(int level, levelNums)
   {
-    parbuf = new Partition();
+    parbuf = new Partition("buf");
     foreach_(Configuration* con, configurations)
     if(level == con->level)
       parbuf->addConfiguration(con);
@@ -364,9 +387,9 @@ void IFEVisitor::GenerateSolutions(){
   int i=0;
   foreach_(Partition* par, configurationGraph)
   {
-    cout<<"levels: "<<i++<<endl;
+    D(cout<<"levels: "<<i++<<endl;)
     foreach_(Configuration* con, par->getPartition())
-      cout<<"configuration "<<" level:"<<con->level<<" size:"<<con->getConfiguration().size()<<endl;
+      D(cout<<"configuration "<<" level:"<<con->level<<" size:"<<con->getConfiguration().size()<<endl;)
   }
 #endif
 
@@ -377,9 +400,15 @@ void IFEVisitor::GenerateSolutions(){
   if (it == configurationGraph.end())
     return;
 
+  cout<<"     combining configuration into valid run-time solutions, based the configuration graph"<<endl;
   foreach_(Configuration* con, (*it)->getPartition())
   {
-    parbuf = new Partition();
+    stringstream parsize;
+    parsize<< (parnum+1);
+    string size = parsize.str();
+
+    parbuf = new Partition(size);
+    parnum++;
     parbuf->addConfiguration(con);
     int nextlevel = con->getConfiguration().size();
 
@@ -388,7 +417,15 @@ void IFEVisitor::GenerateSolutions(){
     else
       FindPartition(nextlevel, parbuf);
   }
-
+  sleep(2);
+  
+  foreach_(Partition* par, partitions)
+  {
+    cout<<"     partition( run-time solution) "<<par->getName()<<": "<<endl;
+    foreach_(Configuration* con, par->getPartition())
+      cout<<"     configuration "<<con->getName()<<endl;
+    cout<<endl;
+  }
 }
 
 bool IFEVisitor::FindLevel(Segment* level, Configuration* con)
@@ -401,10 +438,11 @@ bool IFEVisitor::FindLevel(Segment* level, Configuration* con)
 
 
 void IFEVisitor::EvaluateSolutions(){
-  
+
+  cout<<"     evaluating execution time of generated partitions"<<endl;  
   foreach_(Partition* par, partitions)
   {
-    cout<<"start evaluating partition: "<<endl;
+    cout<<"     partition: "<<par->getName()<<endl;
     double exeTime = 0;
     double levTime = 0;
 
@@ -414,8 +452,8 @@ void IFEVisitor::EvaluateSolutions(){
     {
       levTime = 0;
       //within each level, calculate the execution time for each task
-      cout<<"configuration: "<<(*curCon)->getName()<<endl;
-      cout<<"executing level: "<<seg->getName()<<" at "<<exeTime<<"s"<<endl;
+      cout<<"     executing level: "<<seg->getName()<<" at "<<exeTime<<"s";
+      cout<<" with configuration"<<(*curCon)->getName()<<endl;
 
       double timebuf; 
       foreach_(DfeTask* task, seg->getTasks())
@@ -425,14 +463,21 @@ void IFEVisitor::EvaluateSolutions(){
       }
       if(!FindLevel(seg, *curCon))//cannot find level in this configuration
       {
-        cout<<"reconfiguration triggerred"<<endl;
         curCon++;
+        cout<<"     reconfiguration triggerred, current configuration reconfigured to be configuration ";
+        cout<<(*curCon)->getName()<<endl;
         exeTime += (*curCon)->getReconfigurationTime(); 
       }
       exeTime += levTime;//accumulate execution time for each level, as they cannot run in parallel
-      cout<<"finish with "<<exeTime<<"s"<<endl; 
+      cout<<"     finish with "<<exeTime<<"s"<<endl; 
     }
+    par->setexecutionTime(exeTime);
+    cout<<endl;
   }
+#if DEBUG
+  foreach_(Partition* par, partitions)
+    cout<<par->getexecutionTime()<<endl;
+#endif
 }
 
 void IFEVisitor::FindPartition(int start, Partition* par){
@@ -442,7 +487,11 @@ void IFEVisitor::FindPartition(int start, Partition* par){
 
   foreach_(Configuration* con, ((*(it+start))->getPartition()))
   {
-    parbuf = new Partition();
+    stringstream parsize;
+    parsize<< (parnum+1);
+    string size = parsize.str();
+    parbuf = new Partition(size);
+    //parnum++;
     *parbuf = * par;
     parbuf->addConfiguration(con);
     int nextlevel = (start + con->getConfiguration().size());

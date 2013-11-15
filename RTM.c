@@ -126,7 +126,7 @@ int main() {
                     c_3_3,  c_3_4);
 
 #pragma fast hw_kernel:kernel_do_forward
-  kernel_do_forward(dvv, pp_out, pp_out, pp_out1, conv, source_container,
+  kernel_do_forward(dvv, pp_out, pp_out1, pp_out1, conv, source_container,
                     n1, n2, n3, n12, ORDER,
                     c_0,  c_1_0,  c_1_1,  c_1_2,  c_1_3,
                     c_1_4,  c_2_0,  c_2_1,  c_2_2,  c_2_3,
@@ -134,12 +134,11 @@ int main() {
                     c_3_3,  c_3_4);
 
 #pragma fast hw_kernel:kernel_do_backward
-  kernel_do_backward(dvv, pp_out, pp_out, pp_out1, conv, source_container, scale,
+  kernel_do_backward(dvv, pp_out, pp_out2,pp_out2, conv, source_container, scale,
                      n1, n2, n3, n12, ORDER,
                      c_0,  c_1_0,  c_1_1,  c_1_2,  c_1_3,
                      c_1_4,  c_2_0,  c_2_1,  c_2_2,  c_2_3,
                      c_2_4,  c_3_0,  c_3_1,  c_3_2,
                      c_3_3,  c_3_4);
   return 0;
-
 }

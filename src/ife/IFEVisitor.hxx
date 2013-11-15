@@ -6,6 +6,8 @@
 
 #include <string>
 #include <vector>
+#include <time.h>
+
 class Segment{
   
   std::vector<DfeTask*> segment; 
@@ -36,7 +38,7 @@ class Configuration{
   Configuration(string Cname){
     BRAMs=0; LUTs=0;   FFs=0;    DSPs=0;  bandwidth=0; name = Cname;
     Ib=218;  Il=34809; If=55061; Id=0;
-    Ab=1064; Al=297600;Af=595200;Ad=2016; Abw= 39400;
+    Ab=1064; Al=297600;Af=595200;Ad=2016; Abw= 38400;
     P =123456; 
   };
   void addSegment(Segment* segment){ configuration.push_back(segment);}
@@ -49,11 +51,17 @@ class Configuration{
 class Partition{
   
   std::vector<Configuration*> partition;
+  string name;
+  double executionTime;
   public:
-  Partition(){};
+
+  Partition(string name){this->name = name;};
   void addConfiguration(Configuration* conf){ partition.push_back(conf);}
   void popConfiguration(){ partition.pop_back();}
   std::vector<Configuration*> getPartition(){ return partition;}
+  string getName(){return name;}
+  void setexecutionTime(double time){this->executionTime = time;}
+  double getexecutionTime(){return this->executionTime;}
 };
 
 class IFEVisitor {
@@ -67,9 +75,13 @@ class IFEVisitor {
   std::vector<int> levelNums;
   std::vector<Partition*> configurationGraph;
 
-
   //to guide the search
   std::vector<Configuration*> seenConfigurations;
+
+  //to guide the resource accumulation
+  std::vector<DfeTask*> seenTasks;
+
+  int parnum;
 
   public:
   IFEVisitor(DataFlowGraph *dfg);
@@ -88,6 +100,7 @@ class IFEVisitor {
   void FindPartition(int start, Partition* par);
   bool seenConfiguration(Configuration* con);
   bool FindLevel(Segment* level, Configuration* con);
+  bool FindOverlappedKernel(DfeTask* task);
 };
 
 

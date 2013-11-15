@@ -183,3 +183,4 @@ std::pair<std::string, int> StencilUtils::getStencilOffset(SgBinaryOp* binOp,
 
   return make_pair("", 0);
 }
+
