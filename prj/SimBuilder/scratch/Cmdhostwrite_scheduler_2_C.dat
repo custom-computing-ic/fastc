@@ -1,0 +1,214 @@
+data;
+set nodes
+NodeCounterV1_ID5_0
+NodeEq_ID9_1
+NodeReinterpret_ID11_2
+NodeAnd_ID10_3
+NodeReinterpret_ID13_4
+NodeReinterpret_ID41_5
+NodeAnd_ID40_6
+NodeReinterpret_ID43_7
+NodeCounterV1_ID6_8
+NodeEq_ID20_9
+NodeReinterpret_ID25_10
+NodeCounterV1_ID7_11
+NodeEq_ID23_12
+NodeReinterpret_ID26_13
+NodeAnd_ID24_14
+NodeReinterpret_ID27_15
+NodeReinterpret_ID52_16
+NodeAdd_ID14_17
+NodeReinterpret_ID45_18
+NodeCat_ID47_19
+NodeCat_ID49_20
+NodeCat_ID51_21
+NodeCat_ID53_22
+NodeOutput_ID44_23
+NodePrintf_ID58_24
+NodeCounterV1_ID61_25
+NodeOutputMappedReg_ID63_26
+NodeEq_ID66_27
+NodeFlush_ID64_28
+;
+set inputNodes
+;
+set inputsLeadingToFlushOrSelfDisable
+;
+set outputNodes
+NodeOutput_ID44_23
+;
+set mappedRAMNodes
+;
+set iDescs
+InputDesc_29
+InputDesc_30
+InputDesc_31
+InputDesc_32
+InputDesc_33
+InputDesc_34
+InputDesc_35
+InputDesc_36
+InputDesc_37
+InputDesc_38
+InputDesc_39
+InputDesc_40
+InputDesc_41
+InputDesc_42
+InputDesc_43
+InputDesc_44
+InputDesc_45
+InputDesc_46
+InputDesc_47
+InputDesc_48
+InputDesc_49
+InputDesc_50
+InputDesc_51
+InputDesc_52
+InputDesc_53
+InputDesc_54
+InputDesc_55
+InputDesc_56
+InputDesc_57
+InputDesc_58
+InputDesc_59
+;
+set oDescs
+OutputDesc_60
+OutputDesc_61
+OutputDesc_62
+OutputDesc_63
+OutputDesc_64
+OutputDesc_65
+OutputDesc_66
+OutputDesc_67
+OutputDesc_68
+OutputDesc_69
+OutputDesc_70
+OutputDesc_71
+OutputDesc_72
+OutputDesc_73
+OutputDesc_74
+OutputDesc_75
+OutputDesc_76
+OutputDesc_77
+OutputDesc_78
+OutputDesc_79
+OutputDesc_80
+OutputDesc_81
+OutputDesc_82
+OutputDesc_83
+OutputDesc_84
+OutputDesc_85
+OutputDesc_86
+OutputDesc_87
+OutputDesc_88
+;
+set lockedPairs
+;
+set constrainedPairs
+;
+param flushNode := NodeFlush_ID64_28;
+param flushNodeStartLatency := 3;
+param : getChild getParent getODesc getLatency :=
+InputDesc_29 NodeEq_ID9_1 NodeCounterV1_ID5_0 OutputDesc_60 0
+InputDesc_30 NodeReinterpret_ID11_2 NodeEq_ID9_1 OutputDesc_62 1
+InputDesc_31 NodeAnd_ID10_3 NodeReinterpret_ID11_2 OutputDesc_63 0
+InputDesc_32 NodeReinterpret_ID13_4 NodeAnd_ID10_3 OutputDesc_64 1
+InputDesc_33 NodeReinterpret_ID41_5 NodeReinterpret_ID13_4 OutputDesc_65 0
+InputDesc_34 NodeAnd_ID40_6 NodeReinterpret_ID41_5 OutputDesc_66 0
+InputDesc_35 NodeReinterpret_ID43_7 NodeAnd_ID40_6 OutputDesc_67 0
+InputDesc_36 NodeCounterV1_ID6_8 NodeCounterV1_ID5_0 OutputDesc_61 0
+InputDesc_37 NodeEq_ID20_9 NodeCounterV1_ID6_8 OutputDesc_69 0
+InputDesc_38 NodeReinterpret_ID25_10 NodeEq_ID20_9 OutputDesc_71 1
+InputDesc_39 NodeCounterV1_ID7_11 NodeCounterV1_ID6_8 OutputDesc_70 0
+InputDesc_40 NodeEq_ID23_12 NodeCounterV1_ID7_11 OutputDesc_73 0
+InputDesc_41 NodeReinterpret_ID26_13 NodeEq_ID23_12 OutputDesc_75 1
+InputDesc_42 NodeAnd_ID24_14 NodeReinterpret_ID25_10 OutputDesc_72 0
+InputDesc_43 NodeAnd_ID24_14 NodeReinterpret_ID26_13 OutputDesc_76 0
+InputDesc_44 NodeReinterpret_ID27_15 NodeAnd_ID24_14 OutputDesc_77 1
+InputDesc_45 NodeReinterpret_ID52_16 NodeReinterpret_ID27_15 OutputDesc_78 0
+InputDesc_46 NodeAdd_ID14_17 NodeCounterV1_ID6_8 OutputDesc_69 0
+InputDesc_47 NodeReinterpret_ID45_18 NodeAdd_ID14_17 OutputDesc_80 1
+InputDesc_48 NodeCat_ID47_19 NodeReinterpret_ID45_18 OutputDesc_81 0
+InputDesc_49 NodeCat_ID49_20 NodeCat_ID47_19 OutputDesc_82 0
+InputDesc_50 NodeCat_ID51_21 NodeCat_ID49_20 OutputDesc_83 0
+InputDesc_51 NodeCat_ID53_22 NodeReinterpret_ID52_16 OutputDesc_79 0
+InputDesc_52 NodeCat_ID53_22 NodeCat_ID51_21 OutputDesc_84 0
+InputDesc_53 NodeOutput_ID44_23 NodeReinterpret_ID43_7 OutputDesc_68 0
+InputDesc_54 NodeOutput_ID44_23 NodeCat_ID53_22 OutputDesc_85 0
+InputDesc_55 NodePrintf_ID58_24 NodeCounterV1_ID6_8 OutputDesc_69 0
+InputDesc_56 NodePrintf_ID58_24 NodeCounterV1_ID5_0 OutputDesc_60 0
+InputDesc_57 NodeOutputMappedReg_ID63_26 NodeCounterV1_ID61_25 OutputDesc_86 0
+InputDesc_58 NodeEq_ID66_27 NodeCounterV1_ID61_25 OutputDesc_86 0
+InputDesc_59 NodeFlush_ID64_28 NodeEq_ID66_27 OutputDesc_88 1
+;
+param : getWidth :=
+OutputDesc_60 32
+OutputDesc_61 1
+OutputDesc_62 1
+OutputDesc_63 1
+OutputDesc_64 1
+OutputDesc_65 1
+OutputDesc_66 1
+OutputDesc_67 1
+OutputDesc_68 1
+OutputDesc_69 32
+OutputDesc_70 1
+OutputDesc_71 1
+OutputDesc_72 1
+OutputDesc_73 32
+OutputDesc_74 1
+OutputDesc_75 1
+OutputDesc_76 1
+OutputDesc_77 1
+OutputDesc_78 1
+OutputDesc_79 1
+OutputDesc_80 32
+OutputDesc_81 32
+OutputDesc_82 40
+OutputDesc_83 48
+OutputDesc_84 63
+OutputDesc_85 64
+OutputDesc_86 48
+OutputDesc_87 1
+OutputDesc_88 1
+;
+param : getPairConstraint :=
+;
+set autoVars :=
+;
+param getAutoVarCoeff :
+
+:=
+;
+param getAutoVarUserMinCoeffAutoVar :
+
+:=
+;
+param getAutoVarUserMaxCoeffAutoVar :
+
+:=
+;
+param getAutoVarUserMinCoeffMeasurement :
+
+:=
+;
+param getAutoVarUserMaxCoeffMeasurement :
+
+:=
+;
+param getAutoVarUserMin :=
+;
+param getAutoVarUserMax :=
+;
+set measurements := 
+;
+param getMeasurementStart := 
+;
+param getMeasurementEnd := 
+;
+param getMeasurementCoeff :
+
+:=
+;
+end;

@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ManagerGraph version="2012.1" design_name="Manager_SimBuilder" compilation_phase="Final" hardwareBuild="false">
+	<Node id="0" instanceName="host2mgr" type="InputFlexibleClock">
+		<Output clock="STREAM" name="host2mgr" type="PULL el=1 ael=8" width="128">
+			<Stream name="Stream_1" sink="127" />
+		</Output>
+	</Node>
+	<Node id="4" instanceName="Cmdhostread" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_read" type="PUSH 5" width="64">
+			<Stream name="Stream_6" sink="131" />
+		</Output>
+	</Node>
+	<Node id="5" instanceName="Cmdhostwrite" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_write" type="PUSH 5" width="64">
+			<Stream name="Stream_11" sink="135" />
+		</Output>
+	</Node>
+	<Node id="9" instanceName="dram2mgr" type="InputFlexibleClock">
+		<Output clock="STREAM" name="dram2mgr" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_10" sink="139" />
+		</Output>
+	</Node>
+	<Node id="17" instanceName="Cmdread0" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_read" type="PUSH 5" width="64">
+			<Stream name="Stream_23" sink="143" />
+		</Output>
+	</Node>
+	<Node id="18" instanceName="Cmdread1" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_read" type="PUSH 5" width="64">
+			<Stream name="Stream_28" sink="147" />
+		</Output>
+	</Node>
+	<Node id="19" instanceName="Cmdread2" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_read" type="PUSH 5" width="64">
+			<Stream name="Stream_33" sink="151" />
+		</Output>
+	</Node>
+	<Node id="20" instanceName="Cmdread3" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_read" type="PUSH 5" width="64">
+			<Stream name="Stream_38" sink="155" />
+		</Output>
+	</Node>
+	<Node id="21" instanceName="Cmdwrite0" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_write" type="PUSH 5" width="64">
+			<Stream name="Stream_43" sink="159" />
+		</Output>
+	</Node>
+	<Node id="22" instanceName="Cmdwrite1" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Output clock="STREAM" name="dram_write" type="PUSH 5" width="64">
+			<Stream name="Stream_48" sink="163" />
+		</Output>
+	</Node>
+	<Node id="26" instanceName="dram2knl0" type="InputFlexibleClock">
+		<Output clock="STREAM" name="dram2knl0" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_27" sink="167" />
+		</Output>
+	</Node>
+	<Node id="31" instanceName="dram2knl1" type="InputFlexibleClock">
+		<Output clock="STREAM" name="dram2knl1" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_32" sink="171" />
+		</Output>
+	</Node>
+	<Node id="36" instanceName="dram2knl2" type="InputFlexibleClock">
+		<Output clock="STREAM" name="dram2knl2" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_37" sink="175" />
+		</Output>
+	</Node>
+	<Node id="41" instanceName="dram2knl3" type="InputFlexibleClock">
+		<Output clock="STREAM" name="dram2knl3" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_42" sink="179" />
+		</Output>
+	</Node>
+	<Node id="259" instanceName="MemoryControllerPro" type="MemoryControllerPro">
+	</Node>
+	<Node id="127" instanceName="STREAMSTATUS_host2mgr_host2mgr" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=8" width="128">
+			<Stream name="Stream_128" source="0" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=8" width="128">
+			<Stream name="Stream_129" sink="59" />
+		</Output>
+	</Node>
+	<Node id="131" instanceName="STREAMSTATUS_Cmdhostread_dram_read" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_132" source="4" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_133" sink="7" />
+		</Output>
+	</Node>
+	<Node id="135" instanceName="STREAMSTATUS_Cmdhostwrite_dram_write" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_136" source="5" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_137" sink="12" />
+		</Output>
+	</Node>
+	<Node id="139" instanceName="STREAMSTATUS_dram2mgr_dram2mgr" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_140" source="9" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_141" sink="63" />
+		</Output>
+	</Node>
+	<Node id="143" instanceName="STREAMSTATUS_Cmdread0_dram_read" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_144" source="17" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_145" sink="24" />
+		</Output>
+	</Node>
+	<Node id="147" instanceName="STREAMSTATUS_Cmdread1_dram_read" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_148" source="18" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_149" sink="29" />
+		</Output>
+	</Node>
+	<Node id="151" instanceName="STREAMSTATUS_Cmdread2_dram_read" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_152" source="19" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_153" sink="34" />
+		</Output>
+	</Node>
+	<Node id="155" instanceName="STREAMSTATUS_Cmdread3_dram_read" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_156" source="20" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_157" sink="39" />
+		</Output>
+	</Node>
+	<Node id="159" instanceName="STREAMSTATUS_Cmdwrite0_dram_write" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_160" source="21" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_161" sink="44" />
+		</Output>
+	</Node>
+	<Node id="163" instanceName="STREAMSTATUS_Cmdwrite1_dram_write" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="64">
+			<Stream name="Stream_164" source="22" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="64">
+			<Stream name="Stream_165" sink="49" />
+		</Output>
+	</Node>
+	<Node id="167" instanceName="STREAMSTATUS_dram2knl0_dram2knl0" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_168" source="26" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_169" sink="71" />
+		</Output>
+	</Node>
+	<Node id="171" instanceName="STREAMSTATUS_dram2knl1_dram2knl1" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_172" source="31" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_173" sink="75" />
+		</Output>
+	</Node>
+	<Node id="175" instanceName="STREAMSTATUS_dram2knl2_dram2knl2" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_176" source="36" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_177" sink="67" />
+		</Output>
+	</Node>
+	<Node id="179" instanceName="STREAMSTATUS_dram2knl3_dram2knl3" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_180" source="41" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=16" width="1536">
+			<Stream name="Stream_181" sink="79" />
+		</Output>
+	</Node>
+	<Node id="59" instanceName="Stream_15" type="DualAspectReg">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="128">
+			<Stream name="Stream_130" source="127" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_61" sink="183" />
+		</Output>
+	</Node>
+	<Node id="7" instanceName="cmd_dram2mgr" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_dram2mgr" type="PUSH 8" width="64">
+			<Stream name="Stream_134" source="131" />
+		</Input>
+	</Node>
+	<Node id="12" instanceName="cmd_mgr2dram" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_mgr2dram" type="PUSH 8" width="64">
+			<Stream name="Stream_138" source="135" />
+		</Input>
+	</Node>
+	<Node id="63" instanceName="Stream_3" type="DualAspectMux">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_142" source="139" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="128">
+			<Stream name="Stream_65" sink="187" />
+		</Output>
+	</Node>
+	<Node id="24" instanceName="cmd_dram2knl0" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_dram2knl0" type="PUSH 8" width="64">
+			<Stream name="Stream_146" source="143" />
+		</Input>
+	</Node>
+	<Node id="29" instanceName="cmd_dram2knl1" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_dram2knl1" type="PUSH 8" width="64">
+			<Stream name="Stream_150" source="147" />
+		</Input>
+	</Node>
+	<Node id="34" instanceName="cmd_dram2knl2" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_dram2knl2" type="PUSH 8" width="64">
+			<Stream name="Stream_154" source="151" />
+		</Input>
+	</Node>
+	<Node id="39" instanceName="cmd_dram2knl3" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_dram2knl3" type="PUSH 8" width="64">
+			<Stream name="Stream_158" source="155" />
+		</Input>
+	</Node>
+	<Node id="44" instanceName="cmd_knl2dram0" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_knl2dram0" type="PUSH 8" width="64">
+			<Stream name="Stream_162" source="159" />
+		</Input>
+	</Node>
+	<Node id="49" instanceName="cmd_knl2dram1" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="cmd_knl2dram1" type="PUSH 8" width="64">
+			<Stream name="Stream_166" source="163" />
+		</Input>
+	</Node>
+	<Node id="71" instanceName="Stream_53" type="DualAspectMux">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_170" source="167" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_73" sink="191" />
+		</Output>
+	</Node>
+	<Node id="75" instanceName="Stream_54" type="DualAspectMux">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_174" source="171" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_77" sink="195" />
+		</Output>
+	</Node>
+	<Node id="67" instanceName="Stream_55" type="DualAspectMux">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_178" source="175" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_69" sink="199" />
+		</Output>
+	</Node>
+	<Node id="79" instanceName="Stream_56" type="DualAspectMux">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_182" source="179" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_81" sink="203" />
+		</Output>
+	</Node>
+	<Node id="183" instanceName="STREAMSTATUS_Stream_15_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_184" source="59" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_185" sink="91" />
+		</Output>
+	</Node>
+	<Node id="187" instanceName="STREAMSTATUS_Stream_3_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="128">
+			<Stream name="Stream_188" source="63" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="128">
+			<Stream name="Stream_189" sink="2" />
+		</Output>
+	</Node>
+	<Node id="191" instanceName="STREAMSTATUS_Stream_53_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_192" source="71" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_193" sink="107" />
+		</Output>
+	</Node>
+	<Node id="195" instanceName="STREAMSTATUS_Stream_54_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_196" source="75" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_197" sink="111" />
+		</Output>
+	</Node>
+	<Node id="199" instanceName="STREAMSTATUS_Stream_55_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_200" source="67" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_201" sink="103" />
+		</Output>
+	</Node>
+	<Node id="203" instanceName="STREAMSTATUS_Stream_56_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_204" source="79" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 2" width="32">
+			<Stream name="Stream_205" sink="115" />
+		</Output>
+	</Node>
+	<Node id="91" instanceName="Stream_62" type="PullPushAdapter">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_186" source="183" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 1" width="1536">
+			<Stream name="Stream_93" sink="207" />
+		</Output>
+	</Node>
+	<Node id="2" instanceName="mgr2host" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="mgr2host" type="PUSH 64" width="128">
+			<Stream name="Stream_190" source="187" />
+		</Input>
+	</Node>
+	<Node id="107" instanceName="Stream_74" type="Fifo">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_194" source="191" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_109" sink="215" />
+		</Output>
+	</Node>
+	<Node id="111" instanceName="Stream_78" type="Fifo">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_198" source="195" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_113" sink="219" />
+		</Output>
+	</Node>
+	<Node id="103" instanceName="Stream_70" type="Fifo">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_202" source="199" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_105" sink="211" />
+		</Output>
+	</Node>
+	<Node id="115" instanceName="Stream_82" type="Fifo">
+		<Input clock="STREAM" name="input" type="PUSH 2" width="32">
+			<Stream name="Stream_206" source="203" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_117" sink="223" />
+		</Output>
+	</Node>
+	<Node id="207" instanceName="STREAMSTATUS_Stream_62_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 1" width="1536">
+			<Stream name="Stream_208" source="91" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 1" width="1536">
+			<Stream name="Stream_209" sink="14" />
+		</Output>
+	</Node>
+	<Node id="215" instanceName="STREAMSTATUS_Stream_74_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_216" source="107" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_217" sink="16" />
+		</Output>
+	</Node>
+	<Node id="219" instanceName="STREAMSTATUS_Stream_78_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_220" source="111" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_221" sink="16" />
+		</Output>
+	</Node>
+	<Node id="211" instanceName="STREAMSTATUS_Stream_70_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_212" source="103" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_213" sink="16" />
+		</Output>
+	</Node>
+	<Node id="223" instanceName="STREAMSTATUS_Stream_82_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_224" source="115" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_225" sink="16" />
+		</Output>
+	</Node>
+	<Node id="14" instanceName="mgr2dram" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="mgr2dram" type="PUSH 16" width="1536">
+			<Stream name="Stream_210" source="207" />
+		</Input>
+	</Node>
+	<Node id="16" instanceName="MyApp0" type="Kernel">
+		<PxgFile phase="original">Cmdhostread_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostread_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdhostwrite_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdhostwrite_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">MyApp0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">MyApp0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread1_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread2_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread2_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdread3_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdread3_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite0_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite0_final-simulation.pxg</PxgFile>
+		<PxgFile phase="original">Cmdwrite1_original.pxg</PxgFile>
+		<PxgFile phase="final-simulation">Cmdwrite1_final-simulation.pxg</PxgFile>
+		<Input clock="STREAM" name="dvv" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_214" source="211" />
+		</Input>
+		<Input clock="STREAM" name="p" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_218" source="215" />
+		</Input>
+		<Input clock="STREAM" name="pp" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_222" source="219" />
+		</Input>
+		<Input clock="STREAM" name="source" type="PULL el=1 ael=2" width="32">
+			<Stream name="Stream_226" source="223" />
+		</Input>
+		<Output clock="STREAM" name="pp_out" type="PUSH 5" width="32">
+			<Stream name="Stream_57" sink="227" />
+		</Output>
+		<Output clock="STREAM" name="p_out" type="PUSH 5" width="32">
+			<Stream name="Stream_58" sink="231" />
+		</Output>
+	</Node>
+	<Node id="227" instanceName="STREAMSTATUS_MyApp0_pp_out" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="32">
+			<Stream name="Stream_228" source="16" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="32">
+			<Stream name="Stream_229" sink="119" />
+		</Output>
+	</Node>
+	<Node id="231" instanceName="STREAMSTATUS_MyApp0_p_out" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="32">
+			<Stream name="Stream_232" source="16" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 5" width="32">
+			<Stream name="Stream_233" sink="123" />
+		</Output>
+	</Node>
+	<Node id="119" instanceName="Stream_84" type="Fifo">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="32">
+			<Stream name="Stream_230" source="227" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_121" sink="235" />
+		</Output>
+	</Node>
+	<Node id="123" instanceName="Stream_88" type="Fifo">
+		<Input clock="STREAM" name="input" type="PUSH 5" width="32">
+			<Stream name="Stream_234" source="231" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_125" sink="239" />
+		</Output>
+	</Node>
+	<Node id="235" instanceName="STREAMSTATUS_Stream_84_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_236" source="119" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_237" sink="83" />
+		</Output>
+	</Node>
+	<Node id="239" instanceName="STREAMSTATUS_Stream_88_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_240" source="123" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_241" sink="87" />
+		</Output>
+	</Node>
+	<Node id="83" instanceName="Stream_47" type="DualAspectReg">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_238" source="235" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_85" sink="243" />
+		</Output>
+	</Node>
+	<Node id="87" instanceName="Stream_52" type="DualAspectReg">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="32">
+			<Stream name="Stream_242" source="239" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_89" sink="247" />
+		</Output>
+	</Node>
+	<Node id="243" instanceName="STREAMSTATUS_Stream_47_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_244" source="83" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_245" sink="95" />
+		</Output>
+	</Node>
+	<Node id="247" instanceName="STREAMSTATUS_Stream_52_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_248" source="87" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_249" sink="99" />
+		</Output>
+	</Node>
+	<Node id="95" instanceName="Stream_86" type="PullPushAdapter">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_246" source="243" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 1" width="1536">
+			<Stream name="Stream_97" sink="251" />
+		</Output>
+	</Node>
+	<Node id="99" instanceName="Stream_90" type="PullPushAdapter">
+		<Input clock="STREAM" name="input" type="PULL el=1 ael=0" width="1536">
+			<Stream name="Stream_250" source="247" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 1" width="1536">
+			<Stream name="Stream_101" sink="255" />
+		</Output>
+	</Node>
+	<Node id="251" instanceName="STREAMSTATUS_Stream_86_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 1" width="1536">
+			<Stream name="Stream_252" source="95" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 1" width="1536">
+			<Stream name="Stream_253" sink="46" />
+		</Output>
+	</Node>
+	<Node id="255" instanceName="STREAMSTATUS_Stream_90_output" type="StreamStatus">
+		<Input clock="STREAM" name="input" type="PUSH 1" width="1536">
+			<Stream name="Stream_256" source="99" />
+		</Input>
+		<Output clock="STREAM" name="output" type="PUSH 1" width="1536">
+			<Stream name="Stream_257" sink="51" />
+		</Output>
+	</Node>
+	<Node id="46" instanceName="knl2dram0" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="knl2dram0" type="PUSH 16" width="1536">
+			<Stream name="Stream_254" source="251" />
+		</Input>
+	</Node>
+	<Node id="51" instanceName="knl2dram1" type="OutputFlexibleClock">
+		<Input clock="STREAM" name="knl2dram1" type="PUSH 16" width="1536">
+			<Stream name="Stream_258" source="255" />
+		</Input>
+	</Node>
+</ManagerGraph>

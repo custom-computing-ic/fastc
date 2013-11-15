@@ -1,0 +1,7 @@
+NodeCounterV1 Counter(NUMERIC_INCREMENTING)\nInc: 1\nReset: 0\nInit: 0 {HWOffsetFix:32, 0, UNSIGNED} ID: 6
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.makeCounter(Count.java:355)
+MyApp_pkg.Cmdwrite.<init>(Cmdwrite.java:35)
+MyApp_pkg.AppManager.<init>(AppManager.java:43)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+	FIFO(1) {HWOffsetFix:32, 0, UNSIGNED} 1 ID: 70
+

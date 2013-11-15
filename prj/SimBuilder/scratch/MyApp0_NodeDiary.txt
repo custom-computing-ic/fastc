@@ -1,0 +1,2400 @@
+NodeID     : 0
+Node       : Scalar input (io_dvv_force_disabled)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:18)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 1
+Node       : ~
+Node type  : NodeNot
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:18)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 2
+Node       : Input(dvv)
+Node type  : NodeInput
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:18)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 3
+Node       : Scalar input (io_p_force_disabled)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:19)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 4
+Node       : ~
+Node type  : NodeNot
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:19)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 5
+Node       : Input(p)
+Node type  : NodeInput
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:19)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 6
+Node       : Scalar input (io_pp_force_disabled)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:20)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 7
+Node       : ~
+Node type  : NodeNot
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:20)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 8
+Node       : Input(pp)
+Node type  : NodeInput
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:20)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 9
+Node       : Scalar input (io_source_force_disabled)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:21)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 10
+Node       : ~
+Node type  : NodeNot
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:21)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 11
+Node       : Input(source)
+Node type  : NodeInput
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.input(IO.java:475)
+MyApp_pkg.do_forward.<init>(do_forward.java:21)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 12
+Node       : Scalar input (n1)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:22)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 13
+Node       : Scalar input (n2)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:23)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 14
+Node       : Scalar input (n3)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:24)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 15
+Node       : Scalar input (n12)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:25)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 16
+Node       : Scalar input (ORDER)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:26)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 17
+Node       : Scalar input (c_0)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:27)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 18
+Node       : Scalar input (c_1_0)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:28)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 19
+Node       : Scalar input (c_1_1)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:29)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 20
+Node       : Scalar input (c_1_2)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:30)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 21
+Node       : Scalar input (c_1_3)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:31)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 22
+Node       : Scalar input (c_1_4)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:32)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 23
+Node       : Scalar input (c_2_0)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:33)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 24
+Node       : Scalar input (c_2_1)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:34)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 25
+Node       : Scalar input (c_2_2)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:35)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 26
+Node       : Scalar input (c_2_3)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:36)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 27
+Node       : Scalar input (c_2_4)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:37)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 28
+Node       : Scalar input (c_3_0)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:38)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 29
+Node       : Scalar input (c_3_1)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:39)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 30
+Node       : Scalar input (c_3_2)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:40)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 31
+Node       : Scalar input (c_3_3)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:41)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 32
+Node       : Scalar input (c_3_4)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+MyApp_pkg.do_forward.<init>(do_forward.java:42)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 33
+Node       : {HWOffsetFix:1, 0, UNSIGNED}\n0x1; 1.0
+Node type  : NodeConstantRawBits
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.makeCounterChain(Count.java:438)
+MyApp_pkg.do_forward.<init>(do_forward.java:47)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NODE WAS REMOVED!
+NodeID     : 34
+Node       : 128.0
+Node type  : NodeConstantDouble
+Removed by : [RemoveUntypedConstants]
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain.addCounter(CounterChain.java:501)
+MyApp_pkg.do_forward.<init>(do_forward.java:48)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+Led to:
+  NodeID     : 248
+  Node       : {HWOffsetFix:9, 0, UNSIGNED}\n0x080; 128.0
+  Node type  : NodeConstantRawBits
+  Creator    : RemoveUntypedConstants
+
+------------
+NodeID     : 35
+Node       : Counter(NUMERIC_INCREMENTING)\nInc: 1\nReset: 0\nInit: 0
+Node type  : NodeCounterV1
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain.addCounter(CounterChain.java:501)
+MyApp_pkg.do_forward.<init>(do_forward.java:48)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 36
+Node       : {HWOffsetFix:32, 0, TWOSCOMPLEMENT}
+Node type  : NodeCast
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.cast(HWVar.java:160)
+MyApp_pkg.do_forward.<init>(do_forward.java:48)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NODE WAS REMOVED!
+NodeID     : 37
+Node       : 128.0
+Node type  : NodeConstantDouble
+Removed by : [RemoveUntypedConstants]
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain.addCounter(CounterChain.java:501)
+MyApp_pkg.do_forward.<init>(do_forward.java:49)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+Led to:
+  NodeID     : 249
+  Node       : {HWOffsetFix:9, 0, UNSIGNED}\n0x080; 128.0
+  Node type  : NodeConstantRawBits
+  Creator    : RemoveUntypedConstants
+
+------------
+NodeID     : 38
+Node       : Counter(NUMERIC_INCREMENTING)\nInc: 1\nReset: 0\nInit: 0
+Node type  : NodeCounterV1
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain.addCounter(CounterChain.java:501)
+MyApp_pkg.do_forward.<init>(do_forward.java:49)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 39
+Node       : {HWOffsetFix:32, 0, TWOSCOMPLEMENT}
+Node type  : NodeCast
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.cast(HWVar.java:160)
+MyApp_pkg.do_forward.<init>(do_forward.java:49)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NODE WAS REMOVED!
+NodeID     : 40
+Node       : 128.0
+Node type  : NodeConstantDouble
+Removed by : [RemoveUntypedConstants]
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain.addCounter(CounterChain.java:501)
+MyApp_pkg.do_forward.<init>(do_forward.java:50)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+Led to:
+  NodeID     : 250
+  Node       : {HWOffsetFix:9, 0, UNSIGNED}\n0x080; 128.0
+  Node type  : NodeConstantRawBits
+  Creator    : RemoveUntypedConstants
+
+------------
+NodeID     : 41
+Node       : Counter(NUMERIC_INCREMENTING)\nInc: 1\nReset: 0\nInit: 0
+Node type  : NodeCounterV1
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain.addCounter(CounterChain.java:501)
+MyApp_pkg.do_forward.<init>(do_forward.java:50)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 42
+Node       : {HWOffsetFix:32, 0, TWOSCOMPLEMENT}
+Node type  : NodeCast
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.cast(HWVar.java:160)
+MyApp_pkg.do_forward.<init>(do_forward.java:50)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 43
+Node       : -
+Node type  : NodeSub
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.sub(HWVar.java:767)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 44
+Node       : <
+Node type  : NodeLt
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.lt(HWVar.java:693)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 45
+Node       : >=
+Node type  : NodeGte
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.gte(HWVar.java:619)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 46
+Node       : &
+Node type  : NodeAnd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 47
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 48
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 49
+Node       : <{HWOffsetFix:1, 0, UNSIGNED}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 50
+Node       : -
+Node type  : NodeSub
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.sub(HWVar.java:767)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 51
+Node       : <
+Node type  : NodeLt
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.lt(HWVar.java:693)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 52
+Node       : &
+Node type  : NodeAnd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 53
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 54
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 55
+Node       : <{HWOffsetFix:1, 0, UNSIGNED}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 56
+Node       : >=
+Node type  : NodeGte
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.gte(HWVar.java:619)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 57
+Node       : &
+Node type  : NodeAnd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 58
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 59
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 60
+Node       : <{HWOffsetFix:1, 0, UNSIGNED}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 61
+Node       : -
+Node type  : NodeSub
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.sub(HWVar.java:767)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 62
+Node       : <
+Node type  : NodeLt
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.lt(HWVar.java:693)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 63
+Node       : &
+Node type  : NodeAnd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 64
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 65
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 66
+Node       : <{HWOffsetFix:1, 0, UNSIGNED}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 67
+Node       : >=
+Node type  : NodeGte
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.gte(HWVar.java:619)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 68
+Node       : &
+Node type  : NodeAnd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 69
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 70
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 71
+Node       : <{HWOffsetFix:1, 0, UNSIGNED}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.and(HWVar.java:441)
+MyApp_pkg.do_forward.<init>(do_forward.java:51)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NODE WAS REMOVED!
+NodeID     : 72
+Node       : 2.0
+Node type  : NodeConstantDouble
+Removed by : [PO2FPMultOptimiser]
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mulAsRHS(HWVar.java:824)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NODE WAS REMOVED!
+NodeID     : 73
+Node       : *
+Node type  : NodeMul
+Removed by : [PO2FPMultOptimiser]
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mulAsRHS(HWVar.java:824)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+Led to:
+  NodeID     : 179
+  Node       : PO2FPMult_N1
+  Node type  : NodePO2FPMult
+  Creator    : PO2FPMultOptimiser
+
+------------
+NodeID     : 74
+Node       : -
+Node type  : NodeSub
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.sub(HWVar.java:767)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 75
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 76
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 77
+Node       : stream offset: 1
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 78
+Node       : stream offset: -1
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 79
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 80
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 81
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 82
+Node       : stream offset: 2
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 83
+Node       : stream offset: -2
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 84
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 85
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 86
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 87
+Node       : stream offset: 3
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 88
+Node       : stream offset: -3
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 89
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 90
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 91
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 92
+Node       : stream offset: 4
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 93
+Node       : stream offset: -4
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 94
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 95
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 96
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 97
+Node       : stream offset: 5
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 98
+Node       : stream offset: -5
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 99
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 100
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 101
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 102
+Node       : stream offset: 128
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 103
+Node       : stream offset: -128
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 104
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 105
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 106
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 107
+Node       : stream offset: 256
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 108
+Node       : stream offset: -256
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 109
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 110
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 111
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 112
+Node       : stream offset: 384
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 113
+Node       : stream offset: -384
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 114
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 115
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 116
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 117
+Node       : stream offset: 512
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 118
+Node       : stream offset: -512
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 119
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 120
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 121
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 122
+Node       : stream offset: 640
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 123
+Node       : stream offset: -640
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 124
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 125
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 126
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 127
+Node       : stream offset: 16384
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 128
+Node       : stream offset: -16384
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 129
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 130
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 131
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 132
+Node       : stream offset: 32768
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 133
+Node       : stream offset: -32768
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 134
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 135
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 136
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 137
+Node       : stream offset: 49152
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 138
+Node       : stream offset: -49152
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 139
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 140
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 141
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 142
+Node       : stream offset: 65536
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 143
+Node       : stream offset: -65536
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 144
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 145
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 146
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 147
+Node       : stream offset: 81920
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 148
+Node       : stream offset: -81920
+Node type  : NodeStreamOffset
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.offset(Stream.java:210)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 149
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 150
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 151
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 152
+Node       : *
+Node type  : NodeMul
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.mul(HWVar.java:804)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 153
+Node       : +
+Node type  : NodeAdd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.add(HWVar.java:730)
+MyApp_pkg.do_forward.<init>(do_forward.java:55)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 154
+Node       : MUX
+Node type  : NodeMux
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar.ternaryIf(HWVar.java:976)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 155
+Node       : {HWOffsetFix:1, 0, UNSIGNED}\n0x1; 1.0
+Node type  : NodeConstantRawBits
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 156
+Node       : Scalar input (io_pp_out_force_disabled)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 157
+Node       : ~
+Node type  : NodeNot
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 158
+Node       : &
+Node type  : NodeAnd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 159
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 160
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 161
+Node       : <{HWOffsetFix:1, 0, UNSIGNED}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 162
+Node       : Output(pp_out)
+Node type  : NodeOutput
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:60)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 163
+Node       : {HWOffsetFix:1, 0, UNSIGNED}\n0x1; 1.0
+Node type  : NodeConstantRawBits
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 164
+Node       : Scalar input (io_p_out_force_disabled)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 165
+Node       : ~
+Node type  : NodeNot
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 166
+Node       : &
+Node type  : NodeAnd
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 167
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 168
+Node       : <{HWRawBits:1}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 169
+Node       : <{HWOffsetFix:1, 0, UNSIGNED}>
+Node type  : NodeReinterpret
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 170
+Node       : Output(p_out)
+Node type  : NodeOutput
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.output(IO.java:670)
+MyApp_pkg.do_forward.<init>(do_forward.java:61)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NODE WAS REMOVED!
+NodeID     : 171
+Node       : 1.0
+Node type  : NodeConstantDouble
+Removed by : [RemoveUntypedConstants]
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+Led to:
+  NodeID     : 247
+  Node       : {HWOffsetFix:1, 0, UNSIGNED}\n0x1; 1.0
+  Node type  : NodeConstantRawBits
+  Creator    : RemoveUntypedConstants
+
+------------
+NodeID     : 172
+Node       : {HWOffsetFix:49, 0, UNSIGNED}\n0x1000000000000; 2.81474976710656E14
+Node type  : NodeConstantRawBits
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 173
+Node       : Counter(NUMERIC_INCREMENTING)\nInc: 1\nReset: 0\nInit: 0
+Node type  : NodeCounterV1
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 174
+Node       : {HWOffsetFix:1, 0, UNSIGNED}\n0x1; 1.0
+Node type  : NodeConstantRawBits
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 175
+Node       : Scalar output (current_run_cycle_count)
+Node type  : NodeOutputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 176
+Node       : Flush
+Node type  : NodeFlush
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 177
+Node       : Scalar input (run_cycle_count)
+Node type  : NodeInputMappedReg
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 178
+Node       : ==
+Node type  : NodeEq
+Creator    : User
+Stack Trace:
+com.maxeler.maxcompiler.v1.managers.custom.CustomManager.addKernel(CustomManager.java:807)
+MyApp_pkg.AppManager.<init>(AppManager.java:35)
+MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+
+------------
+NodeID     : 180
+Node       : FIFO(1)
+Node type  : NodeFIFO
+Creator    : ScheduleApplier
+------------
+NodeID     : 181
+Node       : FIFO(2)
+Node type  : NodeFIFO
+Creator    : ScheduleApplier
+------------
+NodeID     : 182
+Node       : FIFO(3)
+Node type  : NodeFIFO
+Creator    : ScheduleApplier
+------------
+NodeID     : 183
+Node       : FIFO(4)
+Node type  : NodeFIFO
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 184
+Node       : FIFO(81935)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 185
+Node       : FIFO(81764)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 186
+Node       : FIFO(81751)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 187
+Node       : FIFO(81753)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 188
+Node       : FIFO(81762)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 189
+Node       : FIFO(81766)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 190
+Node       : FIFO(81773)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 191
+Node       : FIFO(81779)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 192
+Node       : FIFO(81784)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 193
+Node       : FIFO(81792)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 194
+Node       : FIFO(81795)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 195
+Node       : FIFO(81805)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 196
+Node       : FIFO(81684)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 197
+Node       : FIFO(81940)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 198
+Node       : FIFO(81568)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 199
+Node       : FIFO(82080)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 200
+Node       : FIFO(81452)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 201
+Node       : FIFO(82220)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 202
+Node       : FIFO(81336)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 203
+Node       : FIFO(82360)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 204
+Node       : FIFO(81220)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 205
+Node       : FIFO(82500)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 206
+Node       : FIFO(65488)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 207
+Node       : FIFO(98256)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 208
+Node       : FIFO(49116)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 209
+Node       : FIFO(114652)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 210
+Node       : FIFO(32744)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 211
+Node       : FIFO(131048)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NodeID     : 212
+Node       : FIFO(16372)
+Node type  : NodeFIFO
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 213
+Node       : FIFO(147444)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 214
+Node       : FIFO(147444)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NodeID     : 215
+Node       : FIFO(16396)
+Node type  : NodeFIFO
+Creator    : ScheduleApplier
+------------
+NODE WAS REMOVED!
+NodeID     : 216
+Node       : FIFO(81972)
+Node type  : NodeFIFO
+Removed by : [TapFIFOsPass]
+Creator    : ScheduleApplier
+------------
+NodeID     : 217
+Node       : FIFO(16372)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 218
+Node       : FIFO(16372)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 219
+Node       : FIFO(16372)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 220
+Node       : FIFO(15732)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 221
+Node       : FIFO(116)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 222
+Node       : FIFO(116)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 223
+Node       : FIFO(116)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 224
+Node       : FIFO(116)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 225
+Node       : FIFO(67)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 226
+Node       : FIFO(2)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 227
+Node       : FIFO(9)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 228
+Node       : FIFO(2)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 229
+Node       : FIFO(2)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 230
+Node       : FIFO(7)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 231
+Node       : FIFO(6)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 232
+Node       : FIFO(5)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 233
+Node       : FIFO(8)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 234
+Node       : FIFO(3)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 235
+Node       : FIFO(10)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 236
+Node       : FIFO(130)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 237
+Node       : FIFO(5)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 238
+Node       : FIFO(32)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 239
+Node       : FIFO(108)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 240
+Node       : FIFO(140)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 241
+Node       : FIFO(140)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 242
+Node       : FIFO(140)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 243
+Node       : FIFO(15756)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 244
+Node       : FIFO(16396)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 245
+Node       : FIFO(16396)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------
+NodeID     : 246
+Node       : FIFO(16396)
+Node type  : NodeFIFO
+Creator    : TapFIFOsPass
+------------

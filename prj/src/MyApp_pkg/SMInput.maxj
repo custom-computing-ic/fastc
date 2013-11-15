@@ -1,0 +1,153 @@
+package MyApp_pkg;
+
+import com.maxeler.maxcompiler.v1.managers.FPGAManager;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateEnum;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateValue;
+import com.maxeler.maxcompiler.v1.statemachine.manager.ManagerStateMachine;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPullInput;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPushOutput;
+
+
+public final class SMInput extends ManagerStateMachine {
+	// types
+	private enum Mode  {Start, Output0, Output1, Output2}
+
+	// inputs/outputs
+	private final SMPullInput iInput;
+	private final SMPushOutput oOutput0;
+	private final SMPushOutput oOutput1;
+	private final SMPushOutput oOutput2;
+
+	// state
+	private final SMStateValue sReadDataReady;
+	private final SMStateValue sCounter;
+	private final SMStateEnum<Mode> sMode;
+
+	// constructor
+	public SMInput(FPGAManager owner) {
+		super(owner);
+
+		// Initialize state
+		sCounter    = state.value(smUInt(8), 0);
+		sMode = state.enumerated(Mode.class, Mode.Start);
+
+		sReadDataReady = state.value(smBool(), false);
+
+		// Set up inputs/outputs
+    // Stream width allign with memory width
+		iInput   = io.pullInput("input",    smUInt(1536));
+		oOutput0 = io.pushOutput("output0", smUInt(1536), 1);
+		oOutput1 = io.pushOutput("output1", smUInt(1536), 1);
+		oOutput2 = io.pushOutput("output2", smUInt(1536), 1);
+	}
+
+	@Override
+	protected void nextState() {
+
+		/*
+		 * We only get data from the input if:
+		 *  - the input was not empty in the previous cycle
+		 *  AND
+		 *  - the output was not stalled in the previous cycle
+		 */
+		sReadDataReady.next <== ~iInput.empty & ~oOutput0.stall & ~oOutput1.stall;
+
+		/*
+		 * If we get data from the input, then we can count 0s
+		 * or 1s and decode the data stream */
+		IF (sReadDataReady.eq(true)) {
+      SWITCH(sMode) {
+        CASE (Mode.Start) {
+          IF (sCounter.eq(10)){
+            sCounter.next <== 0;
+            sMode.next    <== Mode.Output0;
+          }
+          ELSE {
+            sCounter.next <== sCounter + 1;
+  			  sMode.next    <== Mode.Start;
+  				}
+        }
+        //Distribute data to data-path 0 
+        //Switch to next data-path after two cycles
+        CASE (Mode.Output0) {
+					IF (sCounter.eq(0)){
+            sCounter.next <== sCounter + 1;
+					  sMode.next    <== Mode.Output0;
+          }
+          ELSE {
+            sCounter.next <== 0;
+            sMode.next    <== Mode.Output1;
+						}
+					}
+        //Distribute data to data-path 1
+        //Switch to next data-path after two cycles
+        CASE (Mode.Output1) {
+					IF (sCounter.eq(0)){
+						sCounter.next <== sCounter + 1;
+					  sMode.next    <== Mode.Output1;
+          }
+          ELSE {
+            sCounter.next <== 0;
+            sMode.next    <== Mode.Output2;
+						}
+					}
+        //Distribute data to data-path 1
+        //Switch to next data-path after two cycles
+        CASE (Mode.Output2) {
+					IF (sCounter.eq(0)){
+						sCounter.next <== sCounter + 1;
+					  sMode.next    <== Mode.Output2;
+          }
+          ELSE {
+            sCounter.next <== 0;
+            sMode.next    <== Mode.Output0;
+						}
+					}
+			  }
+		  }
+    //debug part
+    //debug.printf("SM:   Cycle:%d Status:%d sReadDataReady:%d\n" ,sCounter, sMode, sReadDataReady);
+    }
+
+	@Override
+	protected void outputFunction() {
+		/*
+		 * We only request data from the input if:
+		 *  - the input is not empty
+		 *  AND
+		 *  - the output is not stalled
+		 */
+
+		iInput.read <== (~iInput.empty & ~oOutput0.stall & ~oOutput1.stall &~sMode.eq(Mode.Start)) 
+                    |(sMode.eq(Mode.Start) & sCounter.eq(10)) ;
+
+		//Dynamically output inputs, if they are valid
+      SWITCH(sMode) {
+        //Distribute data, switch to next data-path after two cycles
+        CASE (Mode.Output0) {
+        oOutput0 <== iInput;
+        oOutput0.valid <==sReadDataReady;
+        oOutput1.valid <==0;
+        oOutput2.valid <==0;
+        }
+        //Distribute data, switch to next data-path after two cycles
+        CASE (Mode.Output1) {
+        oOutput1 <== iInput;
+        oOutput0.valid <==0;
+        oOutput1.valid <==sReadDataReady;
+        oOutput2.valid <==0;
+			  }
+        //Distribute data, switch to next data-path after two cycles
+        CASE (Mode.Output2) {
+        oOutput2 <== iInput;
+        oOutput0.valid <==0;
+        oOutput1.valid <==0;
+        oOutput2.valid <==sReadDataReady;
+			  }
+    }
+    //debug part
+    //debug.printf("InputRequest:%d\niInput:%d \noOutput0:%d, \noOutput1:%d\n", iInput.read, iInput, oOutput0, oOutput1);
+
+  }
+}
+

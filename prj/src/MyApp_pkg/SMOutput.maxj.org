@@ -1,0 +1,244 @@
+package MyApp_pkg;
+
+import com.maxeler.maxcompiler.v1.managers.FPGAManager;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateEnum;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateValue;
+import com.maxeler.maxcompiler.v1.statemachine.manager.ManagerStateMachine;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPullInput;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPushOutput;
+
+
+public final class SMOutput extends ManagerStateMachine {
+	// types
+	private enum Mode  {Start, Output0, Output1, Output2}
+
+	// inputs/outputs
+	private final SMPullInput iInput0;
+	private final SMPullInput iInput1;
+	private final SMPullInput iInput2;
+	private final SMPushOutput oOutput;
+
+	// state
+	private final SMStateValue Request0;
+	private final SMStateValue Request1;
+	private final SMStateValue Request2;
+	private final SMStateValue Valid0;
+	private final SMStateValue Valid1;
+	private final SMStateValue Valid2;
+	private final SMStateValue sCounter;
+	private final SMStateEnum<Mode> sMode;
+
+	// constructor
+	public SMOutput(FPGAManager owner) {
+		super(owner);
+
+		// Initialize state
+		sCounter = state.value(smUInt(8), 0);
+		sMode    = state.enumerated(Mode.class, Mode.Start);
+
+		Request0 = state.value(smBool(), false);
+		Request1 = state.value(smBool(), false);
+		Request2 = state.value(smBool(), false);
+		Valid0 = state.value(smBool(), false);
+		Valid1 = state.value(smBool(), false);
+		Valid2 = state.value(smBool(), false);
+
+		// Set up inputs/outputs
+    // Stream width allign with memory width
+		iInput0  = io.pullInput("input0",    smUInt(1536));
+		iInput1  = io.pullInput("input1",    smUInt(1536));
+		iInput2  = io.pullInput("input2",    smUInt(1536));
+		oOutput  = io.pushOutput("output",   smUInt(1536), 1);
+	}
+
+	@Override
+	protected void nextState() {
+
+		/*
+		 * We only get data from the input if:
+		 *  - the input was not empty in the previous cycle
+		 *  AND
+		 *  - the output was not stalled in the previous cycle
+		 */
+
+		/*
+		 * If we get data from the input, then we can count 0s
+		 * or 1s and decode the data stream */
+      SWITCH(sMode) {
+        CASE (Mode.Start) {
+          IF (~iInput0.empty & ~iInput1.empty & ~iInput2.empty & ~oOutput.stall){
+            sCounter.next <== 0;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+            sMode.next    <== Mode.Output0;
+          }
+          ELSE {
+            sCounter.next <== 0;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+  			    sMode.next    <== Mode.Start;
+  				}
+        }
+        //Distribute data to data-path 0 
+        //Switch to next data-path after two cycles
+        CASE (Mode.Output0) {
+					IF (sCounter.eq(2) & Valid0.eq(true)){
+            sCounter.next <== 0;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+					  sMode.next    <== Mode.Output1;
+          }
+          ELSE{ 
+            IF (~iInput0.empty & ~oOutput.stall){
+            sCounter.next <== sCounter + 1;
+            Request0.next <== 1;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+            sMode.next    <== Mode.Output0;}
+            ELSE{
+            sCounter.next <== sCounter;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+            sMode.next    <== Mode.Output0;
+            }
+					}
+				}
+        //Distribute data to data-path 1 
+        //Switch to next data-path after two cycles
+        CASE (Mode.Output1) {
+					IF (sCounter.eq(2) & Valid1.eq(true)){
+            sCounter.next <== 0;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+					  sMode.next    <== Mode.Output2;
+          }
+          ELSE{ 
+            IF (~iInput1.empty & ~oOutput.stall){
+            sCounter.next <== sCounter + 1;
+            Request0.next <== 0;
+            Request1.next <== 1;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+            sMode.next    <== Mode.Output1;}
+            ELSE{
+            sCounter.next <== sCounter;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+            sMode.next    <== Mode.Output1;
+            }
+					}
+				}
+        //Distribute data to data-path 2 
+        //Switch to next data-path after two cycles
+        CASE (Mode.Output2) {
+					IF (sCounter.eq(2) & Valid2.eq(true)){
+            sCounter.next <== 0;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+					  sMode.next    <== Mode.Output0;
+          }
+          ELSE{ 
+            IF (~iInput2.empty & ~oOutput.stall){
+            sCounter.next <== sCounter + 1;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 1;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+            sMode.next    <== Mode.Output2;}
+            ELSE{
+            sCounter.next <== sCounter;
+            Request0.next <== 0;
+            Request1.next <== 0;
+            Request2.next <== 0;
+            Valid0.next   <== Request0;
+            Valid1.next   <== Request1;
+            Valid2.next   <== Request2;
+            sMode.next    <== Mode.Output2;
+            }
+					}
+				}
+			}
+    }
+
+	@Override
+	protected void outputFunction() {
+		/*
+		 * We only request data from the input if:
+		 *  - the input is not empty
+		 *  AND
+		 *  - the output is not stalled
+		 */
+
+		iInput0.read <== Request0 & sMode.eq(Mode.Output0) & ~sCounter.eq(3); 
+    iInput1.read <== Request1 & sMode.eq(Mode.Output1) & ~sCounter.eq(3);
+    iInput2.read <== Request2 & sMode.eq(Mode.Output2) & ~sCounter.eq(3);
+
+		//Dynamically output inputs, if they are valid
+ 
+    SWITCH(sMode) {
+                    
+      CASE (Mode.Output0) { 
+        oOutput  <== iInput0; 
+        oOutput.valid <==Valid0;
+      }
+                    
+      CASE (Mode.Output1) { 
+        oOutput  <== iInput1; 
+        oOutput.valid <==Valid1;
+      }
+                    
+      CASE (Mode.Output2) { 
+        oOutput  <== iInput2; 
+        oOutput.valid <==Valid2;
+      }
+    }
+
+    //debug part
+//  debug.printf("Status:%d-%d\nData:%d-%d-%d\nRequest:%d-%d-%d\nValid:%d-%d-%d\nOutput:%d\n\n" 
+//               ,sMode, sCounter
+//               ,~iInput0.empty & ~oOutput.stall ,~iInput1.empty & ~oOutput.stall ,~iInput2.empty & ~oOutput.stall
+//               ,iInput0.read ,iInput1.read ,iInput2.read
+//               ,Valid0,   Valid1,  Valid2
+//               ,oOutput.valid);
+//  debug.printf("iInput0:%d \niInput1:%d \niInput2:%d \noOutput:%d\n\n", 
+//                iInput0,iInput1,iInput2,
+//                oOutput);
+
+  }
+}
+

@@ -1,0 +1,137 @@
+package MyApp_pkg;
+
+import com.maxeler.maxcompiler.v1.managers.FPGAManager;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateEnum;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateValue;
+import com.maxeler.maxcompiler.v1.statemachine.manager.ManagerStateMachine;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPullInput;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPushOutput;
+
+
+public final class SMInput extends ManagerStateMachine {
+	// types
+	private enum Mode  {Start, Count}
+
+	// inputs/outputs
+	private final SMPullInput  iInput;
+	private final SMPushOutput oOutput0;
+	private final SMPushOutput oOutput1;
+	private final SMPushOutput oOutput2;
+
+	// state
+	private final SMStateValue Request0;
+	private final SMStateValue Request1;
+	private final SMStateValue Request2;
+	private final SMStateValue Valid0;
+	private final SMStateValue Valid1;
+	private final SMStateValue Valid2;
+	private final SMStateValue sCounter;
+	private final SMStateEnum<Mode> sMode;
+
+	// constructor
+	public SMInput(FPGAManager owner) {
+		super(owner);
+
+		// Initialize state
+		sCounter = state.value(smUInt(8), 0);
+		sMode    = state.enumerated(Mode.class, Mode.Start);
+
+		Request0 = state.value(smBool(), false);
+		Request1 = state.value(smBool(), false);
+		Request2 = state.value(smBool(), false);
+		Valid0   = state.value(smBool(), false);
+		Valid1   = state.value(smBool(), false);
+		Valid2   = state.value(smBool(), false);
+
+		// Set up inputs/outputs
+    // Stream width allign with memory width
+		iInput   = io.pullInput ("input",    smUInt(1536)   );
+		oOutput0 = io.pushOutput("output0",  smUInt(1536), 1);
+		oOutput1 = io.pushOutput("output1",  smUInt(1536), 1);
+		oOutput2 = io.pushOutput("output2",  smUInt(1536), 1);
+	}
+
+	@Override
+	protected void nextState() {
+
+		/*
+		 * Count every 24 clock cycles to synchronise with address generator
+     */
+      SWITCH(sMode) {
+        CASE (Mode.Start) {
+          IF (~iInput.empty & ~oOutput0.stall & ~oOutput1.stall & ~oOutput2.stall){
+            sCounter.next <== 0;
+            sMode.next    <== Mode.Count;
+          }
+          ELSE {
+            sCounter.next <== 0;
+  			    sMode.next    <== Mode.Start;
+  				}
+        }
+        //Count 24 clock cycles
+        CASE (Mode.Count) {
+          IF (sCounter.eq(23)){
+            sCounter.next <== 0;
+            sMode.next    <== Mode.Count;
+          }
+          ELSE {
+            sCounter.next <== sCounter + 1;
+  			    sMode.next    <== Mode.Count;
+  				}
+        }
+			}
+		/*
+		 * Request at the end of 24 clock cycles
+     */
+      Request0.next <== (sCounter.eq( 1) | sCounter.eq( 3)) & ~iInput.empty;
+      Request1.next <== (sCounter.eq( 5) | sCounter.eq( 7)) & ~iInput.empty;
+      Request2.next <== (sCounter.eq( 9) | sCounter.eq(11)) & ~iInput.empty;
+      Valid0.next   <== Request0;
+      Valid1.next   <== Request1;
+      Valid2.next   <== Request2;
+    }
+
+	@Override
+	protected void outputFunction() {
+		/*
+		 * We only request data from the input if:
+		 *  - the input is not empty
+		 *  AND
+		 *  - the output is not stalled
+		 */
+
+		iInput.read <== Request0 | Request1 | Request2; 
+      
+    oOutput0.valid <==Valid0;
+    oOutput1.valid <==Valid1;
+    oOutput2.valid <==Valid2;
+
+		//Dynamically output inputs, if they are valid
+    IF(Valid0.eq(1)){
+      oOutput0 <== iInput;
+    }
+    ELSE{ 
+      IF(Valid1.eq(1)){
+        oOutput1 <== iInput;
+      }
+      ELSE{
+        IF(Valid2.eq(1)){
+          oOutput2 <== iInput;
+        }
+      }
+    }
+
+    //debug part
+//  debug.printf("Status:%d-%d\nData:%d-%d-%d\nRequest:%d\nValid:%d-%d-%d\nOutput:%d-%d-%d\n\n" 
+//               ,sMode, sCounter
+//               ,~iInput.empty & ~oOutput0.stall ,~iInput.empty & ~oOutput0.stall ,~iInput.empty & ~oOutput0.stall
+//               ,iInput.read  
+//               ,Valid0,   Valid1,  Valid2
+//               ,oOutput0.valid,oOutput1.valid,oOutput2.valid);
+//  debug.printf("iInput0:%d \niInput1:%d \niInput2:%d \noOutput:%d\n\n", 
+//                iInput0,iInput1,iInput2,
+//                oOutput);
+
+  }
+}
+

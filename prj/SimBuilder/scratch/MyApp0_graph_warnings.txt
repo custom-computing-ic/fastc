@@ -1,0 +1,48 @@
+*** After kernel graph-pass 'Init Graph' ***
+node "Scalar input (n12)" (ID 15) has unconnected outputs: [n12]
+stack trace of node creation follows:
+	com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+	MyApp_pkg.do_forward.<init>(do_forward.java:25)
+	MyApp_pkg.AppManager.<init>(AppManager.java:35)
+	MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+	
+*** After kernel graph-pass 'Init Graph' ***
+node "Scalar input (n12)" (ID 15) has unconnected outputs: [n12]
+stack trace of node creation follows:
+	com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+	MyApp_pkg.do_forward.<init>(do_forward.java:25)
+	MyApp_pkg.AppManager.<init>(AppManager.java:35)
+	MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+	
+*** After kernel graph-pass 'PO2FPMultOptimiser' ***
+node "Scalar input (n12)" (ID 15) has unconnected outputs: [n12]
+stack trace of node creation follows:
+	com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+	MyApp_pkg.do_forward.<init>(do_forward.java:25)
+	MyApp_pkg.AppManager.<init>(AppManager.java:35)
+	MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+	
+*** After kernel graph-pass 'ScheduleApplier' ***
+node "Scalar input (n12)" (ID 15) has unconnected outputs: [n12]
+stack trace of node creation follows:
+	com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+	MyApp_pkg.do_forward.<init>(do_forward.java:25)
+	MyApp_pkg.AppManager.<init>(AppManager.java:35)
+	MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+	
+*** After kernel graph-pass 'TapFIFOsPass' ***
+node "Scalar input (n12)" (ID 15) has unconnected outputs: [n12]
+stack trace of node creation follows:
+	com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+	MyApp_pkg.do_forward.<init>(do_forward.java:25)
+	MyApp_pkg.AppManager.<init>(AppManager.java:35)
+	MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+	
+*** After kernel graph-pass 'RemoveUntypedConstants' ***
+node "Scalar input (n12)" (ID 15) has unconnected outputs: [n12]
+stack trace of node creation follows:
+	com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.IO.scalarInput(IO.java:886)
+	MyApp_pkg.do_forward.<init>(do_forward.java:25)
+	MyApp_pkg.AppManager.<init>(AppManager.java:35)
+	MyApp_pkg.SimBuilder.main(SimBuilder.java:13)
+	

@@ -1,0 +1,132 @@
+package MyApp_pkg;
+
+import com.maxeler.maxcompiler.v1.managers.FPGAManager;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateEnum;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateValue;
+import com.maxeler.maxcompiler.v1.statemachine.manager.ManagerStateMachine;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPullInput;
+import com.maxeler.maxcompiler.v1.statemachine.manager.SMPushOutput;
+
+
+public class SMMux extends ManagerStateMachine {
+	public enum Modes {
+		idle, beg, ker, endd}
+
+	// I/O
+	private final SMPullInput  bInput;
+	private final SMPullInput  kInput;
+	private final SMPullInput  eInput;
+	private final SMPushOutput oOutput;
+
+	// State
+  private final SMStateEnum<Modes> m_mode;
+  private final SMStateValue oValid;
+  private final SMStateValue sCounter;
+  
+  int halo  = 80;
+  int kernel= 432;
+
+	public SMMux(FPGAManager owner) {
+		super(owner);
+    // I/O
+		bInput  = io.pullInput("bInput",   smUInt(1536));
+		kInput  = io.pullInput("kInput",   smUInt(1536));
+		eInput  = io.pullInput("eInput",   smUInt(1536));
+    oOutput = io.pushOutput("oOutput", smUInt(1536), 1);
+    // State
+		m_mode  = state.enumerated(Modes.class, Modes.idle);
+    sCounter= state.value(smUInt(32), 0);
+    
+    oValid  = state.value(smBool(), false);
+  }
+	@Override
+	protected void nextState() {
+		SWITCH(m_mode) {
+			CASE(Modes.idle) {
+        IF (~bInput.empty & ~oOutput.stall){
+          m_mode.next <== Modes.beg;
+          sCounter.next    <== 0;
+          oValid.next      <== 0;
+          }
+        ELSE{
+          m_mode.next <== Modes.idle;
+          sCounter.next    <== 0;
+          oValid.next      <== 0;
+          }
+      }
+			CASE(Modes.beg) {
+        IF (sCounter.eq(halo*2) & ~kInput.empty & ~oOutput.stall){
+          m_mode.next <== Modes.ker;
+          sCounter.next    <== 0;
+          oValid.next      <== 0;
+          }
+        ELSE IF (~bInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2)){
+          m_mode.next <== Modes.beg;
+          sCounter.next    <== sCounter + 1;
+          oValid.next      <== 1;
+          }
+        ELSE{
+          m_mode.next <== Modes.beg;
+          sCounter.next    <== sCounter;
+          oValid.next      <== 0;
+          }
+      }
+			CASE(Modes.ker) {
+        IF (sCounter.eq(kernel*2) & ~eInput.empty & ~oOutput.stall){
+          m_mode.next <== Modes.endd;
+          sCounter.next    <== 0;
+          oValid.next      <== 0;
+          }
+        ELSE IF (~kInput.empty & ~oOutput.stall & ~sCounter.eq(kernel*2)){
+          m_mode.next <== Modes.ker;
+          sCounter.next    <== sCounter + 1;
+          oValid.next      <== 1;
+          }
+        ELSE{
+          m_mode.next <== Modes.ker;
+          sCounter.next    <== sCounter;
+          oValid.next      <== 0;
+          }
+      }
+			CASE(Modes.endd) {
+        IF (sCounter.eq(halo*2) & ~bInput.empty & ~oOutput.stall){
+          m_mode.next <== Modes.beg;
+          sCounter.next    <== 0;
+          oValid.next      <== 0;
+          }
+        ELSE IF (~eInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2)){
+          m_mode.next <== Modes.endd;
+          sCounter.next    <== sCounter + 1;
+          oValid.next      <== 1;
+          }
+        ELSE{
+          m_mode.next <== Modes.endd;
+          sCounter.next    <== sCounter;
+          oValid.next      <== 0;
+          }
+      }
+    }
+	}
+
+	@Override
+	protected void outputFunction() {
+  
+  bInput.read <== m_mode.eq(Modes.beg) & ~bInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+  kInput.read <== m_mode.eq(Modes.ker) & ~kInput.empty & ~oOutput.stall & ~sCounter.eq(kernel*2); 
+  eInput.read <== m_mode.eq(Modes.endd)& ~eInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+
+  IF (m_mode.eq(Modes.beg)){
+    oOutput <== bInput;}
+  ELSE  IF(m_mode.eq(Modes.ker)){
+    oOutput <== kInput;}
+  ELSE{
+    oOutput <== eInput;}
+  
+  oOutput.valid <== oValid;
+
+  debug.printf("Status: %d-%d\n",m_mode, sCounter);  
+  debug.printf("Request:%d-%d-%d  %d-%d\n",bInput.read, kInput.read, eInput.read, oValid, oOutput.valid);
+  debug.printf("Streams:%d-%d-%d-%d\n",~bInput.empty,~kInput.empty,~eInput.empty, ~oOutput.stall);
+
+  }
+}

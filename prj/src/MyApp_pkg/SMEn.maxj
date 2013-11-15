@@ -1,0 +1,54 @@
+package MyApp_pkg;
+
+import com.maxeler.maxcompiler.v1.kernelcompiler.KernelLib;
+import com.maxeler.maxcompiler.v1.statemachine.SMInput;
+import com.maxeler.maxcompiler.v1.statemachine.SMOutput;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateEnum;
+import com.maxeler.maxcompiler.v1.statemachine.SMStateValue;
+import com.maxeler.maxcompiler.v1.statemachine.kernel.KernelStateMachine;
+import com.maxeler.maxcompiler.v1.statemachine.types.SMValueType;
+
+public class SMEn extends KernelStateMachine {
+	public enum Modes {Count}
+
+	// I/O
+	private final SMOutput oCount;
+	private final SMInput iInput;
+
+	// State
+	private final SMStateValue sCounter;
+	private final SMStateEnum<Modes> sMode;
+
+	public SMEn(KernelLib owner) {
+		super(owner);
+		
+    // I/O
+		oCount  = io.output("SMoCount", smUInt(8));
+		iInput  = io.input( "SMInput" , smUInt(32));
+		
+    // State
+		sMode = state.enumerated(Modes.class, Modes.Count);
+		sCounter = state.value(smUInt(8), 0);
+	}
+	@Override
+	protected void nextState() {
+    IF(io.isInputValid()){
+		SWITCH(sMode) {
+			CASE(Modes.Count) {
+				IF(sCounter.eq(11)) {
+					sMode.next    <== Modes.Count;
+          sCounter.next <== 0;
+				} ELSE {
+					sMode.next    <== Modes.Count;
+          sCounter.next <== sCounter + 1;
+        }
+			}
+		}
+	}
+  }
+
+	@Override
+	protected void outputFunction() {
+		oCount <== sCounter;
+	}
+}

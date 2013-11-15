@@ -1,0 +1,34 @@
+#This file includes the parameters for the RTM simulation
+#Each parameter should be write in a different line as <Parameter name> <value> 
+#Lines starting with '#' are read as comments;
+#
+#Earth Model File (if the name is not provided the application will use the simple water+salt earth model)
+EMF marmousi.H
+#Output Folder path (if the name is not provided the application will use ./tmp)
+OUT_FOLDER ../tests/marmousi_out
+#Boundaries around the image
+SPONGE_WIDTH 50
+#Sizes of the different dimensions 1->Z 2,3->X,Y
+N1 236
+N2 676
+N3 676
+#Number of iterations
+NF 500
+#Damping parameters
+BC 0.0005
+#Sampling of wavefield (m)
+DX 13.61544
+#Sampling in time (s)
+DT 0.001
+#Propagation steps per frame of output
+JT 6
+#Maximum frequency (Hz)
+FREQ 25.0
+#Source position X,Y (Z is at the top border)
+SX 300
+SY 333
+SZ 51
+#Rerun receiver - if a temporary file with the receiver data exists but the user wants to run it again (True/False)
+RR False
+#Number of subsurface offsets
+SUBS 32

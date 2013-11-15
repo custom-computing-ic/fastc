@@ -1,0 +1,2632 @@
+maxjc -cp /vol/cc/opt/maxeler/maxcompiler-2012.2/lib/MaxCompiler.jar -1.6 -d . src/MyApp_pkg/MyApp.java src/MyApp_pkg/MyApp_beg.java src/MyApp_pkg/MyApp_end.java src/MyApp_pkg/Cmdwrite.java src/MyApp_pkg/Cmdread.java src/MyApp_pkg/AppManager.java src/MyApp_pkg/SMMux.maxj src/MyApp_pkg/SimBuilder.java
+Using maxj batch compiler.
+jar: /vol/cc/opt/maxeler/maxcompiler-2012.2/lib/MaxIDE/ecj.jar
+----------
+1. ERROR in src/MyApp_pkg/MyApp.java (at line 3)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.*;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+2. ERROR in src/MyApp_pkg/MyApp.java (at line 4)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+3. ERROR in src/MyApp_pkg/MyApp.java (at line 5)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.*;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+4. ERROR in src/MyApp_pkg/MyApp.java (at line 6)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.*    ;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+5. ERROR in src/MyApp_pkg/MyApp.java (at line 7)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.*;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+6. ERROR in src/MyApp_pkg/MyApp.java (at line 8)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.*;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+7. ERROR in src/MyApp_pkg/MyApp.java (at line 9)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+8. ERROR in src/MyApp_pkg/MyApp.java (at line 10)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+9. ERROR in src/MyApp_pkg/MyApp.java (at line 11)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+10. ERROR in src/MyApp_pkg/MyApp.java (at line 13)
+	public class do_forward extends Kernel {
+	             ^^^^^^^^^^
+The public type do_forward must be defined in its own file
+----------
+11. ERROR in src/MyApp_pkg/MyApp.java (at line 13)
+	public class do_forward extends Kernel {
+	                                ^^^^^^
+Kernel cannot be resolved to a type
+----------
+12. ERROR in src/MyApp_pkg/MyApp.java (at line 16)
+	public do_forward(KernelParameters parameters) {
+	                  ^^^^^^^^^^^^^^^^
+KernelParameters cannot be resolved to a type
+----------
+13. ERROR in src/MyApp_pkg/MyApp.java (at line 18)
+	HWVar dvv =  io.input("dvv", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+14. ERROR in src/MyApp_pkg/MyApp.java (at line 18)
+	HWVar dvv =  io.input("dvv", hwFloat(8, 24));
+	             ^^
+io cannot be resolved
+----------
+15. ERROR in src/MyApp_pkg/MyApp.java (at line 18)
+	HWVar dvv =  io.input("dvv", hwFloat(8, 24));
+	                             ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+16. ERROR in src/MyApp_pkg/MyApp.java (at line 19)
+	HWVar p =  io.input("p", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+17. ERROR in src/MyApp_pkg/MyApp.java (at line 19)
+	HWVar p =  io.input("p", hwFloat(8, 24));
+	           ^^
+io cannot be resolved
+----------
+18. ERROR in src/MyApp_pkg/MyApp.java (at line 19)
+	HWVar p =  io.input("p", hwFloat(8, 24));
+	                         ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+19. ERROR in src/MyApp_pkg/MyApp.java (at line 20)
+	HWVar pp =  io.input("pp", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+20. ERROR in src/MyApp_pkg/MyApp.java (at line 20)
+	HWVar pp =  io.input("pp", hwFloat(8, 24));
+	            ^^
+io cannot be resolved
+----------
+21. ERROR in src/MyApp_pkg/MyApp.java (at line 20)
+	HWVar pp =  io.input("pp", hwFloat(8, 24));
+	                           ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+22. ERROR in src/MyApp_pkg/MyApp.java (at line 21)
+	HWVar source =  io.input("source", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+23. ERROR in src/MyApp_pkg/MyApp.java (at line 21)
+	HWVar source =  io.input("source", hwFloat(8, 24));
+	                ^^
+io cannot be resolved
+----------
+24. ERROR in src/MyApp_pkg/MyApp.java (at line 21)
+	HWVar source =  io.input("source", hwFloat(8, 24));
+	                                   ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+25. ERROR in src/MyApp_pkg/MyApp.java (at line 22)
+	HWVar n1 =  io.scalarInput("n1", hwInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+26. ERROR in src/MyApp_pkg/MyApp.java (at line 22)
+	HWVar n1 =  io.scalarInput("n1", hwInt(32));
+	            ^^
+io cannot be resolved
+----------
+27. ERROR in src/MyApp_pkg/MyApp.java (at line 22)
+	HWVar n1 =  io.scalarInput("n1", hwInt(32));
+	                                 ^^^^^
+The method hwInt(int) is undefined for the type do_forward
+----------
+28. ERROR in src/MyApp_pkg/MyApp.java (at line 23)
+	HWVar n2 =  io.scalarInput("n2", hwInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+29. ERROR in src/MyApp_pkg/MyApp.java (at line 23)
+	HWVar n2 =  io.scalarInput("n2", hwInt(32));
+	            ^^
+io cannot be resolved
+----------
+30. ERROR in src/MyApp_pkg/MyApp.java (at line 23)
+	HWVar n2 =  io.scalarInput("n2", hwInt(32));
+	                                 ^^^^^
+The method hwInt(int) is undefined for the type do_forward
+----------
+31. ERROR in src/MyApp_pkg/MyApp.java (at line 24)
+	HWVar n3 =  io.scalarInput("n3", hwInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+32. ERROR in src/MyApp_pkg/MyApp.java (at line 24)
+	HWVar n3 =  io.scalarInput("n3", hwInt(32));
+	            ^^
+io cannot be resolved
+----------
+33. ERROR in src/MyApp_pkg/MyApp.java (at line 24)
+	HWVar n3 =  io.scalarInput("n3", hwInt(32));
+	                                 ^^^^^
+The method hwInt(int) is undefined for the type do_forward
+----------
+34. ERROR in src/MyApp_pkg/MyApp.java (at line 25)
+	HWVar n12 =  io.scalarInput("n12", hwInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+35. ERROR in src/MyApp_pkg/MyApp.java (at line 25)
+	HWVar n12 =  io.scalarInput("n12", hwInt(32));
+	             ^^
+io cannot be resolved
+----------
+36. ERROR in src/MyApp_pkg/MyApp.java (at line 25)
+	HWVar n12 =  io.scalarInput("n12", hwInt(32));
+	                                   ^^^^^
+The method hwInt(int) is undefined for the type do_forward
+----------
+37. ERROR in src/MyApp_pkg/MyApp.java (at line 26)
+	HWVar ORDER =  io.scalarInput("ORDER", hwInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+38. ERROR in src/MyApp_pkg/MyApp.java (at line 26)
+	HWVar ORDER =  io.scalarInput("ORDER", hwInt(32));
+	               ^^
+io cannot be resolved
+----------
+39. ERROR in src/MyApp_pkg/MyApp.java (at line 26)
+	HWVar ORDER =  io.scalarInput("ORDER", hwInt(32));
+	                                       ^^^^^
+The method hwInt(int) is undefined for the type do_forward
+----------
+40. ERROR in src/MyApp_pkg/MyApp.java (at line 27)
+	HWVar c_0 =  io.scalarInput("c_0", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+41. ERROR in src/MyApp_pkg/MyApp.java (at line 27)
+	HWVar c_0 =  io.scalarInput("c_0", hwFloat(8, 24));
+	             ^^
+io cannot be resolved
+----------
+42. ERROR in src/MyApp_pkg/MyApp.java (at line 27)
+	HWVar c_0 =  io.scalarInput("c_0", hwFloat(8, 24));
+	                                   ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+43. ERROR in src/MyApp_pkg/MyApp.java (at line 28)
+	HWVar c_1_0 =  io.scalarInput("c_1_0", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+44. ERROR in src/MyApp_pkg/MyApp.java (at line 28)
+	HWVar c_1_0 =  io.scalarInput("c_1_0", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+45. ERROR in src/MyApp_pkg/MyApp.java (at line 28)
+	HWVar c_1_0 =  io.scalarInput("c_1_0", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+46. ERROR in src/MyApp_pkg/MyApp.java (at line 29)
+	HWVar c_1_1 =  io.scalarInput("c_1_1", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+47. ERROR in src/MyApp_pkg/MyApp.java (at line 29)
+	HWVar c_1_1 =  io.scalarInput("c_1_1", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+48. ERROR in src/MyApp_pkg/MyApp.java (at line 29)
+	HWVar c_1_1 =  io.scalarInput("c_1_1", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+49. ERROR in src/MyApp_pkg/MyApp.java (at line 30)
+	HWVar c_1_2 =  io.scalarInput("c_1_2", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+50. ERROR in src/MyApp_pkg/MyApp.java (at line 30)
+	HWVar c_1_2 =  io.scalarInput("c_1_2", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+51. ERROR in src/MyApp_pkg/MyApp.java (at line 30)
+	HWVar c_1_2 =  io.scalarInput("c_1_2", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+52. ERROR in src/MyApp_pkg/MyApp.java (at line 31)
+	HWVar c_1_3 =  io.scalarInput("c_1_3", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+53. ERROR in src/MyApp_pkg/MyApp.java (at line 31)
+	HWVar c_1_3 =  io.scalarInput("c_1_3", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+54. ERROR in src/MyApp_pkg/MyApp.java (at line 31)
+	HWVar c_1_3 =  io.scalarInput("c_1_3", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+55. ERROR in src/MyApp_pkg/MyApp.java (at line 32)
+	HWVar c_1_4 =  io.scalarInput("c_1_4", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+56. ERROR in src/MyApp_pkg/MyApp.java (at line 32)
+	HWVar c_1_4 =  io.scalarInput("c_1_4", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+57. ERROR in src/MyApp_pkg/MyApp.java (at line 32)
+	HWVar c_1_4 =  io.scalarInput("c_1_4", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+58. ERROR in src/MyApp_pkg/MyApp.java (at line 33)
+	HWVar c_2_0 =  io.scalarInput("c_2_0", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+59. ERROR in src/MyApp_pkg/MyApp.java (at line 33)
+	HWVar c_2_0 =  io.scalarInput("c_2_0", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+60. ERROR in src/MyApp_pkg/MyApp.java (at line 33)
+	HWVar c_2_0 =  io.scalarInput("c_2_0", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+61. ERROR in src/MyApp_pkg/MyApp.java (at line 34)
+	HWVar c_2_1 =  io.scalarInput("c_2_1", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+62. ERROR in src/MyApp_pkg/MyApp.java (at line 34)
+	HWVar c_2_1 =  io.scalarInput("c_2_1", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+63. ERROR in src/MyApp_pkg/MyApp.java (at line 34)
+	HWVar c_2_1 =  io.scalarInput("c_2_1", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+64. ERROR in src/MyApp_pkg/MyApp.java (at line 35)
+	HWVar c_2_2 =  io.scalarInput("c_2_2", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+65. ERROR in src/MyApp_pkg/MyApp.java (at line 35)
+	HWVar c_2_2 =  io.scalarInput("c_2_2", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+66. ERROR in src/MyApp_pkg/MyApp.java (at line 35)
+	HWVar c_2_2 =  io.scalarInput("c_2_2", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+67. ERROR in src/MyApp_pkg/MyApp.java (at line 36)
+	HWVar c_2_3 =  io.scalarInput("c_2_3", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+68. ERROR in src/MyApp_pkg/MyApp.java (at line 36)
+	HWVar c_2_3 =  io.scalarInput("c_2_3", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+69. ERROR in src/MyApp_pkg/MyApp.java (at line 36)
+	HWVar c_2_3 =  io.scalarInput("c_2_3", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+70. ERROR in src/MyApp_pkg/MyApp.java (at line 37)
+	HWVar c_2_4 =  io.scalarInput("c_2_4", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+71. ERROR in src/MyApp_pkg/MyApp.java (at line 37)
+	HWVar c_2_4 =  io.scalarInput("c_2_4", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+72. ERROR in src/MyApp_pkg/MyApp.java (at line 37)
+	HWVar c_2_4 =  io.scalarInput("c_2_4", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+73. ERROR in src/MyApp_pkg/MyApp.java (at line 38)
+	HWVar c_3_0 =  io.scalarInput("c_3_0", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+74. ERROR in src/MyApp_pkg/MyApp.java (at line 38)
+	HWVar c_3_0 =  io.scalarInput("c_3_0", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+75. ERROR in src/MyApp_pkg/MyApp.java (at line 38)
+	HWVar c_3_0 =  io.scalarInput("c_3_0", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+76. ERROR in src/MyApp_pkg/MyApp.java (at line 39)
+	HWVar c_3_1 =  io.scalarInput("c_3_1", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+77. ERROR in src/MyApp_pkg/MyApp.java (at line 39)
+	HWVar c_3_1 =  io.scalarInput("c_3_1", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+78. ERROR in src/MyApp_pkg/MyApp.java (at line 39)
+	HWVar c_3_1 =  io.scalarInput("c_3_1", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+79. ERROR in src/MyApp_pkg/MyApp.java (at line 40)
+	HWVar c_3_2 =  io.scalarInput("c_3_2", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+80. ERROR in src/MyApp_pkg/MyApp.java (at line 40)
+	HWVar c_3_2 =  io.scalarInput("c_3_2", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+81. ERROR in src/MyApp_pkg/MyApp.java (at line 40)
+	HWVar c_3_2 =  io.scalarInput("c_3_2", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+82. ERROR in src/MyApp_pkg/MyApp.java (at line 41)
+	HWVar c_3_3 =  io.scalarInput("c_3_3", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+83. ERROR in src/MyApp_pkg/MyApp.java (at line 41)
+	HWVar c_3_3 =  io.scalarInput("c_3_3", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+84. ERROR in src/MyApp_pkg/MyApp.java (at line 41)
+	HWVar c_3_3 =  io.scalarInput("c_3_3", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+85. ERROR in src/MyApp_pkg/MyApp.java (at line 42)
+	HWVar c_3_4 =  io.scalarInput("c_3_4", hwFloat(8, 24));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+86. ERROR in src/MyApp_pkg/MyApp.java (at line 42)
+	HWVar c_3_4 =  io.scalarInput("c_3_4", hwFloat(8, 24));
+	               ^^
+io cannot be resolved
+----------
+87. ERROR in src/MyApp_pkg/MyApp.java (at line 42)
+	HWVar c_3_4 =  io.scalarInput("c_3_4", hwFloat(8, 24));
+	                                       ^^^^^^^
+The method hwFloat(int, int) is undefined for the type do_forward
+----------
+88. ERROR in src/MyApp_pkg/MyApp.java (at line 47)
+	CounterChain chain = control.count.makeCounterChain();
+	^^^^^^^^^^^^
+CounterChain cannot be resolved to a type
+----------
+89. ERROR in src/MyApp_pkg/MyApp.java (at line 47)
+	CounterChain chain = control.count.makeCounterChain();
+	                     ^^^^^^^
+control cannot be resolved
+----------
+90. ERROR in src/MyApp_pkg/MyApp.java (at line 48)
+	HWVar i3 = chain.addCounter(128, 1).cast(hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+91. ERROR in src/MyApp_pkg/MyApp.java (at line 48)
+	HWVar i3 = chain.addCounter(128, 1).cast(hwUInt(32));
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type do_forward
+----------
+92. ERROR in src/MyApp_pkg/MyApp.java (at line 49)
+	HWVar i2 = chain.addCounter(128, 1).cast(hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+93. ERROR in src/MyApp_pkg/MyApp.java (at line 49)
+	HWVar i2 = chain.addCounter(128, 1).cast(hwUInt(32));
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type do_forward
+----------
+94. ERROR in src/MyApp_pkg/MyApp.java (at line 50)
+	HWVar i1 = chain.addCounter(128, 1).cast(hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+95. ERROR in src/MyApp_pkg/MyApp.java (at line 50)
+	HWVar i1 = chain.addCounter(128, 1).cast(hwUInt(32));
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type do_forward
+----------
+96. ERROR in src/MyApp_pkg/MyApp.java (at line 51)
+	HWVar update = i3 < (n3 - ORDER) & i3 >= ORDER & i2 < (n2 - ORDER) & i2 >= ORDER & i1 < (n1 - ORDER) & i1 >= ORDER;
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+97. ERROR in src/MyApp_pkg/MyApp.java (at line 55)
+	HWVar pp_out = ((((2.0 * p) - pp) + source) + (dvv * ((((((((((((((((p * c_0) + (c_1_0 * (stream.offset(p,1*1+128*0+16384*0) + stream.offset(p,1*-1+128*0+16384*0)))) + (c_1_1 * (stream.offset(p,1*2+128*0+16384*0) + stream.offset(p,1*-2+128*0+16384*0)))) + (c_1_2 * (stream.offset(p,1*3+128*0+16384*0) + stream.offset(p,1*-3+128*0+16384*0)))) + (c_1_3 * (stream.offset(p,1*4+128*0+16384*0) + stream.offset(p,1*-4+128*0+16384*0)))) + (c_1_4 * (stream.offset(p,1*5+128*0+16384*0) + stream.offset(p,1*-5+128*0+16384*0)))) + (c_2_0 * (stream.offset(p,1*0+128*1+16384*0) + stream.offset(p,1*0+128*-1+16384*0)))) + (c_2_1 * (stream.offset(p,1*0+128*2+16384*0) + stream.offset(p,1*0+128*-2+16384*0)))) + (c_2_2 * (stream.offset(p,1*0+128*3+16384*0) + stream.offset(p,1*0+128*-3+16384*0)))) + (c_2_3 * (stream.offset(p,1*0+128*4+16384*0) + stream.offset(p,1*0+128*-4+16384*0)))) + (c_2_4 * (stream.offset(p,1*0+128*5+16384*0) + stream.offset(p,1*0+128*-5+16384*0)))) + (c_3_0 * (stream.offset(p,1*0+128*0+16384*1) + stream.offset(p,1*0+128*0+16384*-1)))) + (c_3_1 * (stream.offset(p,1*0+128*0+16384*2) + stream.offset(p,1*0+128*0+16384*-2)))) + (c_3_2 * (stream.offset(p,1*0+128*0+16384*3) + stream.offset(p,1*0+128*0+16384*-3)))) + (c_3_3 * (stream.offset(p,1*0+128*0+16384*4) + stream.offset(p,1*0+128*0+16384*-4)))) + (c_3_4 * (stream.offset(p,1*0+128*0+16384*5) + stream.offset(p,1*0+128*0+16384*-5))))));
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ^^^^^^
+stream cannot be resolved
+----------
+98. ERROR in src/MyApp_pkg/MyApp.java (at line 55)
+	HWVar pp_out = ((((2.0 * p) - pp) + source) + (dvv * ((((((((((((((((p * c_0) + (c_1_0 * (stream.offset(p,1*1+128*0+16384*0) + stream.offset(p,1*-1+128*0+16384*0)))) + (c_1_1 * (stream.offset(p,1*2+128*0+16384*0) + stream.offset(p,1*-2+128*0+16384*0)))) + (c_1_2 * (stream.offset(p,1*3+128*0+16384*0) + stream.offset(p,1*-3+128*0+16384*0)))) + (c_1_3 * (stream.offset(p,1*4+128*0+16384*0) + stream.offset(p,1*-4+128*0+16384*0)))) + (c_1_4 * (stream.offset(p,1*5+128*0+16384*0) + stream.offset(p,1*-5+128*0+16384*0)))) + (c_2_0 * (stream.offset(p,1*0+128*1+16384*0) + stream.offset(p,1*0+128*-1+16384*0)))) + (c_2_1 * (stream.offset(p,1*0+128*2+16384*0) + stream.offset(p,1*0+128*-2+16384*0)))) + (c_2_2 * (stream.offset(p,1*0+128*3+16384*0) + stream.offset(p,1*0+128*-3+16384*0)))) + (c_2_3 * (stream.offset(p,1*0+128*4+16384*0) + stream.offset(p,1*0+128*-4+16384*0)))) + (c_2_4 * (stream.offset(p,1*0+128*5+16384*0) + stream.offset(p,1*0+128*-5+16384*0)))) + (c_3_0 * (stream.offset(p,1*0+128*0+16384*1) + stream.offset(p,1*0+128*0+16384*-1)))) + (c_3_1 * (stream.offset(p,1*0+128*0+16384*2) + stream.offset(p,1*0+128*0+16384*-2)))) + (c_3_2 * (stream.offset(p,1*0+128*0+16384*3) + stream.offset(p,1*0+128*0+16384*-3)))) + (c_3_3 * (stream.offset(p,1*0+128*0+16384*4) + stream.offset(p,1*0+128*0+16384*-4)))) + (c_3_4 * (stream.offset(p,1*0+128*0+16384*5) + stream.offset(p,1*0+128*0+16384*-5))))));
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ^^^^^^
+stream cannot be resolved
+----------
+99. ERROR in src/MyApp_pkg/MyApp.java (at line 55)
+	HWVar pp_out = ((((2.0 * p) - pp) + source) + (dvv * ((((((((((((((((p * c_0) + (c_1_0 * (stream.offset(p,1*1+128*0+16384*0) + stream.offset(p,1*-1+128*0+16384*0)))) + (c_1_1 * (stream.offset(p,1*2+128*0+16384*0) + stream.offset(p,1*-2+128*0+16384*0)))) + (c_1_2 * (stream.offset(p,1*3+128*0+16384*0) + stream.offset(p,1*-3+128*0+16384*0)))) + (c_1_3 * (stream.offset(p,1*4+128*0+16384*0) + stream.offset(p,1*-4+128*0+16384*0)))) + (c_1_4 * (stream.offset(p,1*5+128*0+16384*0) + stream.offset(p,1*-5+128*0+16384*0)))) + (c_2_0 * (stream.offset(p,1*0+128*1+16384*0) + stream.offset(p,1*0+128*-1+16384*0)))) + (c_2_1 * (stream.offset(p,1*0+128*2+16384*0) + stream.offset(p,1*0+128*-2+16384*0)))) + (c_2_2 * (stream.offset(p,1*0+128*3+16384*0) + stream.offset(p,1*0+128*-3+16384*0)))) + (c_2_3 * (stream.offset(p,1*0+128*4+16384*0) + stream.offset(p,1*0+128*-4+16384*0)))) + (c_2_4 * (stream.offset(p,1*0+128*5+16384*0) + stream.offset(p,1*0+128*-5+16384*0)))) + (c_3_0 * (stream.offset(p,1*0+128*0+16384*1) + stream.offset(p,1*0+128*0+16384*-1)))) + (c_3_1 * (stream.offset(p,1*0+128*0+16384*2) + stream.offset(p,1*0+128*0+16384*-2)))) + (c_3_2 * (stream.offset(p,1*0+128*0+16384*3) + stream.offset(p,1*0+128*0+16384*-3)))) + (c_3_3 * (stream.offset(p,1*0+128*0+16384*4) + stream.offset(p,1*0+128*0+16384*-4)))) + (c_3_4 * (stream.offset(p,1*0+128*0+16384*5) + stream.offset(p,1*0+128*0+16384*-5))))));
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ^^^^^^
+stream cannot be resolved
+----------
+100. ERROR in src/MyApp_pkg/MyApp.java (at line 55)
+	HWVar pp_out = ((((2.0 * p) - pp) + source) + (dvv * ((((((((((((((((p * c_0) + (c_1_0 * (stream.offset(p,1*1+128*0+16384*0) + stream.offset(p,1*-1+128*0+16384*0)))) + (c_1_1 * (stream.offset(p,1*2+128*0+16384*0) + stream.offset(p,1*-2+128*0+16384*0)))) + (c_1_2 * (stream.offset(p,1*3+128*0+16384*0) + stream.offset(p,1*-3+128*0+16384*0)))) + (c_1_3 * (stream.offset(p,1*4+128*0+16384*0) + stream.offset(p,1*-4+128*0+16384*0)))) + (c_1_4 * (stream.offset(p,1*5+128*0+16384*0) + stream.offset(p,1*-5+128*0+16384*0)))) + (c_2_0 * (stream.offset(p,1*0+128*1+16384*0) + stream.offset(p,1*0+128*-1+16384*0)))) + (c_2_1 * (stream.offset(p,1*0+128*2+16384*0) + stream.offset(p,1*0+128*-2+16384*0)))) + (c_2_2 * (stream.offset(p,1*0+128*3+16384*0) + stream.offset(p,1*0+128*-3+16384*0)))) + (c_2_3 * (stream.offset(p,1*0+128*4+16384*0) + stream.offset(p,1*0+128*-4+16384*0)))) + (c_2_4 * (stream.offset(p,1*0+128*5+16384*0) + stream.offset(p,1*0+128*-5+16384*0)))) + (c_3_0 * (stream.offset(p,1*0+128*0+16384*1) + stream.offset(p,1*0+128*0+16384*-1)))) + (c_3_1 * (stream.offset(p,1*0+128*0+16384*2) + stream.offset(p,1*0+128*0+16384*-2)))) + (c_3_2 * (stream.offset(p,1*0+128*0+16384*3) + stream.offset(p,1*0+128*0+16384*-3)))) + (c_3_3 * (stream.offset(p,1*0+128*0+16384*4) + stream.offset(p,1*0+128*0+16384*-4)))) + (c_3_4 * (stream.offset(p,1*0+128*0+16384*5) + stream.offset(p,1*0+128*0+16384*-5))))));
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^^^^^^
+stream cannot be resolved
+----------
+----------
+101. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 4)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.Kernel;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+102. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 5)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.KernelParameters;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+103. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 6)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+104. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 7)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+105. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 8)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.KArray;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+106. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 9)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.KArrayType;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+107. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 10)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+108. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 12)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+109. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 13)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.Range;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+110. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 14)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWFix;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+111. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 15)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.RoundingMode;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+112. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 17)
+	public class MyApp_beg extends Kernel {
+	                               ^^^^^^
+Kernel cannot be resolved to a type
+----------
+113. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 22)
+	public KArrayType<HWVar> burst_in=
+	       ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+114. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 22)
+	public KArrayType<HWVar> burst_in=
+	                  ^^^^^
+HWVar cannot be resolved to a type
+----------
+115. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 23)
+	new KArrayType<HWVar>(hwFloat(8, 24),4*Par);
+	    ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+116. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 23)
+	new KArrayType<HWVar>(hwFloat(8, 24),4*Par);
+	               ^^^^^
+HWVar cannot be resolved to a type
+----------
+117. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 23)
+	new KArrayType<HWVar>(hwFloat(8, 24),4*Par);
+	                      ^^^^^^^
+The method hwFloat(int, int) is undefined for the type MyApp_beg
+----------
+118. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 25)
+	public KArrayType<HWVar> Ring=
+	       ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+119. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 25)
+	public KArrayType<HWVar> Ring=
+	                  ^^^^^
+HWVar cannot be resolved to a type
+----------
+120. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 26)
+	new KArrayType<HWVar>(hwFloat(8, 24),Par);
+	    ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+121. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 26)
+	new KArrayType<HWVar>(hwFloat(8, 24),Par);
+	               ^^^^^
+HWVar cannot be resolved to a type
+----------
+122. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 26)
+	new KArrayType<HWVar>(hwFloat(8, 24),Par);
+	                      ^^^^^^^
+The method hwFloat(int, int) is undefined for the type MyApp_beg
+----------
+123. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 28)
+	public KArrayType<HWVar> image_type=
+	       ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+124. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 28)
+	public KArrayType<HWVar> image_type=
+	                  ^^^^^
+HWVar cannot be resolved to a type
+----------
+125. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 29)
+	new KArrayType<HWVar>(hwFloat(8, 24), 8);
+	    ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+126. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 29)
+	new KArrayType<HWVar>(hwFloat(8, 24), 8);
+	               ^^^^^
+HWVar cannot be resolved to a type
+----------
+127. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 29)
+	new KArrayType<HWVar>(hwFloat(8, 24), 8);
+	                      ^^^^^^^
+The method hwFloat(int, int) is undefined for the type MyApp_beg
+----------
+128. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 31)
+	public MyApp_beg (KernelParameters parameters, int Diff) {
+	                  ^^^^^^^^^^^^^^^^
+KernelParameters cannot be resolved to a type
+----------
+129. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 35)
+	OffsetExpr nx = stream.makeOffsetParam("nx",  24/Par, 24/Par);
+	^^^^^^^^^^
+OffsetExpr cannot be resolved to a type
+----------
+130. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 35)
+	OffsetExpr nx = stream.makeOffsetParam("nx",  24/Par, 24/Par);
+	                ^^^^^^
+stream cannot be resolved
+----------
+131. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 36)
+	OffsetExpr nxy = stream.makeOffsetParam("nxy",32* nx, 32 * nx);
+	^^^^^^^^^^
+OffsetExpr cannot be resolved to a type
+----------
+132. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 36)
+	OffsetExpr nxy = stream.makeOffsetParam("nxy",32* nx, 32 * nx);
+	                 ^^^^^^
+stream cannot be resolved
+----------
+133. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 38)
+	HWVar c_0   = constant.var(-0.000000056202665632554272);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+134. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 38)
+	HWVar c_0   = constant.var(-0.000000056202665632554272);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+135. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 39)
+	HWVar c_1_0 = constant.var( 0.000000010666666661052204);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+136. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 39)
+	HWVar c_1_0 = constant.var( 0.000000010666666661052204);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+137. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 40)
+	HWVar c_1_1 = constant.var(-0.000000001523809300962853);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+138. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 40)
+	HWVar c_1_1 = constant.var(-0.000000001523809300962853);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+139. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 41)
+	HWVar c_1_2 = constant.var( 0.000000000253968179819708);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+140. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 41)
+	HWVar c_1_2 = constant.var( 0.000000000253968179819708);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+141. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 42)
+	HWVar c_1_3 = constant.var(-0.000000000031745984313547);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+142. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 42)
+	HWVar c_1_3 = constant.var(-0.000000000031745984313547);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+143. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 43)
+	HWVar c_1_4 = constant.var( 0.000000000002031744130576);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+144. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 43)
+	HWVar c_1_4 = constant.var( 0.000000000002031744130576);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+145. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 44)
+	HWVar c_2_0 = constant.var( 0.000000010666666661052204);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+146. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 44)
+	HWVar c_2_0 = constant.var( 0.000000010666666661052204);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+147. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 45)
+	HWVar c_2_1 = constant.var(-0.000000001523809300962853);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+148. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 45)
+	HWVar c_2_1 = constant.var(-0.000000001523809300962853);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+149. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 46)
+	HWVar c_2_2 = constant.var( 0.000000000253968179819708);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+150. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 46)
+	HWVar c_2_2 = constant.var( 0.000000000253968179819708);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+151. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 47)
+	HWVar c_2_3 = constant.var(-0.000000000031745984313547);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+152. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 47)
+	HWVar c_2_3 = constant.var(-0.000000000031745984313547);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+153. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 48)
+	HWVar c_2_4 = constant.var( 0.000000000002031744130576);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+154. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 48)
+	HWVar c_2_4 = constant.var( 0.000000000002031744130576);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+155. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 49)
+	HWVar c_3_0 = constant.var( 0.000000010666666661052204);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+156. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 49)
+	HWVar c_3_0 = constant.var( 0.000000010666666661052204);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+157. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 50)
+	HWVar c_3_1 = constant.var(-0.000000001523809300962853);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+158. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 50)
+	HWVar c_3_1 = constant.var(-0.000000001523809300962853);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+159. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 51)
+	HWVar c_3_2 = constant.var( 0.000000000253968179819708);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+160. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 51)
+	HWVar c_3_2 = constant.var( 0.000000000253968179819708);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+161. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 52)
+	HWVar c_3_3 = constant.var(-0.000000000031745984313547);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+162. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 52)
+	HWVar c_3_3 = constant.var(-0.000000000031745984313547);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+163. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 53)
+	HWVar c_3_4 = constant.var( 0.000000000002031744130576);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+164. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 53)
+	HWVar c_3_4 = constant.var( 0.000000000002031744130576);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+165. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 55)
+	HWVar bc    = constant.var(-0.0005);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+166. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 55)
+	HWVar bc    = constant.var(-0.0005);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+167. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 57)
+	HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+168. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 57)
+	HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+169. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 57)
+	HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+170. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 58)
+	HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+171. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 58)
+	HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+172. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 58)
+	HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+173. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 59)
+	HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+174. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 59)
+	HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+175. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 59)
+	HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+176. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 60)
+	HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+177. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 60)
+	HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+178. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 60)
+	HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+179. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 61)
+	HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+180. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 61)
+	HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+181. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 61)
+	HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+182. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 64)
+	CounterChain chain = control.count.makeCounterChain();
+	^^^^^^^^^^^^
+CounterChain cannot be resolved to a type
+----------
+183. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 64)
+	CounterChain chain = control.count.makeCounterChain();
+	                     ^^^^^^^
+control cannot be resolved
+----------
+184. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 65)
+	HWVar i4 = chain.addCounter(1000,1).cast(hwUInt(32));//iteration
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+185. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 65)
+	HWVar i4 = chain.addCounter(1000,1).cast(hwUInt(32));//iteration
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+186. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 66)
+	HWVar i3 = chain.addCounter(n3,  1).cast(hwUInt(32));//outest loop
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+187. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 66)
+	HWVar i3 = chain.addCounter(n3,  1).cast(hwUInt(32));//outest loop
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+188. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 67)
+	HWVar i2 = chain.addCounter(n2,  1).cast(hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+189. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 67)
+	HWVar i2 = chain.addCounter(n2,  1).cast(hwUInt(32));
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+190. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 68)
+	HWVar i1 = chain.addCounter(n1,Par).cast(hwUInt(32));//innest loop
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+191. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 68)
+	HWVar i1 = chain.addCounter(n1,Par).cast(hwUInt(32));//innest loop
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_beg
+----------
+192. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 70)
+	HWVar up[] = new HWVar[Par];
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+193. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 70)
+	HWVar up[] = new HWVar[Par];
+	                 ^^^^^
+HWVar cannot be resolved to a type
+----------
+194. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	        ^^^^^^^^^
+The operator >= is undefined for the argument type(s) HWVar, HWVar
+----------
+195. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                       ^^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, HWVar
+----------
+196. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                   ^^^^^^^^^
+The operator >= is undefined for the argument type(s) HWVar, HWVar
+----------
+197. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                                  ^^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, HWVar
+----------
+198. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                                                  ^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, int
+----------
+199. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                                                                ^^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, HWVar
+----------
+200. ERROR in src/MyApp_pkg/MyApp_beg.java (at line 74)
+	HWVar output_ring;
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+----------
+201. ERROR in src/MyApp_pkg/MyApp_end.java (at line 4)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.Kernel;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+202. ERROR in src/MyApp_pkg/MyApp_end.java (at line 5)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.KernelParameters;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+203. ERROR in src/MyApp_pkg/MyApp_end.java (at line 6)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.CounterChain;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+204. ERROR in src/MyApp_pkg/MyApp_end.java (at line 7)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+205. ERROR in src/MyApp_pkg/MyApp_end.java (at line 8)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.KArray;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+206. ERROR in src/MyApp_pkg/MyApp_end.java (at line 9)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.KArrayType;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+207. ERROR in src/MyApp_pkg/MyApp_end.java (at line 10)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+208. ERROR in src/MyApp_pkg/MyApp_end.java (at line 12)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+209. ERROR in src/MyApp_pkg/MyApp_end.java (at line 13)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.Range;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+210. ERROR in src/MyApp_pkg/MyApp_end.java (at line 14)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWFix;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+211. ERROR in src/MyApp_pkg/MyApp_end.java (at line 15)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.RoundingMode;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+212. ERROR in src/MyApp_pkg/MyApp_end.java (at line 17)
+	public class MyApp_end extends Kernel {
+	                               ^^^^^^
+Kernel cannot be resolved to a type
+----------
+213. ERROR in src/MyApp_pkg/MyApp_end.java (at line 22)
+	public KArrayType<HWVar> burst_in=
+	       ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+214. ERROR in src/MyApp_pkg/MyApp_end.java (at line 22)
+	public KArrayType<HWVar> burst_in=
+	                  ^^^^^
+HWVar cannot be resolved to a type
+----------
+215. ERROR in src/MyApp_pkg/MyApp_end.java (at line 23)
+	new KArrayType<HWVar>(hwFloat(8, 24),4*Par);
+	    ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+216. ERROR in src/MyApp_pkg/MyApp_end.java (at line 23)
+	new KArrayType<HWVar>(hwFloat(8, 24),4*Par);
+	               ^^^^^
+HWVar cannot be resolved to a type
+----------
+217. ERROR in src/MyApp_pkg/MyApp_end.java (at line 23)
+	new KArrayType<HWVar>(hwFloat(8, 24),4*Par);
+	                      ^^^^^^^
+The method hwFloat(int, int) is undefined for the type MyApp_end
+----------
+218. ERROR in src/MyApp_pkg/MyApp_end.java (at line 25)
+	public KArrayType<HWVar> Ring=
+	       ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+219. ERROR in src/MyApp_pkg/MyApp_end.java (at line 25)
+	public KArrayType<HWVar> Ring=
+	                  ^^^^^
+HWVar cannot be resolved to a type
+----------
+220. ERROR in src/MyApp_pkg/MyApp_end.java (at line 26)
+	new KArrayType<HWVar>(hwFloat(8, 24),Par);
+	    ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+221. ERROR in src/MyApp_pkg/MyApp_end.java (at line 26)
+	new KArrayType<HWVar>(hwFloat(8, 24),Par);
+	               ^^^^^
+HWVar cannot be resolved to a type
+----------
+222. ERROR in src/MyApp_pkg/MyApp_end.java (at line 26)
+	new KArrayType<HWVar>(hwFloat(8, 24),Par);
+	                      ^^^^^^^
+The method hwFloat(int, int) is undefined for the type MyApp_end
+----------
+223. ERROR in src/MyApp_pkg/MyApp_end.java (at line 28)
+	public KArrayType<HWVar> image_type=
+	       ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+224. ERROR in src/MyApp_pkg/MyApp_end.java (at line 28)
+	public KArrayType<HWVar> image_type=
+	                  ^^^^^
+HWVar cannot be resolved to a type
+----------
+225. ERROR in src/MyApp_pkg/MyApp_end.java (at line 29)
+	new KArrayType<HWVar>(hwFloat(8, 24), 8);
+	    ^^^^^^^^^^
+KArrayType cannot be resolved to a type
+----------
+226. ERROR in src/MyApp_pkg/MyApp_end.java (at line 29)
+	new KArrayType<HWVar>(hwFloat(8, 24), 8);
+	               ^^^^^
+HWVar cannot be resolved to a type
+----------
+227. ERROR in src/MyApp_pkg/MyApp_end.java (at line 29)
+	new KArrayType<HWVar>(hwFloat(8, 24), 8);
+	                      ^^^^^^^
+The method hwFloat(int, int) is undefined for the type MyApp_end
+----------
+228. ERROR in src/MyApp_pkg/MyApp_end.java (at line 31)
+	public MyApp_end (KernelParameters parameters, int Diff) {
+	                  ^^^^^^^^^^^^^^^^
+KernelParameters cannot be resolved to a type
+----------
+229. ERROR in src/MyApp_pkg/MyApp_end.java (at line 35)
+	OffsetExpr nx = stream.makeOffsetParam("nx",  24/Par, 24/Par);
+	^^^^^^^^^^
+OffsetExpr cannot be resolved to a type
+----------
+230. ERROR in src/MyApp_pkg/MyApp_end.java (at line 35)
+	OffsetExpr nx = stream.makeOffsetParam("nx",  24/Par, 24/Par);
+	                ^^^^^^
+stream cannot be resolved
+----------
+231. ERROR in src/MyApp_pkg/MyApp_end.java (at line 36)
+	OffsetExpr nxy = stream.makeOffsetParam("nxy",32* nx, 32 * nx);
+	^^^^^^^^^^
+OffsetExpr cannot be resolved to a type
+----------
+232. ERROR in src/MyApp_pkg/MyApp_end.java (at line 36)
+	OffsetExpr nxy = stream.makeOffsetParam("nxy",32* nx, 32 * nx);
+	                 ^^^^^^
+stream cannot be resolved
+----------
+233. ERROR in src/MyApp_pkg/MyApp_end.java (at line 38)
+	HWVar c_0   = constant.var(-0.000000056202665632554272);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+234. ERROR in src/MyApp_pkg/MyApp_end.java (at line 38)
+	HWVar c_0   = constant.var(-0.000000056202665632554272);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+235. ERROR in src/MyApp_pkg/MyApp_end.java (at line 39)
+	HWVar c_1_0 = constant.var( 0.000000010666666661052204);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+236. ERROR in src/MyApp_pkg/MyApp_end.java (at line 39)
+	HWVar c_1_0 = constant.var( 0.000000010666666661052204);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+237. ERROR in src/MyApp_pkg/MyApp_end.java (at line 40)
+	HWVar c_1_1 = constant.var(-0.000000001523809300962853);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+238. ERROR in src/MyApp_pkg/MyApp_end.java (at line 40)
+	HWVar c_1_1 = constant.var(-0.000000001523809300962853);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+239. ERROR in src/MyApp_pkg/MyApp_end.java (at line 41)
+	HWVar c_1_2 = constant.var( 0.000000000253968179819708);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+240. ERROR in src/MyApp_pkg/MyApp_end.java (at line 41)
+	HWVar c_1_2 = constant.var( 0.000000000253968179819708);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+241. ERROR in src/MyApp_pkg/MyApp_end.java (at line 42)
+	HWVar c_1_3 = constant.var(-0.000000000031745984313547);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+242. ERROR in src/MyApp_pkg/MyApp_end.java (at line 42)
+	HWVar c_1_3 = constant.var(-0.000000000031745984313547);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+243. ERROR in src/MyApp_pkg/MyApp_end.java (at line 43)
+	HWVar c_1_4 = constant.var( 0.000000000002031744130576);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+244. ERROR in src/MyApp_pkg/MyApp_end.java (at line 43)
+	HWVar c_1_4 = constant.var( 0.000000000002031744130576);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+245. ERROR in src/MyApp_pkg/MyApp_end.java (at line 44)
+	HWVar c_2_0 = constant.var( 0.000000010666666661052204);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+246. ERROR in src/MyApp_pkg/MyApp_end.java (at line 44)
+	HWVar c_2_0 = constant.var( 0.000000010666666661052204);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+247. ERROR in src/MyApp_pkg/MyApp_end.java (at line 45)
+	HWVar c_2_1 = constant.var(-0.000000001523809300962853);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+248. ERROR in src/MyApp_pkg/MyApp_end.java (at line 45)
+	HWVar c_2_1 = constant.var(-0.000000001523809300962853);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+249. ERROR in src/MyApp_pkg/MyApp_end.java (at line 46)
+	HWVar c_2_2 = constant.var( 0.000000000253968179819708);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+250. ERROR in src/MyApp_pkg/MyApp_end.java (at line 46)
+	HWVar c_2_2 = constant.var( 0.000000000253968179819708);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+251. ERROR in src/MyApp_pkg/MyApp_end.java (at line 47)
+	HWVar c_2_3 = constant.var(-0.000000000031745984313547);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+252. ERROR in src/MyApp_pkg/MyApp_end.java (at line 47)
+	HWVar c_2_3 = constant.var(-0.000000000031745984313547);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+253. ERROR in src/MyApp_pkg/MyApp_end.java (at line 48)
+	HWVar c_2_4 = constant.var( 0.000000000002031744130576);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+254. ERROR in src/MyApp_pkg/MyApp_end.java (at line 48)
+	HWVar c_2_4 = constant.var( 0.000000000002031744130576);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+255. ERROR in src/MyApp_pkg/MyApp_end.java (at line 49)
+	HWVar c_3_0 = constant.var( 0.000000010666666661052204);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+256. ERROR in src/MyApp_pkg/MyApp_end.java (at line 49)
+	HWVar c_3_0 = constant.var( 0.000000010666666661052204);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+257. ERROR in src/MyApp_pkg/MyApp_end.java (at line 50)
+	HWVar c_3_1 = constant.var(-0.000000001523809300962853);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+258. ERROR in src/MyApp_pkg/MyApp_end.java (at line 50)
+	HWVar c_3_1 = constant.var(-0.000000001523809300962853);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+259. ERROR in src/MyApp_pkg/MyApp_end.java (at line 51)
+	HWVar c_3_2 = constant.var( 0.000000000253968179819708);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+260. ERROR in src/MyApp_pkg/MyApp_end.java (at line 51)
+	HWVar c_3_2 = constant.var( 0.000000000253968179819708);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+261. ERROR in src/MyApp_pkg/MyApp_end.java (at line 52)
+	HWVar c_3_3 = constant.var(-0.000000000031745984313547);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+262. ERROR in src/MyApp_pkg/MyApp_end.java (at line 52)
+	HWVar c_3_3 = constant.var(-0.000000000031745984313547);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+263. ERROR in src/MyApp_pkg/MyApp_end.java (at line 53)
+	HWVar c_3_4 = constant.var( 0.000000000002031744130576);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+264. ERROR in src/MyApp_pkg/MyApp_end.java (at line 53)
+	HWVar c_3_4 = constant.var( 0.000000000002031744130576);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+265. ERROR in src/MyApp_pkg/MyApp_end.java (at line 55)
+	HWVar bc    = constant.var(-0.0005);
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+266. ERROR in src/MyApp_pkg/MyApp_end.java (at line 55)
+	HWVar bc    = constant.var(-0.0005);
+	              ^^^^^^^^
+constant cannot be resolved
+----------
+267. ERROR in src/MyApp_pkg/MyApp_end.java (at line 57)
+	HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+268. ERROR in src/MyApp_pkg/MyApp_end.java (at line 57)
+	HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+269. ERROR in src/MyApp_pkg/MyApp_end.java (at line 57)
+	HWVar n1    = io.scalarInput("n1",    hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+270. ERROR in src/MyApp_pkg/MyApp_end.java (at line 58)
+	HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+271. ERROR in src/MyApp_pkg/MyApp_end.java (at line 58)
+	HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+272. ERROR in src/MyApp_pkg/MyApp_end.java (at line 58)
+	HWVar n2    = io.scalarInput("n2",    hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+273. ERROR in src/MyApp_pkg/MyApp_end.java (at line 59)
+	HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+274. ERROR in src/MyApp_pkg/MyApp_end.java (at line 59)
+	HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+275. ERROR in src/MyApp_pkg/MyApp_end.java (at line 59)
+	HWVar n3    = io.scalarInput("n3",    hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+276. ERROR in src/MyApp_pkg/MyApp_end.java (at line 60)
+	HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+277. ERROR in src/MyApp_pkg/MyApp_end.java (at line 60)
+	HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+278. ERROR in src/MyApp_pkg/MyApp_end.java (at line 60)
+	HWVar ORDER = io.scalarInput("ORDER", hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+279. ERROR in src/MyApp_pkg/MyApp_end.java (at line 61)
+	HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+280. ERROR in src/MyApp_pkg/MyApp_end.java (at line 61)
+	HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+	              ^^
+io cannot be resolved
+----------
+281. ERROR in src/MyApp_pkg/MyApp_end.java (at line 61)
+	HWVar SPONGE= io.scalarInput("SPONGE",hwUInt(32));
+	                                      ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+282. ERROR in src/MyApp_pkg/MyApp_end.java (at line 64)
+	CounterChain chain = control.count.makeCounterChain();
+	^^^^^^^^^^^^
+CounterChain cannot be resolved to a type
+----------
+283. ERROR in src/MyApp_pkg/MyApp_end.java (at line 64)
+	CounterChain chain = control.count.makeCounterChain();
+	                     ^^^^^^^
+control cannot be resolved
+----------
+284. ERROR in src/MyApp_pkg/MyApp_end.java (at line 65)
+	HWVar i4 = chain.addCounter(1000,1).cast(hwUInt(32));//iteration
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+285. ERROR in src/MyApp_pkg/MyApp_end.java (at line 65)
+	HWVar i4 = chain.addCounter(1000,1).cast(hwUInt(32));//iteration
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+286. ERROR in src/MyApp_pkg/MyApp_end.java (at line 66)
+	HWVar i3 = chain.addCounter(n3,  1).cast(hwUInt(32));//outest loop
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+287. ERROR in src/MyApp_pkg/MyApp_end.java (at line 66)
+	HWVar i3 = chain.addCounter(n3,  1).cast(hwUInt(32));//outest loop
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+288. ERROR in src/MyApp_pkg/MyApp_end.java (at line 67)
+	HWVar i2 = chain.addCounter(n2,  1).cast(hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+289. ERROR in src/MyApp_pkg/MyApp_end.java (at line 67)
+	HWVar i2 = chain.addCounter(n2,  1).cast(hwUInt(32));
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+290. ERROR in src/MyApp_pkg/MyApp_end.java (at line 68)
+	HWVar i1 = chain.addCounter(n1,Par).cast(hwUInt(32));//innest loop
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+291. ERROR in src/MyApp_pkg/MyApp_end.java (at line 68)
+	HWVar i1 = chain.addCounter(n1,Par).cast(hwUInt(32));//innest loop
+	                                         ^^^^^^
+The method hwUInt(int) is undefined for the type MyApp_end
+----------
+292. ERROR in src/MyApp_pkg/MyApp_end.java (at line 70)
+	HWVar up[] = new HWVar[Par];
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+293. ERROR in src/MyApp_pkg/MyApp_end.java (at line 70)
+	HWVar up[] = new HWVar[Par];
+	                 ^^^^^
+HWVar cannot be resolved to a type
+----------
+294. ERROR in src/MyApp_pkg/MyApp_end.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	        ^^^^^^^^^
+The operator >= is undefined for the argument type(s) HWVar, HWVar
+----------
+295. ERROR in src/MyApp_pkg/MyApp_end.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                       ^^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, HWVar
+----------
+296. ERROR in src/MyApp_pkg/MyApp_end.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                   ^^^^^^^^^
+The operator >= is undefined for the argument type(s) HWVar, HWVar
+----------
+297. ERROR in src/MyApp_pkg/MyApp_end.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                                  ^^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, HWVar
+----------
+298. ERROR in src/MyApp_pkg/MyApp_end.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                                                  ^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, int
+----------
+299. ERROR in src/MyApp_pkg/MyApp_end.java (at line 72)
+	up[i] = i3>=ORDER & i3<n3-ORDER  & i2>=ORDER & i2<n2-ORDER  & i1>=ORDER-i  & i1<n1-ORDER-i;
+	                                                                                ^^^^^^^^
+The operator - is undefined for the argument type(s) HWVar, HWVar
+----------
+300. ERROR in src/MyApp_pkg/MyApp_end.java (at line 74)
+	HWVar output_ring;
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+----------
+301. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 3)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.Kernel;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+302. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 4)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.KernelParameters;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+303. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 5)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.DRAMCommandStream;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+304. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 6)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+305. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 7)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Counter;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+306. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 8)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.WrapMode;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+307. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 9)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Params;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+308. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 10)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+309. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 12)
+	public class Cmdwrite extends Kernel {
+	                              ^^^^^^
+Kernel cannot be resolved to a type
+----------
+310. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 13)
+	public Cmdwrite(KernelParameters parameters) {
+	                ^^^^^^^^^^^^^^^^
+KernelParameters cannot be resolved to a type
+----------
+311. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 17)
+	HWVar iniBursts     =io.scalarInput("iniBursts",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+312. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 17)
+	HWVar iniBursts     =io.scalarInput("iniBursts",hwUInt(32));
+	                     ^^
+io cannot be resolved
+----------
+313. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 17)
+	HWVar iniBursts     =io.scalarInput("iniBursts",hwUInt(32));
+	                                                ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+314. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 18)
+	HWVar iterations    =io.scalarInput("iterations",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+315. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 18)
+	HWVar iterations    =io.scalarInput("iterations",hwUInt(32));
+	                     ^^
+io cannot be resolved
+----------
+316. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 18)
+	HWVar iterations    =io.scalarInput("iterations",hwUInt(32));
+	                                                 ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+317. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 19)
+	HWVar totalBursts   =io.scalarInput("totalBursts",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+318. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 19)
+	HWVar totalBursts   =io.scalarInput("totalBursts",hwUInt(32));
+	                     ^^
+io cannot be resolved
+----------
+319. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 19)
+	HWVar totalBursts   =io.scalarInput("totalBursts",hwUInt(32));
+	                                                  ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+320. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 20)
+	HWVar wordsPerBurst =io.scalarInput("wordsPerBurst",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+321. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 20)
+	HWVar wordsPerBurst =io.scalarInput("wordsPerBurst",hwUInt(32));
+	                     ^^
+io cannot be resolved
+----------
+322. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 20)
+	HWVar wordsPerBurst =io.scalarInput("wordsPerBurst",hwUInt(32));
+	                                                    ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+323. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 21)
+	HWVar Enable        =io.scalarInput("Enable",hwUInt(1));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+324. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 21)
+	HWVar Enable        =io.scalarInput("Enable",hwUInt(1));
+	                     ^^
+io cannot be resolved
+----------
+325. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 21)
+	HWVar Enable        =io.scalarInput("Enable",hwUInt(1));
+	                                             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+326. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 24)
+	Count.Params param0 = control.count.makeParams(32)
+	^^^^^
+Count cannot be resolved to a type
+----------
+327. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 24)
+	Count.Params param0 = control.count.makeParams(32)
+	                      ^^^^^^^
+control cannot be resolved
+----------
+328. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 28)
+	Counter counter0    = control.count.makeCounter(param0);
+	^^^^^^^
+Counter cannot be resolved to a type
+----------
+329. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 28)
+	Counter counter0    = control.count.makeCounter(param0);
+	                      ^^^^^^^
+control cannot be resolved
+----------
+330. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 29)
+	HWVar  wordCount    = counter0.getCount();
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+331. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 31)
+	Count.Params param1 = control.count.makeParams(32)
+	^^^^^
+Count cannot be resolved to a type
+----------
+332. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 31)
+	Count.Params param1 = control.count.makeParams(32)
+	                      ^^^^^^^
+control cannot be resolved
+----------
+333. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 35)
+	Counter counter1    = control.count.makeCounter(param1);
+	^^^^^^^
+Counter cannot be resolved to a type
+----------
+334. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 35)
+	Counter counter1    = control.count.makeCounter(param1);
+	                      ^^^^^^^
+control cannot be resolved
+----------
+335. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 36)
+	HWVar burstCount    = counter1.getCount();                         
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+336. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 38)
+	Count.Params param2 = control.count.makeParams(32)
+	^^^^^
+Count cannot be resolved to a type
+----------
+337. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 38)
+	Count.Params param2 = control.count.makeParams(32)
+	                      ^^^^^^^
+control cannot be resolved
+----------
+338. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 42)
+	Counter counter2    = control.count.makeCounter(param2);
+	^^^^^^^
+Counter cannot be resolved to a type
+----------
+339. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 42)
+	Counter counter2    = control.count.makeCounter(param2);
+	                      ^^^^^^^
+control cannot be resolved
+----------
+340. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 43)
+	HWVar iterCount     = counter2.getCount(); 
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+341. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 45)
+	HWVar Control       = wordCount.eq(0) & Enable;
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+342. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 47)
+	DRAMCommandStream.makeKernelOutput("dram_write",
+	^^^^^^^^^^^^^^^^^
+DRAMCommandStream cannot be resolved
+----------
+343. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 50)
+	constant.var(hwUInt(8),Burst_inc),// size
+	^^^^^^^^
+constant cannot be resolved
+----------
+344. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 50)
+	constant.var(hwUInt(8),Burst_inc),// size
+	             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+345. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 51)
+	constant.var(hwUInt(6),  1),      // inc
+	^^^^^^^^
+constant cannot be resolved
+----------
+346. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 51)
+	constant.var(hwUInt(6),  1),      // inc
+	             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+347. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 52)
+	constant.var(hwUInt(4),  0),      // stream
+	^^^^^^^^
+constant cannot be resolved
+----------
+348. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 52)
+	constant.var(hwUInt(4),  0),      // stream
+	             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdwrite
+----------
+349. ERROR in src/MyApp_pkg/Cmdwrite.java (at line 57)
+	debug.printf("Address%ld:%d-%d  %d\n",iniBursts, burstCount, wordCount, totalBursts + iniBursts - Burst_inc);
+	^^^^^
+debug cannot be resolved
+----------
+----------
+350. ERROR in src/MyApp_pkg/Cmdread.java (at line 3)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.Kernel;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+351. ERROR in src/MyApp_pkg/Cmdread.java (at line 4)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.KernelParameters;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+352. ERROR in src/MyApp_pkg/Cmdread.java (at line 5)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.DRAMCommandStream;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+353. ERROR in src/MyApp_pkg/Cmdread.java (at line 6)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+354. ERROR in src/MyApp_pkg/Cmdread.java (at line 7)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+355. ERROR in src/MyApp_pkg/Cmdread.java (at line 8)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.WrapMode;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+356. ERROR in src/MyApp_pkg/Cmdread.java (at line 9)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Counter;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+357. ERROR in src/MyApp_pkg/Cmdread.java (at line 10)
+	import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.Params;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+358. ERROR in src/MyApp_pkg/Cmdread.java (at line 13)
+	public class Cmdread extends Kernel {
+	                             ^^^^^^
+Kernel cannot be resolved to a type
+----------
+359. ERROR in src/MyApp_pkg/Cmdread.java (at line 14)
+	public Cmdread(KernelParameters parameters) {
+	               ^^^^^^^^^^^^^^^^
+KernelParameters cannot be resolved to a type
+----------
+360. ERROR in src/MyApp_pkg/Cmdread.java (at line 18)
+	HWVar iniBursts     =io.scalarInput("iniBursts",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+361. ERROR in src/MyApp_pkg/Cmdread.java (at line 18)
+	HWVar iniBursts     =io.scalarInput("iniBursts",hwUInt(32));
+	                     ^^
+io cannot be resolved
+----------
+362. ERROR in src/MyApp_pkg/Cmdread.java (at line 18)
+	HWVar iniBursts     =io.scalarInput("iniBursts",hwUInt(32));
+	                                                ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdread
+----------
+363. ERROR in src/MyApp_pkg/Cmdread.java (at line 19)
+	HWVar totalBursts   =io.scalarInput("totalBursts",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+364. ERROR in src/MyApp_pkg/Cmdread.java (at line 19)
+	HWVar totalBursts   =io.scalarInput("totalBursts",hwUInt(32));
+	                     ^^
+io cannot be resolved
+----------
+365. ERROR in src/MyApp_pkg/Cmdread.java (at line 19)
+	HWVar totalBursts   =io.scalarInput("totalBursts",hwUInt(32));
+	                                                  ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdread
+----------
+366. ERROR in src/MyApp_pkg/Cmdread.java (at line 20)
+	HWVar wordsPerBurst =io.scalarInput("wordsPerBurst",hwUInt(32));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+367. ERROR in src/MyApp_pkg/Cmdread.java (at line 20)
+	HWVar wordsPerBurst =io.scalarInput("wordsPerBurst",hwUInt(32));
+	                     ^^
+io cannot be resolved
+----------
+368. ERROR in src/MyApp_pkg/Cmdread.java (at line 20)
+	HWVar wordsPerBurst =io.scalarInput("wordsPerBurst",hwUInt(32));
+	                                                    ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdread
+----------
+369. ERROR in src/MyApp_pkg/Cmdread.java (at line 21)
+	HWVar Enable        =io.scalarInput("Enable",hwUInt(1));
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+370. ERROR in src/MyApp_pkg/Cmdread.java (at line 21)
+	HWVar Enable        =io.scalarInput("Enable",hwUInt(1));
+	                     ^^
+io cannot be resolved
+----------
+371. ERROR in src/MyApp_pkg/Cmdread.java (at line 21)
+	HWVar Enable        =io.scalarInput("Enable",hwUInt(1));
+	                                             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdread
+----------
+372. ERROR in src/MyApp_pkg/Cmdread.java (at line 24)
+	Count.Params param0 = control.count.makeParams(32)
+	^^^^^
+Count cannot be resolved to a type
+----------
+373. ERROR in src/MyApp_pkg/Cmdread.java (at line 24)
+	Count.Params param0 = control.count.makeParams(32)
+	                      ^^^^^^^
+control cannot be resolved
+----------
+374. ERROR in src/MyApp_pkg/Cmdread.java (at line 28)
+	Counter counter0    = control.count.makeCounter(param0);
+	^^^^^^^
+Counter cannot be resolved to a type
+----------
+375. ERROR in src/MyApp_pkg/Cmdread.java (at line 28)
+	Counter counter0    = control.count.makeCounter(param0);
+	                      ^^^^^^^
+control cannot be resolved
+----------
+376. ERROR in src/MyApp_pkg/Cmdread.java (at line 29)
+	HWVar  wordCount    = counter0.getCount();
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+377. ERROR in src/MyApp_pkg/Cmdread.java (at line 31)
+	Count.Params param1 = control.count.makeParams(32)
+	^^^^^
+Count cannot be resolved to a type
+----------
+378. ERROR in src/MyApp_pkg/Cmdread.java (at line 31)
+	Count.Params param1 = control.count.makeParams(32)
+	                      ^^^^^^^
+control cannot be resolved
+----------
+379. ERROR in src/MyApp_pkg/Cmdread.java (at line 35)
+	Counter counter1    = control.count.makeCounter(param1);
+	^^^^^^^
+Counter cannot be resolved to a type
+----------
+380. ERROR in src/MyApp_pkg/Cmdread.java (at line 35)
+	Counter counter1    = control.count.makeCounter(param1);
+	                      ^^^^^^^
+control cannot be resolved
+----------
+381. ERROR in src/MyApp_pkg/Cmdread.java (at line 36)
+	HWVar burstCount    = counter1.getCount();   
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+382. ERROR in src/MyApp_pkg/Cmdread.java (at line 38)
+	HWVar Control       = wordCount.eq(0) & Enable;
+	^^^^^
+HWVar cannot be resolved to a type
+----------
+383. ERROR in src/MyApp_pkg/Cmdread.java (at line 40)
+	DRAMCommandStream.makeKernelOutput("dram_read",
+	^^^^^^^^^^^^^^^^^
+DRAMCommandStream cannot be resolved
+----------
+384. ERROR in src/MyApp_pkg/Cmdread.java (at line 43)
+	constant.var(hwUInt(8),Burst_inc),// size
+	^^^^^^^^
+constant cannot be resolved
+----------
+385. ERROR in src/MyApp_pkg/Cmdread.java (at line 43)
+	constant.var(hwUInt(8),Burst_inc),// size
+	             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdread
+----------
+386. ERROR in src/MyApp_pkg/Cmdread.java (at line 44)
+	constant.var(hwUInt(6),  1),      // inc
+	^^^^^^^^
+constant cannot be resolved
+----------
+387. ERROR in src/MyApp_pkg/Cmdread.java (at line 44)
+	constant.var(hwUInt(6),  1),      // inc
+	             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdread
+----------
+388. ERROR in src/MyApp_pkg/Cmdread.java (at line 45)
+	constant.var(hwUInt(4),  0),      // stream
+	^^^^^^^^
+constant cannot be resolved
+----------
+389. ERROR in src/MyApp_pkg/Cmdread.java (at line 45)
+	constant.var(hwUInt(4),  0),      // stream
+	             ^^^^^^
+The method hwUInt(int) is undefined for the type Cmdread
+----------
+390. ERROR in src/MyApp_pkg/Cmdread.java (at line 46)
+	constant.var(false));
+	^^^^^^^^
+constant cannot be resolved
+----------
+----------
+391. ERROR in src/MyApp_pkg/AppManager.java (at line 3)
+	import com.maxeler.maxcompiler.v1.managers.MAXBoardModel;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+392. ERROR in src/MyApp_pkg/AppManager.java (at line 4)
+	import com.maxeler.maxcompiler.v1.managers.custom.CustomManager;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+393. ERROR in src/MyApp_pkg/AppManager.java (at line 5)
+	import com.maxeler.maxcompiler.v1.managers.custom.Stream;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+394. ERROR in src/MyApp_pkg/AppManager.java (at line 6)
+	import com.maxeler.maxcompiler.v1.managers.custom.blocks.KernelBlock;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+395. ERROR in src/MyApp_pkg/AppManager.java (at line 7)
+	import static com.maxeler.maxcompiler.v1.managers.custom.stdlib.MemoryControlGroup.MemoryAccessPattern.LINEAR_1D;
+	              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+396. ERROR in src/MyApp_pkg/AppManager.java (at line 8)
+	import com.maxeler.maxcompiler.v1.managers.custom.blocks.StateMachineBlock;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+397. ERROR in src/MyApp_pkg/AppManager.java (at line 9)
+	import com.maxeler.maxcompiler.v1.statemachine.manager.ManagerStateMachine;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+398. ERROR in src/MyApp_pkg/AppManager.java (at line 12)
+	public class AppManager extends CustomManager {
+	                                ^^^^^^^^^^^^^
+CustomManager cannot be resolved to a type
+----------
+399. ERROR in src/MyApp_pkg/AppManager.java (at line 14)
+	AppManager(MAXBoardModel board_model, String name, Target target) {
+	           ^^^^^^^^^^^^^
+MAXBoardModel cannot be resolved to a type
+----------
+400. ERROR in src/MyApp_pkg/AppManager.java (at line 14)
+	AppManager(MAXBoardModel board_model, String name, Target target) {
+	                                                   ^^^^^^
+Target cannot be resolved to a type
+----------
+401. ERROR in src/MyApp_pkg/AppManager.java (at line 19)
+	Stream host2mgr = addStreamFromHost("host2mgr");
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+402. ERROR in src/MyApp_pkg/AppManager.java (at line 19)
+	Stream host2mgr = addStreamFromHost("host2mgr");
+	                  ^^^^^^^^^^^^^^^^^
+The method addStreamFromHost(String) is undefined for the type AppManager
+----------
+403. ERROR in src/MyApp_pkg/AppManager.java (at line 20)
+	Stream mgr2host = addStreamToHost("mgr2host");
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+404. ERROR in src/MyApp_pkg/AppManager.java (at line 20)
+	Stream mgr2host = addStreamToHost("mgr2host");
+	                  ^^^^^^^^^^^^^^^
+The method addStreamToHost(String) is undefined for the type AppManager
+----------
+405. ERROR in src/MyApp_pkg/AppManager.java (at line 22)
+	KernelBlock hostr   = addKernel(new Cmdread(makeKernelParameters("Cmdhostread")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+406. ERROR in src/MyApp_pkg/AppManager.java (at line 22)
+	KernelBlock hostr   = addKernel(new Cmdread(makeKernelParameters("Cmdhostread")));
+	                      ^^^^^^^^^
+The method addKernel(Cmdread) is undefined for the type AppManager
+----------
+407. ERROR in src/MyApp_pkg/AppManager.java (at line 22)
+	KernelBlock hostr   = addKernel(new Cmdread(makeKernelParameters("Cmdhostread")));
+	                                            ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+408. ERROR in src/MyApp_pkg/AppManager.java (at line 23)
+	KernelBlock hostw   = addKernel(new Cmdwrite(makeKernelParameters("Cmdhostwrite")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+409. ERROR in src/MyApp_pkg/AppManager.java (at line 23)
+	KernelBlock hostw   = addKernel(new Cmdwrite(makeKernelParameters("Cmdhostwrite")));
+	                      ^^^^^^^^^
+The method addKernel(Cmdwrite) is undefined for the type AppManager
+----------
+410. ERROR in src/MyApp_pkg/AppManager.java (at line 23)
+	KernelBlock hostw   = addKernel(new Cmdwrite(makeKernelParameters("Cmdhostwrite")));
+	                                             ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+411. ERROR in src/MyApp_pkg/AppManager.java (at line 26)
+	Stream dram2mgr = addStreamFromOnCardMemory("dram2mgr", hostr.getOutput("dram_read"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+412. ERROR in src/MyApp_pkg/AppManager.java (at line 27)
+	Stream mgr2dram = addStreamToOnCardMemory("mgr2dram",   hostw.getOutput("dram_write"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+413. ERROR in src/MyApp_pkg/AppManager.java (at line 35)
+	KernelBlock k0   = addKernel(new MyApp(makeKernelParameters("MyApp0")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+414. ERROR in src/MyApp_pkg/AppManager.java (at line 35)
+	KernelBlock k0   = addKernel(new MyApp(makeKernelParameters("MyApp0")));
+	                   ^^^^^^^^^
+The method addKernel(MyApp) is undefined for the type AppManager
+----------
+415. ERROR in src/MyApp_pkg/AppManager.java (at line 35)
+	KernelBlock k0   = addKernel(new MyApp(makeKernelParameters("MyApp0")));
+	                                 ^^^^^
+MyApp cannot be resolved to a type
+----------
+416. ERROR in src/MyApp_pkg/AppManager.java (at line 35)
+	KernelBlock k0   = addKernel(new MyApp(makeKernelParameters("MyApp0")));
+	                                       ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+417. ERROR in src/MyApp_pkg/AppManager.java (at line 37)
+	KernelBlock r0   = addKernel(new Cmdread(makeKernelParameters("Cmdread0")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+418. ERROR in src/MyApp_pkg/AppManager.java (at line 37)
+	KernelBlock r0   = addKernel(new Cmdread(makeKernelParameters("Cmdread0")));
+	                   ^^^^^^^^^
+The method addKernel(Cmdread) is undefined for the type AppManager
+----------
+419. ERROR in src/MyApp_pkg/AppManager.java (at line 37)
+	KernelBlock r0   = addKernel(new Cmdread(makeKernelParameters("Cmdread0")));
+	                                         ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+420. ERROR in src/MyApp_pkg/AppManager.java (at line 38)
+	KernelBlock r1   = addKernel(new Cmdread(makeKernelParameters("Cmdread1")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+421. ERROR in src/MyApp_pkg/AppManager.java (at line 38)
+	KernelBlock r1   = addKernel(new Cmdread(makeKernelParameters("Cmdread1")));
+	                   ^^^^^^^^^
+The method addKernel(Cmdread) is undefined for the type AppManager
+----------
+422. ERROR in src/MyApp_pkg/AppManager.java (at line 38)
+	KernelBlock r1   = addKernel(new Cmdread(makeKernelParameters("Cmdread1")));
+	                                         ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+423. ERROR in src/MyApp_pkg/AppManager.java (at line 39)
+	KernelBlock r2   = addKernel(new Cmdread(makeKernelParameters("Cmdread2")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+424. ERROR in src/MyApp_pkg/AppManager.java (at line 39)
+	KernelBlock r2   = addKernel(new Cmdread(makeKernelParameters("Cmdread2")));
+	                   ^^^^^^^^^
+The method addKernel(Cmdread) is undefined for the type AppManager
+----------
+425. ERROR in src/MyApp_pkg/AppManager.java (at line 39)
+	KernelBlock r2   = addKernel(new Cmdread(makeKernelParameters("Cmdread2")));
+	                                         ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+426. ERROR in src/MyApp_pkg/AppManager.java (at line 40)
+	KernelBlock r3   = addKernel(new Cmdread(makeKernelParameters("Cmdread3")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+427. ERROR in src/MyApp_pkg/AppManager.java (at line 40)
+	KernelBlock r3   = addKernel(new Cmdread(makeKernelParameters("Cmdread3")));
+	                   ^^^^^^^^^
+The method addKernel(Cmdread) is undefined for the type AppManager
+----------
+428. ERROR in src/MyApp_pkg/AppManager.java (at line 40)
+	KernelBlock r3   = addKernel(new Cmdread(makeKernelParameters("Cmdread3")));
+	                                         ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+429. ERROR in src/MyApp_pkg/AppManager.java (at line 42)
+	KernelBlock w0   = addKernel(new Cmdwrite(makeKernelParameters("Cmdwrite0")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+430. ERROR in src/MyApp_pkg/AppManager.java (at line 42)
+	KernelBlock w0   = addKernel(new Cmdwrite(makeKernelParameters("Cmdwrite0")));
+	                   ^^^^^^^^^
+The method addKernel(Cmdwrite) is undefined for the type AppManager
+----------
+431. ERROR in src/MyApp_pkg/AppManager.java (at line 42)
+	KernelBlock w0   = addKernel(new Cmdwrite(makeKernelParameters("Cmdwrite0")));
+	                                          ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+432. ERROR in src/MyApp_pkg/AppManager.java (at line 43)
+	KernelBlock w1   = addKernel(new Cmdwrite(makeKernelParameters("Cmdwrite1")));
+	^^^^^^^^^^^
+KernelBlock cannot be resolved to a type
+----------
+433. ERROR in src/MyApp_pkg/AppManager.java (at line 43)
+	KernelBlock w1   = addKernel(new Cmdwrite(makeKernelParameters("Cmdwrite1")));
+	                   ^^^^^^^^^
+The method addKernel(Cmdwrite) is undefined for the type AppManager
+----------
+434. ERROR in src/MyApp_pkg/AppManager.java (at line 43)
+	KernelBlock w1   = addKernel(new Cmdwrite(makeKernelParameters("Cmdwrite1")));
+	                                          ^^^^^^^^^^^^^^^^^^^^
+The method makeKernelParameters(String) is undefined for the type AppManager
+----------
+435. ERROR in src/MyApp_pkg/AppManager.java (at line 45)
+	Stream dram2knl0 = addStreamFromOnCardMemory("dram2knl0",  r0.getOutput("dram_read"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+436. ERROR in src/MyApp_pkg/AppManager.java (at line 46)
+	Stream dram2knl1 = addStreamFromOnCardMemory("dram2knl1",  r1.getOutput("dram_read"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+437. ERROR in src/MyApp_pkg/AppManager.java (at line 47)
+	Stream dram2knl2 = addStreamFromOnCardMemory("dram2knl2",  r2.getOutput("dram_read"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+438. ERROR in src/MyApp_pkg/AppManager.java (at line 48)
+	Stream dram2knl3 = addStreamFromOnCardMemory("dram2knl3",  r3.getOutput("dram_read"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+439. ERROR in src/MyApp_pkg/AppManager.java (at line 50)
+	Stream knl2dram0 = addStreamToOnCardMemory("knl2dram0",    w0.getOutput("dram_write"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+440. ERROR in src/MyApp_pkg/AppManager.java (at line 51)
+	Stream knl2dram1 = addStreamToOnCardMemory("knl2dram1",    w1.getOutput("dram_write"));
+	^^^^^^
+Stream cannot be resolved to a type
+----------
+----------
+441. ERROR in src/MyApp_pkg/SMMux.maxj (at line 3)
+	import com.maxeler.maxcompiler.v1.managers.FPGAManager;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+442. ERROR in src/MyApp_pkg/SMMux.maxj (at line 4)
+	import com.maxeler.maxcompiler.v1.statemachine.SMStateEnum;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+443. ERROR in src/MyApp_pkg/SMMux.maxj (at line 5)
+	import com.maxeler.maxcompiler.v1.statemachine.SMStateValue;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+444. ERROR in src/MyApp_pkg/SMMux.maxj (at line 6)
+	import com.maxeler.maxcompiler.v1.statemachine.manager.ManagerStateMachine;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+445. ERROR in src/MyApp_pkg/SMMux.maxj (at line 7)
+	import com.maxeler.maxcompiler.v1.statemachine.manager.SMPullInput;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+446. ERROR in src/MyApp_pkg/SMMux.maxj (at line 8)
+	import com.maxeler.maxcompiler.v1.statemachine.manager.SMPushOutput;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+447. ERROR in src/MyApp_pkg/SMMux.maxj (at line 11)
+	public class SMMux extends ManagerStateMachine {
+	                           ^^^^^^^^^^^^^^^^^^^
+ManagerStateMachine cannot be resolved to a type
+----------
+448. ERROR in src/MyApp_pkg/SMMux.maxj (at line 16)
+	private final SMPullInput  bInput;
+	              ^^^^^^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+449. ERROR in src/MyApp_pkg/SMMux.maxj (at line 17)
+	private final SMPullInput  kInput;
+	              ^^^^^^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+450. ERROR in src/MyApp_pkg/SMMux.maxj (at line 18)
+	private final SMPullInput  eInput;
+	              ^^^^^^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+451. ERROR in src/MyApp_pkg/SMMux.maxj (at line 19)
+	private final SMPushOutput oOutput;
+	              ^^^^^^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+452. ERROR in src/MyApp_pkg/SMMux.maxj (at line 22)
+	private final SMStateEnum<Modes> m_mode;
+	              ^^^^^^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+453. ERROR in src/MyApp_pkg/SMMux.maxj (at line 23)
+	private final SMStateValue oValid;
+	              ^^^^^^^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+454. ERROR in src/MyApp_pkg/SMMux.maxj (at line 24)
+	private final SMStateValue sCounter;
+	              ^^^^^^^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+455. ERROR in src/MyApp_pkg/SMMux.maxj (at line 29)
+	public SMMux(FPGAManager owner) {
+	             ^^^^^^^^^^^
+FPGAManager cannot be resolved to a type
+----------
+456. ERROR in src/MyApp_pkg/SMMux.maxj (at line 32)
+	bInput  = io.pullInput("bInput",   smUInt(1536));
+	^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+457. ERROR in src/MyApp_pkg/SMMux.maxj (at line 32)
+	bInput  = io.pullInput("bInput",   smUInt(1536));
+	          ^^
+io cannot be resolved
+----------
+458. ERROR in src/MyApp_pkg/SMMux.maxj (at line 32)
+	bInput  = io.pullInput("bInput",   smUInt(1536));
+	                                   ^^^^^^
+The method smUInt(int) is undefined for the type SMMux
+----------
+459. ERROR in src/MyApp_pkg/SMMux.maxj (at line 33)
+	kInput  = io.pullInput("kInput",   smUInt(1536));
+	^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+460. ERROR in src/MyApp_pkg/SMMux.maxj (at line 33)
+	kInput  = io.pullInput("kInput",   smUInt(1536));
+	          ^^
+io cannot be resolved
+----------
+461. ERROR in src/MyApp_pkg/SMMux.maxj (at line 33)
+	kInput  = io.pullInput("kInput",   smUInt(1536));
+	                                   ^^^^^^
+The method smUInt(int) is undefined for the type SMMux
+----------
+462. ERROR in src/MyApp_pkg/SMMux.maxj (at line 34)
+	eInput  = io.pullInput("eInput",   smUInt(1536));
+	^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+463. ERROR in src/MyApp_pkg/SMMux.maxj (at line 34)
+	eInput  = io.pullInput("eInput",   smUInt(1536));
+	          ^^
+io cannot be resolved
+----------
+464. ERROR in src/MyApp_pkg/SMMux.maxj (at line 34)
+	eInput  = io.pullInput("eInput",   smUInt(1536));
+	                                   ^^^^^^
+The method smUInt(int) is undefined for the type SMMux
+----------
+465. ERROR in src/MyApp_pkg/SMMux.maxj (at line 35)
+	oOutput = io.pushOutput("oOutput", smUInt(1536), 1);
+	^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+466. ERROR in src/MyApp_pkg/SMMux.maxj (at line 35)
+	oOutput = io.pushOutput("oOutput", smUInt(1536), 1);
+	          ^^
+io cannot be resolved
+----------
+467. ERROR in src/MyApp_pkg/SMMux.maxj (at line 35)
+	oOutput = io.pushOutput("oOutput", smUInt(1536), 1);
+	                                   ^^^^^^
+The method smUInt(int) is undefined for the type SMMux
+----------
+468. ERROR in src/MyApp_pkg/SMMux.maxj (at line 37)
+	m_mode  = state.enumerated(Modes.class, Modes.idle);
+	^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+469. ERROR in src/MyApp_pkg/SMMux.maxj (at line 37)
+	m_mode  = state.enumerated(Modes.class, Modes.idle);
+	          ^^^^^
+state cannot be resolved
+----------
+470. ERROR in src/MyApp_pkg/SMMux.maxj (at line 38)
+	sCounter= state.value(smUInt(32), 0);
+	^^^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+471. ERROR in src/MyApp_pkg/SMMux.maxj (at line 38)
+	sCounter= state.value(smUInt(32), 0);
+	          ^^^^^
+state cannot be resolved
+----------
+472. ERROR in src/MyApp_pkg/SMMux.maxj (at line 38)
+	sCounter= state.value(smUInt(32), 0);
+	                      ^^^^^^
+The method smUInt(int) is undefined for the type SMMux
+----------
+473. ERROR in src/MyApp_pkg/SMMux.maxj (at line 40)
+	oValid  = state.value(smBool(), false);
+	^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+474. ERROR in src/MyApp_pkg/SMMux.maxj (at line 40)
+	oValid  = state.value(smBool(), false);
+	          ^^^^^
+state cannot be resolved
+----------
+475. ERROR in src/MyApp_pkg/SMMux.maxj (at line 40)
+	oValid  = state.value(smBool(), false);
+	                      ^^^^^^
+The method smBool() is undefined for the type SMMux
+----------
+476. ERROR in src/MyApp_pkg/SMMux.maxj (at line 43)
+	protected void nextState() {
+	               ^^^^^^^^^^^
+The method nextState() of type SMMux must override or implement a supertype method
+----------
+477. ERROR in src/MyApp_pkg/SMMux.maxj (at line 44)
+	SWITCH(m_mode) {
+	       ^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+478. ERROR in src/MyApp_pkg/SMMux.maxj (at line 112)
+	protected void outputFunction() {
+	               ^^^^^^^^^^^^^^^^
+The method outputFunction() of type SMMux must override or implement a supertype method
+----------
+479. ERROR in src/MyApp_pkg/SMMux.maxj (at line 114)
+	bInput.read <== m_mode.eq(Modes.beg) & ~bInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+480. ERROR in src/MyApp_pkg/SMMux.maxj (at line 114)
+	bInput.read <== m_mode.eq(Modes.beg) & ~bInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                ^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+481. ERROR in src/MyApp_pkg/SMMux.maxj (at line 114)
+	bInput.read <== m_mode.eq(Modes.beg) & ~bInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                                        ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+482. ERROR in src/MyApp_pkg/SMMux.maxj (at line 114)
+	bInput.read <== m_mode.eq(Modes.beg) & ~bInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                                                        ^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+483. ERROR in src/MyApp_pkg/SMMux.maxj (at line 114)
+	bInput.read <== m_mode.eq(Modes.beg) & ~bInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                                                                         ^^^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+484. ERROR in src/MyApp_pkg/SMMux.maxj (at line 115)
+	kInput.read <== m_mode.eq(Modes.ker) & ~kInput.empty & ~oOutput.stall & ~sCounter.eq(kernel*2); 
+	^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+485. ERROR in src/MyApp_pkg/SMMux.maxj (at line 115)
+	kInput.read <== m_mode.eq(Modes.ker) & ~kInput.empty & ~oOutput.stall & ~sCounter.eq(kernel*2); 
+	                ^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+486. ERROR in src/MyApp_pkg/SMMux.maxj (at line 115)
+	kInput.read <== m_mode.eq(Modes.ker) & ~kInput.empty & ~oOutput.stall & ~sCounter.eq(kernel*2); 
+	                                        ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+487. ERROR in src/MyApp_pkg/SMMux.maxj (at line 115)
+	kInput.read <== m_mode.eq(Modes.ker) & ~kInput.empty & ~oOutput.stall & ~sCounter.eq(kernel*2); 
+	                                                        ^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+488. ERROR in src/MyApp_pkg/SMMux.maxj (at line 115)
+	kInput.read <== m_mode.eq(Modes.ker) & ~kInput.empty & ~oOutput.stall & ~sCounter.eq(kernel*2); 
+	                                                                         ^^^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+489. ERROR in src/MyApp_pkg/SMMux.maxj (at line 116)
+	eInput.read <== m_mode.eq(Modes.endd)& ~eInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+490. ERROR in src/MyApp_pkg/SMMux.maxj (at line 116)
+	eInput.read <== m_mode.eq(Modes.endd)& ~eInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                ^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+491. ERROR in src/MyApp_pkg/SMMux.maxj (at line 116)
+	eInput.read <== m_mode.eq(Modes.endd)& ~eInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                                        ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+492. ERROR in src/MyApp_pkg/SMMux.maxj (at line 116)
+	eInput.read <== m_mode.eq(Modes.endd)& ~eInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                                                        ^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+493. ERROR in src/MyApp_pkg/SMMux.maxj (at line 116)
+	eInput.read <== m_mode.eq(Modes.endd)& ~eInput.empty & ~oOutput.stall & ~sCounter.eq(halo*2); 
+	                                                                         ^^^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+494. ERROR in src/MyApp_pkg/SMMux.maxj (at line 118)
+	IF (m_mode.eq(Modes.beg)){
+	    ^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+495. ERROR in src/MyApp_pkg/SMMux.maxj (at line 125)
+	oOutput.valid <== oValid;
+	^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+496. ERROR in src/MyApp_pkg/SMMux.maxj (at line 125)
+	oOutput.valid <== oValid;
+	                  ^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+497. ERROR in src/MyApp_pkg/SMMux.maxj (at line 127)
+	debug.printf("Status: %d-%d\n",m_mode, sCounter);  
+	^^^^^
+debug cannot be resolved
+----------
+498. ERROR in src/MyApp_pkg/SMMux.maxj (at line 127)
+	debug.printf("Status: %d-%d\n",m_mode, sCounter);  
+	                               ^^^^^^
+SMStateEnum cannot be resolved to a type
+----------
+499. ERROR in src/MyApp_pkg/SMMux.maxj (at line 127)
+	debug.printf("Status: %d-%d\n",m_mode, sCounter);  
+	                                       ^^^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+500. ERROR in src/MyApp_pkg/SMMux.maxj (at line 128)
+	debug.printf("Request:%d-%d-%d  %d-%d\n",bInput.read, kInput.read, eInput.read, oValid, oOutput.valid);
+	^^^^^
+debug cannot be resolved
+----------
+501. ERROR in src/MyApp_pkg/SMMux.maxj (at line 128)
+	debug.printf("Request:%d-%d-%d  %d-%d\n",bInput.read, kInput.read, eInput.read, oValid, oOutput.valid);
+	                                         ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+502. ERROR in src/MyApp_pkg/SMMux.maxj (at line 128)
+	debug.printf("Request:%d-%d-%d  %d-%d\n",bInput.read, kInput.read, eInput.read, oValid, oOutput.valid);
+	                                                      ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+503. ERROR in src/MyApp_pkg/SMMux.maxj (at line 128)
+	debug.printf("Request:%d-%d-%d  %d-%d\n",bInput.read, kInput.read, eInput.read, oValid, oOutput.valid);
+	                                                                   ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+504. ERROR in src/MyApp_pkg/SMMux.maxj (at line 128)
+	debug.printf("Request:%d-%d-%d  %d-%d\n",bInput.read, kInput.read, eInput.read, oValid, oOutput.valid);
+	                                                                                ^^^^^^
+SMStateValue cannot be resolved to a type
+----------
+505. ERROR in src/MyApp_pkg/SMMux.maxj (at line 128)
+	debug.printf("Request:%d-%d-%d  %d-%d\n",bInput.read, kInput.read, eInput.read, oValid, oOutput.valid);
+	                                                                                        ^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+506. ERROR in src/MyApp_pkg/SMMux.maxj (at line 129)
+	debug.printf("Streams:%d-%d-%d-%d\n",~bInput.empty,~kInput.empty,~eInput.empty, ~oOutput.stall);
+	^^^^^
+debug cannot be resolved
+----------
+507. ERROR in src/MyApp_pkg/SMMux.maxj (at line 129)
+	debug.printf("Streams:%d-%d-%d-%d\n",~bInput.empty,~kInput.empty,~eInput.empty, ~oOutput.stall);
+	                                      ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+508. ERROR in src/MyApp_pkg/SMMux.maxj (at line 129)
+	debug.printf("Streams:%d-%d-%d-%d\n",~bInput.empty,~kInput.empty,~eInput.empty, ~oOutput.stall);
+	                                                    ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+509. ERROR in src/MyApp_pkg/SMMux.maxj (at line 129)
+	debug.printf("Streams:%d-%d-%d-%d\n",~bInput.empty,~kInput.empty,~eInput.empty, ~oOutput.stall);
+	                                                                  ^^^^^^
+SMPullInput cannot be resolved to a type
+----------
+510. ERROR in src/MyApp_pkg/SMMux.maxj (at line 129)
+	debug.printf("Streams:%d-%d-%d-%d\n",~bInput.empty,~kInput.empty,~eInput.empty, ~oOutput.stall);
+	                                                                                 ^^^^^^^
+SMPushOutput cannot be resolved to a type
+----------
+----------
+511. ERROR in src/MyApp_pkg/SimBuilder.java (at line 3)
+	import com.maxeler.maxcompiler.v1.managers.BuildConfig;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+512. ERROR in src/MyApp_pkg/SimBuilder.java (at line 4)
+	import com.maxeler.maxcompiler.v1.managers.BuildConfig.Level;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+513. ERROR in src/MyApp_pkg/SimBuilder.java (at line 5)
+	import com.maxeler.maxcompiler.v1.managers.MAX3BoardModel;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+514. ERROR in src/MyApp_pkg/SimBuilder.java (at line 6)
+	import com.maxeler.maxcompiler.v1.managers.custom.CustomManager.Target;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+515. ERROR in src/MyApp_pkg/SimBuilder.java (at line 7)
+	import com.maxeler.maxcompiler.v1.managers.custom.stdlib.DebugLevel;
+	       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The import com.maxeler.maxcompiler.v1 cannot be resolved
+----------
+516. ERROR in src/MyApp_pkg/SimBuilder.java (at line 13)
+	AppManager m = new AppManager(MAX3BoardModel.MAX3424A, "SimBuilder", Target.MAXFILE_FOR_SIMULATION);
+	                              ^^^^^^^^^^^^^^
+MAX3BoardModel cannot be resolved to a variable
+----------
+517. ERROR in src/MyApp_pkg/SimBuilder.java (at line 13)
+	AppManager m = new AppManager(MAX3BoardModel.MAX3424A, "SimBuilder", Target.MAXFILE_FOR_SIMULATION);
+	                                                                     ^^^^^^
+Target cannot be resolved to a variable
+----------
+518. ERROR in src/MyApp_pkg/SimBuilder.java (at line 14)
+	m.setBuildConfig(new BuildConfig(Level.FULL_BUILD));
+	  ^^^^^^^^^^^^^^
+The method setBuildConfig(BuildConfig) is undefined for the type AppManager
+----------
+519. ERROR in src/MyApp_pkg/SimBuilder.java (at line 14)
+	m.setBuildConfig(new BuildConfig(Level.FULL_BUILD));
+	                     ^^^^^^^^^^^
+BuildConfig cannot be resolved to a type
+----------
+520. ERROR in src/MyApp_pkg/SimBuilder.java (at line 14)
+	m.setBuildConfig(new BuildConfig(Level.FULL_BUILD));
+	                                 ^^^^^
+Level cannot be resolved to a variable
+----------
+521. ERROR in src/MyApp_pkg/SimBuilder.java (at line 17)
+	DebugLevel d = new DebugLevel();
+	^^^^^^^^^^
+DebugLevel cannot be resolved to a type
+----------
+522. ERROR in src/MyApp_pkg/SimBuilder.java (at line 17)
+	DebugLevel d = new DebugLevel();
+	                   ^^^^^^^^^^
+DebugLevel cannot be resolved to a type
+----------
+523. ERROR in src/MyApp_pkg/SimBuilder.java (at line 22)
+	m.debug.setDebugLevel(d);
+	  ^^^^^
+debug cannot be resolved or is not a field
+----------
+524. ERROR in src/MyApp_pkg/SimBuilder.java (at line 24)
+	m.build();
+	  ^^^^^
+The method build() is undefined for the type AppManager
+----------
+524 problems (524 errors)make: *** [SimBuilder/scratch/SimBuilder.max] Error 255
