@@ -78,11 +78,12 @@ void StencilCodeGenerator::generateOutputs() {
     string type = this->kernel->getOutputType(out);
 
     if (out == stencil->getDestination()) {
-      // if this is a stencil output, make it conditional on the control block
+      // if this is a stencil output, make it conditional on the
+      // control block and output the initial value for values outside
+      // of the control block (update)
       string control_var = "update";
       source += "io.output( \"" + out + "\"";
-      //source +=  ", update ? " + out + " : " + stencil->getSource() +  "," + type + ");\n";
-      source +=  ", update ? " + out + " : TODO " +  "," + type + ");\n";
+      source +=  ", update ? " + out + " : " + stencil->getSource() +  " , " + type + ");\n";
     } else {
       source += "io.output( \"" + out + "\"";
       source +=  "," + out +  "," + type + ");\n";

@@ -157,8 +157,10 @@ vector<StencilOffset* > ExtractStencil::getStencilOffsets(SgStatement *st, Stenc
   int max = 0;
   string max_vec;
   for (it = offset_map.begin(); it != offset_map.end(); it++) {
-    if (it->second.size() > max)
+    if (it->second.size() > max) {
       max_vec = it->first;
+      max = it->second.size();
+    }
   }
 
 
