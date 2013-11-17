@@ -16,6 +16,8 @@ class Segment{
   void addTask(DfeTask* task){ segment.push_back(task);}
   std::vector<DfeTask*> getTasks(){ return segment;}
   std::string getName(){return name;}
+  std::vector<DfeTask*> getDfeTasks() { return segment; }
+
 };
 
 #endif

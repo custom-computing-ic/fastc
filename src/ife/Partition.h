@@ -21,6 +21,7 @@ class Partition{
   std::string getName(){return name;}
   void setexecutionTime(double time){this->executionTime = time;}
   double getexecutionTime(){return this->executionTime;}
+  bool isStatic() { return partition.size() == 1; }
 };
 
 #endif // PARTITION_H_

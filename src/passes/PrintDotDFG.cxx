@@ -7,7 +7,9 @@
 void PrintDotDFG::runPass(Design *design) {
   foreach_(Kernel *k, design->getKernels()) {
     string fileName = k->getName() + "_graph.dot";
-    DotPrint::writeDotForDfg(fileName, k->getDataFlowGraph());
+    ofstream f(fileName.c_str());
+    DotPrint::writeDotForDfg(f, k->getDataFlowGraph());
+    f.close();
   }
 }
 

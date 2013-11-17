@@ -50,6 +50,8 @@ class IFEVisitor {
   bool seenConfiguration(Configuration* con);
   bool FindLevel(Segment* level, Configuration* con);
   bool FindOverlappedKernel(DfeTask* task);
+  std::vector<Configuration*> getConfigurations() { return configurations; }
+  std::vector<Partition*> getPartitions() { return partitions; }
 };
 
 

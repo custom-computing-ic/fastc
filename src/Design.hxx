@@ -1,15 +1,17 @@
 #ifndef DESIGN_HXX_
 #define DESIGN_HXX_
 
-#include <list>
-#include <ostream>
+
 #include "Kernel.hxx"
 #include "precompiled.hxx"
 #include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DfeTask.hxx"
 #include "Stencil.h"
 #include "utils.hxx"
+#include "ife/Partition.h"
 
+#include <list>
+#include <ostream>
 #include <map>
 #include <set>
 #include <string>
@@ -23,10 +25,11 @@ using namespace std;
 class Design {
 
   SgProject* project;
-  list<Kernel*> kernels;
+  std::list<Kernel*> kernels;
   DataFlowGraph* dfg;
-  map<string, set<string> > inputs_to_fname, outputs_to_fname;
-  vector<Stencil*> stencils;
+  std::map<std::string, set<std::string> > inputs_to_fname, outputs_to_fname;
+  std::vector<Stencil*> stencils;
+  std::vector<Partition*> partitions;
 
 public:
   Design(SgProject* project) {
@@ -37,7 +40,7 @@ public:
   void generateCode(ostream& out);
   void writeCodeFiles();
   void addKernel(Kernel* k);
-  void writeEngineFiles(string path);
+  void writeEngineFiles(std::string path);
   void writeCPUFiles();
 
   /** Adds a new DFE task to this design and updates the dependecies
@@ -49,13 +52,13 @@ public:
       the if we consider control flow statements etc.*/
   void addDfeTask(DfeTask* task);
 
-  Kernel* getKernel(string functionName);
+  Kernel* getKernel(std::string functionName);
 
   /** Given a function call statement, returns the kernel that is
       invoked by that function call.*/
   Kernel* getKernelMatchingFunctionCall(SgFunctionCallExp *);
 
-  list<Kernel*> getKernels() {
+  std::list<Kernel*> getKernels() {
     return kernels;
   }
 
@@ -65,7 +68,11 @@ public:
 
   DataFlowGraph* getDataFlowGraph() { return dfg; }
   void addStencil(SgFunctionDeclaration* f, Stencil* s);
-  vector<Stencil*> getStencils() { return stencils; }
+  std::vector<Stencil*> getStencils() { return stencils; }
+  void setPartitions(std::vector<Partition*> partitions) {
+    this->partitions = partitions;
+  }
+  std::vector<Partition* > getPartitions() { return partitions; }
 };
 
 #endif /* DESIGN_HXX_ */

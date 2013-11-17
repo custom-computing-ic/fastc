@@ -13,7 +13,7 @@ class DfeTask : public Node {
   static int s_idCount;
   std::vector<std::string> inputs, outputs, call_args;
   Kernel* kernel;
-  
+
 public:
   double BRAMs, LUTs, FFs, DSPs;
   double bandwidth;
@@ -22,7 +22,7 @@ public:
   int inputdelay;//updated in DfeTopSortVisitor
 
   list<Offset*> streams;
-  int idle; 
+  int idle;
 
   std::vector<Offset*> sinks;
   std::vector<Offset*> sources;
@@ -51,11 +51,12 @@ public:
   string getCorrespondingKernelParam(string taskParam);
 
   virtual std::string toDot() {
-    string params = "";
+    /*    string params = "";
     foreach_(string p, call_args) {
       params += p + "_" + getCorrespondingKernelParam(p) + "__";
     }
-    return getName() + "params__" + params;
+    return getName() + "params__" + params; */
+    return getName();
   }
 
 };

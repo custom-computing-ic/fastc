@@ -10,20 +10,20 @@ void DotDFSVisitor::visit(Node *node) {
   }
 }
 
-void DotDFSVisitor::beforeVisit() {
-  dot += "digraph {\n";
-}
+void DotDFSVisitor::beforeVisit() {}
 
 void DotDFSVisitor::afterVisit() {
-  dot += "}";
+
 }
 
 string DotDFSVisitor::getDot() {
   return dot;
 }
 
-void DotDFSVisitor::writeDotToFile(string fname) {
-  ofstream f(fname.c_str());
+void DotDFSVisitor::writeDotToFile(ofstream &f) {
+  f << "digraph { \n " << dot << "}";
+}
+
+void DotDFSVisitor::writeDotEdges(ofstream &f) {
   f << dot;
-  f.close();
 }

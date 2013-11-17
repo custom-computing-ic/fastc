@@ -1,7 +1,13 @@
 #include "DotPrint.hxx"
 
-void DotPrint::writeDotForDfg(string filename, DataFlowGraph *dfg) {
+void DotPrint::writeDotForDfg(ofstream &f, DataFlowGraph *dfg) {
   DotDFSVisitor dfsVisitor(dfg);
   dfsVisitor.traverse();
-  dfsVisitor.writeDotToFile(filename);
+  dfsVisitor.writeDotToFile(f);
+}
+
+void DotPrint::writeDotEdges(std::ofstream &f, DataFlowGraph *dfg) {
+  DotDFSVisitor dfsVisitor(dfg);
+  dfsVisitor.traverse();
+  dfsVisitor.writeDotEdges(f);
 }
