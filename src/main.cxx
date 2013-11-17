@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
   c->addPass(new TaskExtraction());
   c->addPass(new IdlefunctionElimination());
   c->addPass(new CodeGeneration());
+
   c->runPasses();
 
   //To check: somehow the dot file is not written now?
@@ -53,7 +54,8 @@ int main(int argc, char** argv) {
   if (dfg != NULL)
     DotPrint::writeDotForDfg("main_flow.dot", c->getDesign()->getDataFlowGraph());
 
-//cout << "Stencil summary:" << endl;
+
+
 
 #if DEBUG
   int num = 1;
