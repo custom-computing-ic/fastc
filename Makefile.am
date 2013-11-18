@@ -31,6 +31,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/DataFlowGraph/TopSortVisitor.hxx src/DataFlowGraph/TopSortVisitor.cxx \
   src/DataFlowGraph/CounterNode.hxx src/DataFlowGraph/CounterNode.cxx\
   src/passes/ExtractOutputs.hxx \
+  src/passes/GenerateAnalysisOverview.h src/passes/GenerateAnalysisOverview.cc \
   src/passes/ManagerExtraction.hxx \
   src/passes/RemoveFast.hxx src/passes/Pass.hxx \
   src/passes/KernelVisitor.hxx src/passes/KernelVisitor.cxx \

@@ -15,5 +15,6 @@
 #include "PrintDotDFG.hxx"
 #include "ExtractStencil.h"
 #include "MergeKernels.h"
+#include "GenerateAnalysisOverview.h"
 
 #endif
