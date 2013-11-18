@@ -24,6 +24,7 @@ class Configuration{
   
   std::vector<Segment*> configuration;
   string name;
+  double executionTime;
 
   public:
   int level;
@@ -46,6 +47,8 @@ class Configuration{
   string getName(){return name;}
   void setName(string Cname){name = Cname;}
   double getReconfigurationTime(){return 0.8;}
+  void setexecutionTime(double time){this->executionTime = time;}
+  double getexecutionTime(){return this->executionTime;}
 };
 
 class Partition{

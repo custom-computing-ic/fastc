@@ -463,6 +463,8 @@ void IFEVisitor::EvaluateSolutions(){
       }
       if(!FindLevel(seg, *curCon))//cannot find level in this configuration
       {
+       (*curCon)->setexecutionTime(exeTime);
+        cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl; 
         curCon++;
         cout<<"     reconfiguration triggerred, current configuration reconfigured to be configuration ";
         cout<<(*curCon)->getName()<<endl;
@@ -472,6 +474,8 @@ void IFEVisitor::EvaluateSolutions(){
       cout<<"     finish with "<<exeTime<<"s"<<endl; 
     }
     par->setexecutionTime(exeTime);
+    (*curCon)->setexecutionTime(exeTime);
+    cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl; 
     cout<<endl;
   }
 #if DEBUG
