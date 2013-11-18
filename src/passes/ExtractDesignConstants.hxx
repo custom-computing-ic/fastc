@@ -41,7 +41,10 @@ public:
           string value = init->unparseToString();
           kernel->addDesignConstant(name, value);
 
-          cout << "\t\t " << name << " = " << value << endl;
+          /*   SgTypeTable* typeTable = n->get_globalTypeTable();
+               SgType* type = typeTable->lookup_type(sym->get_name()); */
+          //          cout << "\t\t" << type->isFloatType() << endl;
+          cout << "\t\t " << name << " = " << value << ", type: float" << endl;
         }
       }
     }

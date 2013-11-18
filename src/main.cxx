@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
   c->addPass(new PrintDotDFG());
   c->addPass(new TaskExtraction());
   c->addPass(new IdlefunctionElimination());
-  c->addPass(new MergeKernels());
+  //c->addPass(new MergeKernels());
   c->addPass(new CodeGeneration());
   c->addPass(new GenerateAnalysisOverview());
   c->runPasses();
