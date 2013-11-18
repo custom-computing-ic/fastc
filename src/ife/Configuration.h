@@ -25,9 +25,10 @@ class Configuration{
   int P;
 
   Configuration(std::string Cname){
-    BRAMs=0; LUTs=0;   FFs=0;    DSPs=0;  bandwidth=0; name = Cname;
-    Ib=218;  Il=34809; If=55061; Id=0;
-    Ab=1064; Al=297600;Af=595200;Ad=2016; Abw= 28800;
+    BRAMs=0; LUTs=0;   FFs=0;     DSPs=0;  bandwidth=0; name = Cname;
+    Ib=218;  Il=34809; If=55061;  Id=0;
+    Ab=1064; Al=297600;Af=595200; Ad=2016; Abw= 28800;//Virtex-6
+    //Ab=2567; Al=695000;Af=1050000;Ad=1963; Abw= 65000;//Stratix-V
     P =123456;
   };
   void addSegment(Segment* segment){ configuration.push_back(segment);}

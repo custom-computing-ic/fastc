@@ -28,7 +28,6 @@ class Kernel {
   vector<string> originalParams;
   vector<Stencil*> stencils;
 
-  map<string, string> ioTypeMap, computeTypeMap;
 
   // The dataflow graph for this kernel
   DataFlowGraph* dfg;
@@ -54,6 +53,7 @@ class Kernel {
 
 
 public:
+  map<string, string> ioTypeMap, computeTypeMap;
   /** Create a kernel with the given name and the corresponding FAST
       declaration from the ROSE AST. */
   Kernel(string name, SgFunctionDeclaration* decl);

@@ -6,6 +6,7 @@
 #include <algorithm>    // std::sort
 #include "../highlevel/HLAVisitor.hxx"
 #include "../DfeTopSortVisitor.hxx"
+#include "../precompiled.hxx"
 
 
 IFEVisitor::IFEVisitor(DataFlowGraph *dfg){
@@ -24,6 +25,23 @@ void IFEVisitor::ExtractProperties(){
 
     Kernel* k = task->getKernel();
     cout<<"     visiting kernel: "<<k->getName()<<endl;
+
+//  for(std::map<string,string>::iterator it=(k->ioTypeMap).begin(); it!=(k->ioTypeMap).end(); ++it)
+//    std::cout << it->first << " => " << it->second << '\n';
+
+    cout<<(k->ioTypeMap)["p"]<<endl;
+    //std::string xx = "hwFloat8, 24";
+    (k->ioTypeMap)["p"] = "hwFloat(8, 24)";
+    //boost::regex *TYPE = new boost::regex("([a-zA-Z]*)([0-9]*)(,\s*)(([0-9]*))?");
+    boost::regex *TYPE = new boost::regex("([a-zA-Z])\(([0-9])(,(\s)([0-9]*))\)?");
+    boost::cmatch group;
+    if (boost::regex_match((k->ioTypeMap)["p"].c_str(), group, *TYPE)) 
+    //if (boost::regex_match((xx.c_str(), group, *TYPE))) 
+      cout<<group[0]<<" "<<group[1]<<endl;
+
+
+
+
     HLAVisitor hlaVisitor(k);
     hlaVisitor.OnchipMemoryAnalysis();
     hlaVisitor.OffchipCommunicationAnalysis();

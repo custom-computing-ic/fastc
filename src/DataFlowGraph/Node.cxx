@@ -13,13 +13,12 @@ Node::Node(string name) {
   //TODO: support for fixed point
   this->floating = true;
   //TODO: dynamic transformation ratio
-  this->transformation = 0;
+  this->transformation = 1;
 
   //TODO: precision analysis
   //currently the precision is fixed to be 8-10 floating
   this->precision[0] = 8;
   this->precision[1] = 24;
-
 }
 
 ostream& Node::operator<< (ostream &out) {
