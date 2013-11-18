@@ -65,8 +65,8 @@ void HLAVisitor::OnchipMemoryAnalysis(){
         {
           if(dims == pair->dimensions.begin())
             *dims = *(dims+1);
-          else if(dims == (pair->dimensions.begin() + pair->dimensions.size() -1 ))
-            *dims = *(dims-1);
+          else if(dims == (pair->dimensions.begin() + pair->dimensions.size() -1 ))//slowest dimension
+            *dims = 512;//*dims = *(dims-1);
           else
             *dims =(*(dims+1)) / (*dims);
         }
