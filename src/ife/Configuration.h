@@ -10,6 +10,8 @@ class Configuration{
 
   std::vector<Segment*> configuration;
   std::string name;
+  double executionTime;
+
 
  public:
   int level;
@@ -32,6 +34,8 @@ class Configuration{
   std::string getName(){return name;}
   void setName(std::string Cname){name = Cname;}
   double getReconfigurationTime(){return 0.8;}
+  void setexecutionTime(double time){this->executionTime = time;}
+  double getexecutionTime(){return this->executionTime;}
 };
 
 #endif // CONFIGURATION_H_
