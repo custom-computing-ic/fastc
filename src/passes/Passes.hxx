@@ -14,5 +14,6 @@
 #include "BuildDFG.hxx"
 #include "PrintDotDFG.hxx"
 #include "ExtractStencil.h"
+#include "MergeKernels.h"
 
 #endif

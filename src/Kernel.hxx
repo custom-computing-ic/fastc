@@ -59,6 +59,9 @@ public:
       declaration from the ROSE AST. */
   Kernel(string name, SgFunctionDeclaration* decl);
 
+  Kernel() {
+  }
+
 
   /** Generate MaxJ source code for this kernel. */
   string generateSourceCode();
@@ -155,6 +158,21 @@ public:
   void addStencil(Stencil *s) { stencils.push_back(s); }
 
   Stencil* getFirstStencil() { return stencils[0]; }
+
+
+  /** merge the given kernel with this one if possible */
+  void mergeKernel(Kernel* kernel_to_merge) {
+    variableRename();
+    mergeInputs(kernel_to_merge);
+    mergeOutputs(kernel_to_merge);
+    mergeDataPath(kernel_to_merge);
+  }
+
+  void variableRename() {}
+  void mergeInputs(Kernel *k) {}
+  void mergeOutputs(Kernel *k) {}
+  void mergeDataPath(Kernel *k) {}
+  
 };
 
 #endif /* KERNEL_HXX_ */

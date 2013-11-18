@@ -2,6 +2,7 @@
 #define CONFIGURATION_H_
 
 #include "Segment.h"
+#include "../Kernel.hxx"
 
 #include <vector>
 #include <string>
@@ -10,6 +11,7 @@ class Configuration{
 
   std::vector<Segment*> configuration;
   std::string name;
+  Kernel* mergedKernel;
 
  public:
   int level;
@@ -32,6 +34,9 @@ class Configuration{
   std::string getName(){return name;}
   void setName(std::string Cname){name = Cname;}
   double getReconfigurationTime(){return 0.8;}
+  void setMergedKernel(Kernel* mergedKernel) { 
+    this->mergedKernel = mergedKernel; 
+  }
 };
 
 #endif // CONFIGURATION_H_

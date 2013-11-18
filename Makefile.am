@@ -45,6 +45,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/passes/BuildDFG.hxx src/passes/BuildDFG.cxx \
   src/passes/PrintDotDFG.hxx src/passes/PrintDotDFG.cxx \
   src/passes/ExtractStencil.h src/passes/ExtractStencil.cc \
+  src/passes/MergeKernels.h src/passes/MergeKernels.cc \
   src/highlevel/HLAVisitor.hxx src/highlevel/HLAVisitor.cxx \
   src/highlevel/HighlevelAnalysis.hxx src/highlevel/HighlevelAnalysis.cxx \
   src/ife/IFEVisitor.hxx src/ife/IFEVisitor.cxx \
