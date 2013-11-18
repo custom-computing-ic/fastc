@@ -336,10 +336,10 @@ void IFEVisitor::OptimiseConfigurations(){
   cout<<"     optimising each configuration to achieve maximum configuration"<<endl;
   foreach_(Configuration* con, configurations)
   {
-    con->P = con->P < ceil((con->Abw) / (con->bandwidth)) ? con->P : ceil((con->Abw) / (con->bandwidth));
-    con->P = con->P < ceil((con->Al-con->Il)/(con->LUTs)) ? con->P : ceil((con->Al-con->Il)/(con->LUTs));
-    con->P = con->P < ceil((con->Af-con->If)/(con->FFs))  ? con->P : ceil((con->Af-con->If)/(con->FFs));
-    con->P = con->P < ceil((con->Ad-con->Id)/(con->DSPs)) ? con->P : ceil((con->Ad-con->Id)/(con->DSPs));
+    con->P = con->P < floor((con->Abw) / (con->bandwidth)) ? con->P : floor((con->Abw) / (con->bandwidth));
+    con->P = con->P < floor((con->Al-con->Il)/(con->LUTs)) ? con->P : floor((con->Al-con->Il)/(con->LUTs));
+    con->P = con->P < floor((con->Af-con->If)/(con->FFs))  ? con->P : floor((con->Af-con->If)/(con->FFs));
+    con->P = con->P < floor((con->Ad-con->Id)/(con->DSPs)) ? con->P : floor((con->Ad-con->Id)/(con->DSPs));
     //con->P = con->P < ceil((con->Ab-con->Ib)/(con->BRAMs))? con->P : ceil((con->Ab-con->Ib)/(con->BRAMs));
   }
   
@@ -445,9 +445,11 @@ void IFEVisitor::EvaluateSolutions(){
     cout<<"     partition: "<<par->getName()<<endl;
     double exeTime = 0;
     double levTime = 0;
+    double conTime = 0;
 
     std::vector<Configuration*> configurations = par->getPartition();
     std::vector<Configuration*>::iterator curCon = configurations.begin();///iterate
+    exeTime += (*curCon)->getReconfigurationTime();//initial configuration time
     foreach_(Segment* seg,  levels)//evalaute level by level
     {
       levTime = 0;
@@ -458,23 +460,37 @@ void IFEVisitor::EvaluateSolutions(){
       double timebuf; 
       foreach_(DfeTask* task, seg->getTasks())
       {
-        timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
+        //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
+        timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 6); 
         levTime = levTime > timebuf ? levTime : timebuf; 
       }
       if(!FindLevel(seg, *curCon))//cannot find level in this configuration
       {
-       (*curCon)->setexecutionTime(exeTime);
-        D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
-        curCon++;
-        cout<<"     reconfiguration triggerred, current configuration reconfigured to be configuration ";
-        cout<<(*curCon)->getName()<<endl;
-        exeTime += (*curCon)->getReconfigurationTime(); 
+       (*curCon)->setexecutionTime(conTime);
+       cout<<"con time "<<conTime<<endl;
+       D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
+       curCon++;
+       foreach_(DfeTask* task, seg->getTasks())
+       {
+         //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
+         timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 6); 
+         levTime = levTime > timebuf ? levTime : timebuf; 
+       }
+       conTime = levTime;
+       exeTime +=levTime;
+       cout<<"     reconfiguration triggerred, current configuration reconfigured to be configuration ";
+       cout<<(*curCon)->getName()<<endl;
+       exeTime += (*curCon)->getReconfigurationTime(); 
       }
-      exeTime += levTime;//accumulate execution time for each level, as they cannot run in parallel
+      else//this level is executed in this configuration 
+      {
+        conTime += levTime;
+        exeTime += levTime;//accumulate execution time for each level, as they cannot run in parallel
+      }
       cout<<"     finish with "<<exeTime<<"s"<<endl; 
     }
     par->setexecutionTime(exeTime);
-    (*curCon)->setexecutionTime(exeTime);
+    (*curCon)->setexecutionTime(conTime);
     D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
     cout<<endl;
   }
