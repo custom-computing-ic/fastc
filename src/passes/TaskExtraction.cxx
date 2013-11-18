@@ -23,8 +23,8 @@ void TaskExtraction::runPass(Design* design) {
   SgProject* project = design->getProject();
   Rose_STL_Container<SgNode*> dfePragmas;
   dfePragmas = NodeQuery::queryNodeList(
-      NodeQuery::querySubTree(project, V_SgPragmaDeclaration),
-      &findDFETasks);
+                                        NodeQuery::querySubTree(project, V_SgPragmaDeclaration),
+                                        &findDFETasks);
 
   foreach_ (SgNode* node, dfePragmas) {
     SgPragmaDeclaration *pragma = isSgPragmaDeclaration(node);
@@ -41,7 +41,10 @@ void TaskExtraction::runPass(Design* design) {
         vector<string> dfe_args = getFunctionCallArgNames(fcall);
         DfeTask* task = new DfeTask(k->getName(), k, dfe_args);
         design->addDfeTask(task);
+        cout << "\tFound task: \033[1;31m" << task->getName() << "\033[0m\n";
+        cout << "\t\tFunction call: " << fcall->unparseToString() << endl;
       }
+
     }
   }
 }

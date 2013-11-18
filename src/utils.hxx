@@ -41,6 +41,11 @@ template<class T> void printVect(std::vector<T> v) {
   std::copy(v.begin(), v.end(), std::ostream_iterator<T>(std::cout, " "));
 }
 
+template<class T> void printList(std::list<T> l) {
+  std::copy(l.begin(), l.end(), std::ostream_iterator<T>(std::cout, " "));
+}
+
+
 std::vector<std::string> getFunctionDeclArgNames(SgFunctionDeclaration* f);
 std::vector<std::string> getFunctionCallArgNames(SgFunctionCallExp* exp);
 

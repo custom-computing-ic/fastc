@@ -212,6 +212,9 @@ void ExtractStencil::runPass(Design* design) {
 
       SgFunctionDeclaration* f_decl = SageInterface::getEnclosingFunctionDeclaration(node);
       design->addStencil(f_decl, s);
+
+      cout << "\t\033[1;31mFound Stencil \033[0m" << endl;
+      s->print();
     }
   }
 }

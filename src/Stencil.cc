@@ -83,24 +83,24 @@ std::vector<int> Stencil::getArrayDimensions() {
 }
 
 void Stencil::print() {
-  cout << "\tUpdate: " << getDestination() << " <-- " << getSource() << endl;
-  cout << "\tDimension: " << getDimension() << endl;
-  cout << "\tInputs: ";
+  cout << "\t\tUpdate: " << getDestination() << " <-- " << getSource() << endl;
+  cout << "\t\tDimension: " << getDimension() << endl;
+  cout << "\t\tInputs: ";
   printVect(getInputs());
   cout << endl;
 
-  cout << "\tOutputs: ";
+  cout << "\t\tOutputs: ";
   printVect(getOutputs());
   cout << endl;
 
-  cout << "\tLoop variables: ";
+  cout << "\t\tLoop variables: ";
   printVect(getLoopVariables());
   cout << endl;
 
-  cout << "\tOffsets " << endl;
+  /*  cout << "\t\tOffsets " << endl;
   foreach_(StencilOffset* of, getOffsets()) {
     map<string, int>::iterator it;
-    cout << "\t\tvars: ";
+    cout << "\t\t\t\tvars: ";
     for (it = of->var_offset.begin(); it != of->var_offset.end(); it++) {
       cout << it->first << " " << it->second << ",";
     }
@@ -115,22 +115,22 @@ void Stencil::print() {
       cout << itt->first << " " << itt->second << ",";
     }
     cout << endl;
+  } */
 
-  }
-
-  cout << "\tLoop increments: ";
+  cout << "\t\tLoop increments: ";
   printVect(getLoopIncrements());
   cout << endl;
 
-  cout << "\tLower bounds: ";
+  cout << "\t\tLower bounds: ";
   printVect(getLowerBounds());
   cout << endl;
 
-  cout << "\tUpper bounds: ";
+  cout << "\t\tUpper bounds: ";
   printVect(getUpperBounds());
 
   cout << endl;
-  cout << "\tArray Dimensions: ";
+  cout << "\t\tArray Dimensions: ";
   printVect(getArrayDimensions());
   cout << endl;
 }
+

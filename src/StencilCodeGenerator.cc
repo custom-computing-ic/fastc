@@ -66,18 +66,12 @@ void StencilCodeGenerator::generateDataPath() {
   int count = 0;
   // foreach_(Stencil *s, this->kernel->getStencils()) {
   Stencil *s = this->kernel->getFirstStencil();
-  cout << "Generating source for stencil " << count << endl;
   SgStatement* statement = s->getUpdateStatement();
-
-  cout << "Update statement " << s->getUpdateStatement()->unparseToString() << endl;
   StencilAstToMaxJVisitor visitor(this->kernel);
   visitor.traverse(statement);
-
   string new_source = visitor.getSource();
-  cout << "New source " << new_source << endl;
   this->source += new_source + "\n\n\n\n";
   count++;
-  cout << this->source << endl;
   //}
 }
 
