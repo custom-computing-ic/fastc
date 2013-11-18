@@ -350,7 +350,7 @@ void IFEVisitor::OptimiseConfigurations(){
     con->LUTs      = con->Il + con->LUTs *con->P  ;
     con->FFs       = con->If + con->FFs  *con->P ;
     con->DSPs      = con->Id + con->DSPs *con->P ;
-    //con->BRAMs     = con->Ib + con->BRAMs*con->P ;
+    con->BRAMs     = con->Ib + con->BRAMs;
     con->bandwidth = con->bandwidth * con->P ;
   }                                   
 
@@ -463,6 +463,8 @@ void IFEVisitor::EvaluateSolutions(){
       }
       if(!FindLevel(seg, *curCon))//cannot find level in this configuration
       {
+       (*curCon)->setexecutionTime(exeTime);
+        D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
         curCon++;
         cout<<"     reconfiguration triggerred, current configuration reconfigured to be configuration ";
         cout<<(*curCon)->getName()<<endl;
@@ -472,6 +474,8 @@ void IFEVisitor::EvaluateSolutions(){
       cout<<"     finish with "<<exeTime<<"s"<<endl; 
     }
     par->setexecutionTime(exeTime);
+    (*curCon)->setexecutionTime(exeTime);
+    D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
     cout<<endl;
   }
 #if DEBUG

@@ -12,7 +12,6 @@
 #include <vector>
 #include <time.h>
 
-
 class IFEVisitor {
 
   DataFlowGraph *dfg;
