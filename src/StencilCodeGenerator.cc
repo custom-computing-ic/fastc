@@ -113,13 +113,13 @@ void StencilCodeGenerator::generateInputMatching() {
 string StencilCodeGenerator::generateStencilCode() {
   cout << "  (1) Generating code for " << this->kernel->getName() << endl;
   cout << "           Found stencils: " << this->kernel->getStencils().size() << endl;
-  cout << "           Merging stencils: " << endl;
-  cout << "           Found output/input matching: " << endl;
+  //cout << "           Merging stencils: " << endl;
+  //cout << "           Found output/input matching: " << endl;
 
   generateInputMatching();
 
 
-  cout << "           Found shared inputs " << endl;
+  //cout << "           Found shared inputs " << endl;
   findSharedInputs();
 
 
