@@ -31,6 +31,7 @@ public:
                            querySubTree(kernel->getDeclaration()->get_definition(), V_SgVarRefExp),
                            &findConstants);
 
+      cout << "\t Kernel: " << kernel->getName() << endl;
       foreach_(SgNode* n, defs) {
         SgVarRefExp *e = isSgVarRefExp(n);
         if (e != NULL) {
@@ -39,6 +40,8 @@ public:
           SgInitializer *init = sym->get_declaration()->get_initializer();
           string value = init->unparseToString();
           kernel->addDesignConstant(name, value);
+
+          cout << "\t\t " << name << " = " << value << endl;
         }
       }
     }
