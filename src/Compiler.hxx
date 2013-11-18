@@ -43,6 +43,8 @@ public:
 
   Design* getDesign() { return design; }
 
+  Kernel* getKernel(string functionName) { return design->getKernel(functionName); }
+
 };
 
 #endif
