@@ -57,19 +57,30 @@ void StencilCodeGenerator::generateBoundaryCounters() {
 
 }
 
+
 void StencilCodeGenerator::generateCache() {
 }
 
+
 void StencilCodeGenerator::generateDataPath() {
+  int count = 0;
+  // foreach_(Stencil *s, this->kernel->getStencils()) {
+  Stencil *s = this->kernel->getFirstStencil();
+  cout << "Generating source for stencil " << count << endl;
+  SgStatement* statement = s->getUpdateStatement();
 
-  Stencil* stencil = this->kernel->getFirstStencil();
-
-
-  SgStatement* statement = stencil->getUpdateStatement();
+  cout << "Update statement " << s->getUpdateStatement()->unparseToString() << endl;
   StencilAstToMaxJVisitor visitor(this->kernel);
   visitor.traverse(statement);
-  this->source += visitor.getSource();
+
+  string new_source = visitor.getSource();
+  cout << "New source " << new_source << endl;
+  this->source += new_source + "\n\n\n\n";
+  count++;
+  cout << this->source << endl;
+  //}
 }
+
 
 void StencilCodeGenerator::generateOutputs() {
   Stencil* stencil = this->kernel->getFirstStencil();
@@ -97,8 +108,26 @@ void StencilCodeGenerator::addComment(string comment) {
   source += "/*" + comment + "*/\n";
 }
 
+void StencilCodeGenerator::findSharedInputs() {
+}
+
+void StencilCodeGenerator::generateInputMatching() {
+}
+
+
+
 string StencilCodeGenerator::generateStencilCode() {
-  cout << "Generating code for " << this->kernel->getName() << endl;
+  cout << "  (1) Generating code for " << this->kernel->getName() << endl;
+  cout << "           Found stencils: " << this->kernel->getStencils().size() << endl;
+  cout << "           Merging stencils: " << endl;
+  cout << "           Found output/input matching: " << endl;
+
+  generateInputMatching();
+
+
+  cout << "           Found shared inputs " << endl;
+  findSharedInputs();
+
 
   source += "\n\n";
   addComment("-----Output Control------");

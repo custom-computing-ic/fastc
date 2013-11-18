@@ -134,9 +134,9 @@ vector<StencilOffset* > ExtractStencil::getStencilOffsets(SgStatement *st, Stenc
 
 
   D(cout << "Found offset expressions" << endl;)
-  foreach_ (SgNode* node, offset_expressions) {
+    foreach_ (SgNode* node, offset_expressions) {
     D(cout << node->unparseToString() << endl;)
-    SgPntrArrRefExp* pntr_ref = isSgPntrArrRefExp(node);
+      SgPntrArrRefExp* pntr_ref = isSgPntrArrRefExp(node);
     SgExpression* expr = pntr_ref->get_lhs_operand();
     if (expr != NULL && isSgVarRefExp(expr)) {
       string var = isSgVarRefExp(expr)->unparseToString();
@@ -149,9 +149,9 @@ vector<StencilOffset* > ExtractStencil::getStencilOffsets(SgStatement *st, Stenc
   map<string, vector<SgExpression*> >::iterator it;
   for (it = offset_map.begin(); it != offset_map.end(); it++) {
     D(cout << it->first << "\n\t";)
-    foreach_(SgExpression *e, it->second) {
+      foreach_(SgExpression *e, it->second) {
       D(cout << e->unparseToString() << ", ";)
-    }
+        }
     D(cout << endl);
   }
 
@@ -212,7 +212,6 @@ void ExtractStencil::runPass(Design* design) {
 
       SgFunctionDeclaration* f_decl = SageInterface::getEnclosingFunctionDeclaration(node);
       design->addStencil(f_decl, s);
-
     }
   }
 }

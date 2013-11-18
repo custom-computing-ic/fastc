@@ -16,6 +16,8 @@ class StencilCodeGenerator {
   void generateDataPath();
   void generateOutputs();
   void addComment(string);
+  void findSharedInputs();
+  void generateInputMatching();
 
 public:
   StencilCodeGenerator(Kernel* kernel) {

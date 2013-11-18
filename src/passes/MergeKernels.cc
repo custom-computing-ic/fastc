@@ -1,6 +1,8 @@
 #include "../precompiled.hxx"
 #include "MergeKernels.h"
 
+#include <map>
+
 void MergeKernels::runPass(Design *design) {
 
   // TODO which is the optimal partition? Should we generate all?
@@ -30,7 +32,16 @@ void MergeKernels::runPass(Design *design) {
         SgFunctionDeclaration* f_decl_to_merge = kernels[i]->getDeclaration();
         SgBasicBlock* block = f_decl_to_merge->get_definition()->get_body();
         SgStatement* st = block->get_statements()[1];
+
+        // merge statements
         SageInterface::appendStatement(st, original);
+
+        // merge stencil info
+        kernel_to_merge->addStencils(kernels[i]->getStencils());
+
+        // find output -> input matching
+        vector<map<string, string> > output_input_match;
+
       }
 
     }

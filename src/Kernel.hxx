@@ -28,8 +28,7 @@ class Kernel {
   vector<string> originalParams;
   vector<Stencil*> stencils;
 
-  map<string, string> ioTypeMap;
-  map<string, string> computeTypeMap;
+  map<string, string> ioTypeMap, computeTypeMap;
 
   // The dataflow graph for this kernel
   DataFlowGraph* dfg;
@@ -159,6 +158,14 @@ public:
 
   Stencil* getFirstStencil() { return stencils[0]; }
 
+  void addStencils(vector<Stencil* > stencils) {
+    foreach_(Stencil* s, stencils) {
+      this->stencils.push_back(s);
+    }
+  }
+
+  vector<Stencil* > getStencils() { return stencils; }
+
 
   /** merge the given kernel with this one if possible */
   void mergeKernel(Kernel* kernel_to_merge) {
@@ -172,7 +179,8 @@ public:
   void mergeInputs(Kernel *k) {}
   void mergeOutputs(Kernel *k) {}
   void mergeDataPath(Kernel *k) {}
-  
+
+
 };
 
 #endif /* KERNEL_HXX_ */
