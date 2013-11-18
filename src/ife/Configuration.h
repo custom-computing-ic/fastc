@@ -12,6 +12,7 @@ class Configuration{
   std::vector<Segment*> configuration;
   std::string name;
   Kernel* mergedKernel;
+  double executionTime;
 
  public:
   int level;
@@ -37,6 +38,8 @@ class Configuration{
   void setMergedKernel(Kernel* mergedKernel) { 
     this->mergedKernel = mergedKernel; 
   }
+  void setexecutionTime(double time){this->executionTime = time;}
+  double getexecutionTime(){return this->executionTime;}
 };
 
 #endif // CONFIGURATION_H_

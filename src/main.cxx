@@ -66,7 +66,7 @@ void write_dot_analysis(Design *design) {
       f << TD << c->FFs << ETD;
       f << TD << c->DSPs << ETD;
       f << TD << c->P << ETD;
-      f << TD << "TODO" << ETD;
+      f << TD << c->getexecutionTime() << ETD;
       f << "</TR>" << endl;
       foreach_(Segment* s, c->getConfiguration()) {
         foreach_ (DfeTask* d, s->getDfeTasks()) {
