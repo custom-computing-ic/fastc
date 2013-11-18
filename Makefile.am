@@ -48,6 +48,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/highlevel/HLAVisitor.hxx src/highlevel/HLAVisitor.cxx \
   src/highlevel/HighlevelAnalysis.hxx src/highlevel/HighlevelAnalysis.cxx \
   src/ife/IFEVisitor.hxx src/ife/IFEVisitor.cxx \
+  src/ife/Segment.h src/ife/Configuration.h src/ife/Partition.h \
   src/DfeTopSortVisitor.hxx src/DfeTopSortVisitor.cxx \
   src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx
 

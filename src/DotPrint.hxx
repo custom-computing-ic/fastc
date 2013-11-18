@@ -4,10 +4,13 @@
 #include "DataFlowGraph/DataFlowGraph.hxx"
 #include "DotDFSVisitor.hxx"
 
+#include <fstream>
+
 namespace DotPrint {
-  
-  void writeDotForDfg(string filename, DataFlowGraph *dfg); 
-  
+
+  void writeDotForDfg(std::ofstream &f, DataFlowGraph *dfg);
+  void writeDotEdges(std::ofstream &f, DataFlowGraph *dfg);
+
 }
 
 #endif

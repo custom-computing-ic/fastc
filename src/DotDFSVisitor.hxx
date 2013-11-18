@@ -5,6 +5,7 @@
 #include "DataFlowGraph/DFSVisitor.hxx"
 
 #include <string>
+#include <fstream>
 
 class DataFlowGraph;
 
@@ -19,7 +20,8 @@ public:
   void beforeVisit();
   void afterVisit();
   string getDot();
-  void writeDotToFile(string fname);
+  void writeDotToFile(std::ofstream &f);
+  void writeDotEdges(ofstream &f);
 };
 
-#endif 
+#endif
