@@ -255,6 +255,17 @@ void IFEVisitor::CombineSegments(){
   }
 }
 
+bool IFEVisitor::FindOverlappedKernel(DfeTask* task){
+  foreach_(DfeTask* branch, seenTasks)
+    if(branch->getName() != task->getName() && 
+        (branch->getKernel())->getName() == (task->getKernel())->getName())
+    {
+      cout<<"     overlapped task: "<<task->getName()<<endl;
+      return true;
+    }
+  return false;
+}
+
 int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
 {
   int find =0;
@@ -270,18 +281,6 @@ int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
             }
   return find;
 }
-
-bool IFEVisitor::FindOverlappedKernel(DfeTask* task){
-  foreach_(DfeTask* branch, seenTasks)
-    if(branch->getName() != task->getName() && 
-        (branch->getKernel())->getName() == (task->getKernel())->getName())
-    {
-      cout<<"     overlapped task: "<<task->getName()<<endl;
-      return true;
-    }
-  return false;
-}
-
 
 void IFEVisitor::OptimiseConfigurations(){
   
@@ -329,7 +328,12 @@ void IFEVisitor::OptimiseConfigurations(){
           D(cout<<"band: "<<con->bandwidth<<endl;)
         }
       }
-
+  
+  foreach_(Configuration* con, configurations)
+  {
+    cout<<"     configuration "<<con->getName()<<endl;
+    cout<<"     banwidth: "<<con->bandwidth<<endl;
+  }
 
   //calculate the parallelism 
   //TODO: explore DSP factor and precision
