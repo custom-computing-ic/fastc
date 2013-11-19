@@ -219,7 +219,21 @@ void HLAVisitor::OffchipCommunicationAnalysis(){
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
   {
     D(cout<<"stream "<<(*it)->getName()<<endl;)
-    precision = (*it)->precision[0] + (*it)->precision[1];
+    boost::cmatch group;
+    boost::regex* r = new boost::regex("[a-zA-Z]*\\(([0-9]*),\\s*([0-9]*)\\)");
+    if (boost::regex_match((kernel->ioTypeMap)[(*it)->getName()].c_str(), group, *r))
+    {
+      int significant;
+      istringstream(group[1]) >> significant;
+      int mantissa;
+      istringstream(group[2]) >> mantissa;
+      precision = significant + mantissa;
+    }
+    else 
+      precision = (*it)->precision[0] + (*it)->precision[1];//default value
+
+    cout<<(kernel->ioTypeMap)[(*it)->getName()]<<endl;
+    cout<<"precision: "<<precision<<endl;
    
     //bandwidth calculation is now taken care at the configuration level
     //bandwidth for each stream are recorded separately

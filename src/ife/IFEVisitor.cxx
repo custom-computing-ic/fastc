@@ -24,20 +24,20 @@ void IFEVisitor::ExtractProperties(){
       continue;
 
     Kernel* k = task->getKernel();
-    cout<<"     visiting kernel: "<<k->getName()<<endl;
+    cout<<"     visiting kernel: \033[1;31m"<<k->getName()<<"\033[0m"<<endl;
 
 //  for(std::map<string,string>::iterator it=(k->ioTypeMap).begin(); it!=(k->ioTypeMap).end(); ++it)
 //    std::cout << it->first << " => " << it->second << '\n';
 
-    cout<<(k->ioTypeMap)["p"]<<endl;
-    //std::string xx = "hwFloat8, 24";
-    (k->ioTypeMap)["p"] = "hwFloat(8, 24)";
-    //boost::regex *TYPE = new boost::regex("([a-zA-Z]*)([0-9]*)(,\s*)(([0-9]*))?");
-    boost::regex *TYPE = new boost::regex("([a-zA-Z])\(([0-9])(,(\s)([0-9]*))\)?");
-    boost::cmatch group;
-    if (boost::regex_match((k->ioTypeMap)["p"].c_str(), group, *TYPE)) 
-    //if (boost::regex_match((xx.c_str(), group, *TYPE))) 
-      cout<<group[0]<<" "<<group[1]<<endl;
+//  cout<<(k->ioTypeMap)["p"]<<endl;
+//  //std::string xx = "hwFloat8, 24";
+//  (k->ioTypeMap)["p"] = "hwFloat(8, 24)";
+//  //boost::regex *TYPE = new boost::regex("([a-zA-Z]*)([0-9]*)(,\s*)(([0-9]*))?");
+//  boost::regex* r = new boost::regex("[a-zA-Z]*\\(([0-9]*),\\s*([0-9]*)\\)");
+//  boost::cmatch group;
+//  if (boost::regex_match((k->ioTypeMap)["p"].c_str(), group, *r)) 
+//  //if (boost::regex_match((xx.c_str(), group, *TYPE))) 
+//    cout<<group[0]<<" "<<group[1]<<endl;
 
 
 
@@ -214,7 +214,7 @@ void IFEVisitor::CombineTasks(){
   int i=0;
   foreach_(Segment* seg, levels)
   {
-    cout<<"     level "<<seg->getName()<<endl;
+    cout<<"     \033[1;31mlevel "<<seg->getName()<<"\033[0m"<<endl;
     foreach_(DfeTask* task, seg->getTasks())
       cout<<"     "<<task->getName()<<endl;
     cout<<endl;
@@ -263,7 +263,7 @@ void IFEVisitor::CombineSegments(){
 
   foreach_(Configuration* con, configurations)
   {
-    cout<<"     configuration "<<con->getName()<<endl;
+    cout<<"     \033[1;31mconfiguration "<<con->getName()<<"\033[0m"<<endl;
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
       {
@@ -347,12 +347,6 @@ void IFEVisitor::OptimiseConfigurations(){
         }
       }
   
-  foreach_(Configuration* con, configurations)
-  {
-    cout<<"     configuration "<<con->getName()<<endl;
-    cout<<"     banwidth: "<<con->bandwidth<<endl;
-  }
-
   //calculate the parallelism 
   //TODO: explore DSP factor and precision
   cout<<"     optimising each configuration to achieve maximum configuration"<<endl;
@@ -378,7 +372,7 @@ void IFEVisitor::OptimiseConfigurations(){
 
   foreach_(Configuration* con, configurations)
   {
-    cout<<"     configuration "<<con->getName()<<endl;
+    cout<<"     \033[1;31mconfiguration "<<con->getName()<<"\033[0m"<<endl;
     cout<<"     banwidth: "<<con->bandwidth<<endl;
     cout<<"     LUTs  "<<con->LUTs<<endl;
     cout<<"     FFs   "<<con->FFs<<endl;
@@ -443,7 +437,7 @@ void IFEVisitor::GenerateSolutions(){
   
   foreach_(Partition* par, partitions)
   {
-    cout<<"     partition( run-time solution) "<<par->getName()<<": "<<endl;
+    cout<<"     \033[1;31mpartition( run-time solution) "<<par->getName()<<": "<<"\033[0m"<<endl;
     foreach_(Configuration* con, par->getPartition())
       cout<<"     configuration "<<con->getName()<<endl;
     cout<<endl;
@@ -477,7 +471,7 @@ void IFEVisitor::EvaluateSolutions(){
       levTime = 0;
       //within each level, calculate the execution time for each task
       cout<<"     executing level: "<<seg->getName()<<" at "<<exeTime<<"s";
-      cout<<" with configuration"<<(*curCon)->getName()<<endl;
+      cout<<" with \033[1;31mconfiguration"<<(*curCon)->getName()<<"\033[0m"<<endl;
 
       double timebuf; 
       foreach_(DfeTask* task, seg->getTasks())
@@ -489,7 +483,6 @@ void IFEVisitor::EvaluateSolutions(){
       if(!FindLevel(seg, *curCon))//cannot find level in this configuration
       {
        (*curCon)->setexecutionTime(conTime);
-       cout<<"con time "<<conTime<<endl;
        D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
        curCon++;
        foreach_(DfeTask* task, seg->getTasks())
@@ -500,8 +493,8 @@ void IFEVisitor::EvaluateSolutions(){
        }
        conTime = levTime;
        exeTime +=levTime;
-       cout<<"     reconfiguration triggerred, current configuration reconfigured to be configuration ";
-       cout<<(*curCon)->getName()<<endl;
+       cout<<"     \033[1;31mreconfiguration triggerred\033[0m, current configuration reconfigured to be \033[1;31mconfiguration ";
+       cout<<(*curCon)->getName()<<"\033[0m"<<endl;
        exeTime += (*curCon)->getReconfigurationTime(); 
       }
       else//this level is executed in this configuration 

@@ -33,7 +33,7 @@ void DfeTopSortVisitor::visit(Node *n) {
   cout<<setw(15)<<"     source stream: "<<setw(15)<<"internaldelay"<<setw(15)<<"inputdelay"<<endl;
   foreach_(Offset* stream, task->sources)
   {
-    cout<<setw(15)<<stream->getName()<<setw(15)<<stream->internaldelay<<setw(15)<<stream->inputdelay<<endl;
+    cout<<setw(15)<<stream->getName()<<setw(15)<<stream->internaldelay<<setw(15)<<"\033[1;31m"<<stream->inputdelay<<"\033[0m"<<endl;
     sourceD = sourceD > (stream->internaldelay + stream->inputdelay) ? sourceD : 
                                                                        stream->internaldelay + stream->inputdelay;
     idle= idle > stream->inputdelay? idle : stream->inputdelay;
