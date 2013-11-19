@@ -61,6 +61,7 @@ void kernel_do_forward(float* dvv, float * p, float *pp, float *pp_out, float *p
     }
   }
 }
+
 #pragma fast var:dvv ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
 #pragma fast var:p ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
 #pragma fast var:pp ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
