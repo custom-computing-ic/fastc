@@ -232,8 +232,8 @@ void HLAVisitor::OffchipCommunicationAnalysis(){
     else 
       precision = (*it)->precision[0] + (*it)->precision[1];//default value
 
-    cout<<(kernel->ioTypeMap)[(*it)->getName()]<<endl;
-    cout<<"precision: "<<precision<<endl;
+    //cout<<(kernel->ioTypeMap)[(*it)->getName()]<<endl;
+    //cout<<"precision: "<<precision<<endl;
    
     //bandwidth calculation is now taken care at the configuration level
     //bandwidth for each stream are recorded separately
