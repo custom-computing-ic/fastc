@@ -477,7 +477,7 @@ void IFEVisitor::EvaluateSolutions(){
       foreach_(DfeTask* task, seg->getTasks())
       {
         //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
-        timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 6); 
+        timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 8); 
         levTime = levTime > timebuf ? levTime : timebuf; 
       }
       if(!FindLevel(seg, *curCon))//cannot find level in this configuration
@@ -488,7 +488,7 @@ void IFEVisitor::EvaluateSolutions(){
        foreach_(DfeTask* task, seg->getTasks())
        {
          //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
-         timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 6); 
+         timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 8); 
          levTime = levTime > timebuf ? levTime : timebuf; 
        }
        conTime = levTime;

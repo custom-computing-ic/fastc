@@ -30,12 +30,14 @@ class Configuration{
 
     ifstream filenode("./platform.txt");
     string ab, al, af, ad, abw;
+    filenode>>ab>>al>>af>>ad>>abw;
+    //cout<<ab<<al<<af<<ad<<abw<<endl;
     istringstream(ab)>>Ab;
     istringstream(al)>>Al;
     istringstream(af)>>Af;
     istringstream(ad)>>Ad;
     istringstream(abw)>>Abw;
-    D(cout<<Ab<<Al<<Af<<Ad<<Abw<<endl;)
+    //cout<<Ab<<Al<<Af<<Ad<<Abw<<endl;
 
     //Ab=1064; Al=297600;Af=595200; Ad=2016; Abw= 28800;//Virtex-6
     //Ab=2567; Al=695000;Af=1050000;Ad=1963; Abw= 65000;//Stratix-V
