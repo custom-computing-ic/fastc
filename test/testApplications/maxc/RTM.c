@@ -62,13 +62,13 @@ void kernel_do_forward(float* dvv, float * p, float *pp, float *pp_out, float *p
   }
 }
 
-#pragma fast var:dvv ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
-#pragma fast var:p ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
-#pragma fast var:pp ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
-#pragma fast var:pp_out ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
-#pragma fast var:p_out ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
-#pragma fast var:source ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
-#pragma fast var:scale ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_forward
+#pragma fast var:dvv ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_backward
+#pragma fast var:p ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_backward
+#pragma fast var:pp ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_backward
+#pragma fast var:pp_out ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_backward
+#pragma fast var:p_out ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_backward
+#pragma fast var:source ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_backward
+#pragma fast var:scale ioType:float(8, 12) computeType:float(8, 12) func:kernel_do_backward
 void kernel_do_backward(float* dvv, float * p, float *pp, float *pp_out, float *p_out,
                         float *source, float scale,
                         int n1, int n2, int n3, int n12, int ORDER) {
