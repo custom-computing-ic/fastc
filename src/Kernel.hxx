@@ -74,7 +74,7 @@ public:
   void addInput(string varName, string inputName, string ioType, string computeType, string width);
   void addOutput(string varName, string outputName, string ioType, string computeType, string width);
   void addScalarInput(string varName, string inputName, string ioType, string computeType);
-  void addDesignConstant(string name, string value);
+  void addDesignConstant(string name, string value, string type);
 
 
   /** Retrieves and stores IO nodes from the original FAST
