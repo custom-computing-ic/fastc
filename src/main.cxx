@@ -9,7 +9,6 @@
 
 #include "AstToDfgVisitor.hxx"
 #include "AstToMaxJVisitor.hxx"
-#include "PragmaVisitor.hxx"
 #include "Compiler.hxx"
 #include "DotDFSVisitor.hxx"
 #include "DotPrint.hxx"

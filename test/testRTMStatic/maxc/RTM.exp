@@ -17,8 +17,8 @@ final int Par = 1;
 final int Mul = 1;
     public RTM(KernelParameters parameters) {
     super(parameters);
-OffsetExpr nx = stream.makeOffsetParam("nx", min_nx / Par, max_nx / Par);
-OffsetExpr nxy = stream.makeOffsetParam("nxy", dim_y * nx, dim_y * nx);
+    OffsetExpr nxy = stream.makeOffsetParam("nxy", dim_y * nx, dim_y * nx);
+    OffsetExpr nx = stream.makeOffsetParam("nx", min_nx / Par, max_nx / Par);
     HWVar n1    = io.scalarInput("n1",    hwUInt(32));
     HWVar n2    = io.scalarInput("n2",    hwUInt(32));
     HWVar n3    = io.scalarInput("n3",    hwUInt(32));

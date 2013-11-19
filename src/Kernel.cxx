@@ -298,10 +298,10 @@ void Kernel::updateTypeInfo(string identifier, string ioType, string computeType
 }
 
 
-void Kernel::addDesignConstant(string name, string value) {
+void Kernel::addDesignConstant(string name, string value, string type) {
   if ( designConstants.find(name) == designConstants.end()) {
     designConstants.insert(name);
-    constants += "final double " + name + " = " + value + ";\n";
+    constants += "final " + type + " " + name + " = " + value + ";\n";
   }
 }
 

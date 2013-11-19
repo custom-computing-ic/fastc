@@ -12,7 +12,6 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
   src/StencilAstToMaxJVisitor.hxx src/StencilAstToMaxJVisitor.cxx \
   src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
-  src/PragmaVisitor.hxx src/PragmaVisitor.cxx \
   src/DotPrint.hxx src/DotPrint.cxx\
   src/DfeTask.hxx src/DfeTask.cxx \
   src/DfeGraph.hxx src/DfeGraph.cxx \
