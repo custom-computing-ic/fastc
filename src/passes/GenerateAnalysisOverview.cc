@@ -28,6 +28,7 @@ void GenerateAnalysisOverview::runPass(Design* design) {
     f << "resource [shape=plaintext, label = < " << endl;
     f << TABLE << endl;
     f << TR << TD << CTD << "BRAMs" << CTD << "LUTs (k)" << CTD << "FFs (k)" << CTD << "DSPs";
+    f << CTD << "BW";
     f << CTD << "Par" << CTD << "Exec. Time" << ETD << ETR << endl;
     colors_map.clear();
     int i = 0;
@@ -43,6 +44,7 @@ void GenerateAnalysisOverview::runPass(Design* design) {
       f << TD << (int)c->LUTs / 1000 << ETD;
       f << TD << (int)c->FFs / 1000 << ETD;
       f << TD << c->DSPs << ETD;
+      f << TD << c->bandwidth; 
       f << TD << c->P << ETD;
       f << TD << c->getexecutionTime() << ETD;
       f << "</TR>" << endl;
