@@ -71,4 +71,11 @@ test-remote: all
 cscope:
 	cscope -b -s src
 
+run: 
+	./fastc test/testApplications/maxc/RTM.c
+	dot -Tps analysis_overview.dot > 1.ps
+	evince 1.ps 
+dot:
+	dot -Tps do_forward_graph.dot > low_level.ps
+	evince low_level.ps
 .PHONY: test
