@@ -40,7 +40,7 @@ void DfeTopSortVisitor::visit(Node *n) {
   }
 
   //now update the output delay
-  cout<<"     updating delay of streams connected to this kernel:"<<endl;
+  //cout<<"     updating delay of streams connected to this kernel:"<<endl;
   foreach_(Offset* stream, task->sinks)
   {
     int Delay = sourceD;// - stream->internaldelay;
@@ -51,8 +51,8 @@ void DfeTopSortVisitor::visit(Node *n) {
       //get the matched input of the output node, and update delay
       string matchedname = MatchName(task, dfeNode);
       string paramName = dfeNode->getCorrespondingKernelParam(matchedname);
-      cout<<"     seaching kernel "<<dfeNode->getName();
-      cout<<" matched name: "<<matchedname<<" corespond to "<<paramName<<endl;
+      //cout<<"     seaching kernel "<<dfeNode->getName();
+      //cout<<" matched name: "<<matchedname<<" corespond to "<<paramName<<endl;
 
       foreach_(Offset* stream, dfeNode->streams)
         if(stream->getName() == paramName) {
