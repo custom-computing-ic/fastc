@@ -8,11 +8,11 @@
 
 std::string* get_pragma_param(std::string pragma, std::string param) {
   using namespace std;
-  int pos = pragma.find(param);
+  unsigned int pos = pragma.find(param);
   string param_value = "";
   if (pos != string::npos) {
-    int semic1 = pragma.find(":", pos);
-    int semic2 = pragma.find(":", semic1 + 1);
+    unsigned int semic1 = pragma.find(":", pos);
+    unsigned int semic2 = pragma.find(":", semic1 + 1);
     if (semic2 == string::npos) {
       param_value = pragma.substr(semic1 + 1);
     } else {
