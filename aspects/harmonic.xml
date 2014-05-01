@@ -1,15 +1,15 @@
 <aspects main="adpTransforms">
-  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:2:1:16:3" name="adpTransforms">
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:2:1:16:3" name="adpTransforms">
     <parameters>
       <input>
         <parameter name="cparams" type="undefined"/>
-        <parameter name="exp" type="undefined"/>
+        <parameter name="mant" type="undefined"/>
         <parameter name="debug" type="boolean">
           <literal type="boolean" value="true"/>
         </parameter>
       </input>
     </parameters>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:10:9:10:38" name="vardecl">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:10:9:10:38" name="vardecl">
       <expression>
         <literal type="string" value="changeCodeParameters_larac_call_var_0"/>
       </expression>
@@ -23,7 +23,7 @@
         </op>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:10:9:10:38" name="expr">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:10:9:10:38" name="expr">
       <expression>
         <call>
           <method>
@@ -38,7 +38,7 @@
         </call>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:11:9:11:36" name="vardecl">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:11:9:11:37" name="vardecl">
       <expression>
         <literal type="string" value="changeComputePrecision_larac_call_var_0"/>
       </expression>
@@ -52,7 +52,7 @@
         </op>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:11:9:11:36" name="expr">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:11:9:11:37" name="expr">
       <expression>
         <call>
           <method>
@@ -62,17 +62,17 @@
             </property>
           </method>
           <argument>
-            <id name="exp"/>
+            <id name="mant"/>
           </argument>
         </call>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:12:4:12:5" name="if">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:12:4:12:5" name="if">
       <expression desc="condition">
         <id name="debug"/>
       </expression>
       <code desc="then">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:13:13:13:26" name="vardecl">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:13:13:13:26" name="vardecl">
           <expression>
             <literal type="string" value="watchFloats_larac_call_var_0"/>
           </expression>
@@ -86,7 +86,7 @@
             </op>
           </expression>
         </statement>
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:13:13:13:26" name="expr">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:13:13:13:26" name="expr">
           <expression>
             <call>
               <method>
@@ -102,15 +102,15 @@
       <code desc="else"/>
     </statement>
   </aspect>
-  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:19:1:26:3" name="changeCodeParameters">
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:19:1:26:3" name="changeCodeParameters">
     <parameters>
       <input>
         <parameter name="cparams" type="undefined"/>
       </input>
     </parameters>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:23:4:23:6" name="loop">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:23:4:23:6" name="loop">
       <code desc="init">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:23:4:23:6" name="vardecl">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:23:4:23:6" name="vardecl">
           <expression>
             <literal type="string" value="v"/>
           </expression>
@@ -121,7 +121,7 @@
         <id name="cparams"/>
       </expression>
       <code desc="body">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:24:12:24:46" name="vardecl">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:24:12:24:46" name="vardecl">
           <expression>
             <literal type="string" value="changeCodeParameter_larac_call_var_0"/>
           </expression>
@@ -135,7 +135,7 @@
             </op>
           </expression>
         </statement>
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:24:12:24:46" name="expr">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:24:12:24:46" name="expr">
           <expression>
             <call>
               <method>
@@ -159,14 +159,14 @@
       </code>
     </statement>
   </aspect>
-  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:29:1:38:3" name="changeCodeParameter">
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:29:1:38:3" name="changeCodeParameter">
     <parameters>
       <input>
         <parameter name="var_name" type="undefined"/>
         <parameter name="var_val" type="undefined"/>
       </input>
     </parameters>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:33:4:33:22" label="changeCodeParameter_select_0" name="select">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:33:4:33:22" label="changeCodeParameter_select_0" name="select">
       <expression>
         <literal type="string" value="file"/>
       </expression>
@@ -182,7 +182,7 @@
       </expression>
       <expression/>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:34:4:36:6" label="changeCodeParameter_apply_0_0" name="apply">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:34:4:36:6" label="changeCodeParameter_apply_0_0" name="apply">
       <expression>
         <id name="changeCodeParameter_select_0"/>
       </expression>
@@ -206,7 +206,7 @@
       </expression>
       <code desc="before"/>
       <code desc="do">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:35:7:35:10" name="expr">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:35:7:35:10" name="expr">
           <expression>
             <call>
               <method>
@@ -253,13 +253,13 @@
       <code desc="after"/>
     </statement>
   </aspect>
-  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:41:1:81:3" name="changeComputePrecision">
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:41:1:81:3" name="changeComputePrecision">
     <parameters>
       <input>
-        <parameter name="exp" type="undefined"/>
+        <parameter name="mant" type="undefined"/>
       </input>
     </parameters>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:46:4:46:20" name="vardecl">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:46:4:46:20" name="vardecl">
       <expression>
         <literal type="string" value="params"/>
       </expression>
@@ -267,13 +267,13 @@
         <literal type="object"/>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:47:4:47:10" name="vardecl">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:47:4:47:10" name="vardecl">
       <expression>
         <literal type="string" value="fn"/>
       </expression>
       <expression desc="init"/>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:49:4:49:26" label="changeComputePrecision_select_0" name="select">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:49:4:49:26" label="changeComputePrecision_select_0" name="select">
       <expression>
         <literal type="string" value="file"/>
       </expression>
@@ -303,7 +303,7 @@
       </expression>
       <expression/>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:50:4:53:6" label="changeComputePrecision_apply_0_0" name="apply">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:50:4:53:6" label="changeComputePrecision_apply_0_0" name="apply">
       <expression>
         <id name="changeComputePrecision_select_0"/>
       </expression>
@@ -327,7 +327,7 @@
       </expression>
       <code desc="before"/>
       <code desc="do">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:51:7:51:12" name="expr">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:51:7:51:12" name="expr">
           <expression>
             <op name="ASSIGN">
               <property>
@@ -341,7 +341,7 @@
             </op>
           </expression>
         </statement>
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:52:7:52:8" name="expr">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:52:7:52:8" name="expr">
           <expression>
             <op name="ASSIGN">
               <id name="fn"/>
@@ -352,7 +352,7 @@
       </code>
       <code desc="after"/>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:56:1:56:16" name="vardecl">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:56:1:56:16" name="vardecl">
       <expression>
         <literal type="string" value="types"/>
       </expression>
@@ -360,7 +360,7 @@
         <literal type="object"/>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:58:4:58:55" name="vardecl">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:58:4:58:55" name="vardecl">
       <expression>
         <literal type="string" value="vrefs"/>
       </expression>
@@ -391,7 +391,7 @@
         </call>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:59:4:59:21" name="vardecl">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:59:4:59:21" name="vardecl">
       <expression>
         <literal type="string" value="fparams"/>
       </expression>
@@ -399,9 +399,9 @@
         <literal type="object"/>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:60:4:60:6" name="loop">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:60:4:60:6" name="loop">
       <code desc="init">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:60:4:60:6" name="vardecl">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:60:4:60:6" name="vardecl">
           <expression>
             <literal type="string" value="i"/>
           </expression>
@@ -412,7 +412,7 @@
         <id name="vrefs"/>
       </expression>
       <code desc="body">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:61:8:61:24" name="vardecl">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:61:8:61:24" name="vardecl">
           <expression>
             <literal type="string" value="v"/>
           </expression>
@@ -423,7 +423,7 @@
             </property>
           </expression>
         </statement>
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:62:8:62:12" name="expr">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:62:8:62:12" name="expr">
           <expression>
             <op name="ASSIGN">
               <property>
@@ -443,7 +443,7 @@
             </op>
           </expression>
         </statement>
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:63:8:63:9" name="if">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:63:8:63:9" name="if">
           <expression desc="condition">
             <op name="AND">
               <op name="IN">
@@ -478,7 +478,7 @@
             </op>
           </expression>
           <code desc="then">
-            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:64:11:64:12" name="if">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:64:11:64:12" name="if">
               <expression desc="condition">
                 <op name="NOT">
                   <op name="IN">
@@ -491,7 +491,7 @@
                 </op>
               </expression>
               <code desc="then">
-                <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:65:14:65:20" name="expr">
+                <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:65:14:65:20" name="expr">
                   <expression>
                     <op name="ASSIGN">
                       <property>
@@ -510,7 +510,7 @@
             </statement>
           </code>
           <code desc="else">
-            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:67:15:67:16" name="if">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:67:15:67:16" name="if">
               <expression desc="condition">
                 <op name="AND">
                   <op name="IN">
@@ -533,7 +533,7 @@
                 </op>
               </expression>
               <code desc="then">
-                <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:68:11:68:17" name="expr">
+                <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:68:11:68:17" name="expr">
                   <expression>
                     <op name="ASSIGN">
                       <property>
@@ -554,7 +554,7 @@
         </statement>
       </code>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:72:4:72:22" label="changeComputePrecision_select_1" name="select">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:72:4:72:22" label="changeComputePrecision_select_1" name="select">
       <expression>
         <literal type="string" value="file"/>
       </expression>
@@ -570,7 +570,7 @@
       </expression>
       <expression/>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:73:4:79:6" label="changeComputePrecision_apply_1_0" name="apply">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:73:4:79:6" label="changeComputePrecision_apply_1_0" name="apply">
       <expression>
         <id name="changeComputePrecision_select_1"/>
       </expression>
@@ -588,9 +588,9 @@
       </expression>
       <code desc="before"/>
       <code desc="do">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:74:7:74:9" name="loop">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:74:7:74:9" name="loop">
           <code desc="init">
-            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:74:7:74:9" name="vardecl">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:74:7:74:9" name="vardecl">
               <expression>
                 <literal type="string" value="param"/>
               </expression>
@@ -601,7 +601,7 @@
             <id name="fparams"/>
           </expression>
           <code desc="body">
-            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:75:11:75:12" name="if">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:75:11:75:12" name="if">
               <expression desc="condition">
                 <property>
                   <id name="fparams"/>
@@ -609,7 +609,7 @@
                 </property>
               </expression>
               <code desc="then">
-                <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:76:15:76:23" name="expr">
+                <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:76:15:76:23" name="expr">
                   <expression>
                     <call>
                       <method>
@@ -629,8 +629,8 @@
                           <key name="[[param]]">
                             <id name="param"/>
                           </key>
-                          <key name="[[exp]]">
-                            <id name="exp"/>
+                          <key name="[[mant]]">
+                            <id name="mant"/>
                           </key>
                           <key name="[[fn.name]]">
                             <property>
@@ -652,8 +652,8 @@
       <code desc="after"/>
     </statement>
   </aspect>
-  <aspect coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:83:1:94:3" name="watchFloats">
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:84:4:84:19" name="vardecl">
+  <aspect coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:83:1:94:3" name="watchFloats">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:84:4:84:19" name="vardecl">
       <expression>
         <literal type="string" value="logged"/>
       </expression>
@@ -661,7 +661,7 @@
         <literal type="array"/>
       </expression>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:85:4:85:27" label="watchFloats_select_0" name="select">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:85:4:85:27" label="watchFloats_select_0" name="select">
       <expression>
         <literal type="string" value="file"/>
       </expression>
@@ -691,7 +691,7 @@
       </expression>
       <expression/>
     </statement>
-    <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:86:4:90:6" label="watchFloats_apply_0_0" name="apply">
+    <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:86:4:90:6" label="watchFloats_apply_0_0" name="apply">
       <expression>
         <id name="watchFloats_select_0"/>
       </expression>
@@ -714,7 +714,7 @@
       </expression>
       <code desc="before"/>
       <code desc="do">
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:87:6:87:7" name="if">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:87:6:87:7" name="if">
           <expression desc="condition">
             <op name="NEQ">
               <property>
@@ -736,7 +736,7 @@
             </op>
           </expression>
           <code desc="then">
-            <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:88:8:88:12" name="expr">
+            <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:88:8:88:12" name="expr">
               <expression>
                 <call>
                   <method>
@@ -782,7 +782,7 @@
           </code>
           <code desc="else"/>
         </statement>
-        <statement coord="/home/paul-g/workspaces/meng/maxcc/aspects/harmonic.lara:89:6:89:11" name="expr">
+        <statement coord="/home/paul-g/workspaces/meng/maxcc/demos/rtm/../../aspects/harmonic.lara:89:6:89:11" name="expr">
           <expression>
             <op name="ASSIGN">
               <property>

@@ -3,12 +3,12 @@ aspectdef adpTransforms
    /**************************************************/
    input
       cparams,
-      exp,
+      mant,
       debug = true
    end
    /***************************************************/
    call changeCodeParameters(cparams);
-   call changeComputePrecision(exp);
+   call changeComputePrecision(mant);
    if (debug) {
        call watchFloats();
    }
@@ -40,7 +40,7 @@ end
 /** Change compute type of kernel IO parameters */
 aspectdef changeComputePrecision
    input
-      exp
+      mant
    end
 
    var params = { };
@@ -73,7 +73,7 @@ var types = { };
    apply
       for (var param in fparams) {
           if (fparams[param]) {
-              $function.insert before %{ #pragma fast var:[[param]] ioType:float(8, 24) computeType:float(8,[[exp]]) func:[[fn.name]]}%;
+              $function.insert before %{ #pragma fast var:[[param]] ioType:float(8, 24) computeType:float(8,[[mant]]) func:[[fn.name]]}%;
           }
       }
    end
