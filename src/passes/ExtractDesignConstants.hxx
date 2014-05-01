@@ -31,6 +31,9 @@ public:
                            querySubTree(kernel->getDeclaration()->get_definition(), V_SgVarRefExp),
                            &findConstants);
 
+      cout << "\t Kernel: " << kernel->getName() << endl;
+
+      map<string, pair<string, string> > constant_type_value;
       foreach_(SgNode* n, defs) {
         SgVarRefExp *e = isSgVarRefExp(n);
         if (e != NULL) {
@@ -38,8 +41,16 @@ public:
           string name = sym->get_name();
           SgInitializer *init = sym->get_declaration()->get_initializer();
           string value = init->unparseToString();
-          kernel->addDesignConstant(name, value);
+          string type = e->get_type()->stripTypedefsAndModifiers()->unparseToString();
+          kernel->addDesignConstant(name, value, type);
+          constant_type_value[name] = make_pair(value, type);
         }
+      }
+
+      map<string, pair<string, string> >::iterator it;
+      for (it = constant_type_value.begin(); it != constant_type_value.end(); it++) {
+        cout << "\t\t " << it->first << " = " << it->second.first;
+        cout << ", type: " << it->second.second << endl;
       }
     }
   }

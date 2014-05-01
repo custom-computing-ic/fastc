@@ -1,6 +1,7 @@
 #ifndef MAXCC_H
 #define MAXCC_H
 
+#define NULL 0
 // simple types
 typedef float float8_24;
 typedef int int32;
@@ -36,12 +37,7 @@ void DRAMOutput(char *stream_name, int Control,
 s_array_f8_24 make_input_array_f(int mantissa, int exponent, int width);
 
 // counter functions
-int count(int a, int b);
-int count_chain(int a, int b, int parent);
-int count_p(int width, int wrapPoint, int inc, int enable);
-
-// offset functions
-//int make_offset(int min, int max);
+int count(int width, int max, int incremnt, int parent);
 
 // control/multiplexer functions
 int fselect(float8_24 cond, float8_24 left, float8_24 right);

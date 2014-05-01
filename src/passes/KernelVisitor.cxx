@@ -28,7 +28,7 @@ void KernelVisitor :: visit (SgNode* n) {
 void KernelVisitor :: writeKernels(ostream& out) {
   list<Kernel*>::iterator it;
   for (it = kernels.begin(); it != kernels.end(); it++ ) {
-    out << (*it)->getSource();
+    out << (*it)->generateSourceCode();
     out << "\n\n";
   }
 }

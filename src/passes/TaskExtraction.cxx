@@ -1,4 +1,6 @@
 #include "TaskExtraction.hxx"
+#include "../DfeTask.hxx"
+#include "../Design.hxx"
 
 NodeQuerySynthesizedAttributeType  findDFETasks(SgNode * astNode)
 {
@@ -6,10 +8,10 @@ NodeQuerySynthesizedAttributeType  findDFETasks(SgNode * astNode)
   NodeQuerySynthesizedAttributeType returnNodeList;
 
   SgPragmaDeclaration* pragma = isSgPragmaDeclaration(astNode);
-  string taskPragma = "#pragma fast kernel";
+  string taskPragma = "#pragma fast hw";
   if (pragma != NULL) {
     string name = pragma->get_pragma()->unparseToString();
-    if (name.substr(0,taskPragma.size()).compare(taskPragma) == 0)
+    if (name.substr(0,taskPragma.size()) == taskPragma)
       returnNodeList.push_back(astNode);
   }
 
@@ -27,10 +29,27 @@ void TaskExtraction::runPass(Design* design) {
   foreach_ (SgNode* node, dfePragmas) {
     SgPragmaDeclaration *pragma = isSgPragmaDeclaration(node);
     if (pragma != NULL) {
-      //      cout << SageInterface::getNextStatement(pragma)->unparseToString() << endl;
+      SgStatement* st = SageInterface::getNextStatement(pragma);
+
+      // check if this a function call statement
+      SgExprStatement *expr_st = isSgExprStatement(st);
+      SgFunctionCallExp* fcall;
+
+      if (expr_st != NULL &&
+          ((fcall = isSgFunctionCallExp(expr_st->get_expression())) != NULL)) {
+        Kernel *k = design->getKernelMatchingFunctionCall(fcall);
+        vector<string> dfe_args = getFunctionCallArgNames(fcall);
+        DfeTask* task = new DfeTask(k->getName(), k, dfe_args);
+        design->addDfeTask(task);
+        cout << "\tFound task: \033[1;31m" << task->getName() << "\033[0m\n";
+        cout << "\t\tFunction call: " << fcall->unparseToString() << endl;
+      }
+
     }
   }
 }
+
+
 
 string TaskExtraction::logPass() {
   return "DFE Task Extraction";

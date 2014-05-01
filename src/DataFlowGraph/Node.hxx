@@ -3,7 +3,11 @@
 
 #include <string>
 #include <list>
+#include <vector>
 #include <iostream>
+
+#include "../StencilOffset.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -16,36 +20,130 @@ protected:
   list<Node *> neighbours;
 
 public:
-  Node(string name);
-  string getName() const {return name;};
+  list<Node *> inputs;
+  bool floating;
+  int transformation;
+  int precision[2];
+  Node(string name="");
+  virtual string getName() const {return name;};
   bool operator<(Node& node) const;
   Node& operator=(const Node& node);
-  //  friend ostream& operator<< (ostream &out, const Node& node);
   ostream& operator<<(ostream&);
   void addNeighbour(Node* node);
-  string toDot();
+  void addInput(Node* node);
+  virtual string toDot();
   list<Node *> getNeighbours(){
     return neighbours;
+  }
+  list<Node *> getInputs(){
+    return inputs;
   }
   string getId();
   virtual string toMaxJ()=0;
   virtual string getType() {return "hwFloat(8, 24)";};
-
+  virtual string classname() {return "Node";}
 };
+
+
+class Pair{
+  //for each pair 
+  //fastest dimension -> lowest dimension (begin -> end) 
+  public:
+  vector<int> dimensions;
+  vector<int> offsets;
+  Pair(){};
+};
+
+class Offset : public Node{
+  vector<StencilOffset*> stencilOffsets;
+
+public:
+  vector<Pair*> pairs;
+  vector<int> max;
+  vector<int> min;
+
+  double BRAMs;
+  double bandwidth;
+  
+  list<string> offsets;
+  list<int> OnchipMemory;
+  int internaldelay;//calculated in HLAVisitor
+  int inputdelay;//updated in DfeTopSortVisitor
+
+  Offset(string name) : Node(name) {internaldelay =0; inputdelay=0; BRAMs = 0; bandwidth=0;};
+  void addoffset(string offset);
+  void setDelay(int inputdelay) {this->inputdelay = inputdelay;}
+  int getDelay() {return this->inputdelay;}
+  int memory();
+  string toMaxJ() {return "Offset\n";}
+  string classname() {return "Offset";}
+  void addStencilOffset(StencilOffset* stencilOffset) {
+    // TODO do some useful calculation
+    this->stencilOffsets.push_back(stencilOffset);
+    //this->stencilOffset = stencilOffset;
+  }
+  vector<StencilOffset*> getStencilOffsets() { return stencilOffsets;}
+};
+
 
 class StreamOffsetNode : public Node {
 public:
-  StreamOffsetNode(string name) : Node(name) {};
+  StencilOffset* stencilOffset;
+  StreamOffsetNode(string name) : Node(name) {
+    stencilOffset = NULL;
+  };
   virtual string toMaxJ() {
     return "stream.offset(" + name + ", )\n";
   }
+  void setStencilOffset(StencilOffset* stencilOffset) {
+    this->stencilOffset = stencilOffset;
+  }
+  string toDot() {
+    string dot = "Offset__" + getId() + "__offsets__";
+
+    if (stencilOffset == NULL)
+      return dot;
+
+    map<string, int>::iterator it;
+
+    if (stencilOffset->var_offset.size() > 0) {
+      it = stencilOffset->var_offset.begin();
+      if ( it != stencilOffset->var_offset.end()) {
+	for (it = stencilOffset->var_offset.begin(); it != stencilOffset->var_offset.end(); it++) {
+	  string snd = boost::lexical_cast<string>(abs(it->second));
+	  if (it->second < 0)
+	    snd = "neg" + snd;
+	  dot += it->first + "_" + snd + "__";
+	}
+      }
+    }
+
+    dot += "__dims__";
+    if (stencilOffset->dim_offset.size() > 0) {
+      if (stencilOffset->dim_offset.size() > 0) {
+	for (it = stencilOffset->dim_offset.begin();
+	     it != stencilOffset->dim_offset.end();
+	     it++) {
+	  string snd = boost::lexical_cast<string>(abs(it->second));
+	  if (it->second < 0)
+	    snd = "neg" + snd;
+	  dot += it->first + "_" + snd + "__";
+	}
+      }
+    }
+    return  dot;
+  }
+
 };
 
-class OpNode : public Node {
+class OpNode : public Node {//arithme node
 
 public:
   OpNode(string op) : Node(op) {};
+  int resource(int transformation);
+
   string toMaxJ() {return "OpNode\n";}
+  string classname() {return "OpNode";}
 };
 
 class ExpressionNode : public Node {
@@ -55,58 +153,25 @@ public:
     return &name;
   }
   string toMaxJ() {return "ExpressionNode";}
+  string classname() {return "ExpressionNode";}
 };
 
-class MUXNode : public Node {
-  Node *falseNode;
-  Node *trueNode;
-public:
-  MUXNode(string name) : Node(name) {}
-  void setIfTrueNode(Node *n) {
-    falseNode = n;
-    n->addNeighbour(this);
-  }
-  void setIfFalseNode(Node *n) {
-    trueNode = n;
-    n->addNeighbour(this);
-  }
-  string toMaxJ() {return "MUXNode\n";}
-
-};
-
-class ConstantNode : public Node {
-  string val;
-public:
-  ConstantNode(string val) : Node(val) {}
-  string toMaxJ() {return "constant.var(" + getType() + "," + getName() +")";}
-};
 
 class VarNode : public Node {
   string val;
 public:
   VarNode(string val) : Node(val) {}
   string toMaxJ() {return "VarNode\n";}
+  string classname() {return "VarNode";}
 };
 
-class CounterNode : public Node {
-  string limit, parent;
-  int inc;
+
+class ConstantNode : public Node {
+  string val;
 public:
-  ostream& operator<<(ostream& out) {
-	  out << "(" << name << ", wrap: " << limit;
-	  out << ", inc: " << inc << ",parent: " << parent << ")";
-	  return out;
-  }
-  CounterNode(string name, string limit, int inc) : Node(name) {
-    this->limit = limit;
-    this->inc   = inc;
-  }
-  CounterNode(string name, string limit, int inc, string parent) : Node(name) {
-    this->limit = limit;
-    this->inc   = inc;
-    this->parent = parent;
-  }
-  string toMaxJ() {return "CounterNode\n";}
+  ConstantNode(string val) : Node(val) {}
+  string toMaxJ() {return "constant.var(" + getType() + "," + getName() +")";}
+  string classname() {return "ConstantNode";}
 };
 
 #endif

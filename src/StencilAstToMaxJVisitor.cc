@@ -1,0 +1,568 @@
+#include "precompiled.hxx"
+#include "StencilAstToMaxJVisitor.h"
+#include "utils.hxx"
+#include "Stencil.h"
+#include "StencilOffset.h"
+
+using namespace std;
+using namespace boost;
+
+class SgFunctionSymbol;
+class SgVarRefExp;
+class SgIntVal;
+class SgBinaryOp;
+class SgUnaryOp;
+
+StencilAstToMaxJVisitor::StencilAstToMaxJVisitor() {
+  this->kernel = NULL;
+  paramCount = 0;
+  source = "";
+}
+
+StencilAstToMaxJVisitor::StencilAstToMaxJVisitor(Kernel* kernel) {
+  this->kernel = kernel;
+  paramCount = 0;
+  source = "";
+}
+
+void StencilAstToMaxJVisitor::preOrderVisit(SgNode *n) {
+  if ( n == NULL || (n != NULL && n->getAttribute("ignore") != NULL) )
+    return;
+
+  D(cerr << "Visiting node: " << n->unparseToString() << endl);
+  D(cerr << ",ignore: " << n->getAttribute("ignore") << endl);
+  D(cerr << "get_name: " << SageInterface::get_name(n) << endl);
+
+  if (isSgVariableDeclaration(n)) {
+    visitVarDecl(isSgVariableDeclaration(n));
+  }  else if (isSgFunctionCallExp(n)) {
+    visitFcall(isSgFunctionCallExp(n));
+  } else if (isSgForStatement(n)) {
+    visitFor(isSgForStatement(n));
+  } else if (isSgExprStatement(n)) {
+    visitExprStmt(isSgExprStatement(n));
+    ignoreChildren(n);
+  } else if (isSgPragma(n)) {
+    source += *visitPragma(isSgPragma(n));
+  } else if (isSgExpression(n)) {
+    string *e = toExpr(isSgExpression(n));
+    if (e != NULL)
+      source += *e;
+    ignoreChildren(n);
+  }
+}
+
+void StencilAstToMaxJVisitor::ignoreChildren(SgNode *n) {
+  vector<SgNode *> children = n->get_traversalSuccessorContainer();
+  ignore(n);
+  foreach_(SgNode *n, children) {
+    if (n != NULL)
+      ignoreChildren(n);
+  }
+}
+
+string* StencilAstToMaxJVisitor::visitPragma(SgPragma *n) {
+  string *s = new string("pragma found");
+  D(cerr << "Visiting pragma! " << endl);
+
+  string *cls  = get_pragma_param(n->get_pragma(), "class");
+  string *name = get_pragma_param(n->get_pragma(), "name");
+
+  if (cls->compare("kernelopt") == 0) {
+    if (name->compare("pushDSP") == 0) {
+      string* factor = get_pragma_param(n->get_pragma(), "factor");
+      return new string("optimization.pushDSPFactor("+*factor+");\n");
+    } else if (name->compare("popDSP") == 0) {
+      return new string("optimization.popDSPFactor();\n");
+    }
+  }
+
+  return s;
+}
+
+void StencilAstToMaxJVisitor::postOrderVisit(SgNode *n) {
+  if (n != NULL  && isSgForStatement(n)) {
+    source += "}\n";
+  }
+}
+
+string* StencilAstToMaxJVisitor::function_call_initializer(string& variableName,
+                                                    SgFunctionCallExp *fcall) {
+  string *s = new string();
+
+  SgExpressionPtrList args = fcall->get_args()->get_expressions();
+  SgExpressionPtrList::iterator itt = args.begin();
+  SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
+  string fname = fsymbol->get_name();
+
+  if (fname == "count") {
+    string *width = toExpr(*itt);
+    string *max = toExpr(*(++itt));
+    string *inc = toExpr(*(++itt));
+    string *parent_name = toExpr(*(++itt));
+    counterMap[variableName] = variableName;
+
+    string counterName = variableName + "_counter";
+
+    // create params
+    string param = "param" + lexical_cast<string>(paramCount);
+    string params =
+      "Count.Params " + param + " = control.count.makeParams(" + *width + ")"
+      + ".withMax(" + *max + ")"
+      + ".withInc(" + *inc + ")";
+    paramCount++;
+
+    string enableParam;
+    if (parent_name != NULL) {
+      // has a parent or enable stream
+      if (counterMap.find(*parent_name) != counterMap.end()) {
+	// TODO use a symbol table to find if this is a counter
+	string parentCounterName = *parent_name + "_counter";
+	enableParam = ".withEnable(" + parentCounterName + ".getWrap())";
+      } else {
+	// XXX check that this is indeed a boolean stream
+	// XXX use a proper check to verify that the parent_name != NULL
+	if (*parent_name != "0")
+	  enableParam = ".withEnable(" + *parent_name + ")";
+      }
+    }
+
+    // create counter
+    string counter = "Counter " + counterName + " = control.count.makeCounter(" +
+      param + ")";
+
+    // create HWVar corresponding to counter
+    string hwvar = "HWVar " + variableName + " = " + counterName + ".getCount()";
+
+    *s += params + enableParam + ";\n" + counter + ";\n" + hwvar + ";\n";
+
+  } else if (fname == "fselect" || fname == "fselect_sf_f" ) {
+    string *exp = toExpr(*itt);
+    string *ifTrue = toExpr(*(++itt));
+    string *ifFalse = toExpr(*(++itt));
+    *s += "HWVar " + variableName + " = control.mux(" + (*exp) + ", "
+      + (*ifTrue) + ", " + (*ifFalse) + ");\n";
+  } else if (fname == "make_offset") {
+    string *min  = toExpr(*itt);
+    string *max  = toExpr(*(++itt));
+    *s += "OffsetExpr " + variableName;
+    *s += " = stream.makeOffsetParam(\""+ variableName + "\"," + *min + "," + *max + ");\n";
+  } else if (fname == "make_array_f") {
+    string *mantissa = toExpr(*itt);
+    string *exponent = toExpr(*++itt);
+    string *width    = toExpr(*++itt);
+    string type = "hwFloat("+*mantissa+","+*exponent+")";
+    *s += "KArray<HWVar>" + variableName;
+    *s += " = (new KArrayType<HWVar>("+type+",";
+    *s += *width+")).newInstance(this);\n";
+  } else if (fname == "make_input_array_f") {
+    string *mantissa = toExpr(*itt);
+    string *exponent = toExpr(*++itt);
+    string *width    = toExpr(*++itt);
+    string type = "hwFloat("+*mantissa+","+*exponent+")";
+    string t ="new KArrayType<HWVar>(" + type + "," + *width + ")";
+    *s += "KArray<HWVar>" + variableName;
+    *s += " = io.input(\"" + variableName + "\",  " + t +")";
+  } else if (fname == "sqrt_i") {
+    string* range_min = toExpr(*itt);
+    string* range_max = toExpr(*(++itt));
+    string* base      = toExpr(*(++itt));
+    string* width     = toExpr(*(++itt));
+    int num = 0; // XXX should be a unique identifier
+    string range="range"+lexical_cast<string>(num);
+    *s+= "KernelMath.Range "+range+ " = ";
+    *s+= "new KernelMath.Range("+*range_min+", "+*range_max+");\n";
+    string type = "hwUInt(" +*width+")";
+    *s+= "HWVar "+variableName+" = KernelMath.sqrt("+range+", "+*base+","+type+");\n";
+  } else if (fname == "cast_fix_i") {
+    string *in = toExpr(*itt);
+    string *exp = toExpr(*(++itt));
+    string *mant = toExpr(*(++itt));
+    *s += str(format("HWVar %s = %s.cast(hwFix(%s, %s, HWFix.SignMode.TWOSCOMPLEMENT));\n")
+              % variableName % *in % *exp % *mant);
+  } else if (fname == "sqrt") {
+    string *in = toExpr(*itt);
+    *s += str(format("HWVar %s = KernelMath.sqrt(%s);\n")
+              % variableName % *in);
+  } else if (fname == "abs") {
+    string *in = toExpr(*itt);
+    *s += str(format("HWVar %s = KernelMath.abs(%s);\n")
+              % variableName % *in);
+  } else if (fname == "printf") {
+    string *s = toExpr(*itt);
+    int size = fsymbol->get_declaration()->get_args().size();
+  }
+
+  if ( s->size() == 0 ) {
+    LOG_CERR();
+    cerr << "Function definition not found! '" + fname + "'" << endl;
+  }
+
+  return s;
+}
+
+string* StencilAstToMaxJVisitor::toExpr(SgExpression *ex) {
+  if (isSgFunctionCallExp(ex)) {
+    return visitFcall(isSgFunctionCallExp(ex));
+  } if (isSgVarRefExp(ex)) {
+    SgVarRefExp *e = isSgVarRefExp(ex);
+    return new string(e->get_symbol()->get_name());
+  } else if (isSgIntVal(ex) || isSgUnsignedLongVal(ex)) {
+    SgValueExp *e = isSgValueExp(ex);
+    return new string(e->get_constant_folded_value_as_string());
+  } else if (isSgFloatVal(ex))  {
+    SgFloatVal *e = isSgFloatVal(ex);
+    return new string(e->get_valueString());
+  } else if ( isSgDoubleVal(ex)) {
+    SgDoubleVal *e = isSgDoubleVal(ex);
+    return new string(e->get_valueString());
+  } else if (isSgStringVal(ex)) {
+    SgStringVal *e = isSgStringVal(ex);
+    stringstream out;
+    out << e->get_value();
+    return new string("\"" + out.str() + "\"");
+  } else if (isSgConditionalExp(ex)){
+    SgConditionalExp* cex = isSgConditionalExp(ex);
+    string* cond = toExpr(cex->get_conditional_exp());
+    string* ifTrue = toExpr(cex->get_true_exp());
+    string* ifFalse = toExpr(cex->get_false_exp());
+    return new string(*cond+"?"+*ifTrue+":"+*ifFalse);
+  } else if (isSgBinaryOp(ex)) {
+
+    SgBinaryOp* e = isSgBinaryOp(ex);
+
+    SgExpression* lhs = e->get_lhs_operand();
+    SgExpression* rhs = e->get_rhs_operand();
+
+    // a = f()
+    if (isSgFunctionCallExp(rhs) && isSgVarRefExp(lhs)) {
+      SgVarRefExp *e = isSgVarRefExp(lhs);
+      string name = e->unparseToString();
+      return function_call_initializer(name, isSgFunctionCallExp(rhs));
+    }
+
+    string op;
+    string *right = toExpr(e->get_rhs_operand());
+    string *left = toExpr(e->get_lhs_operand());
+
+    if (isSgAssignOp(ex)) {
+      op = "=";
+      SgAssignOp *ass = isSgAssignOp(ex);
+      // For stream arrays use <== instead of =
+      SgExpression* nameExp;
+      if (SageInterface::isArrayReference(ass->get_lhs_operand(), &nameExp)) {
+        // XXX: handle assigning constants
+        if (kernel != NULL && kernel->isStreamArrayType(nameExp->unparseToString()))
+          op = "<==";
+      }
+    }
+
+    if (isSgAddOp(ex))
+      op = "+";
+    else if (isSgSubtractOp(ex))
+      op = "-";
+    else if (isSgMultiplyOp(ex))
+      op = "*";
+    else if (isSgAndOp(ex) || isSgBitAndOp(ex))
+      op = "&";
+    else if (isSgLessThanOp(ex))
+      op = "<";
+    else if (isSgGreaterThanOp(ex))
+      op = ">";
+    else if (isSgGreaterOrEqualOp(ex))
+      op = ">=";
+    else if (isSgLessOrEqualOp(ex))
+      op = "<=";
+    else if (isSgDivideOp(ex))
+      op = "/";
+
+    if (isSgEqualityOp(ex))
+      return new string((*left) + ".eq(" + (*right) + ")");
+    else if (isSgNotEqualOp(ex))
+      return new string((*left) + ".neq(" + (*right) + ")");
+
+
+    if (isSgPntrArrRefExp(ex)) {
+      SgPntrArrRefExp *e = isSgPntrArrRefExp(ex);
+
+      Stencil *s = this->kernel->getFirstStencil();
+      StencilOffset* so = StencilUtils::extractSingleOffset(e->get_rhs_operand(), s);
+
+      string varRef = e->get_lhs_operand()->unparseToString();
+      string offsetDim = so->getDataflowOffsetExpresion();
+
+      // FIXME this optimization should be moved to a separate pass
+      if (offsetDim == "0")
+        return new string(varRef);
+      return new string ("stream.offset(" + varRef + "," + offsetDim  + ")");
+    } else {
+      if (isSgAssignOp(ex))
+        // can't bracket assign stmts
+        return new string((*left) + " " + op + " " + (*right));
+      else
+        return new string("(" + (*left) + " " + op + " " + (*right) + ")");
+    }
+
+  } else if (isSgUnaryOp(ex)) {
+    SgUnaryOp *unOp = isSgUnaryOp(ex);
+    string *exp = toExpr(unOp->get_operand());
+    string op;
+    if (isSgMinusOp(ex))
+      op = "-";
+    else if (isSgPlusPlusOp(ex))
+      op = "++";
+    else if (isSgPointerDerefExp(ex))
+      op = "";
+
+    if (exp != NULL)
+      return new string(op + *exp);
+  }
+
+  return NULL;
+}
+
+void StencilAstToMaxJVisitor::visitVarDecl(SgVariableDeclaration* decl) {
+
+  SgVariableDeclaration *varDecl = isSgVariableDeclaration(decl);
+  SgInitializedNamePtrList vars = varDecl->get_variables();
+  SgInitializedNamePtrList::iterator it;
+  for (it = vars.begin(); it != vars.end(); it++) {
+    SgInitializedName *v = *it;
+    string variableName = v->get_qualified_name();
+    if (isSgArrayType(v->get_type()) ) {
+      SgArrayType *t  = isSgArrayType(v->get_type());
+
+      vector<SgExpression*> expressions = SageInterface::get_C_array_dimensions(t);
+      vector<SgExpression*>::iterator it = expressions.begin();
+      int dim = expressions.size() - 1;
+
+      source += "HWVar " + variableName;
+      for (int i = 0 ; i < dim; i++ ) {
+        source += "[]";
+      }
+      source += " = new HWVar ";
+      for (; it != expressions.end(); it++) {
+        SgExpression* d = *(it);
+        string *value = toExpr(d);
+        if ( value != NULL )
+          source += "[" + *value + "]";
+      }
+      source += ";\n";
+      continue;
+    }
+
+    SgInitializer *init = v->get_initializer();
+    SgAssignInitializer *ass = isSgAssignInitializer(init);
+    if (ass == NULL) {
+      // just a stream declaration, no assignment
+      source += "HWVar " + variableName + ";\n";
+      continue;
+    }
+
+    SgExpression *exp = ass->get_operand();
+
+    // i = f() ..
+    SgFunctionCallExp *fcall = isSgFunctionCallExp(exp);
+    if (fcall != NULL) {
+      source += *function_call_initializer(variableName, fcall);
+      continue;
+    }
+
+    // i = expr;
+    string* n = toExpr(exp);
+
+    if (n != NULL) {
+      // XXX: float constants aren't handled properly
+      if ( //get_type(v)->compare("float") == 0 ||
+           get_type(v)->compare("int") == 0) {
+        // proper float or int constants
+        source += *get_type(v) + " " + variableName;
+        source += " = " + (*n)  + ";\n";
+        } else {
+        // stream type consts or vars
+        if (isConstant(*n))
+          *n =  constVar(*n);
+        source += "HWVar " + variableName + " = " + (*n) + ";\n";
+       }
+    }
+
+
+  }
+}
+
+string* StencilAstToMaxJVisitor::get_type(SgInitializedName *ident) {
+  SgType *type = ident->get_type();
+  return new string(type->unparseToString());
+}
+
+string* StencilAstToMaxJVisitor::visitFcall(SgFunctionCallExp *fcall) {
+  D(cerr << "Handling fcall " << endl);
+  string type("hwFloat(8, 24)");
+  SgExpressionPtrList args = fcall->get_args()->get_expressions();
+  SgExpressionPtrList::iterator it = args.begin();
+  SgFunctionSymbol* fsymbol = fcall->getAssociatedFunctionSymbol();
+  string fname = fsymbol->get_name();
+
+  string *s = new string();
+
+  if (fname.compare("output_ic") == 0) {
+    string* name = toExpr(*it);
+    string* expr = toExpr(*(++it));
+    string* cond = toExpr(*(++it));
+    if (name == NULL || expr == NULL) {
+      cerr << "NULL NAME!";
+    } else if (cond == NULL)
+      *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+        + ")";
+    else {
+      *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+        + ", " + (*cond) + ")";
+    }
+  } else if (fname.compare("output_f") == 0) {
+    string* name = toExpr(*it);
+    string* expr = toExpr(*(++it));
+    if (name == NULL || expr == NULL) {
+      cerr << "NULL NAME!";
+    } else {
+      *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+        + ")";
+    }
+  } else if (fname.compare("output_i") == 0) {
+    string* name = toExpr(*it);
+    string* expr = toExpr(*(++it));
+    type = "hwInt(32)";
+    if (name == NULL || expr == NULL) {
+      cerr << "NULL NAME!";
+    } else {
+      *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+        + ")";
+    }
+  } else if (fname.compare("output_iaf") == 0) {
+    string* name = toExpr(*it);
+    string* expr = toExpr(*(++it));
+    string* mantissa = toExpr(*(++it));
+    string* exponent = toExpr(*(++it));
+    string* width = toExpr(*(++it));
+    string type = "new KArrayType<HWVar>(hwFloat("+*mantissa+", "+*exponent+"), "+*width+")";
+    *s += "io.output(\"" + (*name) + "\", " + (*expr) + ", " + type
+      + ")";
+  }  else if (fname.compare("DRAMOutput") == 0) {
+    string *streamName = toExpr(*(it));
+    string *control    = toExpr(*(++it));
+    string *address    = toExpr(*(++it));
+    string *size       = toExpr(*(++it));
+    string *inc        = toExpr(*(++it));
+    string *streamNo   = toExpr(*(++it));
+    string *interrupt  = toExpr(*(++it));
+
+    if (interrupt->compare("0") == 0)
+      *interrupt = constVar("false");
+    else if ( isConstant(*interrupt) )
+      *interrupt = constVar("true");
+
+    *s += "DRAMCommandStream.makeKernelOutput("
+      + *streamName + ",\n"
+      + *control + ",\n"
+      + *address + ",\n"
+      + constVar(*size, "hwUInt(8)") + ",\n"
+      + constVar(*inc, "hwUInt(6)") + ",\n"
+      + constVar(*streamNo, "hwUInt(4)") + ",\n"
+      + *interrupt
+      + ")";
+
+  } else if (fname == "pushDSPFactor") {
+    string *exp = toExpr(*it);
+    *s += "optimization.pushDSPFactor(" + *exp + ")";
+  } else if (fname == "popDSPFactor" ) {
+    *s += "optimization.popDSPFactor()";
+  } else if (fname == "fselect" || fname == "fselect_sf_f" ) {
+    string *exp = toExpr(*it);
+    string *ifTrue = toExpr(*(++it));
+    string *ifFalse = toExpr(*(++it));
+    *s += "control.mux("+*exp+", "+*ifTrue+", "+*ifFalse+")";
+  } else if (fname == "cast2ff" || fname == "cast2sff" || fname == "cast2fsf") {
+    string *out = toExpr(*it);
+    string *in  = toExpr(*(++it));
+    string *exponent = toExpr(*(++it));
+    string *mantissa = toExpr(*(++it));
+    string type = "hwFloat("+*exponent+", "+*mantissa+")";
+    *s += *out+" = "+*in+".cast("+type+")";
+  } else if (fname == "castf_f" || fname == "castf_sf") {
+    string *in  = toExpr(*it);
+    string *exponent = toExpr(*(++it));
+    string *mantissa = toExpr(*(++it));
+    string type = "hwFloat("+*exponent+", "+*mantissa+")";
+    *s += *in+".cast("+type+")";
+  } else if (fname == "exp") {
+    string* power = toExpr(*it);
+    *s += str(format("KernelMath.exp(%s)") % (*power));
+  } else if (fname == "pushRoundingMode") {
+    *s+= "optimization.pushRoundingMode(RoundingMode.TRUNCATE)";
+  } else if (fname == "popRoundingMode") {
+    *s+= "optimization.popRoundingMode()";
+  }  else if (fname == "printf") {
+    *s += "debug.printf(";
+    bool first = true;
+    foreach_(SgExpression* sgExpr, fcall->get_args()->get_expressions()) {
+      string *e = toExpr(sgExpr);
+      if (e != NULL) {
+        if (!first)
+          *s += ", ";
+        *s+= *e;
+        first = false;
+      }
+    }
+    *s+= ")";
+  }
+
+  if (s->size() == 0) {
+    LOG_CERR();
+    cerr << "Function definition not found: '"+fname+"'" << endl;
+  }
+
+  return s;
+}
+
+void StencilAstToMaxJVisitor::visitExprStmt(SgExprStatement *exprStmt) {
+  D(cerr << "Visiing expression statment" << endl);
+  string* s = toExpr(exprStmt->get_expression());
+  if ( s != NULL )
+    source += *s + ";\n";
+}
+
+void StencilAstToMaxJVisitor::ignore(SgNode *n) {
+  AstAttribute *ignore = new AstTextAttribute("yes");
+  n->setAttribute("ignore", ignore);
+}
+
+void StencilAstToMaxJVisitor::visitFor(SgForStatement *forStmt) {
+
+  SgStatementPtrList initList = forStmt->get_init_stmt();
+  SgStatement        *test = forStmt->get_test();
+  SgExpression       *incr = forStmt->get_increment();
+
+  source += "for (";
+  foreach_(SgStatement* stmt, initList) {
+    source += stmt->unparseToString();
+    ignoreChildren(stmt);
+  }
+  source += test->unparseToString();
+  source += incr->unparseToString();
+  source += ")";
+  ignoreChildren(test); ignoreChildren(incr);
+  source += " {\n";
+}
+
+string StencilAstToMaxJVisitor::constVar(string s) {
+  return "constant.var(" + s + ")";
+}
+
+string StencilAstToMaxJVisitor::constVar(string s, string type) {
+  return constVar(type + "," + s);
+}
+
+bool StencilAstToMaxJVisitor::isConstant(string s) {
+  regex constant("-?[0-9]*(.[0-9]*)?");
+  cmatch group;
+  return regex_match(s.c_str(), group, constant);
+}

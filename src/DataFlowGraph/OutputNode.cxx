@@ -15,7 +15,7 @@ string OutputNode::getInput() const {
       source += ".cast(" + ioType + ")";
     return source;
   }
-  else return "ERROR Processing Output Node";
+  return "ERROR Processing Output Node";
 }
 
 bool OutputNode::operator==(const OutputNode& other) {

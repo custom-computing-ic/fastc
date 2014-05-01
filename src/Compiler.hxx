@@ -17,7 +17,7 @@ class Compiler
   }
 
   void logPass(string msg) {
-    printf("[%*d] %s Pass\n", 2, pass, msg.c_str());
+    printf("\033[1;33m[%*d] %s Pass\n\033[0m", 2, pass, msg.c_str());
     pass++;
   }
 
@@ -40,6 +40,10 @@ public:
     }
     log("Dataflow Implementation Generated Succesfully in build/");
   }
+
+  Design* getDesign() { return design; }
+
+  Kernel* getKernel(string functionName) { return design->getKernel(functionName); }
 
 };
 

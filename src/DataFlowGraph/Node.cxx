@@ -1,26 +1,32 @@
+#include "../precompiled.hxx"
 #include "Node.hxx"
 
 #include <iostream>
-#include <iterator>
-#include <sstream>
+#include <typeinfo>
 
 using namespace std;
+using namespace boost;
 
 Node::Node(string name) {
   this->id = s_idCount++;
   this->name = name;
+  //TODO: support for fixed point
+  this->floating = true;
+  //TODO: dynamic transformation ratio
+  this->transformation = 1;
+
+  //TODO: precision analysis
+  //currently the precision is fixed to be 8-10 floating
+  this->precision[0] = 8;
+  this->precision[1] = 24;
 }
 
 ostream& Node::operator<< (ostream &out) {
   out << name << "[ " ;
-
-  list<Node *>::iterator it;
-  string dot;
-  for (it = neighbours.begin(); it != neighbours.end(); it++) {
-    cout << (*it)->getName() << " ";
-    }
-
-  cout << "]";
+  foreach_ (Node* n, neighbours) {
+    out << n->getName() << " ";
+  }
+  out << "]";
   return out;
 }
 
@@ -34,17 +40,22 @@ Node& Node::operator=(const Node& node){
 }
 
 void Node::addNeighbour(Node *node) {
+#if DEBUG
+  cout << "Adding node " << node << endl;
+#endif
   neighbours.push_front(node);
 }
 
+void Node::addInput(Node *node) {
+  inputs.push_front(node);
+}
+
 string Node::toDot() {
-  return "\"" + name + "[id: " + getId() + "]\"";
+  return "\"" + name + "[id: " + getId() + "]" + classname() + "\"";
 }
 
 string Node::getId() {
-  stringstream out;
-  out << id;
-  return out.str();
+  return lexical_cast<string>(id);
 }
 
 int Node::s_idCount = 0;

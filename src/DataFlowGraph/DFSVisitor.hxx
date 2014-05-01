@@ -1,15 +1,14 @@
 #ifndef DFSVISITOR_HXX
 #define DFSVISITOR_HXX
 
-using namespace std;
-
 #include "DataFlowGraph.hxx"
+#include "../precompiled.hxx"
 #include <list>
 
 class DFSVisitor {
   DataFlowGraph *dfg;
-  list<Node*> queue, seenNodes;
-  list<Node*> nodes;
+  std::list<Node*> queue, seenNodes;
+  std::list<Node*> nodes;
   int seen;
 
 public:

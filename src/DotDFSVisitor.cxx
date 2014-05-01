@@ -1,20 +1,29 @@
 #include "DotDFSVisitor.hxx"
 
-void DotDFSVisitor::visit(Node *n) {
-	list<Node *>::iterator it;
-	list<Node *> neighbours = n->getNeighbours();
-	for (it = neighbours.begin(); it != neighbours.end(); it++)
-		dot += n->toDot() + " -> " + (*it)->toDot() + ";\n";
+#include <fstream>
+
+void DotDFSVisitor::visit(Node *node) {
+  foreach_ (Node* child, node->getNeighbours()) {
+    dot += node->toDot() + " -> ";
+    if (child != NULL)
+      dot += child->toDot() + ";\n";
+  }
 }
 
-void DotDFSVisitor::beforeVisit() {
-	dot += "digraph {\n";
-}
+void DotDFSVisitor::beforeVisit() {}
 
 void DotDFSVisitor::afterVisit() {
-	dot += "}";
+
 }
 
 string DotDFSVisitor::getDot() {
-	return dot;
+  return dot;
+}
+
+void DotDFSVisitor::writeDotToFile(ofstream &f) {
+  f << "digraph { \n " << dot << "}";
+}
+
+void DotDFSVisitor::writeDotEdges(ofstream &f) {
+  f << dot;
 }

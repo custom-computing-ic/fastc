@@ -9,51 +9,61 @@
 
 #include "AstToDfgVisitor.hxx"
 #include "AstToMaxJVisitor.hxx"
-#include "PragmaVisitor.hxx"
 #include "Compiler.hxx"
+#include "DotDFSVisitor.hxx"
+#include "DotPrint.hxx"
+#include "Stencil.h"
 
-#include "passes/ManagerExtraction.hxx"
-#include "passes/RemoveFast.hxx"
-#include "passes/KernelExtraction.hxx"
-#include "passes/CodeGeneration.hxx"
-#include "passes/HostCodeGeneration.hxx"
-#include "passes/TaskExtraction.hxx"
-#include "passes/PragmaExtraction.hxx"
-#include "passes/ExtractDesignConstants.hxx"
-#include "passes/InlineKernels.hxx"
-#include "passes/InputOutputExtraction.hxx"
+#include "passes/Passes.hxx"
+#include "highlevel/HighlevelAnalysis.hxx"
 
-#include <boost/filesystem.hpp>
+#include "ife/Configuration.h"
+#include "ife/Partition.h"
+#include "ife/IdlefunctionElimination.hxx"
 
-void setupBuild() {
-  using namespace boost::filesystem;
-  path dir("build"), cpu("build/cpu"), engine("build/engine");
-  create_directory(dir);
-  create_directory(cpu);
-  create_directory(engine);
-}
+#include <unistd.h>
 
 int main(int argc, char** argv) {
-    SgProject* project = frontend(argc, argv);
-    //  AstTests :: runAllTests(project);
-    if (project == NULL) {
-        cerr << "Could not run compiler frontend! Shutting down! " << endl;
-        return 1;
-    }
+  SgProject* project = frontend(argc, argv);
+  //  AstTests :: runAllTests(project);
+  if (project == NULL) {
+    cerr << "Could not run compiler frontend! Shutting down! " << endl;
+    return 1;
+  }
 
-    setupBuild();
+  generateDOT(*project);
+  setupBuild();
 
-    Compiler* c = new Compiler(project);
-    c->addPass(new KernelExtraction());
-    c->addPass(new ExtractDesignConstants());
-    c->addPass(new PragmaExtraction());
-    //    c->addPass(new InputOutputExtraction());
-    c->addPass(new InlineKernels());
-    c->addPass(new CodeGeneration());
-    c->addPass(new RemoveFast());
-    c->addPass(new TaskExtraction());
-    c->addPass(new HostCodeGeneration());
-    c->runPasses();
-    //    generateDOT(*project);
-    return 0;
+  Compiler* c = new Compiler(project);
+  c->addPass(new KernelExtraction());
+  c->addPass(new ExtractStencil());
+  c->addPass(new ExtractDesignConstants());
+  c->addPass(new PragmaExtraction());
+  c->addPass(new BuildDFG());
+  c->addPass(new PrintDotDFG());
+  c->addPass(new TaskExtraction());
+  c->addPass(new IdlefunctionElimination());
+  //c->addPass(new MergeKernels());
+  c->addPass(new CodeGeneration());
+  c->addPass(new GenerateAnalysisOverview());
+  c->runPasses();
+
+  //To check: somehow the dot file is not written now?
+  DataFlowGraph *dfg = c->getDesign()->getDataFlowGraph();
+  ofstream ff("main_flow.dot");
+  if (dfg != NULL)
+    DotPrint::writeDotForDfg(ff, dfg);
+  ff.close();
+
+#if DEBUG
+  int num = 1;
+  foreach_(Stencil* s, c->getDesign()->getStencils()) {
+    cout << "Stencil " << num << endl;
+    s->print();
+    cout << endl;
+    num++;
+  }
+#endif
+
+  return 0;
 }

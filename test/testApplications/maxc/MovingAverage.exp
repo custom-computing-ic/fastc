@@ -1,0 +1,26 @@
+package engine;
+
+import com.maxeler.maxcompiler.v1.kernelcompiler.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.*    ;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
+
+public class MovingAverage extends Kernel {
+
+
+    public MovingAverage(KernelParameters parameters) {
+        super(parameters);
+        HWVar x =  io.input("x", hwFloat(8, 24));
+
+        HWVar prev = (0.03 * stream.offset(x, -1));
+        HWVar next = (2 * stream.offset(x, 1));
+        HWVar sum = ((prev + x) + next);
+        HWVar result = (sum / 3);
+
+        io.output("y", result, hwFloat(8, 24));
+    }}

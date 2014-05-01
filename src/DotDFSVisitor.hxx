@@ -1,10 +1,13 @@
 #ifndef DOTDFSVISITOR_HXX
 #define DOTDFSVISITOR_HXX
 
-#include "DataFlowGraph/DataFlowGraph.hxx"
+#include "precompiled.hxx"
 #include "DataFlowGraph/DFSVisitor.hxx"
 
 #include <string>
+#include <fstream>
+
+class DataFlowGraph;
 
 class DotDFSVisitor : public DFSVisitor {
 
@@ -17,6 +20,8 @@ public:
   void beforeVisit();
   void afterVisit();
   string getDot();
+  void writeDotToFile(std::ofstream &f);
+  void writeDotEdges(ofstream &f);
 };
 
-#endif 
+#endif

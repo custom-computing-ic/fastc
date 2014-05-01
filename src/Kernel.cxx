@@ -1,7 +1,23 @@
 #include "Kernel.hxx"
 #include "passes/ExtractOutputs.hxx"
 #include "AstToMaxJVisitor.hxx"
+#include "StencilAstToMaxJVisitor.h"
 #include "utils.hxx"
+
+#include "StencilCodeGenerator.h"
+
+#include "DataFlowGraph/Node.hxx"
+#include "DataFlowGraph/InputNode.hxx"
+#include <iostream>
+
+Kernel::Kernel(string name, SgFunctionDeclaration* decl) {
+  this->name = name;
+  preamble = declaration() + "\n";
+  declarations = "";
+  this->decl = decl;
+
+  this->dfg = new DataFlowGraph();
+}
 
 string Kernel::declaration() {
   return "package engine;\n\n" + imports() + "\n"
@@ -23,6 +39,7 @@ string Kernel::imports() {
 
 }
 
+
 void Kernel::removeOutputAssignments() {
   ExtractOutputs extractOutputs(getOutputs());
   extractOutputs.traverse(decl->get_definition(), preorder);
@@ -36,22 +53,6 @@ string Kernel::import(list<string> imports) {
     import += "import com.maxeler.maxcompiler.v1.kernelcompiler." + (*it)
       + ";\n";
   return import;
-}
-
-Kernel::Kernel(string name, SgFunctionDeclaration* decl) {
-  this->name = name;
-  preamble = declaration() + "\n";
-  declarations = "";
-  this->decl = decl;
-}
-
-string Kernel::getName() {
-  return name;
-}
-
-string Kernel::getFunctionName() {
-  // XXX for now assume kernels are kernel_<KernelName>
-  return "kernel_" + name;
 }
 
 
@@ -69,12 +70,19 @@ bool Kernel::isStreamArrayType(string identifier) {
   return false;
 }
 
-string Kernel::getSource() {
-  extractIO();
-  generateIO();
-  ASTtoMaxJVisitor visitor(this);
-  visitor.traverse(decl->get_definition());
-  addSource(visitor.getSource());
+string Kernel::generateSourceCode() {
+  if (!isStencilKernel()) {
+    extractIO(true);
+    generateIO();
+
+    ASTtoMaxJVisitor visitor(this);
+    visitor.traverse(decl->get_definition());
+    addSource(visitor.getSource());
+  } else {
+    extractIO(false);
+    StencilCodeGenerator scg(this);
+    addSource(scg.generateStencilCode());
+  }
 
   preamble += constants +
     "public " + name + "(KernelParameters parameters) {\n"
@@ -110,6 +118,7 @@ void Kernel::addInput(string varName, string inputName, string ioType, string co
   }
 }
 
+
 void Kernel::addOutput(string varName, string outputName, string ioType, string computeType, string width) {
   string type = computeType;
   if (width != "1") {
@@ -120,6 +129,7 @@ void Kernel::addOutput(string varName, string outputName, string ioType, string 
   outputs.push_back(new OutputNode(this, varName, outputName, ioType, computeType, width));
 }
 
+
 void Kernel::addScalarInput(string varName, string inputName, string ioType, string computeType) {
   scalars.push_back(inputName);
   declarations += "HWVar " + varName + " =  io.scalarInput(\"" + inputName
@@ -129,11 +139,13 @@ void Kernel::addScalarInput(string varName, string inputName, string ioType, str
   declarations+= ";\n";
 }
 
+
 void Kernel::generateIO() {
   foreach_ (OutputNode* outputNode, outputs) {
     output += outputNode->toMaxJ();
   }
 }
+
 
 // XXX: this should account for type width
 string Kernel::convertType(string type) {
@@ -149,6 +161,7 @@ string Kernel::convertType(string type) {
   return "hwFloat(8, 24)";
 }
 
+
 string Kernel::convertHwType(string type) {
   string hwType = type;
   regex floatType("float \\( (\\d*), (\\d*) \\)");
@@ -163,6 +176,7 @@ string Kernel::convertHwType(string type) {
 
 }
 
+
 string Kernel::convertWidth(SgType *type) {
   using namespace SageInterface;
   if (isSgArrayType(type)) {
@@ -172,7 +186,7 @@ string Kernel::convertWidth(SgType *type) {
       string s;
       if (isSgValueExp(dims[1]))
         s = boost::lexical_cast<string>(getIntegerConstantValue(isSgValueExp(dims[1])));
-        else
+      else
         s = dims[1]->unparseToString();
       return s;
     } else
@@ -180,6 +194,7 @@ string Kernel::convertWidth(SgType *type) {
   }
   return "1";
 }
+
 
 set<string> Kernel::findModset(SgNode* sgNode) {
   Rose_STL_Container<SgNode* > assigns;
@@ -189,25 +204,26 @@ set<string> Kernel::findModset(SgNode* sgNode) {
     SgAssignOp* op = isSgAssignOp(node);
     string name = op->get_lhs_operand()->unparseToString();
     SgExpression* nameExp;
-    if (SageInterface::isArrayReference(op->get_lhs_operand(), &nameExp))
+    if (SageInterface::isArrayReference(op->get_lhs_operand(), &nameExp)) {
       name = nameExp->unparseToString();
+    } else if (isSgPointerDerefExp(op->get_lhs_operand())) {
+      // XXX this is a hack since it assumes only one pointer dereference
+      // TODO should check for multiple dereferences
+      name = isSgPointerDerefExp(op->get_lhs_operand())->get_operand_i()->unparseToString();
+    }
     modSet.insert(name);
   }
   return modSet;
 }
 
 
-void Kernel::extractIO() {
+void Kernel::extractIO(bool _removeOutputAssignments) {
 
   // extract kernel inputs and outputs
-  SgInitializedNamePtrList args = decl->get_args();
-  SgInitializedNamePtrList::iterator it = args.begin();
-
   set<string> modSet = findModset(decl->get_definition());
   int paramNumber = 0;
-  for ( ; it != args.end(); it++) {
+  foreach_(SgInitializedName* param, decl->get_args()) {
 
-    SgInitializedName* param = *it;
     SgType* param_type = param->get_type();
     string varName = param->get_name().getString();
     string inputName = originalParams[paramNumber];
@@ -236,12 +252,15 @@ void Kernel::extractIO() {
     paramNumber++;
   }
 
-  removeOutputAssignments();
+  if (_removeOutputAssignments)
+    removeOutputAssignments();
 }
 
-void Kernel::saveIO() {
+
+void Kernel::saveOriginalInputOutputNodes() {
   SgInitializedNamePtrList args = decl->get_args();
   set<string> modSet = findModset(decl->get_definition());
+
   foreach_(SgInitializedName* param, decl->get_args()) {
     SgType* paramType = param->get_type();
     string paramName = param->get_name().getString();
@@ -249,14 +268,22 @@ void Kernel::saveIO() {
     if (isSgPointerType(paramType) || isSgArrayType(paramType)) {
       if (modSet.find(paramName) != modSet.end()) {
         streamOutputParams.push_back(paramName);
+
+        // add output node to DFG
+        dfg->addOutputNode(new OutputNode(paramName));
       } else {
         streamInputParams.push_back(paramName);
+
+        // add input node to DFG
+        dfg->addInputNode(new InputNode(paramName));
       }
     } else {
       scalarInputs.push_back(paramName);
+      dfg->addInputNode(new InputNode(paramName));
     }
   }
 }
+
 
 void Kernel::addOffsetExpression(string var, string max, string min) {
   offsets.push_back(var);
@@ -264,14 +291,75 @@ void Kernel::addOffsetExpression(string var, string max, string min) {
     "\"" + var + "\", " + min + ", " + max + ");\n";
 }
 
+
 void Kernel::updateTypeInfo(string identifier, string ioType, string computeType) {
   ioTypeMap[identifier] = convertHwType(ioType);
   computeTypeMap[identifier] = convertHwType(computeType);
 }
 
-void Kernel::addDesignConstant(string name, string value) {
+
+void Kernel::addDesignConstant(string name, string value, string type) {
   if ( designConstants.find(name) == designConstants.end()) {
     designConstants.insert(name);
-    constants += "final int " + name + " = " + value + ";\n";
+    constants += "final " + type + " " + name + " = " + value + ";\n";
   }
+}
+
+
+string Kernel::getName() {
+  return name;
+}
+
+
+string Kernel::getFunctionName() {
+  // XXX for now assume kernels are kernel_<KernelName>
+  return "kernel_" + name;
+}
+
+
+void Kernel::print(ostream& out) {
+  out << this->getName() << "[Outputs: ";
+  foreach_(string s, streamOutputParams) {
+    out << s << " ";
+  }
+  out << ", Inputs: ";
+  foreach_(string s, streamInputParams) {
+    out << s << " ";
+  }
+  out << "]";
+}
+
+
+vector<string> Kernel::getParamOffsets(
+                                       vector<string> dfeTaskArguments,
+                                       list<string> param_names) {
+  vector<string> task_inputs;
+  foreach_(int o, getKernelParamOffsets(param_names)) {
+    task_inputs.push_back(dfeTaskArguments[o]);
+  }
+  return task_inputs;
+}
+
+
+vector<int> Kernel::getKernelParamOffsets(list<string> param_name_vector) {
+  int pos = 0;
+  vector<int> arg_offsets;
+  foreach_(SgInitializedName* arg, decl->get_args()) {
+    string arg_name = arg->unparseToString();
+    list<string>::iterator it = find(
+                                     param_name_vector.begin(),
+                                     param_name_vector.end(),
+                                     arg_name);
+    if (it != param_name_vector.end())
+      arg_offsets.push_back(pos);
+
+    pos++;
+  }
+
+  return arg_offsets;
+}
+
+
+string Kernel::getParamName(int index) {
+  return decl->get_args()[index]->unparseToString();
 }

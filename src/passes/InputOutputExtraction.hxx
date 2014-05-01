@@ -9,7 +9,7 @@ public:
   InputOutputExtraction() {}
   void runPass(Design *design) {
     foreach_(Kernel *kernel, design->getKernels()) {
-      kernel->extractIO();
+      kernel->extractIO(false);
     }
   }
 

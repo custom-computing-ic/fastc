@@ -14,6 +14,7 @@ public:
       " = io.input(\"" + getName() + "\"," + getType() + ")";
   }
   
+  string classname() { return "InputNode"; }
 };
 
 #endif

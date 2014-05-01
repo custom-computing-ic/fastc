@@ -3,6 +3,7 @@
 
 #include "Pass.hxx"
 
+/** Generate MaxJ code corresponding to the FAST dataflow designs. */
 class CodeGeneration : public Pass {
 public:
   CodeGeneration() {}

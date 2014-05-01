@@ -3,20 +3,19 @@
 
 #include "Node.hxx"
 #include "../precompiled.hxx"
-//#include "../Kernel.hxx"
 
 class Kernel;
 
 class OutputNode : public Node {
 
   SgNode* node;
-  string width;
-  string ioType, computeType;
+  string width, ioType, computeType, outputName;
   Kernel* kernel;
-  string outputName;
 
 public:
-
+  OutputNode(string name) : Node(name) {
+    this->name = name;
+  }
   OutputNode(Kernel* kernel, string name, string outputName, string ioType, string computeType, string width) : Node(name){
     this->width = width;
     this->ioType = ioType;
@@ -42,6 +41,8 @@ public:
     else
     return ioType;
   }
+
+  string classname() { return "OutputNode"; }
 };
 
 #endif
