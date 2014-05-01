@@ -11,7 +11,7 @@ Experimental speedup results for our implementation of the bitonic
 sorting network design are listed in \Cref{table:bit-data}.
 
   \begin{sidewaystable}
-    \renewcommand{\arraystretch}{0}
+    \renewcommand{\arraystretch}{1.3}
     \begin{tabularx}{\textheight}{p{3.5cm}|X|X|X|X|X|X|X|X|X|X|X|X|p{1cm}|}
       \textbf{Aspects} & \textbf{DSP Balance} & \textbf{Par} & \textbf{Mem Freq} & \textbf{Width} & \textbf{FPGA Time (Ms)} & \textbf{Total Time (s)} & \textbf{Total Power (Watt)} & \textbf{Dyn. Power (Watt)} & \textbf{LUT (\%)} & \textbf{FF(\%)} & \textbf{BRAM (\%)} & \textbf{DSP (\%)} & \textbf{Build Time} \\
       \hline \hline
@@ -49,7 +49,7 @@ sorting network design are listed in \Cref{table:bit-data}.
   \renewcommand{\arraystretch}{1.1}
   \begin{tabularx}{\textwidth}{X|X|X|X|X|X|X}
     \hline
-    Network Size        & log(n)      & CPU Time & FPGA Time & Compute Speedup & FPGA Total Time & FPGA Total Speedup \\
+    \textbf{Network Size}        & \textbf{log(n)}      & \textbf{CPU Time} & \textbf{FPGA Time} & \textbf{Compute Speedup} & \textbf{FPGA Total Time} & \textbf{FPGA Total Speedup} \\
     \hline \hline
     \multirow{10}{*}{128}   & 14          & 0.156162 & 0.006564  & 23.79           & 1.006564        & 0.1551             \\
     & 15          & 0.312428 & 0.013028  & 23.98           & 1.013028        & 0.3084             \\

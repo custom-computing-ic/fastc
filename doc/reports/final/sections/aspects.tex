@@ -1,8 +1,8 @@
 \chapter{Aspect Descriptions}
 \label{sec:aspects}
 
-Aspects descriptions are modules that capture functional cross-cutting
-concerns that are decoupled from the primary function of a program. In
+Aspect descriptions are modules that capture functional cross-cutting
+concerns which can be decoupled from the primary function of a program. In
 traditional Aspect-oriented approaches, program execution points
 (e.g. method calls) are intercepted at run-time to allow new code to
 be executed before, after or in place of these execution points. The
@@ -346,43 +346,46 @@ end
 \label{sect:asp_reconfig}
 
 
-Run-time reconfiguration aspects are used to partition and generate
+Run-time reconfiguration aspects can be used to partition and generate
 hardware/software links required for reconfiguration based on user
-specified requirements and optimisation goals.
+specified requirements and optimisation goals. To support run-time
+reconfiguration, we specify the configuration associated with the
+function call in the \FAST{} pragma as shown in Listing
+\ref{lst:fast-reconf}.
 
-To support run-time reconfiguration, we specify the configuration
-associated with the function call in the \FAST{} pragma. For instance:
+\begin{lstlisting}[label=lst:fast-reconf,caption=FAST support for run-time reconfiguration.]
+(*@\marktext{\#pragma FAST hw:fast\_f0 cfg:c0}@*)
+x = f(0);
+(*@\marktext{\#pragma FAST hw:fast\_f1 cfg:c1}@*)
+y = f(x);
+(*@\marktext{\#pragma FAST hw:fast\_g cfg:c1}@*)
+z = g(x);
+\end{lstlisting}
 
-\noindent\texttt{\footnotesize{\marktext{\#pragma FAST hw:fast\_f0 cfg:c0}\\
-x = f(0); \\
-\marktext{\#pragma FAST hw:fast\_f1 cfg:c1}\\
-y = f(x); \\
-\marktext{\#pragma FAST hw:fast\_g cfg:c1}\\
-z = g(x); \\
-}}
 
-\noindent With the above code annotations, our design-flow can
-generate multiple configurations, each containing a set of \FAST{}
-implementations that can be executed in parallel. If the configuration
-name is not specified using the \FAST{} pragma, then we assume a
-default configuration. Having a single configuration can lead to
-situations where at any point in time and due to data dependencies,
-part of the functions are idle. With run-time reconfiguration, we can
-exploit unused resources to support active functions. In particular,
-during the execution of an application, we select various
-configurations at different points in time to maximise the utilisation
-of FPGA resources. Within this context, we use a hardware partition,
-which contains a set of configurations that are used to support
-reconfiguration during the life cycle of an application. In the above
-example, configuration \texttt{c0} contains a single implementation of
-\texttt{f} (\texttt{fast\_f0}), and thus can potentially use more
-resources and be faster than the \texttt{fast\_f1} version which must
-share the same configuration (\texttt{c1}) with \texttt{fast\_g}.
+With the directives shown in Listing \ref{lst:fast-reconf}, our
+design-flow can generate multiple configurations, each containing a
+set of \FAST{} implementations that can be executed in parallel. If
+the configuration name is not specified using the \FAST{} pragma, then
+we assume a default configuration. Having a single configuration can
+lead to situations where at any point in time and due to data
+dependencies, part of the functions are idle. With run-time
+reconfiguration, we can exploit unused resources to support active
+functions. In particular, during the execution of an application, we
+select various configurations at different points in time to maximise
+the utilisation of FPGA resources. Within this context, we use a
+hardware partition, which contains a set of configurations that are
+used to support reconfiguration during the life cycle of an
+application. In the above example, configuration \texttt{c0} contains
+a single implementation of \texttt{f} (\texttt{fast\_f0}), and thus
+can potentially use more resources and be faster than the
+\texttt{fast\_f1} version which must share the same configuration
+(\texttt{c1}) with \texttt{fast\_g}.
 
 The work in~\cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} proposes an
 approach for extracting valid and efficient hardware partitions. To realize
 run-time reconfiguration without modifying the original code we use the
-aspect shown in Fig.~\ref{fig:aspect-reconf}.  The input to the
+aspect shown in \Cref{fig:aspect-reconf}.  The input to the
 aspect is a hardware partition (lines 2--4). The partition is implemented as a
 hash table that maps a function call (key) to a hardware
 implementation, represented as a tuple containing the hardware
@@ -416,7 +419,7 @@ representing a hardware partition. The key (e.g. main:f:1) identifies
 a function call in the application, and is formed by concatenating the
 name of the caller function (main), the name of the invoked function
 (e.g. f) and a unique number (1).  Line~5 in the aspect shown in
-Fig.~\ref{fig:aspect-reconf} selects all function calls, and for each
+\Cref{fig:aspect-reconf} selects all function calls, and for each
 call found in the input partition (line~7), we set the appropriate
 pragma on top of the call statement (lines 10--12). We can now realize
 and experiment different reconfiguration designs by invoking this
@@ -426,10 +429,7 @@ aspect with different hardware partitions.
 %{\footnotesize
 %\fontfamily{pcr}\selectfont
 \begin{table}[!h]
-\caption{An example of a hardware partition, represented as a hash
-  table, used with the reconfiguration aspect
-  (Fig.~\ref{fig:aspect-reconf})}
-\label{fig:aspect-hash}
+
 \centering
 \begin{tabular}{c|c|c}
 \hline
@@ -442,6 +442,10 @@ main:f:2 & fast\_f1 & c1 \\
 main:g:3 & fast\_g & c1 \\
 \hline
 \end{tabular}
+\caption{An example of a hardware partition, represented as a hash
+  table, used with the reconfiguration aspect
+  (\Cref{fig:aspect-reconf})}
+\label{fig:aspect-hash}
 \end{table}
 \begin{comment}
 \subsection{Feedback Aspects}
@@ -464,41 +468,39 @@ expressions in the design.
 
 
 
-\subsection{Operator Optimisation}
+\subsection{Optimisation}
 \label{sect:asp_ops}
-To provide architectural details to \FAST{} designs, such as mapping
-operators to DSP blocks, we can use the \FAST{} pragma shown in
-Fig. \ref{fig:aspect-balance} at the top of a statement (including code
-blocks). The balancing parameter corresponds to the degree of
-utilisation of DSP blocks in a statement.
+\FAST{} supports a number of directives that can be used for platform
+specific optimisations. For, example, to provide architectural details
+to \FAST{} designs, such as mapping operators to DSP blocks, we can
+use the \FAST{} pragma shown in Listing \ref{lst:aspect-balance}
+before a code block or single statement. The balancing parameter
+corresponds to the degree of utilisation of DSP blocks in a statement
+which is passed to the MaxCompiler backend to perform the
+optimisation.
 
-\lstset{style=MaxC}
-\begin{figure}[!h]
-\begin{lstlisting}
+\begin{lstlisting}[style=MaxC, label={lst:aspect-balance}, caption={The \FAST{}
+    balancing pragma provides fine grained control over the mapping of
+    computation to either DSPs or LUT/FF pairs.}]
 (*@ \marktext{\#pragma FAST balanceDSP:balanced} @*)
 {
   x = x * y;
   x++;
 }
 \end{lstlisting}
-\caption{The \FAST{} balancing pragma provides fine grained control
-  over the mapping of computation to either DSPs or LUT/FF pairs.}
-\label{fig:aspect-balance}
-\end{figure}
 
-The aspect shown in Fig.~\ref{fig:aspect-DSP} is the strategy for
-balancing DSP blocks in every statement of an application. Instead of
-adding the above pragma manually, we provide a set of rules
-(lines~3--4) that define where to place the \texttt{balanceDSP}
-pragma. In this example, we established the rule that full DSP block
-utilisation is applied to any statement that has 5 or more
-multipliers and adders, balanced if 3 or more multipliers, and no DSP
-utilisation otherwise.
+Listing \ref{lst:aspect-DSP} shows a possible strategy for balancing
+DSP blocks in every statement of an application. This results in a
+portable description in which the optimisation directives are placed
+automatically. Instead of manually applying the optimisation, the user
+provides a set of rules (lines~3--4) that define where to place the
+\texttt{balanceDSP} pragma. In this example, full DSP block
+utilisation is applied to any statement that has 5 or more multipliers
+and adders, balanced if 3 or more multipliers, and no DSP utilisation
+otherwise.
 
-\lstset{style=lara}
-\begin{figure}[!h]
-  \centering
-  \begin{lstlisting}
+
+\begin{lstlisting}[style=lara, label={lst:aspect-DSP}, caption= {Aspect for exploring mapping of computation to DSP blocks.}]
 aspectdef DspBalancing
 var op_granularity =
  [{DspBalance:'full',MultiplyOp: 5,AddOp: 5 },
@@ -520,45 +522,46 @@ apply
          break;}}
    end
 end
-  \end{lstlisting}
-  \caption{Aspect for exploring mapping of computation to DSP blocks.}
-  \label{fig:aspect-DSP}
-\end{figure}
-
-
+\end{lstlisting}
 
 
 \section{Exploration Aspect Descriptions}
 
-Exploration aspects deal with strategies that generate multiple designs to find an optimal
-implementation based on user requirements. Exploration aspects can act
-on any level of the design flow (C code, C and \FAST{}, or \FAST{}
-functions). They enable systematic exploration of trade-offs and
-optimisation opportunities. Examples of exploration aspects include
-iterative aspects (Section~\ref{sect:asp_it}) which generate a
-sequence of solutions until a termination criterion is satisfied, and
-metaheuristic-based aspects to find optimal solutions in a very large
-design space.
+Exploration aspects specify strategies responsible for generating
+multiple designs to find an optimal implementation based on user
+requirements. Exploration aspects can act on any level of the design
+flow (C code, C and \FAST{}, or \FAST{} functions) and enable
+automated exploration of trade-offs and optimisation
+opportunities. Examples of exploration aspects include iterative
+aspects (\Cref{sect:asp_it}) which generate a sequence of solutions
+until a termination criterion is satisfied. Additionally
+metaheuristic-based aspects could be used to find optimal solutions in
+a very large design space.
 
 \subsection{Iterative Design Space Exploration}
 \label{sect:asp_it}
-Using LARA we can implement and combine these aspects to enable
+The aspect descriptions shown so far can be combined to enable
 systematic design space exploration of all the optimisation options
-exposed by the \FAST{} backend resulting in the generation of a large
-number of designs. The feedback-directed compilation process of LARA
-can be used to capture and extract feedback from the backend reports
-pertaining to resource usage or timing information and automatically
-adjust the compilation process.
+exposed by the \FAST{} backend resulting in the automatic generation
+of a large number of designs. The feedback-directed compilation
+process of LARA could be used to capture and extract feedback from the
+backend reports pertaining to resource usage or timing information and
+automatically adjust the compilation process.
 
-An example of a LARA aspect for design space exploration is
-shown in Fig.~\ref{fig:aspect-exploration}. It highlights the feedback capabilities of the design
-flow: the aspect will generate and build the \FAST{} designs until the
-resource usage passes a specified LUT threshold, and at each step
-increasing a particular design attribute, such as exponent, mantissa or the parallelism of the design (by replicating the computational pipeline).
+An example of a LARA aspect for design space exploration is shown in
+\Cref{fig:aspect-exploration}. It highlights the feedback capabilities
+of the design flow: the aspect will generate and build the \FAST{}
+designs until the resource usage passes a specified LUT threshold, and
+at each step increasing a particular design attribute, such as
+exponent, mantissa or the parallelism of the design (by replicating
+the computational pipeline).
 
-\lstset{style=lara}
-\begin{figure}[!h]
-\begin{lstlisting}
+\begin{lstlisting}[
+  style=lara,
+  caption=Exploration aspect that generates multiple \FAST{} designs by varying
+  a design attribute (e.g. number of kernels or mantissa) until a LUT threshold ]is reached.,
+  label={fig:aspect-exploration}
+]
   aspectdef DesignExploration
   input
      attribute,
@@ -577,49 +580,40 @@ increasing a particular design attribute, such as exponent, mantissa or the para
            && i < LIMIT);
   end
 \end{lstlisting}
-\caption{Exploration aspect that generates multiple \FAST{} designs by varying a design attribute (e.g. number of kernels or mantissa) until a LUT threshold is reached.}
-\label{fig:aspect-exploration}
-\end{figure}
-
 
 \section{Development Aspect Descriptions}
 
+
+
 Development aspects capture transformations that have an impact on the
-development process such as debugging (Section~\ref{sect:asp_debug}),
-and, potentially, simulating kernels or improving compilation
-speed. Separating these concerns makes the original code easier to
-maintain and enables the automatic application of these
-transformations to a wide range of designs, improving developer
-productivity. Simulation aspects could be applied to dataflow designs
-to generate equivalent state-based C code thus enabling pure software
-simulation. Compilation aspects, on the other hand, could be applied
-during the development process to create versions of the dataflow
-design that compile faster by reducing the operating frequency,
-removing debug blocks or applying design-level optimisations that can
-resolve timing constraints. Naturally, reducing the compilation time
-would increase developer productivity.
-
-
-
-
-
-
-
-
-
-
-
+development process such as debugging
+(\Cref{sect:asp_debug}). Separating these concerns simplifies
+maintenance of the original code and enables automatic application of
+these transformations to a wide range of designs, improving developer
+productivity. For example, simulation aspects could be applied to
+dataflow designs to generate equivalent state-based C code thus
+enabling pure software simulation. Compilation aspects, on the other
+hand, could be applied during the development process to create
+versions of the dataflow design that compile faster by reducing the
+operating frequency, removing debug blocks or applying design-level
+optimisations that can resolve timing constraints. Naturally, reducing
+the compilation time would increase developer productivity.
 
 \subsection{Debugging Aspect}
 \label{sect:asp_debug}
-Because the current execution model does not provide run-time debugging
-of hardware designs, the easiest solution to debug designs is to log
-the values of various streams during execution. The insertion of debug
-statements can be encapsulated in aspects. It is particularly
-important to separate debug aspects from the original application code
-since debug blocks can influence the compilation time and timing
-constraints as well as the behaviour of the design. As an example,
-the aspect in Fig. ~\ref{fig:aspect-debug} instruments the code to log every change in the value of a variable.
+
+Debugging aspects can be used to overcome an important limitation of
+the back-end tool-chain lack of run-time debugging. In this case, the
+easiest solution to debug designs is to log the values of various
+streams during execution. The insertion of debug statements can be
+encapsulated in aspects. It is particularly important to separate
+debug aspects from the original application code since debug blocks
+can influence the compilation time and timing constraints as well as
+the behaviour of the design. Additionally, adding debug code is a
+repetitive and error-prone task that can be automated to a great
+extent using adequate aspect description. As an example, the aspect in
+\Cref{fig:aspect-debug} instruments the code to log every change in
+the value of a variable.
 
 \lstset{style=lara}
 \begin{figure}[!h]
@@ -643,19 +637,20 @@ end
 
 \section{Summary}
 
-We have introduced the four main classes of novel aspect descriptions
-used with our the proposed design flow. System aspect descriptions
-operate at the whole system level (C + \FAST{} specification) to
-generate hardware/software partitioning, run-time reconfiguration
-designs, monitorisation and modelling of resource usage and
-performance data.  Implementation aspect descriptions operate at the
-design level and perform low level optimisations such as mapping of
-computation to DSPs or adjusting word length. Exploration aspect
-descriptions are used to drive the design space exploration process,
-for example, iteratively increase a certain design property (such as
-parallelism or clock frequency) until a certain requirement is met
-(e.g. resource usage threshold is exceeded or execution time
-requirement is met). Finally, development aspect descriptions can be
-used to capture strategies that are related to the development
-process, such as the need for monitoring values or reducing
-compilation time.
+We have introduced four novel classes of aspect descriptions and have
+shown how these can be used with the proposed design flow to generate
+more efficient, productive and portable descriptions. System aspect
+descriptions operate at the whole system level (C + \FAST{}
+specification) to generate hardware/software partitioning, run-time
+reconfiguration designs, monitorisation and modelling of resource
+usage and performance data.  Implementation aspect descriptions
+operate at the design level and perform low level optimisations such
+as mapping of computation to DSPs or adjusting word
+length. Exploration aspect descriptions are used to drive the design
+space exploration process, for example, iteratively increase a certain
+design property (such as parallelism or clock frequency) until a
+certain requirement is met (e.g. resource usage threshold is exceeded
+or execution time requirement is met). Finally, development aspect
+descriptions can be used to capture strategies that are related to the
+development process, such as the need for monitoring values or
+reducing compilation time.

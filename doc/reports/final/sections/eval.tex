@@ -374,14 +374,13 @@ trade-off opportunities using design space exploration.
 \begin{figure}[!h]
   \centering
   \begin{tikzpicture}
-    \selectcolormodel{gray}
     \begin{axis}[
       xmin=16,
       ymin=0,
       axis y line*=left,
       xlabel=Mantissa Bits,
       ylabel=Resource Usage(\%),
-      xtick={16,18,20,22,24},
+      xtick=data,
       ytick={4, 10, 20, 40, 50, 70, 80, 100},
       legend columns=4,
       legend entries={
@@ -390,7 +389,7 @@ trade-off opportunities using design space exploration.
         LUT Usage,
         BRAM Usage},
       legend style={
-        at={(-0.1,1.1)},
+        at={(0,1.1)},
         anchor=west
       }
       ]
@@ -427,7 +426,6 @@ trade-off opportunities using design space exploration.
       ylabel=Precision (1E-6),
       axis y line*=right,
       axis x line=none,
-      ylabel style={at={(1.35,0.5)}}
       ]
       \addplot[mark=none] coordinates {
         (16, 15.2585)
@@ -449,7 +447,7 @@ $$ \text{precision} = \frac{1}{2^{\text{mantissa bits}}} $$
 
 \begin{table}[!ht]
   \begin{tabularx}{\textwidth}{c|c|X|X|X|X|X}
-    Exp. & Mant. & FF    & BRAM  & LUT   & DSP   & Precision ($1E-6$) \\
+    \textbf{Exp.} & \textbf{Mant.} & \textbf{FF \%}    & \textbf{BRAM \%}  & \textbf{LUT \%}  & \textbf{DSP \%}   & \textbf{Precision ($1E-6$)} \\
     \hline\hline
     8      & 24    & 24.09 & 27.73 & 34.13 & 34.82 & 0.0596             \\
     8      & 22    & 31.17 & 27.73 & 45.02 & 15.18 & 0.2384             \\
