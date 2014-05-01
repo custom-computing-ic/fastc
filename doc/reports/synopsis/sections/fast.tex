@@ -1,35 +1,27 @@
 \label{sec:fast}
 
 \FAST{} (Facile Aspect-driven Source Transformation) is a novel
-language for specifying dataflow designs that are used as a starting
-point for the design flow described in Section
-\ref{sec:design-flow}. In particular, we use C syntax to capture
-dataflow computations but, instead of heavily relying on API libraries
-to specify the design (as in MaxCompiler \cite{5719584}), we use
-aspect descriptions to specify the transformations required to
-optimise the dataflow implementation.
+language for specifying dataflow designs used as a starting point for
+the design flow described in Section \ref{sec:design-flow}. C syntax
+captures the dataflow computation and aspect descriptions specify the
+transformations required to optimise the dataflow implementation.
 
 Listing \ref{lst:fast-bscholesr} shows a simple implementation of a
-dataflow kernel for finite difference Black-Scholes option pricing
-which highlights some of the most important features of \FAST{}:
+dataflow kernel for Black-Scholes option pricing, highlighting some
+of the most important features of \FAST{}:
 \begin{itemize}
-\item dataflow kernels are declared as regular C functions with inputs
-  and outputs clearly defined as arguments in the function signature;
-\item \emph{streams} of data are declared and accessed as C99 style pointers;
+\item dataflow kernels are declared as C functions with inputs and
+  outputs defined in the function's signature;
+\item \emph{streams} of data are declared and accessed as C pointers;
 \item stream ``direction'' (input or output) is inferred by the compiler;
+\item array indexing is used to access previous, current or past
+  stream values;
 \item type width information is decoupled from the application code
   and can be added automatically via aspect generated pragma
   statements;
-\item array indexing is used to access previous, current or past
-  stream values;
-\item index values are linear combinations of compile-time constants
-  or variables;
-\item loops with compile-time bounds can be used to parametrise
-  dataflow designs;
 \item C function calls are mapped to dataflow kernels via pragmas
-  which provides the flexibility of selecting a software
-  implementation or dataflow configurations based on run-time
-  conditions.
+  which provides the flexibility of selecting between software
+  and dataflow implementations at run-time.
 \end{itemize}
 
 \begin{lstlisting}[
@@ -48,15 +40,23 @@ which highlights some of the most important features of \FAST{}:
     int stockstep  = (CURRENT_CYCLE / n1) \% timesteps;
 
     #pragma fast DSPBalance:full
-    float result = stockPrices[ 0] * c1 + stockPrices[ 1] * c2 + stockPrices[-1] * c3;
+    float result = stockPrices[0] * c1 + stockPrices[1] * c2 + stockPrices[-1] * c3;
 
     // 4. boolean types used for conditions
     bool up = (stockstep >= stencilOrder) && (stock < stockstep - stencilorder);
 
     // 5. assigning to output stream automatically outputs value
     r[0] = up ? result : stockPrices;
+
   }
 
+  // Regular C style CPU implementation and main function
+  void Price_CPU(...) {...}
+
+  int main() {
+    #pragma FAST hw:Price_FPGA
+    Price_CPU(...);
+  }
 \end{lstlisting}
 
 \Cref{table:fast-features} summarises the features of \FAST{} and
@@ -96,12 +96,18 @@ direct translation of C applications to dataflow designs.
 \end{table}
 
 
-\FAST{} dataflow designs are compiled by our experimental compiler,
-\fastc{} to MaxCompiler designs. \fastc{} extends the
-ROSE\cite{Quinlan:2000} compiler framework which is used to produce an
-Abstract Syntax Tree(AST) from C sources. The AST is directly
-manipulated in a series of compiler passes to generate MaxCompiler
-designs for the dataflow kernels. The sequence of passes includes:
+\FAST{} dataflow designs are compiled by the \fastc{} compiler to
+MaxCompiler~\cite{5719584} designs, a commercial tool for dataflow
+engines. MaxCompiler adopts a low-level dataflow language, so by
+providing a higher-level programming interface, we improve
+productivity of dataflow programmers.
+
+\fastc{} extends the ROSE~\cite{Quinlan:2000} compiler framework to
+produce an Abstract Syntax Tree (AST) from C sources. \fastc{}
+comprises 47 classes, including a decoupled library for analysis of
+dataflow graphs, totalling approximately three thousand lines of
+executable code and two thousand lines of tests. \fastc{} transforms
+the ROSE AST in a series of compiler passes including:
 
 \begin{enumerate}
 \item \textbf{Extract dataflow kernels} -- separates \FAST{} dataflow
@@ -127,26 +133,9 @@ designs for the dataflow kernels. The sequence of passes includes:
 \item \textbf{Inline auxiliary functions} and \textbf{Static Single
     Assignment Renaming} -- inline calls to helper functions
   made from \FAST{} dataflow kernels;
-\item \textbf{Type Checking and Inference} -- based on the type of
-  input and output streams and values of constants infer and check
-  type consistency;
 \item \textbf{Dataflow Graph Generation} -- traverse the AST of every
-  dataflow kernel to create a corresponding dataflow graph. An example
-  generated dataflow graph is shown in \Cref{fig:fast-dfg}. It
-  illustrates \texttt{Input}, \texttt{Offset} and \texttt{Arithmetic}
-  nodes. The \emph{in} edge of input nodes is connected to a special node
-  name \texttt{Source} while the \emph{out} edge of output nodes is
-  connected to a special \texttt{Sink} node;
-\item \textbf{Remove FAST} -- removes the function nodes corresponding
-  to the dataflow kernels from the AST and verifies AST integrity;
+  dataflow kernel to create a corresponding dataflow graph;
 \item \textbf{MaxCompiler Design Generation} -- traverse the constructed
   dataflow graph and the original AST to generate corresponding MaxCompiler
   designs for extracted dataflow kernels.
 \end{enumerate}
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.5, clip=true, trim=880 740 650 0]{figs/MaxCtemplateDFG.png}
-  \caption{Section of a dataflow graph generated using \fastc{}.}
-  \label{fig:fast-dfg}
-\end{figure}

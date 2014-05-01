@@ -15,11 +15,13 @@
 \usepackage{mdwtab}
 \usepackage{xcolor}
 \usepackage{tikz}
-\usepackage{geometry}
+\usepackage[top=1in, bottom=1.4in, left=1.1in, right=1.1in]{geometry}
+\usepackage{capt-of}
 \usepackage{rotating}
 \usepackage{pbox}
 \usepackage{pdflscape}
 \usepackage{tabularx}
+\usepackage{subfig}
 %\usepackage{pstricks}
 \usepackage{parskip}
 \usepackage{algpseudocode}
@@ -123,7 +125,7 @@
 
 
 \lstset{aboveskip=20pt,
-  belowskip=20pt,
+  belowskip=10pt,
   basicstyle=\scriptsize\sffamily,
   rulecolor=\color{lightgray},
   frame=single,
@@ -142,8 +144,8 @@
   enlargelimits=0.1,
   compat=1.8,
   tick label style={font=\tiny},
-  label style={font=\footnotesize},
-  legend style={font=\scriptsize},
+  label style={font=\small},
+  legend style={font=\small},
   axis line style={lightgray},
 }
 
@@ -219,11 +221,70 @@
 \input{sections/eval.tex}
 \input{sections/conclusion.tex}
 
+\clearpage
+\appendix
+\section{Experimental Data}
+\label{sec:appendix}
+
+\begin{table}[!ht]
+{\small
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabularx}{\linewidth}{c|X|X|X|X|X|X|X|X|X}
+    & \textbf{CPU} & \textbf{GPU} \cite{phillips2010implementing} & \textbf{GPU} \cite{datta2008stencil} & \textbf{GPU} \cite{yang2012hybrid}& \textbf{FPGA} \cite{araya2011assessing} & \textbf{FPGA} \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} \ & \textbf{FPGA} & \textbf{FPGA D\footnote{D = Dynamic (i.e. using run-time reconfiguration)}} \cite{Xinyu:Qiwei:Luk:Qiang:Pell:2012} & \textbf{FPGA D} \\
+    \hline \hline
+    Freq.(GHz) & 2.7          & 1.15         &    1.15          &   1.15           &    0.1           & 0.1                 & 0.1                 & 0.1                 & 0.1                 \\
+    Time (s)   & 1458         & 52           &    --          &     --         &    --           & 18                  & 18.3                & 13.4                & 13.6                \\
+    GFLOP/s    & 0.9          & 51.2         &    36          &     64.5         &    35.8          & 68.0                & 66.8                & 91.6                & 90.2                \\
+    Speed-up(X)   & 1           & 56.8        &   40          &     71.6         &     39.7          & 76.4               & \textbf{74.22}     & 102.9              & \textbf{101.3}     \\
+    Power (W)  & 185          & --        &    461          &      --        &         --      & 129                 & 126                 & 128                 & 125                 \\
+    Efficiency & 4.9          & --        &    78          &       --       &    --           & 527.1               & 527.7               & 715.6               & 721.6               \\
+    Eff. Gains & 1           & --        &    15.9          &        --      & --            & 107.5              & \textbf{107.0}     & 146.0             & \textbf{147.1}     \\
+  \end{tabularx}
+  \caption{Comparison of our RTM implementation (results highlighted in bold) with other published results for CPU, GPU and FPGA.
+ FPGA implementations marked \emph{D} (Dynamic) exploit the possibility to reconfigure the FPGA chips with a new dataflow design at run-time to remove idle functions. This leads to improved performance and energy efficiency.}
+  \label{table:rtm-performance}
+}
+\end{table}
+
+\begin{table}[!ht] {\small
+    \renewcommand{\arraystretch}{1.5} \begin{tabularx}{\linewidth}{X|X|X|X|X|X}
+      \textbf{Kernel} & \textbf{Size} & \textbf{Reduction} &
+      \textbf{API Calls} & \textbf{Performance} & \textbf{Resource}
+      \\
+      \hline\hline
+      MemoryRead       & 48 & 43 \%               & 4.33                     & \multirow{2}{1.5cm}{$ > 75\%$}        & \multirow{6}{1.5cm}{$\approx 100\%$} \\
+      MemoryWrite      & 54  & 31 \%              & 4.13                     &                                   &                              \\
+      \cline{1-4}
+      RTMCompute            & 231 & 27 \%              & 10                       & \multirow{5}{1.5cm}{$ \approx 100\%$} &                              \\
+      SmoothFilter      & 60 & 45 \%              & 14                       &                                   &                              \\
+      Differentiation       & 58 & 42 \%              & 14                       &                                   &                              \\
+      Black-Scholes & 56  & 60 \%               & 5.5                      &                                   &                              \\
+      \cline{5-5}
+      AdPrediction & 94 & 40 \%             & 16                       &                                   &    $ \approx 117 \% $                          \\
+    \end{tabularx} \caption{Comparison of manual MaxCompiler designs
+      and \FAST{} designs. Column 2 gives the size of the benchmark in
+      executable lines of code, while columns 3 and 4 measure the
+      reduction in code size and API calls achieved by the FAST
+      implementations, showing that code size can be reduced by as
+      much as 60\% while using as much as 16 times less API
+      calls. MemoryRead and MemoryWrite are the memory controller
+      kernels and RTMCompute is the computational kernel of our RTM
+      implementation. SmoothFilter and Differentiation implement the
+      filtering and differentiation of our numerical differentiation
+      implementation. Black-Scholes and AdPrediction represent the
+      computational kernels for Black-Scholes options pricing and Bing
+      Ad Prediction respectively.}
+  \label{table:benchmark}
+}
+\end{table}
+
+
+\clearpage
 
 % some spacing
 \newcommand{\BIBdecl}{\setlength{\itemsep}{0.4 em}}
 
 \bibliographystyle{IEEEtran}
-\bibliography{../../refdb/bibliography.bib}
+\bibliography{bibliography.bib}
 
 \end{document}

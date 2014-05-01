@@ -1,18 +1,13 @@
 \label{sec:aspects}
 
-However, since \FAST{} designs only capture the simplest form of a
-dataflow design, \emph{aspect descriptions} are used to augment our
-flow with additional information used for optimisation. Aspect
-descriptions are modules that capture functional cross-cutting
-concerns which can be decoupled from the primary function of a
-program. Through a process called \emph{weaving} these modules can be
-combined with application code to allow the addition of new
-functionality. The LARA aspect-oriented design-flow
-\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012} used in
-this project (\Cref{fig:aspect-weaving}) performs weaving at
-compile-time, generating new sources that incorporate both functional
-elements of the original sources, and non-functional concerns (such as
-optimisations) captured by the aspect descriptions.
+However, since \FAST{} only captures the basic elements of a dataflow
+design, \emph{aspect descriptions} are used to augment our flow with
+additional capabilities. Aspect descriptions are modules that capture
+cross-cutting concerns which can be decoupled from the primary
+function of a program. Through \emph{weaving}
+(\Cref{fig:aspect-weaving}) these modules can be combined with
+application code to allow the addition of new functionality.
+
 
 \begin{figure}[!ht]
   \centering
@@ -22,43 +17,42 @@ optimisations) captured by the aspect descriptions.
   \label{fig:aspect-weaving}
 \end{figure}
 
-Combining the LARA aspect design-flow with \FAST{} dataflow designs
-allows dataflow computations to be expressed intuitively in \FAST{}
-while aspects specify decoupled optimisation and transformation
-strategies that operate on these descriptions. This approach makes the
-functionality of the application easier to understand, more
-maintainable and portable since it is no longer obscured by various
-structural or algorithmic transformations, or platform specific
-optimisations. In addition, strategies can be re-applied automatically
-in different applications, thus improving developer productivity.
+In this project we combine \FAST{} dataflow designs with the LARA
+aspect-oriented design-flow
+\cite{Cardoso:Carvalho:Cutinho:Luk:Nobre:Diniz:Petrov:2012} that
+performs weaving at compile-time to generate new sources which
+incorporate both functional elements of the original sources, and
+non-functional concerns (such as optimisations) captured by the aspect
+descriptions. This approach makes the functionality of the application
+easier to understand -- since computation is expressed more
+intuitively in \FAST{} -- and results in more maintainable and
+portable designs that are not obscured by algorithmic transformations
+or platform-specific optimisations. Additionally, strategies can be
+re-used across different applications, improving developer
+productivity.
 
-We introduce novel aspect descriptions to use with \FAST{} dataflow
-designs, which we group in four main classes:
-
-\begin{itemize}
-\item \textbf{System Aspect Descriptions} are applied at the whole
-  system level (\FAST{} + C application) to capture the mapping
-  between application modules and accelerator
-\item \textbf{Implementation Aspect Descriptions} are applied at the
-  level of the dataflow design, to apply platform specific
-  optimisations
-\item \textbf{Exploration Aspect Descriptions} are used to explore the
-  design space of optimisation trade-offs
-\item \textbf{Development Aspect Description} are used to support
-  the development process
-\end{itemize}
+We group aspect descriptions used with our approach in four main
+classes: \emph{i. system aspect descriptions}, are applied at the
+whole system level (\FAST{} + C application) to capture the mapping
+between application modules and dataflow accelerator,
+\emph{ii. implementation aspect descriptions}, operate at the level of
+the dataflow design, to apply platform specific optimisations,
+\emph{iii. exploration aspect descriptions}, are used to explore the
+design space of optimisation trade-offs and, finally,
+\emph{iv. development aspect descriptions}, support the development
+process (e.g. by facilitating debugging).
 
 An example of an implementation aspect description is the operator
 optimisation aspect of Listing \ref{lst:aspect-DSP}. This aspect
 description maps operators in the program to dedicated hardware
-resources called Digital Signal Processors (DSPs), by inserting a
-\FAST{} optimisation pragma (\texttt{\#pragma FAST
-  balanceDSP:<factor>}) before statements that match a certain
-operator usage pattern, provided as input by the user (e.g. three
-multiplications and two additions).
+resources called Digital Signal Processors (DSPs), by inserting an
+optimisation pragma (\texttt{\#pragma FAST balanceDSP:<factor>})
+before statements that match a certain operator usage pattern,
+provided as input by the user (e.g. three multiplications and two
+additions).
 
 \begin{lstlisting}[label=lst:aspect-DSP, style=lara,
-  caption={Operator optimisation aspect.}]
+  caption={Operator optimisation aspect description.}]
 aspectdef DspBalancing
 input: opMapping
 function.stmt:
@@ -69,15 +63,15 @@ function.stmt:
 end
 \end{lstlisting}
 
-Then, the aspect of Listing \ref{lst:aspect-exploration} can be used
-to explore the design space of operator optimisations. This aspect
-description automates a common design optimisation pattern: vary an
+Then, the aspect description in Listing \ref{lst:aspect-exploration}
+can be used to explore the design space of operator optimisations,
+thus automating a common design optimisation pattern: vary an
 attribute of a dataflow configuration, generate the FAST configuration
 and corresponding FPGA design, extract feedback from the compilation
 report and stop when a resource usage limit is reached.
 
 \begin{lstlisting}[label=lst:aspect-exploration, style=lara,
-  caption={Iterative design space exploration aspect.}]
+  caption={Iterative design space exploration aspect description.}]
 aspectdef DesignExploration
 input: attribute, start, step, res, res_limit, config
   config[attribute] = start

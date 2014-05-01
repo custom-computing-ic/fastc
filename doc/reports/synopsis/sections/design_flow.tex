@@ -1,27 +1,12 @@
 \section{Design Flow}
 \label{sec:design-flow}
 
-To improve both efficiency and productivity, our design flow focuses
-on maintaining or improving the \emph{performance} and \emph{energy
-  efficiency} of existing applications while using a more systematic
-approach for design optimisation that results in more \emph{portable}
-application code, improves \emph{integration} with existing
-applications and \emph{automates} manual, time consuming and
-error-prone tasks.
-
-\begin{comment}
-Our design flow aims to improve both \emph{efficiency} (in terms of
-performance and energy consumption) and \emph{productivity}. The
-former is crucial to High Performance Computing, the latter helps
-reduce development cost and time and is a well-known issue with
-existing FPGA based acceleration solutions \cite{jones2010gpu}. To
-achieve this we focus on maintaining or improving the
-\emph{performance} and \emph{energy efficiency} of existing
+To improve both efficiency and productivity, our design flow improves
+the \emph{performance} and \emph{energy efficiency} of existing
 applications while using a more systematic approach for design
 optimisation that results in more \emph{portable} application code,
 improves \emph{integration} with existing applications and
-\emph{automates} manual, time consuming and error-prone tasks.
-\end{comment}
+\emph{automates} manual, time-consuming and error-prone tasks.
 
 The key components of the design flow are:
 \begin{itemize}
@@ -30,16 +15,15 @@ The key components of the design flow are:
   and supporting combined hardware and software specifications;
 
 \item \emph{aspect driven compilation flow}, used to decouple
-  optimisation from design development, improving design portability,
-  and automating the generation of code and design space
+  optimisation from design development, improving portability, and
+  automating code generation and design space
   exploration~\footnote{the process of exploring multiple
-    configurations to identify optimal implementations} which improves
+    configurations to identify optimal implementations}, improving
   productivity;
 
-\item \emph{systematic design space exploration}, to identify maximum
-  performance configurations by using \emph{aspect descriptions} to
-  conveniently control and guide the exploration process based on
-  user-specified constraints;
+\item \emph{systematic design space exploration}, to identify
+  efficient configurations by using \emph{aspect descriptions} to
+  control the exploration process based on user-specified constraints.
 \end{itemize}
 
 \Cref{fig:design-flow} illustrates the design flow:
@@ -47,21 +31,19 @@ The key components of the design flow are:
 \item a C application containing an embedded high-level dataflow
   design specified in \FAST{} is developed from the original source
   application;
-\item the dataflow design is transformed by the aspects in the
-  repository to generate new configurations (e.g. with multiple
-  word-length configurations);
+\item the dataflow design is transformed according to the aspect
+  descriptions in the repository to generate new configurations
+  (e.g. with multiple word-length configurations);
 \item the generated configurations are compiled using a backend
-  compilation toolchain (MaxCompiler) to dataflow designs
-  implemented on FPGAs;
-\item the feedback from the compilation process is used to drive
-  design space exploration, repeating the weaving and compilation
-  process until user-specified constraints are satisfied.
+  compilation toolchain to FPGA dataflow designs;
+\item feedback from the compilation process is used to drive design
+  space exploration until user-specified constraints are satisfied.
 \end{enumerate}
 
 \begin{figure}[!ht]
   \centering
-  \def\svgwidth{0.8\linewidth}
-  \input{figs/asap13-design-flow.pdf_tex}
+  \def\svgwidth{0.9\textwidth}
+  \input{figs/synopsis-design-flow.pdf_tex}
   \caption{Proposed approach for aspect-driven compilation of dataflow
    designs.}
   \label{fig:design-flow}
