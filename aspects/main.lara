@@ -6,13 +6,12 @@ input
 csources, // the input source kernels
 cflags,   // flags for c compilation to pass to fastc
 cparams,  // kernel parameters
-mants      // range of mantissa values to use
+mants,    // range of mantissa values to use
+aspRoot  // directory containing the aspects
 end
 
 /** Cleanup Designs **/
 cmd('rm', ['-rf', 'designs']); cmd('mkdir', ['-p', 'designs']);
-
-var aspRoot='/home/paul-g/workspaces/meng/maxcc/aspects/';
 
 /** Start DSE **/
 var i = 0;
@@ -27,10 +26,12 @@ for (deb in debug_vals) {
                       '-csources='+csources, '-cflags=' + cflags,
                       '-aspArgv={cparams:'+params+', mant: '+mants[e]+', debug: '+ deb+' }'],
                 verbose:2);
+
             var design_name = 'designs/'+params;
             design_name+='_mant'+mants[e]+'_d'+debug_vals[deb];
             cmd('mkdir', [design_name]);
             cmd('mv', ['code_woven/' + csources,  design_name]);
+
             /** Generate fast design **/
             run(tool:'fastcc', args:[design_name + '/' + csources]);
             cmd('mv', ['build/engine', design_name]);
