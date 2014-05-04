@@ -10,10 +10,12 @@ Cloning This Repo
 
 Installation
 ------------
-To install fastc run:
+
 ~~~~
 tar xvzf fastc-${version}.tar.gz && cd fastc-${version}
+
 configure --with-boost=/path/to/boost --with-rose=/path/to/rose
+
 make && make install
 ~~~~
 
@@ -30,8 +32,6 @@ For example:
 fastc -Iinclude/ test/testRTMStatic/maxc/RTM.c
 ~~~
 
-This will generate MaxJ design files from the specified FAST design file (which can contain one or multiple kernels).
+This will generate MaxJ files from the specified FAST file.
 
 (NOTE! MaxCompiler Manager generation is not currently supported.)
-
-Please check the [wiki](https://github.com/paul-g/fastc/wiki) to get started!
