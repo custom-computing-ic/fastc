@@ -14,7 +14,9 @@ Installation
 ~~~~
 tar xvzf fastc-${version}.tar.gz && cd fastc-${version}
 
-configure --with-boost=/path/to/boost --with-rose=/path/to/rose
+./autogen.sh --with-boost=/path/to/boost --with-rose=/path/to/rose
+
+./configure --with-boost=/path/to/boost --with-rose=/path/to/rose
 
 make && make install
 ~~~~
