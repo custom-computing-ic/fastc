@@ -90,4 +90,3 @@ void kernel_Adp(
   }
 }
 
-int main() {}

@@ -12,7 +12,8 @@ aspectdef adpTransforms
    if (debug) {
        call watchFloats();
    }
-
+   var opGranularity = {DspBalance:'full', Cond: {MultiplyOp: 10, AddOp: 1}};
+   call DspBalancing(opGranularity);
 end
 
 /** Change all input parameters **/
@@ -92,3 +93,28 @@ aspectdef watchFloats
   condition [[$vref.name]] ~= "scalar_." end
 
 end
+
+
+/** Aspect used to change the dsp balance **/
+aspectdef DspBalancing
+input
+ opGranularity
+end
+select statement end
+apply
+   if ($statement.label == 'ExprStatement' ||
+       $statement.label == 'VariableDeclaration') {
+     var match = true;
+     var req = opGranularity.Cond;
+     for (var op in opGranularity.Cond) {
+       match = match && ($statement.num_construct(op) >= req[op]);
+     }
+
+     if (match) {
+       var pragma = '#pragma FAST balanceDSP:' + opGranularity.DspBalance;
+       $statement.insert before "[[pragma]]";
+     }
+  }
+end
+end
+

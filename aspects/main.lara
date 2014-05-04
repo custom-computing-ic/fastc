@@ -15,7 +15,7 @@ cmd('rm', ['-rf', 'designs']); cmd('mkdir', ['-p', 'designs']);
 
 /** Start DSE **/
 var i = 0;
-var debug_vals=[false, true];
+var debug_vals=[true];
 for (deb in debug_vals) {
     for (e in mants) {
         for (cp in cparams) {
