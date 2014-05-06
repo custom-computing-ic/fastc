@@ -4,9 +4,10 @@
 # dependencies (Harmonic, Lara and maxcc binaries with required
 # includes)
 
-# Check architecture is 64 bit (required for binaries)
 function setup {
     echo "Setting up demo. This may take a while..."
+
+    # Check architecture is 64 bit (required for binaries)
     arch=`uname -m`
     if [[ "$arch" == "i686" ]]; then
         echo "Error: 32 bit architecture/OS not supported!"
@@ -30,10 +31,25 @@ function package {
     tar cvzf adpRtmDemo.tar.gz run settings.sh setup.sh src
 }
 
+function clean {
+    rm -rf *.dot code* *.code *.xml build rose*.c
+}
+
+function help {
+    echo "Usage: bash setup.sh <flag>"
+    echo " <flag> can be:"
+    echo "  -s   setup the demo and download dependencies"
+    echo "  -r   run the demo"
+    echo "  -p   package the demo"
+    echo "  -c   clean trash files"
+    echo "  -h   print the help message"
+}
+
 setupFlag=$1
-echo $setupFlag
 
 case $setupFlag in
     -s) setup;;
     -p) package;;
+    -c) clean;;
+    *)  help;;
 esac
