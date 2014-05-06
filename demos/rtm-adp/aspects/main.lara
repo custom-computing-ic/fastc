@@ -1,0 +1,43 @@
+/** Parameterisable Design Space Exploration Aspect
+    for mantissa, design constants and debug.
+**/
+aspectdef DSE
+input
+csources, // the input source kernels
+cflags,   // flags for c compilation to pass to fastc
+cparams,  // kernel parameters
+mants,    // range of mantissa values to use
+aspRoot  // directory containing the aspects
+end
+
+/** Cleanup Designs **/
+cmd('rm', ['-rf', 'designs']); cmd('mkdir', ['-p', 'designs']);
+
+/** Start DSE **/
+var i = 0;
+var debug_vals=[true];
+for (deb in debug_vals) {
+    for (e in mants) {
+        for (cp in cparams) {
+            var params = cparams[cp].toSource();
+            /** Apply lower level aspects **/
+            run(tool:'harmonic',
+                args:['-aspLARA='+aspRoot+'harmonic.lara',
+                      '-csources='+csources, '-cflags=' + cflags,
+                      '-aspArgv={cparams:'+params+', mant: '+mants[e]+', debug: '+ deb+' }'],
+                verbose:2);
+
+            var design_name = 'designs/'+params;
+            design_name+='_mant'+mants[e]+'_d'+debug_vals[deb];
+            cmd('mkdir', [design_name]);
+            cmd('mv', ['code_woven/' + csources,  design_name]);
+
+            /** Generate fast design **/
+            run(tool:'fastcc', args:[design_name + '/' + csources]);
+            cmd('mv', ['build/engine', design_name]);
+            cmd('bash demo.sh -c');
+            i++;
+        }
+    }
+}
+end
