@@ -4,4 +4,4 @@
 export PATH=$(readlink -m ../bin/):${PATH}
 
 #aspect repository
-export ASP_REP=$(readlink -m ../../aspects/)
+export ASP_REP=$(readlink -m aspects/)
