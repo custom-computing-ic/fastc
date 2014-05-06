@@ -35,7 +35,7 @@ for (deb in debug_vals) {
             /** Generate fast design **/
             run(tool:'fastcc', args:[design_name + '/' + csources]);
             cmd('mv', ['build/engine', design_name]);
-            cmd('bash setup.sh -c');
+            cmd('bash demo.sh -c');
             i++;
         }
     }
