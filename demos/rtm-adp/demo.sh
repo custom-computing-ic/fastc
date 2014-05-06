@@ -30,10 +30,13 @@ function setup {
 
 function package {
     echo "Packaging demo. Please wait..."
-    tar cvzf adpRtmDemo.tar.gz run settings.sh demo.sh src aspects
+    clean
+    tar cvzf adpRtmDemo.tar.gz Readme.md settings.sh demo.sh src aspects
 }
 
 function clean {
+    echo "Running clean. Please wait..."
+    rm  -f aspects/harmonic.xml
     rm -rf *.dot code* *.code *.xml build rose*.c *.c
 }
 
