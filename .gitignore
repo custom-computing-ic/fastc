@@ -32,6 +32,7 @@ build
 /doc/reports/interim/bib/auto/bibliography.el
 *.log
 *.pdf
+
 /doc/papers/ASAP/report.tex
 /doc/reports/interim/report.tex
 *.a
@@ -76,3 +77,8 @@ engine/*
 /test/testRTMStatic/engine/*.java
 /test/testRTMStatic/maxc/build/
 /fastc
+
+# Demo things
+demos/rtm-adp/include
+demos/rtm-adp/bin
+demos/rtm-adp/designs-*
