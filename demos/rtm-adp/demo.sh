@@ -30,7 +30,7 @@ function setup {
 
 function package {
     echo "Packaging demo. Please wait..."
-    tar cvzf adpRtmDemo.tar.gz run settings.sh demo.sh src
+    tar cvzf adpRtmDemo.tar.gz run settings.sh demo.sh src aspects
 }
 
 function clean {
