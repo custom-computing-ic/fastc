@@ -6,27 +6,40 @@ This demo shows:
   1. Introduce DSP balancing pragmas selectively on arithmetic statements
   2. Tune design parameters (design constants, compute types)
   3. Perform design space exploration
+  4. Re-use of aspects for multiple designs (same aspects for RTM and ADP)
 
 * Use of the FAST compiler to generate MaxJ code from
 aspect-instrumented FAST programs.
 
-
-## Requirements
-
-This demo requires the LARA and Harmonic weavers to work properly.
-Please download and extract the binaries (in the demo directory):
-
-```
-wget -O aspDFE.support.tgz http://goo.gl/MKmgaU && tar xvzf aspDFE.support.tgz
-```
-
 ## Running
 
-Use the provide `run` script to run the demo. This will generate
-designs (as described above):
+Use the provide `demo.sh` script:
 
-1. For RTM the source file is src/RTMKernel.c; designs are generated
-in designs-RTM
+1. to setup the demo with `bash demo.sh -s`
 
-2. For ADP the source file is src/ADPKernel.c; designs are generated
-in designs-ADP
+2. to run the script with `bash demo.sh -r`
+
+3. to package the demo for distribution `bash demo.sh -p`
+
+After setting up the demo you should see the following structure:
+
+```
+root/
+    bin/       # Binaries required for the demo
+	include/   # Includes required for the demo
+    demo/
+        src/   # Kernel source files
+		maxcc-includes/
+		aspects/
+        demo.sh
+```
+
+__Note__ You can change `settings.sh` to set a different path to the
+`bin/` and `aspects/` directories. (Note that the `include` directory
+should be in the same parent directory as the `bin/` folder).
+
+## About
+
+The demo operates on the RTM and ADP kernels in the `src` directory,
+producing new FAST designs (as described above). The FAST designs are
+then compiled to MaxJ using the FAST compiler.
