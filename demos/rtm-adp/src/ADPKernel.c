@@ -37,8 +37,8 @@ float CDF(float z) {
   bool c3 = zabs < cutoff;
 
   float pA = expntl *
-    ((((((p6 * zabs + p5) * zabs + p4) * zabs + p3)* zabs + p2) * zabs + p1) * zabs + p0) /
-    (((((((q7 * zabs + q6) * zabs + q5)*zabs + q4) * zabs + q3) * zabs + q2)*zabs + q1 * zabs) + q0 * zabs);
+    (((((((p6 * zabs + p5) * zabs + p4) * zabs + p3)* zabs + p2) * zabs + p1) * zabs + p0) /
+     (((((((q7 * zabs + q6) * zabs + q5)*zabs + q4) * zabs + q3) * zabs + q2)*zabs + q1 * zabs) + q0 * zabs));
 
   float pB = pdf / (zabs + 1.0/(zabs + 2.0/(zabs + 3.0/(zabs + 4.0/(zabs + 0.65)))));
 
@@ -60,7 +60,7 @@ float W(float t) {
 /** Design parametrised by number of features **/
 const int N = 10;
 
-void kernel_Adp(
+void kernel_AdpKernel(
                 float scalar_y, float scalar_beta,
                 float* prior_m[N],
                 float* prior_v[N],
@@ -89,4 +89,3 @@ void kernel_Adp(
     post_s[i][0] = ps_s;
   }
 }
-
