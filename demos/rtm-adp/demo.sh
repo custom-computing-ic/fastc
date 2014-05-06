@@ -28,7 +28,7 @@ function setup {
 
 function package {
     echo "Packaging demo. Please wait..."
-    tar cvzf adpRtmDemo.tar.gz run settings.sh setup.sh src
+    tar cvzf adpRtmDemo.tar.gz run settings.sh demo.sh src
 }
 
 function clean {
@@ -36,7 +36,7 @@ function clean {
 }
 
 function help {
-    echo "Usage: bash setup.sh <flag>"
+    echo "Usage: bash demo.sh <flag>"
     echo " <flag> can be:"
     echo "  -s   setup the demo and download dependencies"
     echo "  -r   run the demo"
