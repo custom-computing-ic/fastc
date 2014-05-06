@@ -79,6 +79,6 @@ engine/*
 /fastc
 
 # Demo things
-demos/rtm-adp/include
-demos/rtm-adp/bin
+demos/include
+demos/bin
 demos/rtm-adp/designs-*
