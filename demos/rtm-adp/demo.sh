@@ -23,7 +23,9 @@ function setup {
     fi
 
     # Download binaries and headers
-    wget -O aspDFE.support.tgz http://goo.gl/MKmgaU && tar xvzf aspDFE.support.tgz
+    wget -O aspDFE.support.tgz http://goo.gl/MKmgaU
+    tar xvzf aspDFE.support.tgz
+    mv aspDFE.support.tgz bin include ..
 }
 
 function package {
