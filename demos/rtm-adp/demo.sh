@@ -67,7 +67,7 @@ function run {
     #--- RTM Code generation
     cp src/RTMKernel.c .
     echo "[RTM] 1. Running Harmonic Weaver"
-    larai $ASP_REP/harmonic.lara -x bin/
+    larai $ASP_REP/harmonic.lara -x ../bin/
     cp harmonic.xml $ASP_REP
     larai $ASP_REP/main.lara -a "{csources:'RTMKernel.c', cflags: '-Imaxcc-include', cparams:[ { Par: 1, Mul: 1}, { Par: 2, Mul: 1 } ], mants:[22, 24], aspRoot: '$ASP_REP/'}"
     echo "[RTM] 2. Compiling FAST ==> MaxJ"
@@ -80,7 +80,7 @@ function run {
     cp src/ADPKernel.c .
     echo "[APD] 1. Running Harmonic weaver"
     #larai $ASP_REP/main.lara -a "{csources:'ADPKernel.c', cflags: '-I../../include/', cparams:[ { N: 8 }, { N: 9}], mants:[10, 11]}"
-    larai $ASP_REP/harmonic.lara -x bin/
+    larai $ASP_REP/harmonic.lara -x ../bin/
     cp harmonic.xml $ASP_REP
     larai $ASP_REP/main.lara -a "{csources:'ADPKernel.c', cflags: '-Imaxcc-include/', cparams:[{ N: 8 }], mants:[10], aspRoot: '$ASP_REP/'}"
     echo "[ADP] 2. Compiling FAST ==> MaxJ"
