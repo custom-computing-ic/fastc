@@ -31,7 +31,7 @@ function setup {
 function package {
     echo "Packaging demo. Please wait..."
     clean
-    tar cvzf adpRtmDemo.tar.gz Readme.md settings.sh demo.sh src aspects
+    tar cvzf adpRtmDemo.tar.gz Readme.md settings.sh demo.sh src aspects maxcc-include
 }
 
 function clean {
