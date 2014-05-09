@@ -10,6 +10,8 @@ void IdlefunctionElimination::runPass(Design* design){
   //each function node goes through HLA to extract function properties
   cout<<" (1) Extracting kernel properties"<<endl;
   ifeVisitor.ExtractProperties();
+  
+  ifeVisitor.UpdateXML();
 
   //assign dependency level based on data dependency and interconnections
   cout<<" (2) Grouping kernels based on analysed data dependency"<<endl;

@@ -3,6 +3,7 @@
 
 #include <list>
 #include "Node.hxx"
+#include "../StencilOffset.h"
 
 class DataFlowGraph {
 
@@ -15,6 +16,8 @@ public:
   std::list<Node *>  sources;
   std::list<Offset*> streams;
   std::list<Node*>   arithmetics;
+
+  StencilOffset* stencilOffsets;
 
   DataFlowGraph();
   void   addInputNode(Node*);

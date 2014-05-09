@@ -66,7 +66,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
           if(dims == pair->dimensions.begin())
             *dims = *(dims+1);
           else if(dims == (pair->dimensions.begin() + pair->dimensions.size() -1 ))//slowest dimension
-            *dims = 512;//*dims = *(dims-1);
+            *dims = 128;//*dims = *(dims-1);
           else
             *dims =(*(dims+1)) / (*dims);
         }
@@ -188,7 +188,10 @@ void HLAVisitor::OnchipMemoryAnalysis(){
   //calculate data size 
   this->ds = 1; 
   foreach_(int size, (((dfg->streams.front())->pairs).front())->dimensions)
+  {
     this->ds = this->ds * size;
+    cout<<size<<endl;
+  }
   cout<<"     data size: "<<this->ds<<endl;
 }
 

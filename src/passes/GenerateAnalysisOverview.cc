@@ -19,7 +19,7 @@ void GenerateAnalysisOverview::runPass(Design* design) {
 
   int n_cluster = 0;
   map<string, string> colors_map;
-  foreach_r_(Partition* p, design->getPartitions()) {
+  foreach_(Partition* p, design->getPartitions()) {
     f << "digraph G {" << endl;
     f << "subgraph cluster" << n_cluster;
     n_cluster++;
@@ -28,31 +28,9 @@ void GenerateAnalysisOverview::runPass(Design* design) {
     f << "resource [shape=plaintext, label = < " << endl;
     f << TABLE << endl;
     f << TR << TD << CTD << "BRAMs" << CTD << "LUTs (k)" << CTD << "FFs (k)" << CTD << "DSPs";
-    f << CTD << "BW";
     f << CTD << "Par" << CTD << "Exec. Time" << ETD << ETR << endl;
     colors_map.clear();
     int i = 0;
-
-
-    // available resources
-    // TODO pull this in a function...
-    ifstream filenode("./platform.txt");
-    string ab, al, af, ad, abw;
-    string line;
-    getline(filenode, line);
-    filenode>>ab>>al>>af>>ad>>abw;
-    double Ab, Al, Af, Ad, Abw;
-    istringstream(ab)>>Ab;
-    istringstream(al)>>Al;
-    istringstream(af)>>Af;
-    istringstream(ad)>>Ad;
-    istringstream(abw)>>Abw;
-
-    f << TR << TD << "Available" << CTD << Ab;
-    f << CTD << (int) (Al / 1000) << CTD;
-    f << (int)(Af / 1000);
-    f << CTD << ad << CTD << abw << CTD << "-" << CTD << "-" << ETD;
-    f << ETR;
 
     stringstream node_decl;
 
@@ -65,12 +43,12 @@ void GenerateAnalysisOverview::runPass(Design* design) {
       f << TD << (int)c->LUTs / 1000 << ETD;
       f << TD << (int)c->FFs / 1000 << ETD;
       f << TD << c->DSPs << ETD;
-      f << TD << c->bandwidth;
-      f << CTD << c->P << ETD;
+      f << TD << c->P << ETD;
       f << TD << c->getexecutionTime() << ETD;
       f << "</TR>" << endl;
 
-      node_decl << "subgraph cluster" << n_cluster + i << " { " << endl;
+
+      node_decl << "subgraph cluster" << i << " { " << endl;
       node_decl << " node[style=filled, color=white];" << endl;
       node_decl << "style = filled;\n color=lightgrey;\n fontsize=15; " << endl;
       node_decl << "label = \" Configuration " << c->getName() << "\";" << endl;
@@ -88,7 +66,7 @@ void GenerateAnalysisOverview::runPass(Design* design) {
     }
 
     f << TR << TD << "TOTAL" << ETD << endl;
-    f << TD << CTD << CTD << CTD << CTD << CTD << CTD << endl;
+    f << TD << CTD << CTD << CTD << CTD << CTD << endl;
     f << p->getexecutionTime() << ETD;
     f << ETR;
 
@@ -100,6 +78,16 @@ void GenerateAnalysisOverview::runPass(Design* design) {
 
     f << node_decl.str();
 
+    /*foreach_(Node* n, dfg->getNodes()) {
+      DfeTask* task = dynamic_cast<DfeTask*>(n);
+      if (task == NULL)
+      continue;
+      string taskName = task->getName();
+      f << taskName << "[label = \"";
+      f << taskName;
+      f << "\", fontcolor=\"" + colors_map[taskName];
+      f << "\"];\n";
+      }*/
     DotPrint::writeDotEdges(f, dfg);
     f << "}" << endl;
   }

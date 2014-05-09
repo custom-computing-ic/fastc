@@ -58,6 +58,7 @@ class Offset : public Node{
   vector<StencilOffset*> stencilOffsets;
 
 public:
+  Stencil* stencil;
   vector<Pair*> pairs;
   vector<int> max;
   vector<int> min;

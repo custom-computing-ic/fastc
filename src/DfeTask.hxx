@@ -28,6 +28,7 @@ public:
   std::vector<Offset*> sources;
 
   double ds;
+  double precision;
   double frequency;
 
   DfeTask(string name, Kernel *k, std::vector<std::string> call_args);

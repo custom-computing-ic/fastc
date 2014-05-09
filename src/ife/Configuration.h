@@ -29,8 +29,7 @@ class Configuration{
     Ib=218;  Il=34809; If=55061;  Id=0;
 
     ifstream filenode("./platform.txt");
-    string ab, al, af, ad, abw, buf;
-    getline(filenode, buf);
+    string ab, al, af, ad, abw;
     filenode>>ab>>al>>af>>ad>>abw;
     //cout<<ab<<al<<af<<ad<<abw<<endl;
     istringstream(ab)>>Ab;

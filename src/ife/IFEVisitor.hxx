@@ -8,6 +8,8 @@
 #include "../DataFlowGraph/DataFlowGraph.hxx"
 #include "../DfeTask.hxx"
 
+#include "../xml/xmlParser.hxx"
+
 #include <string>
 #include <vector>
 #include <time.h>
@@ -34,6 +36,7 @@ class IFEVisitor {
   public:
   IFEVisitor(DataFlowGraph *dfg);
   void ExtractProperties();
+  void UpdateXML();
   void ATAPLevel();
   void CombineTasks();
   void CombineSegments();

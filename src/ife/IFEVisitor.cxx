@@ -9,6 +9,7 @@
 #include "../precompiled.hxx"
 
 
+
 IFEVisitor::IFEVisitor(DataFlowGraph *dfg){
   this->dfg = dfg;
   this->parnum =0;
@@ -40,8 +41,6 @@ void IFEVisitor::ExtractProperties(){
 //    cout<<group[0]<<" "<<group[1]<<endl;
 
 
-
-
     HLAVisitor hlaVisitor(k);
     hlaVisitor.OnchipMemoryAnalysis();
     hlaVisitor.OffchipCommunicationAnalysis();
@@ -60,10 +59,115 @@ void IFEVisitor::ExtractProperties(){
 
     task->ds        = hlaVisitor.getDataSize();
     task->frequency = hlaVisitor.getfrequency();
-    sleep(2);
+    //sleep(1);
     cout<<endl;
   }
 }
+
+template <typename T>
+std::string to_string(T const& value) {
+  stringstream sstr;
+  sstr << value;
+  return sstr.str();
+}
+
+
+void IFEVisitor::UpdateXML(){
+
+  XMLNode xMainNode=XMLNode::openFileHelper("Faster.xml","Faster_XML");
+  
+  XMLNode xNode=xMainNode.getChildNode("architecture").getChildNode("system");
+  XMLNode pNode = xNode.addChild("processing_elements");
+  XMLNode mNode = xNode.addChild("memory_elements");
+  char *t;
+  
+  foreach_(Node* node, dfg->getNodes()) {
+    DfeTask *task = (DfeTask *)node;
+    if (task->getName() == "sink" || task->getName() == "source")
+      continue;
+    
+    Kernel* k = task->getKernel();
+    cout<<"kernel: \033[1;31m"<<k->getName()<<"\033[0m"<<endl;
+
+    task->bandwidth = 0;
+    DataFlowGraph* d = k->getDataFlowGraph();
+    foreach_(Offset* stream, d->streams)
+    {
+      cout<<"stream: "<<stream->getName()<<endl;
+      task->bandwidth += stream->bandwidth;
+      task->precision =  stream->precision[0] + stream->precision[1];
+    }
+    
+    cout<<"BRAMs:     "<<task->BRAMs     <<endl; 
+    cout<<"LUTs:      "<<task->LUTs      <<endl; 
+    cout<<"FFs:       "<<task->FFs       <<endl; 
+    cout<<"DSPs:      "<<task->DSPs      <<endl; 
+    cout<<"bandwidth: "<<task->bandwidth <<endl; 
+
+  
+    XMLNode rNode = pNode.addChild("reconfigurable_area");
+    rNode.addAttribute("id", (char*)task->getName().c_str());
+  
+    cout<<task->LUTs<<endl;
+    cout<<to_string(task->LUTs)<<endl;
+
+    XMLNode sNode; 
+    sNode = rNode.addChild("specs");
+    sNode.addAttribute("LUTs", (char *)to_string(task->LUTs).c_str());
+    sNode = rNode.addChild("specs");
+    sNode.addAttribute("FFs",  (char *)to_string(task->FFs).c_str());
+
+    sNode = rNode.addChild("specs");
+    sNode.addAttribute("DSPs", (char *)to_string(task->DSPs).c_str());      
+
+    sNode = rNode.addChild("specs");
+    sNode.addAttribute("BRAMs",(char *)to_string(task->BRAMs).c_str());        
+    
+    sNode = rNode.addChild("specs");
+    sNode.addAttribute("execution time",(char *)to_string(task->ds).c_str());        
+    sNode.addAttribute("unit", "cycles");        
+
+    XMLNode bNode; 
+    bNode = mNode.addChild("memory");
+    bNode.addAttribute("id",(char*)task->getName().c_str());
+    bNode.addAttribute("type","DRAM / BRAM");
+    sNode = bNode.addChild("specs");
+    sNode.addAttribute("data rate",(char*)to_string(task->bandwidth).c_str());
+    sNode.addAttribute("unit","MB");
+    sNode = bNode.addChild("specs");
+    double data_size =(task->ds) * (task->precision) / (1024 * 1024 * 8);
+    cout<<task->precision<<endl;
+    cout<<task->ds<<endl;
+    cout<<data_size<<endl;
+     
+    sNode.addAttribute("size",     (char*)to_string(data_size).c_str());
+    sNode.addAttribute("unit","MB");
+    sNode = bNode.addChild("specs");
+    sNode.addAttribute("frequency",(char*)to_string(task->frequency).c_str());
+    sNode.addAttribute("unit","MHz");
+
+    sNode = bNode.addChild("interface");
+    XMLNode pNode;
+    foreach_(string stream, task->getOutputs())
+    {
+      pNode = sNode.addChild("port");
+      pNode.addAttribute("id", stream.c_str());
+      pNode.addAttribute("size", (char *) to_string(task->precision).c_str());
+      pNode.addAttribute("direction", "OUT");
+    }
+    
+    foreach_(string stream, task->getInputs())
+    {
+      pNode = sNode.addChild("port");
+      pNode.addAttribute("id", stream.c_str());
+      pNode.addAttribute("size", (char *) to_string(task->precision).c_str());
+      pNode.addAttribute("direction", "IN");
+    }
+  }
+
+  xMainNode.writeToFile("HLA.xml");
+}
+
 
 Offset* IFEVisitor::FindSink(DfeTask* task, string name){
   foreach_(Offset* stream, task->streams)
@@ -433,7 +537,7 @@ void IFEVisitor::GenerateSolutions(){
     else
       FindPartition(nextlevel, parbuf);
   }
-  sleep(2);
+  //sleep(2);
   
   foreach_(Partition* par, partitions)
   {
