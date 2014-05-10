@@ -22,12 +22,12 @@ const float scale =  0.000000000002031744130576;
 
 
 //#pragma fast var:dvv ioType:float(8, 12) computeType:float(8, 12)
-//#pragma fast var:p ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:pp ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:pp_out ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:p_out ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:source ioType:float(8, 12) computeType:float(8, 12) 
-void kernel_do_forward(float* dvv, float * p, float *pp, float *pp_out, float *p_out,
+//#pragma fast var:p ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:pp ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:pp_out ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:p_out ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:source ioType:float(8, 12) computeType:float(8, 12)
+void kernel_DoForward(float* dvv, float * p, float *pp, float *pp_out, float *p_out,
                        float *source, int n1, int n2, int n3, int n12, int ORDER) {
 
 #pragma fast stencil
@@ -63,14 +63,14 @@ void kernel_do_forward(float* dvv, float * p, float *pp, float *pp_out, float *p
 
 }
 
-//#pragma fast var:dvv ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:p ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:pp ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:pp_out ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:p_out ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:source ioType:float(8, 12) computeType:float(8, 12) 
-//#pragma fast var:scale ioType:float(8, 12) computeType:float(8, 12) 
-void kernel_do_backward(float* dvv, float * p, float *pp, float *pp_out, float *p_out,
+//#pragma fast var:dvv ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:p ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:pp ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:pp_out ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:p_out ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:source ioType:float(8, 12) computeType:float(8, 12)
+//#pragma fast var:scale ioType:float(8, 12) computeType:float(8, 12)
+void kernel_DoBackward(float* dvv, float * p, float *pp, float *pp_out, float *p_out,
                         float *source, float scale,
                         int n1, int n2, int n3, int n12, int ORDER) {
 
@@ -130,16 +130,16 @@ int main() {
 
 
 
-#pragma fast hw_kernel:kernel_do_forward
-  kernel_do_forward(dvv, p, pp, pp_out, conv, source_container,
+#pragma fast hw_kernel:kernel_DoForward
+  kernel_DoForward(dvv, p, pp, pp_out, conv, source_container,
                     n1, n2, n3, n12, ORDER);
 
-#pragma fast hw_kernel:kernel_do_forward
-  kernel_do_forward(dvv, conv, pp_out, pp_out1, pp_out2, source_container,
+#pragma fast hw_kernel:kernel_DoForward
+  kernel_DoForward(dvv, conv, pp_out, pp_out1, pp_out2, source_container,
                     n1, n2, n3, n12, ORDER);
 
-#pragma fast hw_kernel:kernel_do_backward
-  kernel_do_backward(dvv, conv, pp_out,pp_out3, pp_out4, source_container, scale,
+#pragma fast hw_kernel:kernel_DoBackward
+  kernel_DoBackward(dvv, conv, pp_out,pp_out3, pp_out4, source_container, scale,
                      n1, n2, n3, n12, ORDER);
   return 0;
 }

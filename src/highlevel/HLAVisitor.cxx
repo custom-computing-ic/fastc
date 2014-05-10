@@ -1,6 +1,6 @@
 #include "HLAVisitor.hxx"
 #include <sstream>
-#include <math.h>       
+#include <math.h>
 
 HLAVisitor::HLAVisitor(Kernel *k){
   this->kernel = k;
@@ -13,7 +13,7 @@ HLAVisitor::HLAVisitor(Kernel *k){
   this->LUTs=0;
   this->FFs =0;
   this->DSPs=0;
-  
+
   this->internaldelay =0;
   this->inputdelay =0;
 }
@@ -37,17 +37,17 @@ void HLAVisitor::OnchipMemoryAnalysis(){
     D(cout<<"stream "<<(*it)->getName()<<endl;)
     D(cout<<"offset:"<<endl;)
     precision = (*it)->precision[0] + (*it)->precision[1]; //mantisa + significant
-    
+
     if(((*it)->getStencilOffsets()).size()!=0)//if there is a stencil
     {
-      //TODO: check why the iterator doesn't work 
+      //TODO: check why the iterator doesn't work
       foreach_(StencilOffset* soff, ((*it)->getStencilOffsets()))
       {
         vector<string> loopVars = soff->stencil->getLoopVariables();
         Pair* pair = new Pair();
         foreach_(string key, loopVars)
         {
-          vector<int>::iterator front; 
+          vector<int>::iterator front;
           front = pair->offsets.begin();
           pair->offsets.insert(front, soff->var_offset[key]);
           //some hacking here: assume " " stands for 0
@@ -70,7 +70,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
           else
             *dims =(*(dims+1)) / (*dims);
         }
-        (*it)->pairs.push_back(pair); 
+        (*it)->pairs.push_back(pair);
 
 #if DEBUG
         foreach_(string key, loopVars)
@@ -88,13 +88,13 @@ void HLAVisitor::OnchipMemoryAnalysis(){
       //for each dimension, we need to go through all the dimensions
       //as offset value are for the same data (stream), the dimension size is the same
       int size = ((*it)->pairs.front())->dimensions.size();
-      (*it)->max.resize(size); 
-      (*it)->min.resize(size); 
+      (*it)->max.resize(size);
+      (*it)->min.resize(size);
       D(cout<<"size "<<size<<endl;)
 
       foreach_(Pair* pair,(*it)->pairs)
       {
-        vector<int>::iterator jt_max = (*it)->max.begin(); 
+        vector<int>::iterator jt_max = (*it)->max.begin();
         vector<int>::iterator jt_min = (*it)->min.begin();
         for(vector<int>::iterator jt = pair->offsets.begin(); jt != pair->offsets.end(); jt++)
         {
@@ -121,7 +121,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
 
         int gap=1;//distance for 1 neighbouring data in this dimension
         int dimGap = jt_max - (*it)->max.begin();//the 1 account for that first dimenion gap is 1
-        for(vector<int>::iterator jt_dim =((*it)->pairs.front())->dimensions.begin(); 
+        for(vector<int>::iterator jt_dim =((*it)->pairs.front())->dimensions.begin();
                                   jt_dim!=((*it)->pairs.front())->dimensions.begin()+dimGap; jt_dim++)
           gap = gap * (*jt_dim);
 
@@ -129,7 +129,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
         jt_min++;
       }
       D(cout<<"internal delay: "<<(*it)->internaldelay<<endl;)
-        
+
       (*it)->BRAMs = (double) (((*it)->internaldelay) * precision) / (36.0 * 1024.0);
       double width = (double)((int)((*it)->OnchipMemory.size()) * precision) / 36.0;
       if((*it)->BRAMs ==0) width = 0;
@@ -137,7 +137,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
       (*it)->BRAMs = (*it)->BRAMs > width ? (*it)->BRAMs : width;
       (*it)->BRAMs =(double) ceil((*it)->BRAMs);
     }
-    else//for kernel with only 1 dimension 
+    else//for kernel with only 1 dimension
     {
       for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
       {
@@ -151,7 +151,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
           int offset;
           istringstream ( *jt ) >> offset;
           if(!findoffset(offset, *it))
-            (*it)->OnchipMemory.push_back(offset); 
+            (*it)->OnchipMemory.push_back(offset);
         }
         cout<<endl;
 
@@ -162,7 +162,7 @@ void HLAVisitor::OnchipMemoryAnalysis(){
         {
           Max = Max > *jt ? Max : *jt;
           Min = Min > *jt ? *jt : Min;
-        } 
+        }
         (*it)->internaldelay = Max - Min;
         (*it)->BRAMs = (double) ((Max - Min) * precision) / (36.0 * 1024.0);
 
@@ -178,15 +178,17 @@ void HLAVisitor::OnchipMemoryAnalysis(){
   //aggregrate BRAMs
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
     BRAMs += (*it)->BRAMs;
-  cout<<"     memory resource consumption: "<< BRAMs<<" BRAMs"<<endl; 
-  
+  cout<<"     memory resource consumption: "<< BRAMs<<" BRAMs"<<endl;
+
   //aggregrate idle cycles
   for(list<Offset*>::iterator it = dfg->streams.begin(); it!=dfg->streams.end(); it++)
     this->internaldelay = this->internaldelay > (*it)->internaldelay ? this->internaldelay : (*it)->internaldelay;
   cout<<"     kernel internal delay: "<< this->internaldelay<<" cycles"<<endl;
 
-  //calculate data size 
-  this->ds = 1; 
+  //calculate data size
+  this->ds = 1;
+
+
   foreach_(int size, (((dfg->streams.front())->pairs).front())->dimensions)
   {
     this->ds = this->ds * size;
@@ -198,23 +200,23 @@ void HLAVisitor::OnchipMemoryAnalysis(){
 double HLAVisitor::gap(Offset* node)
 {
 
-  //TODO: when multiple dimension are involved, 
-  //overlap and different between OnchipMemory and nextStep would be 
-  //more complicated 
+  //TODO: when multiple dimension are involved,
+  //overlap and different between OnchipMemory and nextStep would be
+  //more complicated
   //TODO: partial storage (block tiling)
   list<int> nextStep;
   for(list<int>::iterator it = node->OnchipMemory.begin(); it!=node->OnchipMemory.end(); it++)
     nextStep.push_back(*it+1);
 
-  double difference; 
+  double difference;
   for(list<int>::iterator it = nextStep.begin(); it!=nextStep.end(); it++)
-  {    
+  {
     int tag =1;
     for(list<int>::iterator jt = node->OnchipMemory.begin(); jt!=node->OnchipMemory.end(); jt++)
     if(*it <= * jt) tag =0;
 
     if(tag == 1) difference +=1;
-  } 
+  }
   return difference;
 }
 
@@ -232,23 +234,23 @@ void HLAVisitor::OffchipCommunicationAnalysis(){
       istringstream(group[2]) >> mantissa;
       precision = significant + mantissa;
     }
-    else 
+    else
       precision = (*it)->precision[0] + (*it)->precision[1];//default value
 
     //cout<<(kernel->ioTypeMap)[(*it)->getName()]<<endl;
     //cout<<"precision: "<<precision<<endl;
-   
+
     //bandwidth calculation is now taken care at the configuration level
     //bandwidth for each stream are recorded separately
-    //TODO: use gap(*it) to calculate the data required from onchipmemory, evey cycle 
+    //TODO: use gap(*it) to calculate the data required from onchipmemory, evey cycle
     (*it)->bandwidth = (double) precision * frequency / 8;
-#if DEBUG    
+#if DEBUG
     cout<<"bandwidth: "<<(*it)->bandwidth<<" MB/s"<<endl;
 #endif
 
-    //offchipdata += (double) precision * gap(*it);  
+    //offchipdata += (double) precision * gap(*it);
     //bandwidth = offchipdata * frequency / 8;
-  } 
+  }
 }
 
 void HLAVisitor::ArithmeticResource(Node* node, int* width){
@@ -263,8 +265,8 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         {
           Ls = 209;
           Fs = 100+Ls;
-          Ds = 0; 
-        } 
+          Ds = 0;
+        }
         else if (node->getName()=="*")
         {
           Ls = 673;
@@ -277,8 +279,8 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         {
           Ls = 209;
           Fs = 100+Ls;
-          Ds = 2; 
-        } 
+          Ds = 2;
+        }
         else if (node->getName()=="*")
         {
           Ls = 100;
@@ -291,8 +293,8 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         {
           Ls = 209;
           Fs = 100+Ls;
-          Ds = 2; 
-        } 
+          Ds = 2;
+        }
         else if (node->getName()=="*")
         {
           Ls = 114;
@@ -310,13 +312,13 @@ void HLAVisitor::ArithmeticResource(Node* node, int* width){
         {
           Ls = width[0] + width[1];
           Fs = width[0] + width[1];
-        } 
+        }
         else if (node->getName()=="*")
         {
           Ls = (width[0] + width[1]) * (width[0] + width[1]);
           Fs =  width[0] + width[1];
         }
-        break; 
+        break;
       case 1:
         if(node->getName() == "+" || node->getName() == "-")
         {

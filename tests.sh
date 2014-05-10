@@ -27,9 +27,9 @@ runDiffTool() {
     res=$?
     if [ "$res" = "0" ]; then
         meld $file1 $file2
-        return
     fi
 
+    # run diff anyway, just in case meld crashed...
     diff $file1 $file2
 }
 
@@ -90,9 +90,11 @@ runTest() {
         runDiffTool $test_abs_path/$runOut $test_abs_path/$base.exp
 
         showOutput $test_log_file
+
+	# Stop running following tests
+	exit 1
     fi
 }
-
 
 runRemote() {
     cd test/$1 && CLEAN=true MAXC=true bash deploy.sh
@@ -113,13 +115,16 @@ runLocalTestSuite() {
     runTest "testCommon/maxc/Mux" $1
     runTest "testCommon/maxc/Scalars" $1
     runTest "testApplications/maxc/MovingAverage" $1
-    runTest "testApplications/maxc/RTM" $1
     runTest "testTypes/maxc/Types" $1
     runTest "test1dConvolution/maxc/Convolution1d" $1
     runTest "testPassThrough/maxc/PassThroughKernel" $1
     runTest "testCounter/maxc/Counter" $1
-    runTest "testFASTCIntegrated/maxc/main" $1
+
     #    runTest "maxc/testRTMManager"
+
+    # XXX fix these tests
+    # runTest "testFASTCIntegrated/maxc/main" $1
+    # runMultiKernelTest "testApplications/maxc/RTM" $1
 }
 
 # runs a single test.

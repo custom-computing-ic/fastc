@@ -1,0 +1,6 @@
+<FASTER_XML>
+  <architecture>
+    <system id="max3" type="FPGA", device="Virtex-6-SX475T">
+    </system>
+  </architecture>
+</FASTER_XML>
