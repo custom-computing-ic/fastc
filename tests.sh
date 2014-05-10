@@ -120,10 +120,12 @@ runLocalTestSuite() {
     runTest "testPassThrough/maxc/PassThroughKernel" $1
     runTest "testCounter/maxc/Counter" $1
 
+
+    # TODO implement these features/tests
     #    runTest "maxc/testRTMManager"
 
     # XXX fix these tests
-    # runTest "testFASTCIntegrated/maxc/main" $1
+    # runMultiKernelTest "testFASTCIntegrated/maxc/main" $1
     # runMultiKernelTest "testApplications/maxc/RTM" $1
 }
 
