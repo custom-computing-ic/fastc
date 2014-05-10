@@ -30,6 +30,10 @@ class Configuration{
 
     ifstream filenode("./platform.txt");
     string ab, al, af, ad, abw;
+    //skip the first line
+    string dummyLine;
+    getline(filenode, dummyLine);
+    //read in the second line as the platform file
     filenode>>ab>>al>>af>>ad>>abw;
     //cout<<ab<<al<<af<<ad<<abw<<endl;
     istringstream(ab)>>Ab;
