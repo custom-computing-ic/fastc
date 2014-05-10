@@ -51,8 +51,8 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/ife/IFEVisitor.hxx src/ife/IFEVisitor.cxx \
   src/ife/Segment.h src/ife/Configuration.h src/ife/Partition.h \
   src/DfeTopSortVisitor.hxx src/DfeTopSortVisitor.cxx \
-  src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx
-
+  src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx \
+  src/xml/xmlParser.hxx src/xml/xmlParser.cxx
 
 #BUILT_SOURCES = src/precompiled.hxx.gch
 #src/precompiled.hxx.gch: src/precompiled.hxx
@@ -71,10 +71,10 @@ test-remote: all
 cscope:
 	cscope -b -s src
 
-run: 
+run:
 	./fastc test/testApplications/maxc/RTM.c
 	dot -Tps analysis_overview.dot > 1.ps
-	evince 1.ps 
+	evince 1.ps
 dot:
 	dot -Tps do_forward_graph.dot > low_level.ps
 	evince low_level.ps
