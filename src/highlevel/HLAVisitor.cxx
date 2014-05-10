@@ -2,6 +2,7 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
+#include <vector>
 
 HLAVisitor::HLAVisitor(Kernel *k){
   this->kernel = k;
@@ -179,23 +180,26 @@ void HLAVisitor::OnchipMemoryAnalysis(){
   list<Offset* > streams = dfg->streams;
 
   //aggregrate BRAMs and idle cycles
-  if (streams.size() > 0) {
-    foreach_(Offset* of, streams) {
-      BRAMs += of->BRAMs;
-      internaldelay = max(internaldelay, (double)of->internaldelay);
-    }
+  foreach_(Offset* of, streams) {
+    BRAMs += of->BRAMs;
+    internaldelay = max(internaldelay, (double)of->internaldelay);
   }
+
   cout<<"     memory resource consumption: "<< BRAMs<<" BRAMs"<<endl;
   cout<<"     kernel internal delay: "<< this->internaldelay<<" cycles"<<endl;
 
   //calculate data size
   this->ds = 1;
 
-  foreach_(int size, ((streams.front()->pairs).front())->dimensions)
-  {
-    this->ds = this->ds * size;
-    cout<<size<<endl;
+  vector<Pair* > pairs = streams.front()->pairs;
+  if (pairs.size() > 0) {
+    foreach_(int size,  pairs.front()->dimensions)
+      {
+	this->ds = this->ds * size;
+	cout<<size<<endl;
+      }
   }
+
   cout<<"     data size: "<<this->ds<<endl;
 }
 
