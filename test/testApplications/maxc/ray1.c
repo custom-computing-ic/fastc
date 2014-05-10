@@ -16,7 +16,7 @@ typedef struct
 
 
 
-int   IsPointInsidePolygon(const RT_Polygon *polygon, const RT_Point *p)
+int   kernel_IsPointInsidePolygon(const RT_Polygon *polygon, const RT_Point *p)
 {
   int       i0 = polygon->projectionDimension[0];
   int       i1 = polygon->projectionDimension[1];
@@ -54,7 +54,7 @@ int main(){
   const RT_Polygon *polygon;
   const RT_Point *p;
 
-  #pragma fast hw_kernel:kernel_do_forward
-  IsPointInsidePolygon(polygon, p);
+  #pragma fast hw_kernel:kernel_IsPointInsidePolygon
+  kernel_IsPointInsidePolygon(polygon, p);
 
 }
