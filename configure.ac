@@ -10,7 +10,7 @@ AC_PROG_CXX
 # Put autotools auxiliary files in a subdir, so they don't clutter top dir:
 AC_CONFIG_AUX_DIR([build-aux])
 
-AM_INIT_AUTOMAKE([1.10 -Wall no-define foreign])
+AM_INIT_AUTOMAKE([1.11.1 -Wall no-define foreign parallel-tests color-tests])
 
 ##########################################################################
 # adding the ROSE library (static name 'librose.a')

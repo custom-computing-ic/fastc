@@ -54,6 +54,9 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/ife/IdlefunctionElimination.hxx src/ife/IdlefunctionElimination.cxx \
   src/xml/xmlParser.hxx src/xml/xmlParser.cxx
 
+TESTS = \
+  test/dfg
+
 #BUILT_SOURCES = src/precompiled.hxx.gch
 #src/precompiled.hxx.gch: src/precompiled.hxx
 #	$(CXXCOMPILE) -c $<
