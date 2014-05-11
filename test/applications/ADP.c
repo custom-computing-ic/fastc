@@ -59,7 +59,7 @@ float W(float t) {
 
 const int N = 10;
 #pragma fast var:y ioType:float(8, 24) computeType:float(8,12) func:kernel_Adp
-void kernel_Adp(
+void kernel_ADP(
                 float y, float beta,
                 float* prior_m[10],
                 float* prior_v[10],
