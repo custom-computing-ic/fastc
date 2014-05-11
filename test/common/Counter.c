@@ -1,4 +1,4 @@
-#include "../../../include/maxcc.h"
+#include "maxcc.h"
 
 void kernel_Counter(int *out) {
 

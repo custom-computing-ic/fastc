@@ -4,8 +4,9 @@
 
 setupTestDirectory
 
-runTest "common/CmdRead" $1
-runTest "common/CmdWrite" $1
-runTest "common/Mux" $1
-runTest "common/Scalars" $1
-runTest "common/Types" $1
+runTest "common/CmdRead" true
+runTest "common/CmdWrite" true
+runTest "common/Mux" true
+runTest "common/Scalars" true
+runTest "common/Types" true
+runTest "common/Counter" true
