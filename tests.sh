@@ -26,7 +26,7 @@ runDiffTool() {
     difftool=`which meld > /dev/null 2>/dev/null`
     res=$?
     if [ "$res" = "0" ]; then
-        meld $file1 $file2
+        meld $file1 $file2 &
     fi
 
     # run diff anyway, just in case meld crashed...
@@ -107,18 +107,18 @@ runRemote() {
 #
 # usage: runLocalTestSuite
 runLocalTestSuite() {
-    runTest "testDFG/maxc/DFG" $1
-    runTest "testRTMStatic/maxc/RTM" $1
-    runTest "testArrays/maxc/Arrays" $1
-    runTest "testCommon/maxc/CmdRead" $1
-    runTest "testCommon/maxc/CmdWrite" $1
-    runTest "testCommon/maxc/Mux" $1
-    runTest "testCommon/maxc/Scalars" $1
-    runTest "testApplications/maxc/MovingAverage" $1
-    runTest "testTypes/maxc/Types" $1
-    runTest "test1dConvolution/maxc/Convolution1d" $1
-    runTest "testPassThrough/maxc/PassThroughKernel" $1
-    runTest "testCounter/maxc/Counter" $1
+    # runTest "testDFG/maxc/DFG" $1
+    # runTest "testRTMStatic/maxc/RTM" $1
+    # runTest "testArrays/maxc/Arrays" $1
+    runTest "common/CmdRead" $1
+    # runTest "testCommon/maxc/CmdWrite" $1
+    # runTest "testCommon/maxc/Mux" $1
+    # runTest "testCommon/maxc/Scalars" $1
+    # runTest "testApplications/maxc/MovingAverage" $1
+    # runTest "testTypes/maxc/Types" $1
+    # runTest "test1dConvolution/maxc/Convolution1d" $1
+    # runTest "testPassThrough/maxc/PassThroughKernel" $1
+    # runTest "testCounter/maxc/Counter" $1
 
 
     # TODO implement these features/tests
@@ -157,17 +157,17 @@ setupTestDirectory() {
 }
 
 
-############# Test Setup #################
+# ############# Test Setup #################
 
-if [ "$REMOTE" = "true" ]; then
-    runRemoteTestSuite $TEST
-else
-    setupTestDirectory
-    if [ "$TEST" = "" ]; then
-        runLocalTestSuite $OUTPUT
-    else
-        runLocalTest $TEST $OUTPUT
-    fi
-fi
+# if [ "$REMOTE" = "true" ]; then
+#     runRemoteTestSuite $TEST
+# else
+#     setupTestDirectory
+#     if [ "$TEST" = "" ]; then
+#         runLocalTestSuite $OUTPUT
+#     else
+#         runLocalTest $TEST $OUTPUT
+#     fi
+# fi
 
-############# Test Summary ###############
+# ############# Test Summary ###############

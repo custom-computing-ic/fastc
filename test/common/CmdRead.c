@@ -1,4 +1,4 @@
-#include "../../../include/maxcc.h"
+#include "../../include/maxcc.h"
 
 #ifndef Burst_inc
 #define Burst_inc 1

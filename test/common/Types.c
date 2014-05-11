@@ -1,5 +1,3 @@
-#include "../../../include/maxcc.h"
-
 void kernel_Types(
                   float* sin1,
                   float* sout1
