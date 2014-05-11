@@ -55,7 +55,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/xml/xmlParser.hxx src/xml/xmlParser.cxx
 
 TESTS = \
-  test/dfg.sh test/common.sh
+  test/common.sh test/highlevel.sh
 
 #BUILT_SOURCES = src/precompiled.hxx.gch
 #src/precompiled.hxx.gch: src/precompiled.hxx

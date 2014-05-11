@@ -10,10 +10,10 @@ import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
 import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
 import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
 
-public class DFG extends Kernel {
+public class Dfg extends Kernel {
 
 
-public DFG(KernelParameters parameters) {
+public Dfg(KernelParameters parameters) {
 super(parameters);
 HWVar a =  io.input("a", hwInt(32));
 
