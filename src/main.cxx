@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
 
   Compiler* c = new Compiler(project);
   c->addPass(new KernelExtraction());
+  c->addPass(new InlineKernels());
   c->addPass(new ExtractStencil());
   c->addPass(new ExtractDesignConstants());
   c->addPass(new PragmaExtraction());
