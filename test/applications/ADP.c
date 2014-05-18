@@ -36,9 +36,11 @@ float CDF(float z) {
   bool c2 = z < -37.0;
   bool c3 = zabs < cutoff;
 
+#pragma fast class:kernelopt name:pushDSP factor:0.5
   float pA = expntl *
     ((((((p6 * zabs + p5) * zabs + p4) * zabs + p3)* zabs + p2) * zabs + p1) * zabs + p0) /
     (((((((q7 * zabs + q6) * zabs + q5)*zabs + q4) * zabs + q3) * zabs + q2)*zabs + q1 * zabs) + q0 * zabs);
+#pragma fast class:kernelopt name:popDSP
 
   float pB = pdf / (zabs + 1.0/(zabs + 2.0/(zabs + 3.0/(zabs + 4.0/(zabs + 0.65)))));
 

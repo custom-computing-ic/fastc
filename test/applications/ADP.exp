@@ -1,114 +1,137 @@
-package adp;
+package engine;
 
-import com.maxeler.maxcompiler.v2.kernelcompiler.stdlib.KernelMath;
-import com.maxeler.maxcompiler.v2.kernelcompiler.Kernel;
-import com.maxeler.maxcompiler.v2.kernelcompiler.KernelParameters;
-import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.*;
-import com.maxeler.maxcompiler.v2.kernelcompiler.types.composite.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.HWVar;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.*    ;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Count.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.KernelMath.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.stdlib.core.Stream.OffsetExpr;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.composite.*;
+import com.maxeler.maxcompiler.v1.kernelcompiler.types.base.*;
 
-class AdpKernel extends Kernel {
-    private static final int N = 10;
-    private DFEFloat realType = dfeFloat(8, 24);
-    private DFEFloat ioType = dfeFloat(11, 53);
-    private HWVar root2pi = constant.var( 2.50662827463100050242);
-
-    private HWVar p0 = constant.var(220.2068679123761).cast(realType);
-    private HWVar p1 = constant.var(221.2135961699311).cast(realType);
-    private HWVar p2 = constant.var(112.0792914978709).cast(realType);
-    private HWVar p3 = constant.var(33.91286607838300).cast(realType);
-    private HWVar p4 = constant.var(6.373962203531650).cast(realType);
-    private HWVar p5 = constant.var(.7003830644436881).cast(realType);
-    private HWVar p6 = constant.var(.3526249659989109E-01).cast(realType);
-
-    private HWVar q0 = constant.var(440.4137358247522).cast(realType);
-    private HWVar q1 = constant.var(793.8265125199484).cast(realType);
-    private HWVar q2 = constant.var(637.3336333788311).cast(realType);
-    private HWVar q3 = constant.var(296.5642487796737).cast(realType);
-    private HWVar q4 = constant.var(86.78073220294608).cast(realType);
-    private HWVar q5 = constant.var(16.06417757920695).cast(realType);
-    private HWVar q6 = constant.var(1.755667163182642).cast(realType);
-    private HWVar q7 = constant.var(.8838834764831844E-1).cast(realType);
-
-    private HWVar cutoff = constant.var(7.071).cast(realType);
-
-    HWVar PDF(HWVar z) {
-        return KernelMath.exp(-z * z / 2) / root2pi;
-    }
+public class ADP extends Kernel {
 
 
-    HWVar CDF(HWVar z) {
-        HWVar zabs = KernelMath.abs(z);
+final int N = 10;
+public ADP(KernelParameters parameters) {
+super(parameters);
+HWVar y__0 =  io.scalarInput("y", hwFloat(8, 24)).cast(hwFloat(8, 12));
+HWVar beta__1 =  io.scalarInput("beta", hwFloat(8, 24));
+KArray<HWVar> prior_m__2 = io.input("prior_m",  new KArrayType<HWVar>(hwFloat(8, 24),10));
+KArray<HWVar> prior_v__3 = io.input("prior_v",  new KArrayType<HWVar>(hwFloat(8, 24),10));
+KArray<HWVar> post_m__4 = (new KArrayType<HWVar>(hwFloat(8, 24),10)).newInstance(this);
+KArray<HWVar> post_s__5 = (new KArrayType<HWVar>(hwFloat(8, 24),10)).newInstance(this);
 
-        HWVar expntl = KernelMath.exp(-.5*zabs*zabs);
-        HWVar pdf = expntl/root2pi;
-
-        HWVar c1 = z > 37.0;
-        HWVar c2 = z < -37.0;
-        HWVar c3 = zabs < cutoff;
-        HWVar pA =  expntl*((((((p6*zabs + p5)*zabs + p4)*zabs + p3)*zabs +
-                               p2)*zabs + p1)*zabs + p0)/(((((((q7*zabs + q6)*zabs +
-                                                               q5)*zabs + q4)*zabs + q3)*zabs + q2)*zabs + q1)*zabs +
-                                                          q0);
-        HWVar pB = pdf/(zabs + 1.0/(zabs + 2.0/(zabs + 3.0/(zabs + 4.0/
-                                                             (zabs + 0.65)))));
-
-        HWVar pX = c3? pA : pB;
-
-        HWVar p = (z < 0.0) ? pX : 1 - pX;
-
-        return c1? 1.0 : (c2 ? 0.0 : p);
-    }
-
-    HWVar V (HWVar t) {
-        HWVar cdf = CDF(t);
-        HWVar c0 = (cdf === 0.0);
-        return c0? 0.0 : (PDF(t) / cdf);
-    }
-
-    HWVar W (HWVar t) {
-        HWVar v = V(t);
-        return v * (v + t);
-    }
-
-    AdpKernel(KernelParameters parameters) {
-        super(parameters);
-
-
-        KArrayType<HWVar> arrayType = new KArrayType<HWVar>(ioType, 10);
-        // Input
-        HWVar y = io.scalarInput("y", ioType).cast(realType);
-        HWVar beta = io.scalarInput("beta", ioType).cast(realType);
-        KArray<HWVar> prior_m = io.input("prior_m", arrayType);
-        KArray<HWar> prior_v = io.input("prior_v", arrayType);
-
-        HWVar s = constant.var(realType, 0.0);
-        HWVar m = constant.var(realType, 0.0);
-
-        for (int i = 0; i < N; i++)
-        {
-         m = m + prior_m[i].cast(realType);
-         s = s + prior_v[i].cast(realType);
-     }
-
-        HWVar S = KernelMath.sqrt(beta * beta + s);
-        HWVar t = (y * m) / S;
-
-        KArray<HWVar> post_m = arrayType.newInstance(this);
-        KArray<HWVar> post_s = arrayType.newInstance(this);
-
-        for (int i = 0; i < N; i++) {
-                                    HWVar pr_m = prior_m[i].cast(realType);
-                                     HWVar pr_v = prior_v[i].cast(realType);
-                                     HWVar ps_m = (pr_m + y * (pr_v / S) * V(t)).cast(ioType);
-                                     HWVar ps_s = (KernelMath.sqrt(KernelMath.abs(pr_v * (1 - (pr_v / (S*S)) * W(t))))).cast(ioType);
-                                     post_m[i] <== ps_bm;
-                                     post_s[i] <== ps_s;
-                                 }
-
-
-        // Output
-        io.output("post_m", post_m, arrayType);
-        io.output("post_s", post_s, arrayType);
-
-    }
+HWVar m__6;
+HWVar s__7;
+m__6 = 0;
+s__7 = 0;
+for (int i__8 = 0;i__8 < N;i__8++) {
+m__6 = (m__6 + prior_m__2[i__8]);
+s__7 = (s__7 + prior_v__3[i__8]);
 }
+HWVar S__9 = KernelMath.sqrt(((beta__1 * beta__1) + s__7));
+HWVar t__10 = ((y__0 * m__6) / S__9);
+for (int i__11 = 0;i__11 < N;i__11++) {
+HWVar pr_m__12 = prior_m__2[i__11];
+HWVar pr_v__13 = prior_v__3[i__11];
+HWVar rose_temp__4__14;
+HWVar t__2__15 = t__10;
+HWVar rose_temp__12__16;
+HWVar z__10__17 = t__2__15;
+HWVar p0__18 = constant.var(220.2068679123761);
+HWVar p1__19 = constant.var(221.2135961699311);
+HWVar p2__20 = constant.var(112.0792914978709);
+HWVar p3__21 = constant.var(33.91286607838300);
+HWVar p4__22 = constant.var(6.373962203531650);
+HWVar p5__23 = constant.var(0.7003830644436881);
+HWVar p6__24 = constant.var(0.03526249659989109);
+HWVar q0__25 = constant.var(440.4137358247522);
+HWVar q1__26 = constant.var(793.8265125199484);
+HWVar q2__27 = constant.var(637.3336333788311);
+HWVar q3__28 = constant.var(296.5642487796737);
+HWVar q4__29 = constant.var(86.78073220294608);
+HWVar q5__30 = constant.var(16.06417757920695);
+HWVar q6__31 = constant.var(1.755667163182642);
+HWVar q7__32 = constant.var(0.08838834764831844);
+HWVar cutoff__33 = constant.var(7.071);
+HWVar root2pi__34 = constant.var(2.50662827463100050242);
+HWVar zabs__35 = KernelMath.sqrt(z__10__17);
+HWVar expntl__36 = KernelMath.exp(((-0.5 * zabs__35) * zabs__35));
+HWVar pdf__37 = (expntl__36 / root2pi__34);
+HWVar c1__38 = (z__10__17 > 37.0);
+HWVar c2__39 = (z__10__17 < -37.0);
+HWVar c3__40 = (zabs__35 < cutoff__33);
+optimization.pushDSPFactor((0.5));
+HWVar pA__41 = ((expntl__36 * ((((((((((((p6__24 * zabs__35) + p5__23) * zabs__35) + p4__22) * zabs__35) + p3__21) * zabs__35) + p2__20) * zabs__35) + p1__19) * zabs__35) + p0__18)) / (((((((((((((q7__32 * zabs__35) + q6__31) * zabs__35) + q5__30) * zabs__35) + q4__29) * zabs__35) + q3__28) * zabs__35) + q2__27) * zabs__35) + (q1__26 * zabs__35)) + (q0__25 * zabs__35)));
+optimization.popDSPFactor();
+HWVar pB__42 = (pdf__37 / (zabs__35 + (1.0 / (zabs__35 + (2.0 / (zabs__35 + (3.0 / (zabs__35 + (4.0 / (zabs__35 + 0.65))))))))));
+HWVar pX__43 = c3__40.eq(0)?pB__42:pA__41;
+HWVar p__44 = (z__10__17 < 0.0)?pX__43:(1 - pX__43);
+rose_temp__12__16 = c1__38.eq(0)?c2__39.eq(0)?p__44:0.0:1.0;
+HWVar cdf__45 = rose_temp__12__16;
+cdf__45.eq(0);
+rose_temp__4__14 = 0;
+HWVar rose_temp__17__46;
+HWVar z__14__47 = t__2__15;
+HWVar root2pi__48 = constant.var(2.50662827463100050242);
+rose_temp__17__46 = (KernelMath.exp(((-z__14__47 * z__14__47) / 2)) / root2pi__48);
+rose_temp__4__14 = (rose_temp__17__46 / cdf__45);
+HWVar ps_m__49 = (pr_m__12 + ((y__0 * (pr_v__13 / S__9)) * rose_temp__4__14));
+HWVar rose_temp__8__50;
+HWVar t__6__51 = t__10;
+HWVar rose_temp__21__52;
+HWVar t__19__53 = t__6__51;
+HWVar rose_temp__25__54;
+HWVar z__23__55 = t__19__53;
+HWVar p0__56 = constant.var(220.2068679123761);
+HWVar p1__57 = constant.var(221.2135961699311);
+HWVar p2__58 = constant.var(112.0792914978709);
+HWVar p3__59 = constant.var(33.91286607838300);
+HWVar p4__60 = constant.var(6.373962203531650);
+HWVar p5__61 = constant.var(0.7003830644436881);
+HWVar p6__62 = constant.var(0.03526249659989109);
+HWVar q0__63 = constant.var(440.4137358247522);
+HWVar q1__64 = constant.var(793.8265125199484);
+HWVar q2__65 = constant.var(637.3336333788311);
+HWVar q3__66 = constant.var(296.5642487796737);
+HWVar q4__67 = constant.var(86.78073220294608);
+HWVar q5__68 = constant.var(16.06417757920695);
+HWVar q6__69 = constant.var(1.755667163182642);
+HWVar q7__70 = constant.var(0.08838834764831844);
+HWVar cutoff__71 = constant.var(7.071);
+HWVar root2pi__72 = constant.var(2.50662827463100050242);
+HWVar zabs__73 = KernelMath.sqrt(z__23__55);
+HWVar expntl__74 = KernelMath.exp(((-0.5 * zabs__73) * zabs__73));
+HWVar pdf__75 = (expntl__74 / root2pi__72);
+HWVar c1__76 = (z__23__55 > 37.0);
+HWVar c2__77 = (z__23__55 < -37.0);
+HWVar c3__78 = (zabs__73 < cutoff__71);
+optimization.pushDSPFactor((0.5));
+HWVar pA__79 = ((expntl__74 * ((((((((((((p6__62 * zabs__73) + p5__61) * zabs__73) + p4__60) * zabs__73) + p3__59) * zabs__73) + p2__58) * zabs__73) + p1__57) * zabs__73) + p0__56)) / (((((((((((((q7__70 * zabs__73) + q6__69) * zabs__73) + q5__68) * zabs__73) + q4__67) * zabs__73) + q3__66) * zabs__73) + q2__65) * zabs__73) + (q1__64 * zabs__73)) + (q0__63 * zabs__73)));
+optimization.popDSPFactor();
+HWVar pB__80 = (pdf__75 / (zabs__73 + (1.0 / (zabs__73 + (2.0 / (zabs__73 + (3.0 / (zabs__73 + (4.0 / (zabs__73 + 0.65))))))))));
+HWVar pX__81 = c3__78.eq(0)?pB__80:pA__79;
+HWVar p__82 = (z__23__55 < 0.0)?pX__81:(1 - pX__81);
+rose_temp__25__54 = c1__76.eq(0)?c2__77.eq(0)?p__82:0.0:1.0;
+HWVar cdf__83 = rose_temp__25__54;
+cdf__83.eq(0);
+rose_temp__21__52 = 0;
+HWVar rose_temp__30__84;
+HWVar z__27__85 = t__19__53;
+HWVar root2pi__86 = constant.var(2.50662827463100050242);
+rose_temp__30__84 = (KernelMath.exp(((-z__27__85 * z__27__85) / 2)) / root2pi__86);
+rose_temp__21__52 = (rose_temp__30__84 / cdf__83);
+HWVar v__87 = rose_temp__21__52;
+rose_temp__8__50 = (v__87 * (v__87 + t__6__51));
+HWVar a__88 = KernelMath.abs(((pr_v__13 * 1) - ((pr_v__13 / (S__9 * S__9)) * rose_temp__8__50)));
+HWVar sq__89 = KernelMath.sqrt(a__88);
+HWVar ps_s__90 = (pr_v__13 + sq__89);
+post_m__4[i__11] <== ps_m__49;
+post_s__5[i__11] <== ps_s__90;
+}
+
+io.output("post_m", post_m__4, new KArrayType<HWVar> (hwFloat(8, 24), 10));
+io.output("post_s", post_s__5, new KArrayType<HWVar> (hwFloat(8, 24), 10));
+}}
