@@ -9,7 +9,7 @@ const int dim_y = 32;
 
 #pragma fast var:nx type:offset max:max_nx/Par min:min_nx/Par func:kernel_RTM
 #pragma fast var:nxy type:offset max:dim_y*nx min:dim_y*nx func:kernel_RTM
-void kernel_RTM(
+void kernel_RTMKernel(
 unsigned int scalar_n1, unsigned int scalar_n2, unsigned int scalar_n3,
   unsigned int ORDER, unsigned int SPONGE,
   float* burst_p[Par],
@@ -22,10 +22,10 @@ unsigned int scalar_n1, unsigned int scalar_n2, unsigned int scalar_n3,
   )
 {
 
-int i4 = count(1000, 1);
-int i3 = count_chain(scalar_n3, 1, i4);
-int i2 = count_chain(scalar_n2, 1, i3);
-int i1 = count_chain(scalar_n1, Par, i2);
+  int i4 = count(32, 1000, 1, NULL);
+  int i3 = count(32, scalar_n3, 1, i4);
+  int i2 = count(32, scalar_n2, 1, i3);
+  int i1 = count(32, scalar_n1, Par, i2);
 
 
 float c_0   = -0.000000056202665632554272;
