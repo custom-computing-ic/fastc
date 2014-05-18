@@ -11,45 +11,13 @@ class InlineKernels : public Pass
 public:
   InlineKernels() {}
 
-  void runPass(Design* design) {
-    int iterCount = 0;
-     foreach_(Kernel* k, design->getKernels()) {
-       int bCalls, aCalls;
-       bool inlined;
-       do {
-         iterCount++;
-         bCalls = countFunctionCalls(k->getDeclaration());
-         inlined = inlineFunctionCalls(k->getDeclaration(), design->getProject());
-         aCalls = countFunctionCalls(k->getDeclaration());
-       } while (bCalls > aCalls || inlined);
-     }
-     if (iterCount > 1)
-       renameVariables(design->getProject());
-  }
+  void runPass(Design* design);
 
-  int countFunctionCalls(SgFunctionDeclaration* decl) {
-    Rose_STL_Container<SgNode*> calls;
-    calls = NodeQuery::querySubTree(decl->get_definition(), V_SgFunctionCallExp);
-    return calls.size();
-  }
+  int countFunctionCalls(SgFunctionDeclaration* decl);
 
-  bool inlineFunctionCalls(SgFunctionDeclaration* decl, SgProject *project) {
-    Rose_STL_Container<SgNode*> calls;
-    if (decl->get_definition() == NULL)
-      return false;
-    calls = NodeQuery::querySubTree(decl->get_definition(), V_SgFunctionCallExp);
-    bool inlined = false;
-    foreach_(SgNode* n, calls) {
-      SgFunctionCallExp* fcall = isSgFunctionCallExp(n);
-      if (fcall != NULL){
-        inlined |= doInline(fcall);
-      }
-    }
-    return inlined;
-  }
-  string logPass() {
-    return "Inline Kernels";
-  }
+  bool inlineFunctionCalls(SgFunctionDeclaration* decl, SgProject *project);
+
+  string logPass();
 };
 
 

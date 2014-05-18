@@ -29,7 +29,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/DataFlowGraph/BFSVisitor.hxx src/DataFlowGraph/BFSVisitor.cxx \
   src/DataFlowGraph/TopSortVisitor.hxx src/DataFlowGraph/TopSortVisitor.cxx \
   src/DataFlowGraph/CounterNode.hxx src/DataFlowGraph/CounterNode.cxx\
-  src/passes/ExtractOutputs.hxx \
+  src/passes/ExtractOutputs.hxx src/passes/ExtractOutputs.cxx \
   src/passes/GenerateAnalysisOverview.h src/passes/GenerateAnalysisOverview.cc \
   src/passes/ManagerExtraction.hxx \
   src/passes/RemoveFast.hxx src/passes/Pass.hxx \
@@ -39,7 +39,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/passes/TaskExtraction.hxx src/passes/TaskExtraction.cxx \
   src/passes/HostCodeGeneration.hxx \
   src/passes/PragmaExtraction.hxx \
-  src/passes/InlineKernels.hxx \
+  src/passes/InlineKernels.hxx src/passes/InlineKernels.cxx\
   src/passes/ExtractDesignConstants.hxx \
   src/passes/InputOutputExtraction.hxx \
   src/passes/BuildDFG.hxx src/passes/BuildDFG.cxx \
@@ -57,9 +57,9 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
 TESTS = \
   test/common.sh test/highlevel.sh test/applications.sh test/new.sh
 
-#BUILT_SOURCES = src/precompiled.hxx.gch
-#src/precompiled.hxx.gch: src/precompiled.hxx
-#	$(CXXCOMPILE) -c $<
+BUILT_SOURCES = src/precompiled.hxx.gch
+src/precompiled.hxx.gch: src/precompiled.hxx
+	$(CXXCOMPILE) -c $<
 
 dist_noinst_SCRIPTS = autogen.sh tests.sh clean.sh
 

@@ -1,6 +1,3 @@
-#ifndef _INLINEKERNELS_HXX_
-#define _INLINEKERNELS_HXX_
-
 #include "InlineKernels.hxx"
 
 void InlineKernels::runPass(Design* design) {
@@ -11,6 +8,10 @@ void InlineKernels::runPass(Design* design) {
        do {
          iterCount++;
          bCalls = countFunctionCalls(k->getDeclaration());
+
+	 if (bCalls == 0)
+	   return;
+
          inlined = inlineFunctionCalls(k->getDeclaration(), design->getProject());
          aCalls = countFunctionCalls(k->getDeclaration());
        } while (bCalls > aCalls || inlined);
@@ -19,13 +20,13 @@ void InlineKernels::runPass(Design* design) {
        renameVariables(design->getProject());
 }
 
-int InlineKernls::countFunctionCalls(SgFunctionDeclaration* decl) {
+int InlineKernels::countFunctionCalls(SgFunctionDeclaration* decl) {
     Rose_STL_Container<SgNode*> calls;
     calls = NodeQuery::querySubTree(decl->get_definition(), V_SgFunctionCallExp);
     return calls.size();
 }
 
-bool InlineKernls::inlineFunctionCalls(SgFunctionDeclaration* decl, SgProject *project) {
+bool InlineKernels::inlineFunctionCalls(SgFunctionDeclaration* decl, SgProject *project) {
     Rose_STL_Container<SgNode*> calls;
     if (decl->get_definition() == NULL)
       return false;
@@ -40,9 +41,6 @@ bool InlineKernls::inlineFunctionCalls(SgFunctionDeclaration* decl, SgProject *p
     return inlined;
   }
 
-string InlineKernls::logPass() {
+string InlineKernels::logPass() {
   return "Inline Kernels";
 }
-
-
-#endif /* _INLINEKERNELS_HXX_ */
