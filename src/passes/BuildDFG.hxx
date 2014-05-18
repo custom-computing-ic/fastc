@@ -6,7 +6,9 @@
 
 class BuildDFG : public Pass {
 public:
-  BuildDFG(){}
+
+  BuildDFG(const Compiler& compiler) : super(compiler) {}
+
   void runPass(Design *design);
   string logPass();
 };

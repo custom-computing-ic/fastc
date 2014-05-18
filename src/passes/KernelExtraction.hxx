@@ -9,7 +9,7 @@
 class KernelExtraction : public Pass
 {
 public:
-  KernelExtraction(){}
+  KernelExtraction(const Compiler& compiler) : super(compiler) {}
   void runPass(Design* design);
   string logPass();
 };

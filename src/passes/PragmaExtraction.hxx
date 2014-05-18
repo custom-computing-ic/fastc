@@ -7,7 +7,8 @@
 class PragmaExtraction : public Pass
 {
 public:
-  PragmaExtraction(){}
+
+  PragmaExtraction(const Compiler& compiler) : super(compiler) {}
 
   void updateKernelDeclaration(Kernel* kernel, string pragma) {
     string *var = get_pragma_param(pragma, "var");
@@ -15,7 +16,7 @@ public:
       string *max = get_pragma_param(pragma, "max");
       string *min = get_pragma_param(pragma, "min");
       kernel->addOffsetExpression(*var, *max, *min);
-    } 
+    }
 
     if (*get_pragma_param(pragma, "ioType") != "") {
       string *ioType = get_pragma_param(pragma, "ioType");

@@ -10,8 +10,8 @@
 
 class HighlevelAnalysis : public Pass {
 
-  public:
-    HighlevelAnalysis(){}
-    void runPass(Design* design);
-    string logPass();
+public:
+  HighlevelAnalysis(const Compiler& compiler) : super(compiler){}
+  void runPass(Design* design);
+  string logPass();
 };

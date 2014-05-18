@@ -20,7 +20,8 @@ NodeQuerySynthesizedAttributeType  findConstants(SgNode * astNode)
 class ExtractDesignConstants : public Pass
 {
 public:
-  ExtractDesignConstants() {}
+
+  ExtractDesignConstants(const Compiler& compiler) : super(compiler) {}
 
   void runPass(Design* design) {
     using namespace NodeQuery;

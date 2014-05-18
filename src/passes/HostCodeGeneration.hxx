@@ -11,7 +11,7 @@ class HostCodeGeneration : public Pass
 
 
 public:
-  HostCodeGeneration() {}
+  HostCodeGeneration(const Compiler& compiler) : super(compiler) {}
   void runPass(Design* design) {
     design->getProject()->unparse();
   }

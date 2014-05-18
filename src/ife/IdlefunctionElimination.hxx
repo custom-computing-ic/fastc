@@ -7,16 +7,17 @@
 #include "../DataFlowGraph/DFSVisitor.hxx"
 #include "../passes/Pass.hxx"
 #include "../Design.hxx"
+#include "../Compiler.hxx"
 
 #include <string>
 
 
 class IdlefunctionElimination : public Pass {
 
-  public:
-    IdlefunctionElimination(){}
-    void runPass(Design* design);
-    string logPass();
+public:
+  IdlefunctionElimination(const Compiler& compiler) : super(compiler){}
+  void runPass(Design* design);
+  string logPass();
 };
 
 #endif /* IDLEFUNCTIONELIMINATION_HXX_ */

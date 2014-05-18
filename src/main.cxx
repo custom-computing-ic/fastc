@@ -36,23 +36,23 @@ int main(int argc, char** argv) {
   generateDOT(*project);
   setupBuild();
 
-  Compiler* c = new Compiler(project);
-  c->addPass(new KernelExtraction());
-  c->addPass(new InlineKernels());
-  c->addPass(new ExtractStencil());
-  c->addPass(new ExtractDesignConstants());
-  c->addPass(new PragmaExtraction());
-  c->addPass(new BuildDFG());
-  c->addPass(new PrintDotDFG());
-  c->addPass(new TaskExtraction());
-  c->addPass(new IdlefunctionElimination());
-  //c->addPass(new MergeKernels());
-  c->addPass(new CodeGeneration());
-  c->addPass(new GenerateAnalysisOverview());
-  c->runPasses();
+  Compiler c(project);
+  c.addPass(new KernelExtraction(c));
+  c.addPass(new InlineKernels(c));
+  c.addPass(new ExtractStencil(c));
+  c.addPass(new ExtractDesignConstants(c));
+  c.addPass(new PragmaExtraction(c));
+  c.addPass(new BuildDFG(c));
+  c.addPass(new PrintDotDFG(c));
+  c.addPass(new TaskExtraction(c));
+  c.addPass(new IdlefunctionElimination(c));
+  //c.addPass(new MergeKernels());
+  c.addPass(new CodeGeneration(c));
+  c.addPass(new GenerateAnalysisOverview(c));
+  c.runPasses();
 
   //To check: somehow the dot file is not written now?
-  DataFlowGraph *dfg = c->getDesign()->getDataFlowGraph();
+  DataFlowGraph *dfg = c.getDesign()->getDataFlowGraph();
   ofstream ff("main_flow.dot");
   if (dfg != NULL)
     DotPrint::writeDotForDfg(ff, dfg);
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 
 #if DEBUG
   int num = 1;
-  foreach_(Stencil* s, c->getDesign()->getStencils()) {
+  foreach_(Stencil* s, c.getDesign()->getStencils()) {
     cout << "Stencil " << num << endl;
     s->print();
     cout << endl;

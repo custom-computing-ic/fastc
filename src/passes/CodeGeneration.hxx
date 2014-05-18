@@ -6,7 +6,7 @@
 /** Generate MaxJ code corresponding to the FAST dataflow designs. */
 class CodeGeneration : public Pass {
 public:
-  CodeGeneration() {}
+  CodeGeneration(const Compiler& compiler) : super(compiler) {}
   void runPass(Design* design);
   string logPass();
 };

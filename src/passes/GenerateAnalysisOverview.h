@@ -25,7 +25,7 @@ class GenerateAnalysisOverview : public Pass {
   static std::string colors[3];
 
  public:
-  GenerateAnalysisOverview() {}
+  GenerateAnalysisOverview(const Compiler& compiler) : super(compiler) {}
 
   void runPass(Design* design);
 
@@ -34,5 +34,3 @@ class GenerateAnalysisOverview : public Pass {
 };
 
 #endif // GENERATEANALYSISOVERVIEW_H_
-
-

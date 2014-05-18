@@ -7,7 +7,7 @@
 class PrintDotDFG : public Pass {
 
 public:
-  PrintDotDFG() {}
+  PrintDotDFG(const Compiler& compiler) : super(compiler) {}
 
   void runPass(Design *design);
   string logPass();

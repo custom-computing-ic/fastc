@@ -9,7 +9,8 @@ void FixSgProject(SgProject& proj);
 class InlineKernels : public Pass
 {
 public:
-  InlineKernels() {}
+
+  InlineKernels(const Compiler& compiler) : super(compiler) {}
 
   void runPass(Design* design);
 

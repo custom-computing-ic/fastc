@@ -6,7 +6,7 @@
 class TaskExtraction : public Pass
 {
 public:
-  TaskExtraction() {}
+  TaskExtraction(const Compiler& compiler) : super(compiler) {}
   void runPass(Design* design);
   string logPass();
 };

@@ -1,11 +1,12 @@
 #ifndef COMPILER_HXX
 #define COMPILER_HXX
 
+#include "Design.hxx"
 #include "passes/Pass.hxx"
 
 class Compiler
 {
-
+  Config *config;
   Design *design;
   list<Pass*> passes;
 
@@ -25,7 +26,13 @@ public:
 
   Compiler(SgProject* project) {
     pass = 0;
+    config = new Config();
     design = new Design(project);
+  }
+
+  ~Compiler() {
+    delete design;
+    delete config;
   }
 
   void addPass(Pass* p) {
@@ -44,6 +51,14 @@ public:
   Design* getDesign() { return design; }
 
   Kernel* getKernel(string functionName) { return design->getKernel(functionName); }
+
+  bool xmlEnabled() const {
+    return config->isXmlEnabled();
+  }
+
+  void setXmlEnabled() {
+    config->setXmlEnabled(true);
+  }
 
 };
 

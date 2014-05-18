@@ -24,7 +24,7 @@ class ExtractStencil : public Pass {
   StencilOffset* extractSingleOffset(SgExpression* e, Stencil* stencil);
 
  public:
-  ExtractStencil() {}
+ ExtractStencil(const Compiler& compiler) : super(compiler) {}
 
 
   void runPass(Design* design);

@@ -23,7 +23,7 @@ class RemoveFast : public Pass
 {
 public:
 
-  RemoveFast() {
+  RemoveFast(const Compiler& compiler) : super(compiler) {
   }
 
   void runPass(Design* design) {

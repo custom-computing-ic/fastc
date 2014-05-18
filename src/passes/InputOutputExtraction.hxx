@@ -6,7 +6,7 @@
 class InputOutputExtraction : public Pass
 {
 public:
-  InputOutputExtraction() {}
+  InputOutputExtraction(const Compiler& compiler) : super(compiler) {}
   void runPass(Design *design) {
     foreach_(Kernel *kernel, design->getKernels()) {
       kernel->extractIO(false);
