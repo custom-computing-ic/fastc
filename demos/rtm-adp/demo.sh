@@ -71,7 +71,7 @@ function run {
     cp harmonic.xml $ASP_REP
     larai $ASP_REP/main.lara -a "{csources:'RTMKernel.c', cflags: '-Imaxcc-include', cparams:[ { Par: 1, Mul: 1}, { Par: 2, Mul: 1 } ], mants:[22, 24], aspRoot: '$ASP_REP/'}"
     echo "[RTM] 2. Compiling FAST ==> MaxJ"
-    find designs/ -name "*.c" -exec fastc -Imaxcc-include {} \; -exec bash -c   'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \;
+    find designs/ -name "*.c" -exec maxcc -disable-write-xml -Imaxcc-include {} \; -exec bash -c   'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \;
     echo "[RTM] 3. Save and Clean-up"
     mv designs designs-RTM
     clean
@@ -84,7 +84,7 @@ function run {
     cp harmonic.xml $ASP_REP
     larai $ASP_REP/main.lara -a "{csources:'ADPKernel.c', cflags: '-Imaxcc-include/', cparams:[{ N: 8 }], mants:[10], aspRoot: '$ASP_REP/'}"
     echo "[ADP] 2. Compiling FAST ==> MaxJ"
-    find designs/ -name "*.c" -exec maxcc -Imaxcc-include {} \; -exec bash -c  'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \;
+    find designs/ -name "*.c" -exec maxcc -disable-write-xml -Imaxcc-include {} \; -exec bash -c  'dir=`dirname  "{}"` && mv build/engine/*.java "$dir"' \;
     echo "[ADP] 3. Save and Clean-up"
     mv designs designs-ADP
     clean
