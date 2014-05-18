@@ -26,7 +26,7 @@ runDiffTool() {
     difftool=`which meld > /dev/null 2>/dev/null`
     res=$?
     if [ "$res" = "0" ]; then
-        meld $file1 $file2 &
+        meld $file1 $file2
     fi
 
     # run diff anyway, just in case meld crashed...
@@ -86,7 +86,7 @@ runTest() {
     else
         print_error "[FAIL!]"
         printf " $1.c\n"
-        print_info "Diff (meld $test_rel_path/$runOut $test_rel_path/$base.exp)\n"
+        print_info "Diff (meld $test_abs_path/$runOut $test_abs_path/$base.exp)\n"
         runDiffTool $test_abs_path/$runOut $test_abs_path/$base.exp
 
         showOutput $test_log_file
