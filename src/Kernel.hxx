@@ -58,10 +58,6 @@ public:
       declaration from the ROSE AST. */
   Kernel(string name, SgFunctionDeclaration* decl);
 
-  Kernel() {
-  }
-
-
   /** Generate MaxJ source code for this kernel. */
   string generateSourceCode();
 
