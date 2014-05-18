@@ -12,7 +12,7 @@ aspectdef adpTransforms
    if (debug) {
        call watchFloats();
    }
-   var opGranularity = {DspBalance:'full', Cond: {MultiplyOp: 10, AddOp: 1}};
+   var opGranularity = {DspBalance:'0.5', Cond: {MultiplyOp: 10, AddOp: 1}};
    call DspBalancing(opGranularity);
 end
 
@@ -111,8 +111,10 @@ apply
      }
 
      if (match) {
-       var pragma = '#pragma FAST balanceDSP:' + opGranularity.DspBalance;
+       var pragma = '#pragma fast class:kernelopt name:pushDSP factor:' + opGranularity.DspBalance;
+       var poppragma = '#pragma fast class:kernelopt name:popDSP';
        $statement.insert before "[[pragma]]";
+       $statement.insert after  "[[poppragma]]";
      }
   }
 end
