@@ -32,11 +32,14 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-
   generateDOT(*project);
   setupBuild();
 
   Compiler c(project);
+
+  Rose_STL_Container<std::string > args = CommandlineProcessing::generateArgListFromArgcArgv(argc, argv);
+  c.setXmlEnabled(!CommandlineProcessing::isOption(args, "-disable-write-xml", "", false));
+
   c.addPass(new KernelExtraction(c));
   c.addPass(new InlineKernels(c));
   c.addPass(new ExtractStencil(c));

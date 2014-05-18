@@ -56,8 +56,8 @@ public:
     return config->isXmlEnabled();
   }
 
-  void setXmlEnabled() {
-    config->setXmlEnabled(true);
+  void setXmlEnabled(bool enabled) {
+    config->setXmlEnabled(enabled);
   }
 
 };
