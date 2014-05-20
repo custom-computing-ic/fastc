@@ -8,11 +8,11 @@
 
 std::string* get_pragma_param(std::string pragma, std::string param) {
   using namespace std;
-  int pos = pragma.find(param);
+  size_t pos = pragma.find(param);
   string param_value = "";
   if (pos != string::npos) {
-    int semic1 = pragma.find(":", pos);
-    int semic2 = pragma.find(":", semic1 + 1);
+    size_t semic1 = pragma.find(":", pos);
+    size_t semic2 = pragma.find(":", semic1 + 1);
     if (semic2 == string::npos) {
       param_value = pragma.substr(semic1 + 1);
     } else {
@@ -183,4 +183,3 @@ std::pair<std::string, int> StencilUtils::getStencilOffset(SgBinaryOp* binOp,
 
   return make_pair("", 0);
 }
-

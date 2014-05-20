@@ -36,8 +36,8 @@ void IFEVisitor::ExtractProperties(){
 //  //boost::regex *TYPE = new boost::regex("([a-zA-Z]*)([0-9]*)(,\s*)(([0-9]*))?");
 //  boost::regex* r = new boost::regex("[a-zA-Z]*\\(([0-9]*),\\s*([0-9]*)\\)");
 //  boost::cmatch group;
-//  if (boost::regex_match((k->ioTypeMap)["p"].c_str(), group, *r)) 
-//  //if (boost::regex_match((xx.c_str(), group, *TYPE))) 
+//  if (boost::regex_match((k->ioTypeMap)["p"].c_str(), group, *r))
+//  //if (boost::regex_match((xx.c_str(), group, *TYPE)))
 //    cout<<group[0]<<" "<<group[1]<<endl;
 
 
@@ -53,7 +53,7 @@ void IFEVisitor::ExtractProperties(){
     task->DSPs      = hlaVisitor.getDSPs();
     task->bandwidth = hlaVisitor.getbandwidth();
     task->streams   = hlaVisitor.getstreams();
-    
+
     task->internaldelay=hlaVisitor.getinternaldelay();
     task->inputdelay   =hlaVisitor.getinputdelay();
 
@@ -75,17 +75,16 @@ std::string to_string(T const& value) {
 void IFEVisitor::UpdateXML(){
 
   XMLNode xMainNode=XMLNode::openFileHelper("Faster.xml","Faster_XML");
-  
+
   XMLNode xNode=xMainNode.getChildNode("architecture").getChildNode("system");
   XMLNode pNode = xNode.addChild("processing_elements");
   XMLNode mNode = xNode.addChild("memory_elements");
-  char *t;
-  
+
   foreach_(Node* node, dfg->getNodes()) {
     DfeTask *task = (DfeTask *)node;
     if (task->getName() == "sink" || task->getName() == "source")
       continue;
-    
+
     Kernel* k = task->getKernel();
     cout<<"kernel: \033[1;31m"<<k->getName()<<"\033[0m"<<endl;
 
@@ -97,37 +96,37 @@ void IFEVisitor::UpdateXML(){
       task->bandwidth += stream->bandwidth;
       task->precision =  stream->precision[0] + stream->precision[1];
     }
-    
-    cout<<"BRAMs:     "<<task->BRAMs     <<endl; 
-    cout<<"LUTs:      "<<task->LUTs      <<endl; 
-    cout<<"FFs:       "<<task->FFs       <<endl; 
-    cout<<"DSPs:      "<<task->DSPs      <<endl; 
-    cout<<"bandwidth: "<<task->bandwidth <<endl; 
 
-  
+    cout<<"BRAMs:     "<<task->BRAMs     <<endl;
+    cout<<"LUTs:      "<<task->LUTs      <<endl;
+    cout<<"FFs:       "<<task->FFs       <<endl;
+    cout<<"DSPs:      "<<task->DSPs      <<endl;
+    cout<<"bandwidth: "<<task->bandwidth <<endl;
+
+
     XMLNode rNode = pNode.addChild("reconfigurable_area");
     rNode.addAttribute("id", (char*)task->getName().c_str());
-  
+
     cout<<task->LUTs<<endl;
     cout<<to_string(task->LUTs)<<endl;
 
-    XMLNode sNode; 
+    XMLNode sNode;
     sNode = rNode.addChild("specs");
     sNode.addAttribute("LUTs", (char *)to_string(task->LUTs).c_str());
     sNode = rNode.addChild("specs");
     sNode.addAttribute("FFs",  (char *)to_string(task->FFs).c_str());
 
     sNode = rNode.addChild("specs");
-    sNode.addAttribute("DSPs", (char *)to_string(task->DSPs).c_str());      
+    sNode.addAttribute("DSPs", (char *)to_string(task->DSPs).c_str());
 
     sNode = rNode.addChild("specs");
-    sNode.addAttribute("BRAMs",(char *)to_string(task->BRAMs).c_str());        
-    
-    sNode = rNode.addChild("specs");
-    sNode.addAttribute("execution time",(char *)to_string(task->ds).c_str());        
-    sNode.addAttribute("unit", "cycles");        
+    sNode.addAttribute("BRAMs",(char *)to_string(task->BRAMs).c_str());
 
-    XMLNode bNode; 
+    sNode = rNode.addChild("specs");
+    sNode.addAttribute("execution time",(char *)to_string(task->ds).c_str());
+    sNode.addAttribute("unit", "cycles");
+
+    XMLNode bNode;
     bNode = mNode.addChild("memory");
     bNode.addAttribute("id",(char*)task->getName().c_str());
     bNode.addAttribute("type","DRAM / BRAM");
@@ -139,7 +138,7 @@ void IFEVisitor::UpdateXML(){
     cout<<task->precision<<endl;
     cout<<task->ds<<endl;
     cout<<data_size<<endl;
-     
+
     sNode.addAttribute("size",     (char*)to_string(data_size).c_str());
     sNode.addAttribute("unit","MB");
     sNode = bNode.addChild("specs");
@@ -155,7 +154,7 @@ void IFEVisitor::UpdateXML(){
       pNode.addAttribute("size", (char *) to_string(task->precision).c_str());
       pNode.addAttribute("direction", "OUT");
     }
-    
+
     foreach_(string stream, task->getInputs())
     {
       pNode = sNode.addChild("port");
@@ -172,7 +171,7 @@ void IFEVisitor::UpdateXML(){
 Offset* IFEVisitor::FindSink(DfeTask* task, string name){
   foreach_(Offset* stream, task->streams)
   {
-    if(stream->getName() == name) 
+    if(stream->getName() == name)
     {
       cout<<"sink: "<<name<<endl;
       return stream;
@@ -187,7 +186,7 @@ void IFEVisitor::FindSource(DfeTask* task){
   {
     string name = sink->getName();
     foreach_(Offset* stream, task->streams)
-      if(stream->getName() != name ) 
+      if(stream->getName() != name )
       {
         task->sources.push_back(stream);
         cout<<"source: "<<name<<endl;
@@ -218,7 +217,8 @@ void IFEVisitor::AssignLevel(DfeTask* task)
     D(cout<<"source node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;)
     sourceD = sourceD > stream->internaldelay ? sourceD : stream->internaldelay;
   }
-  foreach_(Offset* stream, task->sinks)
+
+  D(foreach_(Offset* stream, task->sinks))
     D(cout<<"sink node: "<<stream->getName()<<" delay: "<<stream->internaldelay<<endl;)
 
   //TODO: we hack here since we assume each function only has 1 output
@@ -300,7 +300,7 @@ void IFEVisitor::CombineTasks(){
        string sslevel = ssidle.str();
 
        levels.push_back(new Segment(sslevel));
-       if(cap != levels.capacity()) //expanding
+       if(cap != (int)levels.capacity()) //expanding
        {
          it = levels.begin() + offset;
          cap= levels.capacity();
@@ -315,7 +315,6 @@ void IFEVisitor::CombineTasks(){
      }
   }
 
-  int i=0;
   foreach_(Segment* seg, levels)
   {
     cout<<"     \033[1;31mlevel "<<seg->getName()<<"\033[0m"<<endl;
@@ -379,7 +378,7 @@ void IFEVisitor::CombineSegments(){
 
 bool IFEVisitor::FindOverlappedKernel(DfeTask* task){
   foreach_(DfeTask* branch, seenTasks)
-    if(branch->getName() != task->getName() && 
+    if(branch->getName() != task->getName() &&
         (branch->getKernel())->getName() == (task->getKernel())->getName())
     {
       cout<<"     overlapped task: "<<task->getName()<<endl;
@@ -392,7 +391,7 @@ int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
 {
   int find =0;
   foreach_(string outputname, task->getOutputs())
-    if(task->getCorrespondingKernelParam(outputname) == name) //matching the searched streamed
+    if(task->getCorrespondingKernelParam(outputname) == name){//matching the searched streamed
       foreach_(Segment* seg, con->getConfiguration())
         foreach_(DfeTask* branch, seg->getTasks())
           foreach_(string inputname, branch->getInputs())
@@ -401,11 +400,12 @@ int IFEVisitor::FindOutput(DfeTask* task, Configuration* con, string name)
               D(cout<<"mathed name: "<<outputname<<endl;)
               find++;
             }
+    }
   return find;
 }
 
 void IFEVisitor::OptimiseConfigurations(){
-  
+
   //aggregrate the function properties, LUTs, FFs, BRAMs, DSPs
   cout<<"     accumulating extracted kernel properties, for non-overlapped kernels"<<endl;
   foreach_(Configuration* con, configurations)
@@ -426,17 +426,17 @@ void IFEVisitor::OptimiseConfigurations(){
       }
     }
   }
-  
+
   //aggregrate the bandwidth
   //TODO: there are kernels sharing the same input data, need to process that
-  //TODO: for that case, also need to think how to merge the onchipmemory 
+  //TODO: for that case, also need to think how to merge the onchipmemory
   cout<<"     aggregrating off-chip memory bandwidth for each configuration"<<endl;
   foreach_(Configuration* con, configurations)
     foreach_(Segment* seg, con->getConfiguration())
       foreach_(DfeTask* task, seg->getTasks())
       {
         Kernel* kbuf = task->getKernel();
-        DataFlowGraph* dbuf = kbuf->getDataFlowGraph(); 
+        DataFlowGraph* dbuf = kbuf->getDataFlowGraph();
         foreach_(Offset* stream, dbuf->streams)
         {
           D(cout<<"con "<<con->getName()<<"stream "<<stream->getName()<<" "<<endl;)
@@ -450,8 +450,8 @@ void IFEVisitor::OptimiseConfigurations(){
           D(cout<<"band: "<<con->bandwidth<<endl;)
         }
       }
-  
-  //calculate the parallelism 
+
+  //calculate the parallelism
   //TODO: explore DSP factor and precision
   cout<<"     optimising each configuration to achieve maximum configuration"<<endl;
   foreach_(Configuration* con, configurations)
@@ -462,7 +462,7 @@ void IFEVisitor::OptimiseConfigurations(){
     con->P = con->P < floor((con->Ad-con->Id)/(con->DSPs)) ? con->P : floor((con->Ad-con->Id)/(con->DSPs));
     //con->P = con->P < ceil((con->Ab-con->Ib)/(con->BRAMs))? con->P : ceil((con->Ab-con->Ib)/(con->BRAMs));
   }
-  
+
   //aggregrate the resource consumption for infrasttructure
   cout<<"     updating resource consumption based on infrastructure resource and optimised parallelism"<<endl;
   foreach_(Configuration* con, configurations)
@@ -472,7 +472,7 @@ void IFEVisitor::OptimiseConfigurations(){
     con->DSPs      = con->Id + con->DSPs *con->P ;
     con->BRAMs     = con->Ib + con->BRAMs;
     con->bandwidth = con->bandwidth * con->P ;
-  }                                   
+  }
 
   foreach_(Configuration* con, configurations)
   {
@@ -485,7 +485,7 @@ void IFEVisitor::OptimiseConfigurations(){
     cout<<"     Parallelism "<<con->P<<endl;
     cout<<endl;
   }
-  
+
   //TODO: iterate the pass to find the optimal DSP factor and precision
   //TODO: data blocking for multi-dimenion offsets
 }
@@ -530,7 +530,7 @@ void IFEVisitor::GenerateSolutions(){
     parbuf = new Partition(size);
     parnum++;
     parbuf->addConfiguration(con);
-    int nextlevel = con->getConfiguration().size();
+    size_t nextlevel = con->getConfiguration().size();
 
     if(nextlevel == levelNums.size())
       partitions.push_back(parbuf);
@@ -538,7 +538,7 @@ void IFEVisitor::GenerateSolutions(){
       FindPartition(nextlevel, parbuf);
   }
   //sleep(2);
-  
+
   foreach_(Partition* par, partitions)
   {
     cout<<"     \033[1;31mpartition( run-time solution) "<<par->getName()<<": "<<"\033[0m"<<endl;
@@ -551,15 +551,15 @@ void IFEVisitor::GenerateSolutions(){
 bool IFEVisitor::FindLevel(Segment* level, Configuration* con)
 {
   foreach_(Segment* seg, con->getConfiguration())
-      if(seg->getName() == level->getName()) 
-        return true; 
+      if(seg->getName() == level->getName())
+        return true;
   return false;
 }
 
 
 void IFEVisitor::EvaluateSolutions(){
 
-  cout<<"     evaluating execution time of generated partitions"<<endl;  
+  cout<<"     evaluating execution time of generated partitions"<<endl;
   foreach_(Partition* par, partitions)
   {
     cout<<"     partition: "<<par->getName()<<endl;
@@ -577,40 +577,40 @@ void IFEVisitor::EvaluateSolutions(){
       cout<<"     executing level: "<<seg->getName()<<" at "<<exeTime<<"s";
       cout<<" with \033[1;31mconfiguration"<<(*curCon)->getName()<<"\033[0m"<<endl;
 
-      double timebuf; 
+      double timebuf;
       foreach_(DfeTask* task, seg->getTasks())
       {
-        //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
-        timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 8); 
-        levTime = levTime > timebuf ? levTime : timebuf; 
+        //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P);
+        timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 8);
+        levTime = levTime > timebuf ? levTime : timebuf;
       }
       if(!FindLevel(seg, *curCon))//cannot find level in this configuration
       {
        (*curCon)->setexecutionTime(conTime);
-       D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
+       D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;)
        curCon++;
        foreach_(DfeTask* task, seg->getTasks())
        {
-         //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P); 
-         timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 8); 
-         levTime = levTime > timebuf ? levTime : timebuf; 
+         //timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)(*curCon)->P);
+         timebuf = task->ds * 1000 / (task->frequency * 1000000 * (double)((*curCon)->P) / 8);
+         levTime = levTime > timebuf ? levTime : timebuf;
        }
        conTime = levTime;
        exeTime +=levTime;
        cout<<"     \033[1;31mreconfiguration triggerred\033[0m, current configuration reconfigured to be \033[1;31mconfiguration ";
        cout<<(*curCon)->getName()<<"\033[0m"<<endl;
-       exeTime += (*curCon)->getReconfigurationTime(); 
+       exeTime += (*curCon)->getReconfigurationTime();
       }
-      else//this level is executed in this configuration 
+      else//this level is executed in this configuration
       {
         conTime += levTime;
         exeTime += levTime;//accumulate execution time for each level, as they cannot run in parallel
       }
-      cout<<"     finish with "<<exeTime<<"s"<<endl; 
+      cout<<"     finish with "<<exeTime<<"s"<<endl;
     }
     par->setexecutionTime(exeTime);
     (*curCon)->setexecutionTime(conTime);
-    D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;) 
+    D(cout<<"execution time for "<<(*curCon)->getName()<<" "<<(*curCon)->getexecutionTime()<<endl;)
     cout<<endl;
   }
 #if DEBUG
@@ -633,7 +633,7 @@ void IFEVisitor::FindPartition(int start, Partition* par){
     //parnum++;
     *parbuf = * par;
     parbuf->addConfiguration(con);
-    int nextlevel = (start + con->getConfiguration().size());
+    size_t nextlevel = (start + con->getConfiguration().size());
 
     if(nextlevel == levelNums.size())
       partitions.push_back(parbuf);
