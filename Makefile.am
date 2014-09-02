@@ -75,7 +75,7 @@ cscope:
 	cscope -b -s src
 
 run:
-	./fastc test/testApplications/maxc/RTM.c
+	./fastc test/applications/RTM.c	
 	dot -Tps analysis_overview.dot > 1.ps
 	evince 1.ps
 dot:
