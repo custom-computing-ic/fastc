@@ -57,9 +57,9 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
 TESTS = \
   test/common.sh test/highlevel.sh test/applications.sh test/new.sh
 
-BUILT_SOURCES = src/precompiled.hxx.gch
-src/precompiled.hxx.gch: src/precompiled.hxx
-	$(CXXCOMPILE) -c $<
+#BUILT_SOURCES = src/precompiled.hxx.gch
+#src/precompiled.hxx.gch: src/precompiled.hxx
+#	$(CXXCOMPILE) -c $<
 
 dist_noinst_SCRIPTS = autogen.sh tests.sh clean.sh
 
