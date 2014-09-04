@@ -8,6 +8,8 @@
 #include "../DfeTopSortVisitor.hxx"
 #include "../precompiled.hxx"
 
+#include <libxml++/libxml++.h>
+#include <iostream>
 
 
 IFEVisitor::IFEVisitor(DataFlowGraph *dfg){
@@ -74,12 +76,165 @@ std::string to_string(T const& value) {
 
 void IFEVisitor::UpdateXML(){
 
+  std::string filepath, filepath_out;
+  filepath     = "faster_initial.xml";
+  filepath_out = "faster_hla.xml";
+  
   XMLNode xMainNode=XMLNode::openFileHelper("Faster.xml","Faster_XML");
 
   XMLNode xNode=xMainNode.getChildNode("architecture").getChildNode("system");
   XMLNode pNode = xNode.addChild("processing_elements");
   XMLNode mNode = xNode.addChild("memory_elements");
 
+  try
+  {
+    xmlpp::DomParser parser;
+    parser.set_substitute_entities(); //We just want the text to be resolved/unescaped automatically.
+    parser.parse_file(filepath);
+    if(parser)
+    { 
+      xmlpp::Document* document = parser.get_document();
+      xmlpp::Node* root_node = document->get_root_node(); //deleted by DomParser.
+
+      xmlpp::Node::NodeList task_list = root_node->get_children();
+      xmlpp::Node* library;
+      xmlpp::Element* partition;
+      for(xmlpp::Node::NodeList::iterator p_it = task_list.begin(); p_it != task_list.end(); p_it++)
+      //iterate through the first-level nodes, looking for partitions and libraries
+      { 
+        xmlpp::Node* t_node = dynamic_cast<xmlpp::Node*>(*p_it);
+        if(t_node->get_name()=="library")
+           library = dynamic_cast<xmlpp::Node*>(*p_it);
+        else if(t_node->get_name()=="partitions")
+        {
+          partition = t_node->add_child("partition");
+          partition->set_attribute("id", "partition0");
+
+          foreach_(Node* node, dfg->getNodes()) {
+            DfeTask *task = (DfeTask *)node;
+            if (task->getName() == "sink" || task->getName() == "source")
+              continue;
+
+            Kernel* k = task->getKernel();
+            cout<<"kernel: \033[1;31m"<<k->getName()<<"\033[0m"<<endl;
+
+            task->bandwidth = 0;
+            DataFlowGraph* d = k->getDataFlowGraph();
+            foreach_(Offset* stream, d->streams)
+            {
+              cout<<"stream: "<<stream->getName()<<endl;
+              task->bandwidth += stream->bandwidth;
+              task->precision =  stream->precision[0] + stream->precision[1];
+            }
+
+            cout<<"BRAMs:     "<<task->BRAMs     <<endl;
+            cout<<"LUTs:      "<<task->LUTs      <<endl;
+            cout<<"FFs:       "<<task->FFs       <<endl;
+            cout<<"DSPs:      "<<task->DSPs      <<endl;
+            cout<<"bandwidth: "<<task->bandwidth <<endl;
+
+            xmlpp::Element* xml_task = partition->add_child("task");
+            xml_task->set_attribute("id", task->getName().c_str());
+
+            xmlpp::Element* spec = xml_task->add_child("spec");
+            spec->set_attribute("name","function");
+
+            //software implementation
+            std::string arm = "ARM_";
+            xmlpp::Element* imp  = library->add_child("implementation");
+            imp->set_attribute("id",arm+(task->getName()).c_str());
+
+                            xml_task = imp->add_child("task");
+            xml_task->set_attribute("id", task->getName().c_str());
+            
+            xmlpp::Element* com  = imp->add_child("component");
+            com->set_attribute("type", "SW");
+
+                            spec = imp->add_child("spec");
+            spec->set_attribute("name", "execution_time");
+            spec->set_attribute("value",to_string(task->ds * 12).c_str());
+            spec->set_attribute("unit", "cycles");
+
+            //hardware implementation
+            std::string max = "MAX_";
+                            imp  = library->add_child("implementation");
+            imp->set_attribute("id",max+(task->getName()).c_str());
+
+                            xml_task = imp->add_child("task");
+            xml_task->set_attribute("id", task->getName().c_str());
+
+                            com  = imp->add_child("component");
+            com->set_attribute("type", "HW");
+
+                            spec = imp->add_child("spec");
+            spec->set_attribute("name", "execution_time");
+            spec->set_attribute("value",to_string(task->ds).c_str());
+            spec->set_attribute("unit", "cycles");
+                            
+            spec = imp->add_child("spec");
+            spec->set_attribute("name", "area");
+            spec->set_attribute("value",to_string(task->LUTs).c_str());
+            
+            spec = imp->add_child("spec");
+            spec->set_attribute("name", "FFs");
+            spec->set_attribute("value",to_string(task->FFs).c_str());
+            
+            spec = imp->add_child("spec");
+            spec->set_attribute("name", "DSPs");
+            spec->set_attribute("value",to_string(task->DSPs).c_str());
+            
+            spec = imp->add_child("spec");
+            spec->set_attribute("name", "BRAMs");
+            spec->set_attribute("value",to_string(task->BRAMs).c_str());
+            
+            spec = imp->add_child("spec");
+            spec->set_attribute("name", "memory_bandwidth");
+            spec->set_attribute("value",(char*)to_string(task->bandwidth).c_str());
+            spec->set_attribute("unit", "MB/s");
+            
+            double data_size =(task->ds) * (task->precision) / (1024 * 1024 * 8);
+            spec = imp->add_child("spec");
+            spec->set_attribute("name", "data_size");
+            spec->set_attribute("value",(char*)to_string(data_size).c_str());
+            spec->set_attribute("unit", "MB");
+            
+            spec = imp->add_child("spec");
+            spec->set_attribute("name", "frequency");
+            spec->set_attribute("value",(char*)to_string(task->frequency).c_str());
+            spec->set_attribute("unit", "MHz");
+            
+            foreach_(string stream, task->getOutputs())
+            {
+              spec = imp->add_child("spec");
+              spec->set_attribute("name", "port");
+              spec->set_attribute("id", stream.c_str());
+              spec->set_attribute("size", (char *) to_string(task->precision).c_str());
+              spec->set_attribute("direction", "OUT");
+            } 
+
+            foreach_(string stream, task->getInputs())
+            {
+              spec = imp->add_child("spec");
+              spec->set_attribute("name", "port");
+              spec->set_attribute("id", stream.c_str());
+              spec->set_attribute("size", (char *) to_string(task->precision).c_str());
+              spec->set_attribute("direction", "IN");
+            }
+
+          }
+        }
+      }
+      document->write_to_file(filepath_out);
+    }
+  }
+  catch(const std::exception& ex)
+  {
+    std::cout << "Exception caught: " << ex.what() << std::endl;
+  }
+
+
+
+  /*
   foreach_(Node* node, dfg->getNodes()) {
     DfeTask *task = (DfeTask *)node;
     if (task->getName() == "sink" || task->getName() == "source")
@@ -163,6 +318,8 @@ void IFEVisitor::UpdateXML(){
       pNode.addAttribute("direction", "IN");
     }
   }
+  */
+  //keep the current write opertions in case they are needed 
 
   xMainNode.writeToFile("HLA.xml");
 }

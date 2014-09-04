@@ -1,0 +1,173 @@
+<FASTER_XML>
+	<architecture>
+		<system id="ZedBoard">
+			<specs name="type" value="GPP"/>
+			<specs name="device" value="ZedBoard"/>
+			<specs name="instances" value="10"/>
+			<processing_elements>
+				<processing_element id="arm0">
+					<specs name="type" value="GPP"/>
+					<specs name="frequency" value="600" unit="MHz"/>
+				</processing_element>
+				<processing_element id="arm1">
+					<specs name="type" value="GPP"/>
+					<specs name="frequency" value="600" unit="MHz"/>
+				</processing_element>
+			</processing_elements>
+			<memory_elements>
+				<memory_element id="cacheL1_arm0">
+					<specs name="size" value="16" unit="KB"/>
+				</memory_element>
+				<memory_element id="cacheL1_arm1">
+					<specs name="size" value="16" unit="KB"/>
+				</memory_element>
+				<memory_element id="cacheL2">
+					<specs name="size" value="16" unit="KB"/>
+				</memory_element>
+				<memory_element id="ddrRAM">
+					<specs name="size" value="16" unit="KB"/>
+				</memory_element>
+			</memory_elements>
+			<communication_elements>
+				<communication_element id="ambaBUS">
+					<specs name="type" value="BUS"/>
+					<virtual>
+						<link slave="cacheL1_arm0" master="arm0"/>
+						<link slave="arm0" master="cacheL1_arm0"/>
+						<link slave="cacheL1_arm1" master="arm1"/>
+						<link slave="arm1" master="cacheL1_arm1"/>
+						<link slave="cacheL1_arm0" master="cacheL2"/>
+						<link slave="cacheL2" master="cacheL1_arm0"/>
+						<link slave="cacheL1_arm1" master="cacheL2"/>
+						<link slave="cacheL2" master="cacheL1_arm1"/>
+						<link slave="ddrRAM" master="cacheL2"/>
+						<link slave="cacheL2" master="ddrRAM"/>
+					</virtual>
+				</communication_element>
+				<communication_element id="axiLite">
+					<specs name="type" value="BUS"/>
+					<virtual>
+						<link slave="artix7" master="arm0"/>
+						<link slave="artix7" master="arm1"/>
+						<link slave="arm0" master="artix7"/>
+						<link slave="arm1" master="artix7"/>
+					</virtual>
+				</communication_element>
+			</communication_elements>
+			<system id="artix7">
+				<specs name="type" value="FPGA"/>
+				<specs name="device" value="Artix7"/>
+				<processing_elements>
+					<reconfigurable_area id="reconfArea">
+						<specs name="totalArea" value="40000" unit="lut"/>
+						<region id="151_0">
+						</region>
+						<region id="153_0">
+						</region>
+						<region id="210_0">
+						</region>
+						<region id="117_0">
+						</region>
+						<region id="130_0">
+						</region>
+						<region id="238_0">
+						</region>
+						<region id="110_0">
+						</region>
+						<region id="139_0">
+						</region>
+						<region id="230_0">
+						</region>
+						<region id="172_0">
+						</region>
+						<region id="171_0">
+						</region>
+						<region id="85_0">
+						</region>
+						<region id="25_0">
+						</region>
+						<region id="224_0">
+						</region>
+						<region id="169_0">
+						</region>
+						<region id="47_0">
+						</region>
+						<region id="29_0">
+						</region>
+						<region id="29_1">
+						</region>
+						<region id="3_0">
+						</region>
+						<region id="181_0">
+						</region>
+						<region id="181_1">
+						</region>
+						<region id="187_0">
+						</region>
+						<region id="184_0">
+						</region>
+						<region id="6_0">
+						</region>
+						<region id="188_0">
+						</region>
+						<region id="189_0">
+						</region>
+						<region id="201_0">
+						</region>
+						<region id="147_0">
+						</region>
+						<region id="144_0">
+						</region>
+						<region id="185_0">
+						</region>
+						<region id="77_0">
+						</region>
+						<region id="108_0">
+						</region>
+						<region id="241_0">
+						</region>
+						<region id="125_0">
+						</region>
+						<region id="232_0">
+						</region>
+						<region id="227_0">
+						</region>
+						<region id="129_0">
+						</region>
+						<region id="166_0">
+						</region>
+						<region id="101_0">
+						</region>
+						<region id="39_0">
+						</region>
+						<region id="15_0">
+						</region>
+						<region id="17_0">
+						</region>
+						<region id="18_0">
+						</region>
+						<region id="57_0">
+						</region>
+						<region id="30_0">
+						</region>
+						<region id="50_0">
+						</region>
+						<region id="63_0">
+						</region>
+						<region id="65_0">
+						</region>
+					</reconfigurable_area>
+				</processing_elements>
+			</system>
+		</system>
+	</architecture>
+	<application>
+    	<files>
+      		<file name="test.c"/>
+    	</files>
+  	</application>
+	<library>
+	</library>
+	<partitions>
+	</partitions>
+</FASTER_XML>
