@@ -1,6 +1,11 @@
 fastc
 =====
 
+Experimental framework for aspect-oriented compilation of dataflow designs.
+
+This is described in [Paul Grigoras et al., _Aspect Driven Compilation for Dataflow Designs_](http://paul-g.github.io/pgasap2013.pdf)
+
+
 Cloning This Repo
 -----------------
 
