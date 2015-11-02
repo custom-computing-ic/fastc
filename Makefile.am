@@ -3,6 +3,8 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 bin_PROGRAMS = fastc
 
+fastc_CPPFLAGS = $(LIBXMLXX_CFLAGS)
+fastc_LDADD = $(LIBXMLXX_LIBS)
 fastc_SOURCES = src/main.cxx src/main.hxx \
   src/Kernel.hxx src/Kernel.cxx \
   src/Design.hxx src/Design.cxx \
@@ -10,7 +12,7 @@ fastc_SOURCES = src/main.cxx src/main.hxx \
   src/precompiled.hxx src/utils.hxx src/utils.cxx \
   src/AstToDfgVisitor.hxx src/AstToDfgVisitor.cxx \
   src/AstToMaxJVisitor.hxx src/AstToMaxJVisitor.cxx \
-  src/StencilAstToMaxJVisitor.hxx src/StencilAstToMaxJVisitor.cxx \
+  src/StencilAstToMaxJVisitor.hxx src/StencilAstToMaxJVisitor.cc \
   src/DotDFSVisitor.hxx src/DotDFSVisitor.cxx \
   src/DotPrint.hxx src/DotPrint.cxx\
   src/DfeTask.hxx src/DfeTask.cxx \
@@ -75,7 +77,7 @@ cscope:
 	cscope -b -s src
 
 run:
-	./fastc test/applications/RTM.c	
+	./fastc test/applications/RTM.c
 	dot -Tps analysis_overview.dot > 1.ps
 	evince 1.ps
 dot:

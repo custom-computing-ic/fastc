@@ -55,29 +55,9 @@ if test $BOOSTPATHSET = 1 ; then
 AM_CXXFLAGS="$AM_CXXFLAGS -I$with_boost/include"
 AM_LDFLAGS="$AM_LDFLAGS -L$with_boost/lib"
 fi
-
 ##########################################################################
-# adding the libxml++ library
-##########################################################################
-# adding xml libs to the files to link
-LIBS="-lxml++-1.0 -lxml2 $LIBS"
-AM_CXXFLAGS="$AM_CXXFLAGS -I/usr/include/libxml2"
 
-# introduce the optional configure parameter for a non-standard install prefix of ROSE
-AC_ARG_WITH([libxmlpp],
-[AS_HELP_STRING([--with-libxmlpp=prefix],
-[try this for a non-standard install prefix of XMLPP])],
-[XMLPPPATHSET=1],
-[XMLPPPATHSET=0])
-
-# if optional parameter used, extend path flags for compliler and linker
-if test $XMLPPPATHSET = 1 ; then
-# extend the compiler and linker flags according to the path set
-AM_CXXFLAGS="$AM_CXXFLAGS -I$with_libxmlpp/include"
-AM_LDFLAGS="$AM_LDFLAGS -L$with_libxmlpp/lib"
-fi
-
-##########################################################################
+PKG_CHECK_MODULES([LIBXMLXX], [libxml++-2.6])
 
 AM_CXXFLAGS="$AM_CXXFLAGS -Winvalid-pch -Wall -std=c++0x -g3 -O0"
 
