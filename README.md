@@ -5,9 +5,7 @@ Experimental framework for aspect-oriented compilation of dataflow designs.
 
 This is described in [Paul Grigoras et al., _Aspect Driven Compilation for Dataflow Designs_](http://www.doc.ic.ac.uk/~pg1709/pgasap2013.pdf)
 
-
-Cloning This Repo
------------------
+## Installation
 
 ```
 git clone https://github.com/custom-computing-ic/fastc.git
@@ -35,8 +33,7 @@ Please report to paul.grigoras90@gmail.com
 
 __Note__ Tests in `new.sh` are expected to fail, they are currently unsupported features. 
 
-Usage
------
+## Usage
 
 ~~~
 fastc -I/path/to/fastc/include/ /path/to/kernels.c
