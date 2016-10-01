@@ -5,7 +5,7 @@ Experimental framework for aspect-oriented compilation of dataflow designs.
 
 This is described in [Paul Grigoras et al., _Aspect Driven Compilation for Dataflow Designs_](http://www.doc.ic.ac.uk/~pg1709/pgasap2013.pdf).
 
-Support for automatic exploitation of runtime reconfiguration is described in [Xinyu Niu et al., _Automating Elimination of Idle Functions by Run-time Reconfiguration_](http://www.doc.ic.ac.uk/~nx210/static/pub/J4.pdf)
+Support for the automatic exploitation of runtime reconfiguration approach described in [Xinyu Niu et al., _Dynamic Stencil: Effective Exploitation of Run-time Resources in Reconfigurable Clusters_](https://www.doc.ic.ac.uk/~nx210/static/pub/C13.pdf)
 
 ## Installation
 
